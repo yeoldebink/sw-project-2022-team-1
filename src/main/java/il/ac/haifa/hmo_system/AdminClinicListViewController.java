@@ -4,7 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
 
-public class ClinicListViewController {
+public class AdminClinicListViewController {
 
   @FXML private TableView<?> clinicTable;
 
