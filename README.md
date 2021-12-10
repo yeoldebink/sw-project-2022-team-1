@@ -34,4 +34,4 @@ to make sure you haven't missed any files.
 
 ## Building
 
-`mvn clean compile assembly:single`
+`mvn clean package`
