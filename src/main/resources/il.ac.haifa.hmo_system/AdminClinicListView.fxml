@@ -8,38 +8,46 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="507.0" prefWidth="1307.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.ac.haifa.hmo_system.AdminClinicListViewController">
-   <children>
-      <VBox layoutX="14.0" layoutY="14.0" prefHeight="477.0" prefWidth="1012.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
-         <children>
-            <Label prefHeight="41.0" prefWidth="294.0" text="Clinic Administration">
-               <font>
-                  <Font name="DejaVu Sans Bold" size="22.0" />
-               </font>
-            </Label>
-            <TableView fx:id="clinicTable" prefHeight="437.0" prefWidth="1003.0">
-              <columns>
-                <TableColumn prefWidth="75.0" text="ID" />
-                <TableColumn prefWidth="130.0" text="Clinic Name" />
-                  <TableColumn prefWidth="91.0" text="Address" />
-                  <TableColumn minWidth="4.0" prefWidth="114.0" text="Monday Hours" />
-                  <TableColumn prefWidth="132.0" text="Tuesday Hours" />
-                  <TableColumn minWidth="0.0" prefWidth="159.0" text="Wednesday Hours" />
-                  <TableColumn minWidth="0.0" prefWidth="134.0" text="Thursday Hours" />
-                  <TableColumn minWidth="0.0" prefWidth="113.0" text="Friday Hours" />
-                  <TableColumn minWidth="0.0" prefWidth="140.0" text="Saturday Hours" />
-              </columns>
-               <contextMenu>
-                  <ContextMenu>
-                    <items>
-                      <MenuItem mnemonicParsing="false" onAction="#showEditClinicDialog" text="Edit clinic" />
-                      <MenuItem mnemonicParsing="false" onAction="#showAddClinicDialog" text="Add clinic" />
-                    </items>
-                  </ContextMenu>
-               </contextMenu>
-            </TableView>
-         </children>
-      </VBox>
-   </children>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity"
+  minHeight="-Infinity"
+  minWidth="-Infinity" prefHeight="507.0" prefWidth="1307.0"
+  xmlns="http://javafx.com/javafx/17"
+  fx:controller="il.ac.haifa.hmo_system.AdminClinicListViewController">
+  <children>
+    <VBox AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0"
+      AnchorPane.topAnchor="15.0"
+      layoutX="14.0" layoutY="14.0" prefHeight="477.0"
+      prefWidth="1012.0">
+      <children>
+        <Label prefHeight="41.0" prefWidth="294.0" text="Clinic Administration">
+          <font>
+            <Font name="DejaVu Sans Bold" size="22.0"/>
+          </font>
+        </Label>
+        <TableView prefHeight="437.0" prefWidth="1003.0" fx:id="clinicTable">
+          <columns>
+            <TableColumn prefWidth="75.0" text="ID"/>
+            <TableColumn prefWidth="130.0" text="Clinic Name"/>
+            <TableColumn prefWidth="91.0" text="Address"/>
+            <TableColumn minWidth="4.0" prefWidth="114.0" text="Monday Hours"/>
+            <TableColumn prefWidth="132.0" text="Tuesday Hours"/>
+            <TableColumn minWidth="0.0" prefWidth="159.0" text="Wednesday Hours"/>
+            <TableColumn minWidth="0.0" prefWidth="134.0" text="Thursday Hours"/>
+            <TableColumn minWidth="0.0" prefWidth="113.0" text="Friday Hours"/>
+            <TableColumn minWidth="0.0" prefWidth="140.0" text="Saturday Hours"/>
+          </columns>
+          <contextMenu>
+            <ContextMenu>
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#showEditClinicDialog"
+                  text="Edit clinic"/>
+                <MenuItem mnemonicParsing="false" onAction="#showAddClinicDialog"
+                  text="Add clinic"/>
+              </items>
+            </ContextMenu>
+          </contextMenu>
+        </TableView>
+      </children>
+    </VBox>
+  </children>
 </AnchorPane>

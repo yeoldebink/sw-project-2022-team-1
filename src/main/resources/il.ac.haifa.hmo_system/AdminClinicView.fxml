@@ -12,7 +12,7 @@
 <?import javafx.scene.Scene?>
 <?import javafx.scene.text.Font?>
 <?import javafx.stage.Stage?>
-<Stage xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+<Stage xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17"
   fx:controller="il.ac.haifa.hmo_system.AdminClinicViewController">
   <scene>
     <Scene>
@@ -20,21 +20,47 @@
         <children>
           <VBox layoutX="14.0" layoutY="14.0" prefHeight="401.0" prefWidth="276.0">
             <children>
-              <Label text="Edit Clinic">
-                <font>
-                  <Font name="DejaVu Sans Bold" size="22.0"/>
-                </font>
-              </Label>
-              <Label prefHeight="18.0" prefWidth="91.0" text="Clinic Info" underline="true">
-                <VBox.margin>
-                  <Insets top="5.0"/>
-                </VBox.margin>
-                <font>
-                  <Font name="DejaVu Sans Bold" size="14.0"/>
-                </font>
-              </Label>
-              <VBox/>
               <GridPane>
+                <children>
+                  <Label GridPane.rowIndex="0" text="Name: "/>
+                  <Label GridPane.columnIndex="1" text="NAME"/>
+
+                  <Label GridPane.rowIndex="1" text="Address: "/>
+                  <Label GridPane.columnIndex="1" GridPane.rowIndex="1" text="ADDRESS"/>
+
+                  <Label GridPane.rowIndex="2" text="Manager: "/>
+                  <Label GridPane.columnIndex="1" GridPane.rowIndex="2" text="MANAGER"/>
+
+                  <Label GridPane.rowIndex="3" text="Hours" underline="true"/>
+
+                  <Label GridPane.rowIndex="4" text="Sun"/>
+                  <Label GridPane.rowIndex="5" text="Mon"/>
+
+                  <Label GridPane.rowIndex="6" text="Tue"/>
+                  <Label GridPane.rowIndex="7" text="Wed"/>
+
+                  <Label GridPane.rowIndex="8" text="Thu"/>
+                  <Label GridPane.rowIndex="9" text="Fri"/>
+
+                  <Label GridPane.rowIndex="10" text="Sat"/>
+                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="4"
+                    fx:id="sunHoursTextField"/>
+
+                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="5"
+                    fx:id="monHoursTextField"/>
+                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="6"
+                    fx:id="tueHoursTextField"/>
+
+                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="7"
+                    fx:id="wedHoursTextField"/>
+                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="8"
+                    fx:id="thuHoursTextField"/>
+
+                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="9"
+                    fx:id="friHoursTextField"/>
+                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="10"
+                    fx:id="satHoursTextField"/>
+                </children>
                 <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="132.0" minWidth="10.0"
                     prefWidth="80.0"/>
@@ -54,47 +80,21 @@
                   <RowConstraints/>
                   <RowConstraints/>
                 </rowConstraints>
-                <children>
-                  <Label text="Name: " GridPane.rowIndex="0"/>
-                  <Label text="NAME" GridPane.columnIndex="1"/>
-
-                  <Label text="Address: " GridPane.rowIndex="1"/>
-                  <Label text="ADDRESS" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-
-                  <Label text="Manager: " GridPane.rowIndex="2"/>
-                  <Label text="MANAGER" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-
-                  <Label text="Hours" underline="true" GridPane.rowIndex="3"/>
-
-                  <Label text="Sun" GridPane.rowIndex="4"/>
-                  <TextField fx:id="sunHoursTextField" GridPane.columnIndex="1"
-                    GridPane.rowIndex="4"/>
-
-                  <Label text="Mon" GridPane.rowIndex="5"/>
-                  <TextField fx:id="monHoursTextField" GridPane.columnIndex="1"
-                    GridPane.rowIndex="5"/>
-
-                  <Label text="Tue" GridPane.rowIndex="6"/>
-                  <TextField fx:id="tueHoursTextField" GridPane.columnIndex="1"
-                    GridPane.rowIndex="6"/>
-
-                  <Label text="Wed" GridPane.rowIndex="7"/>
-                  <TextField fx:id="wedHoursTextField" GridPane.columnIndex="1"
-                    GridPane.rowIndex="7"/>
-
-                  <Label text="Thu" GridPane.rowIndex="8"/>
-                  <TextField fx:id="thuHoursTextField" GridPane.columnIndex="1"
-                    GridPane.rowIndex="8"/>
-
-                  <Label text="Fri" GridPane.rowIndex="9"/>
-                  <TextField fx:id="friHoursTextField" GridPane.columnIndex="1"
-                    GridPane.rowIndex="9"/>
-
-                  <Label text="Sat" GridPane.rowIndex="10"/>
-                  <TextField fx:id="satHoursTextField" GridPane.columnIndex="1"
-                    GridPane.rowIndex="10"/>
-                </children>
               </GridPane>
+              <Label prefHeight="18.0" prefWidth="91.0" text="Clinic Info" underline="true">
+                <VBox.margin>
+                  <Insets top="5.0"/>
+                </VBox.margin>
+                <font>
+                  <Font name="DejaVu Sans Bold" size="14.0"/>
+                </font>
+              </Label>
+              <Label text="Edit Clinic">
+                <font>
+                  <Font name="DejaVu Sans Bold" size="22.0"/>
+                </font>
+              </Label>
+              <VBox/>
               <VBox alignment="BASELINE_CENTER">
                 <Button onAction="#saveClinicChanges" text="Save Changes">
                   <VBox.margin>

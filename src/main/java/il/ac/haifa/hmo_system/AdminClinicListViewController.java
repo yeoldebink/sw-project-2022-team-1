@@ -9,6 +9,9 @@ public class AdminClinicListViewController {
   @FXML private TableView<?> clinicTable;
 
   @FXML
+  public void initialize() {}
+
+  @FXML
   void showAddClinicDialog(ActionEvent event) {}
 
   @FXML
