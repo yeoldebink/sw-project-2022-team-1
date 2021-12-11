@@ -27,13 +27,13 @@ create table clinics (
   id int primary key auto_increment,
   name varchar(50),
   address varchar(50),
-	sun_hours varchar(30),
-	mon_hours varchar(30),
-	tue_hours varchar(30),
-	wed_hours varchar(30),
-	thu_hours varchar(30),
-	fri_hours varchar(30),
-	sat_hours varchar(30)
+  sun_hours varchar(30),
+  mon_hours varchar(30),
+  tue_hours varchar(30),
+  wed_hours varchar(30),
+  thu_hours varchar(30),
+  fri_hours varchar(30),
+  sat_hours varchar(30)
 );
 
 create table patients (

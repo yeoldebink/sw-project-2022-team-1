@@ -34,8 +34,8 @@ insert into users (id, firstName, lastName, role_id) values
 delete from clinics;
 
 insert into clinics values
-	(null, "Carmel Center", "HaNassi 45, Haifa", "8:00-16:00", "8:00-16:00", "8:00-12:00, 16:00-20:00", "8:00-16:00", "8:00-16:00", "8:00-12:00", null),
-	(null, "Dizengoff", "Dizengoff 12, Tel Aviv", "8:00-16:00", "8:00-12:00, 16:00-20:00", "8:00-16:00", "8:00-16:00", "8:00-16:00", "8:00-12:00", null)
+      (null, "Carmel Center", "HaNassi 45, Haifa", "8:00-16:00", "8:00-16:00", "8:00-12:00, 16:00-20:00", "8:00-16:00", "8:00-16:00", "8:00-12:00", null),
+      (null, "Dizengoff", "Dizengoff 12, Tel Aviv", "8:00-16:00", "8:00-12:00, 16:00-20:00", "8:00-16:00", "8:00-16:00", "8:00-16:00", "8:00-12:00", null)
 ;
 
 delete from clinic_staff;
