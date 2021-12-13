@@ -8,13 +8,13 @@ import javafx.fxml.FXML;
 
 public class PrimaryController {
 
-    @FXML
-    void sendWarning(ActionEvent event) {
-    	try {
-			HMOClient.getClient().sendToServer("#warning");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+  @FXML
+  void sendWarning(ActionEvent event) {
+    try {
+      HMOClient.getClient().sendToServer("#warning");
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
     }
+  }
 }

@@ -9,6 +9,7 @@ public class Appointment {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
+
   private int patient_id;
   private int type_id;
   private int specialist_role_id;
@@ -19,8 +20,13 @@ public class Appointment {
   private String comments;
   private LocalDateTime lock_time;
 
-  public Appointment(int patient_id, int type_id, int specialist_role_id, int staff_member_id,
-      int clinic_id, LocalDateTime date) {
+  public Appointment(
+      int patient_id,
+      int type_id,
+      int specialist_role_id,
+      int staff_member_id,
+      int clinic_id,
+      LocalDateTime date) {
     this.patient_id = patient_id;
     this.type_id = type_id;
     this.specialist_role_id = specialist_role_id;

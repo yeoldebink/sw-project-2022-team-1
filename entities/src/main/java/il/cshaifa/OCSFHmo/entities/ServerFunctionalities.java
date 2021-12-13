@@ -1,4 +1,5 @@
 package il.ac.haifa.client_server.entities.src.main.java.il.cshaifa.OCSFHmo.entities;
+
 import il.ac.haifa.client_server.entities.src.main.java.il.cshaifa.OCSFHmo.entities.Clinic;
 
 import java.io.Serializable;
@@ -13,7 +14,6 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
-
 public class ServerFunctionalities implements Serializable {
   private static Session session;
 
@@ -23,7 +23,6 @@ public class ServerFunctionalities implements Serializable {
     UPDATE_CLINIC_HOURS
   }
 
-
   public static SessionFactory getSessionFactory() throws HibernateException {
     Configuration configuration = new Configuration();
     ServiceRegistry serviceRegistry =
@@ -32,7 +31,6 @@ public class ServerFunctionalities implements Serializable {
   }
 
   /**
-   *
    * @return a list of all Clinic objects.
    * @throws Exception
    */
@@ -61,7 +59,6 @@ public class ServerFunctionalities implements Serializable {
   }
 
   /**
-   *
    * @param clinic_id - SQL identifier of clinic
    * @return - clinic object with same ID
    */
@@ -85,7 +82,6 @@ public class ServerFunctionalities implements Serializable {
   }
 
   /**
-   *
    * @param clinic_id - the clinic we want to change the opening hour
    * @param day - 1/2/../7 by day we want to change
    * @param workHours - String of the new opening hours. e.g. "08:00-10:00 12:00-14:00"

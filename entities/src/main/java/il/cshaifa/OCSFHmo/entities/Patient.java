@@ -9,6 +9,7 @@ public class Patient {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
+
   private int user_id;
   private int home_clinic_id;
   private LocalDateTime birthday;

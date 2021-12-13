@@ -5,25 +5,20 @@
 package il.ac.haifa.client_server.server.src.main.java.il.cshaifa.OCSFHmo.server.ocsf;
 
 /**
- * A message class used by the Observable layer of the OCSF in order to conserve
- * information about the originator of a message.
+ * A message class used by the Observable layer of the OCSF in order to conserve information about
+ * the originator of a message.
  *
  * @author Dr. Robert Lagani&egrave;re
  * @version July 2001
  */
-public class OriginatorMessage
-{
-  /**
-   * The connection that originated the message
-   */
+public class OriginatorMessage {
+  /** The connection that originated the message */
   private ConnectionToClient originator;
 
-  /**
-   * The message.
-   */
+  /** The message. */
   private Object message;
 
-// Constructor ***************************************************************
+  // Constructor ***************************************************************
 
   /**
    * Constructs an instance of an OriginatorMessage
@@ -31,21 +26,19 @@ public class OriginatorMessage
    * @param originator The client who created this message
    * @param message The contents of the message
    */
-  public OriginatorMessage(ConnectionToClient originator, Object message)
-  {
+  public OriginatorMessage(ConnectionToClient originator, Object message) {
     this.originator = originator;
     this.message = message;
   }
 
-// Accessor methods *********************************************************
+  // Accessor methods *********************************************************
 
   /**
    * Returns the originating connection.
    *
    * @return The connection from which the message originated.
    */
-  public ConnectionToClient getOriginator()
-  {
+  public ConnectionToClient getOriginator() {
     return originator;
   }
 
@@ -54,8 +47,7 @@ public class OriginatorMessage
    *
    * @return The content of the message.
    */
-  public Object getMessage()
-  {
+  public Object getMessage() {
     return message;
   }
 }

@@ -8,6 +8,7 @@ public class AppointmentType {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
+
   private String name;
 
   public AppointmentType(String name) {

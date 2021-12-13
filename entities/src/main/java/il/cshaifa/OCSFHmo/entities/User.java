@@ -12,6 +12,7 @@ public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
+
   private int username;
   private String password;
   private String salt;
@@ -21,8 +22,15 @@ public class User {
   private String phone;
   private int role_id;
 
-  public User(int username, String password, String firstName, String lastName,
-      String email, String phone, int role_id) throws NoSuchAlgorithmException {
+  public User(
+      int username,
+      String password,
+      String firstName,
+      String lastName,
+      String email,
+      String phone,
+      int role_id)
+      throws NoSuchAlgorithmException {
     this.username = username;
     this.firstName = firstName;
     this.lastName = lastName;
@@ -105,10 +113,7 @@ public class User {
     this.salt = new String(salt);
   }
 
-
-  /**
-   * Before storing password in DB, we encoded it
-   **/
+  /** Before storing password in DB, we encoded it */
   private String encodePassword(String password) throws NoSuchAlgorithmException {
     /* Generate random salt */
     SecureRandom random = new SecureRandom();
@@ -118,12 +123,10 @@ public class User {
 
     /* Encode password+salt and return */
     MessageDigest md = MessageDigest.getInstance("SHA-512");
-    byte[] messageDigest = md.digest((password+this.salt).getBytes());
+    byte[] messageDigest = md.digest((password + this.salt).getBytes());
     BigInteger no = new BigInteger(1, messageDigest);
     StringBuilder hashtext = new StringBuilder(no.toString(16));
-    while (hashtext.length() < 32)
-      hashtext.insert(0, "0");
+    while (hashtext.length() < 32) hashtext.insert(0, "0");
     return hashtext.toString();
   }
-
 }
