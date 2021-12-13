@@ -1,6 +1,5 @@
-package il.ac.haifa.client_server.entities.src.main.java.il.cshaifa.OCSFHmo.entities;
-
-import il.ac.haifa.client_server.entities.src.main.java.il.cshaifa.OCSFHmo.entities.Clinic;
+package il.cshaifa.OCSFHmo.entities;
+import il.cshaifa.OCSFHmo.entities.Clinic;
 
 import java.io.Serializable;
 import java.util.List;
@@ -34,16 +33,25 @@ public class ServerFunctionalities implements Serializable {
    * @return a list of all Clinic objects.
    * @throws Exception
    */
-  public static Object GetClinicList() throws Exception {
-    List<Clinic> data = null;
+
+  public CriteriaQuery<Clinic> GetClinicListQ(){
+    CriteriaBuilder builder = session.getCriteriaBuilder();
+    CriteriaQuery<Clinic> query = builder.createQuery(Clinic.class);
+    query.from(Clinic.class);
+
+    return query;
+  }
+  //
+  public static Object GetClinicList() {
+    ArrayList<Clinic> data = null;
     try {
       SessionFactory sessionFactory = getSessionFactory();
       session = sessionFactory.openSession();
       session.beginTransaction();
-      CriteriaBuilder builder = session.getCriteriaBuilder();
-      CriteriaQuery<Clinic> query = builder.createQuery(Clinic.class);
-      query.from(Clinic.class);
-      data = session.createQuery(query).getResultList();
+//      CriteriaBuilder builder = session.getCriteriaBuilder();
+//      CriteriaQuery<Clinic> query = builder.createQuery(Clinic.class);
+//      query.from(Clinic.class);
+      data = session.createQuery(GetClinicListQ()).getResultList();
       session.flush();
       session.getTransaction().commit();
       data.sort(Comparator.comparing(Clinic::getName));
@@ -82,30 +90,25 @@ public class ServerFunctionalities implements Serializable {
   }
 
   /**
-   * @param clinic_id - the clinic we want to change the opening hour
-   * @param day - 1/2/../7 by day we want to change
-   * @param workHours - String of the new opening hours. e.g. "08:00-10:00 12:00-14:00"
-   * @return will return the updated Clinic object
+   * @param current_clinic - updated clinic object
    */
-  public Clinic UpdateClinicWorkHours(int clinic_id, int day, String workHours) {
-    Clinic result = null;
+  public void UpdateClinicData(Clinic current_clinic) {
     try {
       SessionFactory sessionFactory = getSessionFactory();
       session = sessionFactory.openSession();
       session.beginTransaction();
-      Clinic current_clinic = (Clinic) session.get(Clinic.class, clinic_id);
-      current_clinic.setClinicWorkHours(day, workHours);
+//    Clinic current_clinic = (Clinic) session.get(Clinic.class, clinic_id);
       session.update(current_clinic);
       session.flush();
       session.getTransaction().commit();
-      result = current_clinic;
     } catch (Exception exception) {
-      if (session != null) session.getTransaction().rollback();
-      System.err.println("An error occurred, changes have been rolled back.");
-      exception.printStackTrace();
+        if (session != null)
+          session.getTransaction().rollback();
+        System.err.println("An error occurred, changes have been rolled back.");
+        exception.printStackTrace();
     } finally {
-      if (session != null) session.close();
+        if (session != null)
+          session.close();
     }
-    return result;
   }
 }

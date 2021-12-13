@@ -1,4 +1,4 @@
-package il.ac.haifa.client_server.entities.src.main.java.il.cshaifa.OCSFHmo.entities;
+package il.cshaifa.OCSFHmo.entities;
 
 import javax.persistence.*;
 
@@ -8,7 +8,6 @@ public class AppointmentType {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
-
   private String name;
 
   public AppointmentType(String name) {

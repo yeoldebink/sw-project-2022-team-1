@@ -2,7 +2,7 @@
 // "Object Oriented Software Engineering" and is issued under the open-source
 // license found at www.lloseng.com
 
-package il.ac.haifa.client_server.server.src.main.java.il.cshaifa.OCSFHmo.server.ocsf;
+package server.src.main.java.il.cshaifa.OCSFHmo.server.ocsf;
 
 /**
  * The <code> ObservableOriginatorServer </code> is a subclass of <code> ObservableServer </code>

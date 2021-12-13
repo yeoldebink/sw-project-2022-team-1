@@ -1,8 +1,7 @@
-package il.ac.haifa.client_server.client.src.main.java.il.cshaifa.OCSFHmo.client;
-
-import il.ac.haifa.client_server.entities.src.main.java.il.cshaifa.OCSFHmo.entities.ClinicFunctionalities;
-import il.ac.haifa.client_server.client.src.main.java.il.cshaifa.OCSFHmo.client.ocsf.AbstractClient;
-import il.ac.haifa.client_server.entities.src.main.java.il.cshaifa.OCSFHmo.entities.ServerFunctionalities;
+package il.cshaifa.OCSFHmo.client;
+import il.cshaifa.OCSFHmo.client.ocsf.AbstractClient;
+import entities.src.main.java.il.cshaifa.OCSFHmo.entities.ClinicFunctionalities;
+import entities.src.main.java.il.cshaifa.OCSFHmo.entities.ServerFunctionalities;
 
 import org.greenrobot.eventbus.EventBus;
 

@@ -1,4 +1,4 @@
-package il.ac.haifa.client_server.entities.src.main.java.il.cshaifa.OCSFHmo.entities;
+package il.cshaifa.OCSFHmo.entities;
 
 import java.io.Serializable;
 import java.time.LocalTime;

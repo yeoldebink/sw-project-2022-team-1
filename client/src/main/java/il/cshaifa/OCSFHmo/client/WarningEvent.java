@@ -1,6 +1,5 @@
-package il.ac.haifa.client_server.client.src.main.java.il.cshaifa.OCSFHmo.client;
-
-import il.ac.haifa.client_server.entities.src.main.java.il.cshaifa.OCSFHmo.entities.ServerFunctionalities;
+package il.cshaifa.OCSFHmo.client;
+import entities.src.main.java.il.cshaifa.OCSFHmo.entities.ServerFunctionalities;
 
 public class WarningEvent {
 
@@ -15,7 +14,7 @@ public class WarningEvent {
   }
 }
 
-// import il.ac.haifa.client_server.entities.src.main.java.il.cshaifa.OCSFHmo.entities.Warning;
+// import entities.src.main.java.il.cshaifa.OCSFHmo.entities.Warning;
 //	private Warning warning;
 //
 //	public Warning getWarning() {

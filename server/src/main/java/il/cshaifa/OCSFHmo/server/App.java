@@ -1,4 +1,4 @@
-package il.ac.haifa.client_server.server.src.main.java.il.cshaifa.OCSFHmo.server;
+package server.src.main.java.il.cshaifa.OCSFHmo.server;
 
 import java.io.IOException;
 
