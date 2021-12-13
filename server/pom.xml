@@ -29,7 +29,6 @@
       <version>${project.version}</version>
     </dependency>
   </dependencies>
-
   <build>
     <plugins>
       <plugin>
@@ -69,11 +68,17 @@
 </project>
 
 
+<<<<<<< Updated upstream
+=======
+
+
+>>>>>>> Stashed changes
   <!--<?xml version="1.0" encoding="UTF-8"?>-->
 <!--<project xmlns="http://maven.apache.org/POM/4.0.0"-->
 <!--  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"-->
 <!--  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">-->
 <!--  <modelVersion>4.0.0</modelVersion>-->
+<<<<<<< Updated upstream
 <!--  <parent>-->
 <!--    <artifactId>SoftwareEngineering2022</artifactId>-->
 <!--    <groupId>HmoSystem</groupId>-->
@@ -82,6 +87,11 @@
 
 <!--  <groupId>il.cshaifa.OCSFHmo</groupId>-->
 <!--  <artifactId>server</artifactId>-->
+=======
+<!--  <artifactId>server</artifactId>-->
+<!--  <groupId>il.cshaifa.OCSFHmo</groupId>-->
+<!--  <version>0.0.1-SNAPSHOT</version>-->
+>>>>>>> Stashed changes
 <!--  <packaging>jar</packaging>-->
 
 <!--  <name>server</name>-->
@@ -94,10 +104,17 @@
 <!--      <version>4.13.1</version>-->
 <!--      <scope>test</scope>-->
 <!--    </dependency>-->
+<<<<<<< Updated upstream
 <!--    <dependency>-->
 <!--      <groupId>il.cshaifa.OCSFHmo</groupId>-->
 <!--      <artifactId>entities</artifactId>-->
 <!--    </dependency>-->
+=======
+<!--&lt;!&ndash;    <dependency>&ndash;&gt;-->
+<!--&lt;!&ndash;      <groupId>il.cshaifa.OCSFHmo</groupId>&ndash;&gt;-->
+<!--&lt;!&ndash;      <artifactId>entities</artifactId>&ndash;&gt;-->
+<!--&lt;!&ndash;    </dependency>&ndash;&gt;-->
+>>>>>>> Stashed changes
 <!--  </dependencies>-->
 
 <!--  <build>-->
@@ -112,6 +129,7 @@
 <!--      </plugin>-->
 <!--      <plugin>-->
 <!--        <groupId>org.apache.maven.plugins</groupId>-->
+<<<<<<< Updated upstream
 <!--        <artifactId>maven-assembly-plugin</artifactId>-->
 <!--        <version>${maven.assemblyPlugin.version}</version>-->
 <!--        <configuration>-->
@@ -124,6 +142,36 @@
 <!--            </manifest>-->
 <!--          </archive>-->
 <!--        </configuration>-->
+=======
+<!--        <artifactId>maven-shade-plugin</artifactId>-->
+<!--        <version>3.2.3</version>-->
+<!--        <executions>-->
+<!--          <execution>-->
+<!--            <phase>package</phase>-->
+<!--            <goals>-->
+<!--              <goal>shade</goal>-->
+<!--            </goals>-->
+<!--            <configuration>-->
+<!--              <transformers>-->
+<!--                <transformer-->
+<!--                  implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">-->
+<!--                  <mainClass>il.cshaifa.OCSFHmo.server.App</mainClass>-->
+<!--                </transformer>-->
+<!--              </transformers>-->
+<!--            </configuration>-->
+<!--          </execution>-->
+<!--        </executions>-->
+<!--&lt;!&ndash;        <configuration>&ndash;&gt;-->
+<!--&lt;!&ndash;          <descriptorRefs>&ndash;&gt;-->
+<!--&lt;!&ndash;            <descriptorRef>jar-with-dependencies</descriptorRef>&ndash;&gt;-->
+<!--&lt;!&ndash;          </descriptorRefs>&ndash;&gt;-->
+<!--&lt;!&ndash;          <archive>&ndash;&gt;-->
+<!--&lt;!&ndash;            <manifest>&ndash;&gt;-->
+<!--&lt;!&ndash;              <mainClass>il.cshaifa.OCSFHmo.server.App</mainClass>&ndash;&gt;-->
+<!--&lt;!&ndash;            </manifest>&ndash;&gt;-->
+<!--&lt;!&ndash;          </archive>&ndash;&gt;-->
+<!--&lt;!&ndash;        </configuration>&ndash;&gt;-->
+>>>>>>> Stashed changes
 <!--        <executions>-->
 <!--          <execution>-->
 <!--            <id>make-assembly</id>-->
