@@ -3,14 +3,14 @@
 
 name: SW Eng CI
 
+# TODO: Add a job to check that the client and server jars execute
+
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches: [ '**' ]
 
 jobs:
-  formatting:
+  google-java-formatting:
     runs-on: ubuntu-latest
     steps:
       - if: github.event_name != 'pull_request'
@@ -23,10 +23,8 @@ jobs:
         with:
           args: "--replace"
 
-  build:
-
+  maven-build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 17
@@ -36,4 +34,4 @@ jobs:
           distribution: 'adopt'
           cache: maven
       - name: Build with Maven
-        run: mvn clean package
+        run: mvn clean install
