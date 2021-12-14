@@ -5,37 +5,32 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "users")
 public class User {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
-
-  private int username;
+  @Id private final int id;
   private String password;
   private String salt;
   private String firstName;
   private String lastName;
   private String email;
   private String phone;
-  private int role_id;
+  @ManyToOne private Role role_id;
 
   public User(
-      int username,
+      int id,
       String password,
       String firstName,
       String lastName,
       String email,
       String phone,
-      int role_id)
+      Role role_id)
       throws NoSuchAlgorithmException {
-    this.username = username;
+    this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
@@ -47,18 +42,6 @@ public class User {
 
   public int getId() {
     return id;
-  }
-
-  public void setId(int id) {
-    this.id = id;
-  }
-
-  public int getUsername() {
-    return username;
-  }
-
-  public void setUsername(int username) {
-    this.username = username;
   }
 
   public String getPassword() {
@@ -101,11 +84,11 @@ public class User {
     this.phone = phone;
   }
 
-  public int getRole_id() {
+  public Role getRole_id() {
     return role_id;
   }
 
-  public void setRole_id(int role_id) {
+  public void setRole_id(Role role_id) {
     this.role_id = role_id;
   }
 

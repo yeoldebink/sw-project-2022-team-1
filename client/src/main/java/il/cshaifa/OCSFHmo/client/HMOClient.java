@@ -13,7 +13,6 @@ public class HMOClient extends AbstractClient {
     super(host, port);
   }
 
-  /** Ask liran about this */
   @Override
   protected void handleMessageFromServer(Object response) {
     if (response.getClass().equals(ClinicFunctionalities.class)) {

@@ -12,14 +12,10 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
+// TODO : Document sauce for this spaghetti (it's dry spaghetti, but still inedible)
+
 public class ServerFunctionalities implements Serializable {
   private static Session session;
-
-  public enum ClientMessage {
-    GET_CLINIC_LIST,
-    GET_CLINIC,
-    UPDATE_CLINIC_HOURS
-  }
 
   public static SessionFactory getSessionFactory() throws HibernateException {
     Configuration configuration = new Configuration();
@@ -32,8 +28,6 @@ public class ServerFunctionalities implements Serializable {
    * @return a list of all Clinic objects.
    * @throws Exception
    */
-
-  //
   public static Object GetClinicList() {
     ArrayList<Clinic> data = null;
     try {

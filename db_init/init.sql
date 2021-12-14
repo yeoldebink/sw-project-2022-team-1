@@ -37,7 +37,7 @@ create table clinics (
 );
 
 create table patients (
-  user_id int,
+  user_id int primary key,
   home_clinic_id int,
   birthday datetime
 );
@@ -61,6 +61,7 @@ create table appointment_types (
 );
 
 create table clinic_staff (
+  id int primary key auto_increment,
   clinic_id int,
   user_id int
 );

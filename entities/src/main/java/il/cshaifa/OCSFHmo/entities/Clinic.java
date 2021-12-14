@@ -121,31 +121,30 @@ public class Clinic {
     this.sat_hours = sat_hours;
   }
 
-  public void setClinicWorkHours(int day, String workHours) throws NotSupportedException {
+  public void setClinicWorkHours(int day, String workHours) {
     switch (day) {
       case (1):
         setSun_hours(workHours);
-        break;
+        return;
       case (2):
         setMon_hours(workHours);
-        break;
+        return;
       case (3):
         setTue_hours(workHours);
-        break;
+        return;
       case (4):
         setWed_hours(workHours);
-        break;
+        return;
       case (5):
         setThu_hours(workHours);
-        break;
+        return;
       case (6):
         setFri_hours(workHours);
-        break;
+        return;
       case (7):
         setSat_hours(workHours);
-        break;
+        return;
       default:
-        throw new NotSupportedException("Only seven days in a week");
     }
   }
 }

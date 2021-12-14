@@ -9,12 +9,6 @@ public class ClinicFunctionalities implements Serializable {
   private final int day;
   private final String openingHours;
 
-  public enum FuncList {
-    GET_CLINICS_LIST,
-    GET_CLINIC,
-    UPDATE_CLINIC_HOURS
-  }
-
   public ClinicFunctionalities(int functionality, int clinic_id, int day, String openingHours) {
     this.functionality = functionality;
     this.clinic_id = clinic_id;

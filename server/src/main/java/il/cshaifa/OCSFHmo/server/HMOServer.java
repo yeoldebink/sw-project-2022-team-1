@@ -28,12 +28,6 @@ public class HMOServer extends AbstractServer {
     }
   }
 
-  //	@Override
-  //	protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
-  //		System.out.println("Received Message: " + msg.toString());
-  //		sendToAllClients(msg);
-  //	}
-
   @Override
   protected synchronized void clientDisconnected(ConnectionToClient client) {
     // TODO Auto-generated method stub

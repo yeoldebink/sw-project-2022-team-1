@@ -6,6 +6,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+// TODO: Composite primary key?
+
 @Entity
 @Table(name = "clinic_staff")
 public class ClinicStaff {
