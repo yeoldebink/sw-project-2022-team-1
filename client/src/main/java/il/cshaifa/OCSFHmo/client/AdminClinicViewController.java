@@ -1,4 +1,4 @@
-package il.ac.haifa.hmo_system;
+package il.cshaifa.OCSFHmo.client;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

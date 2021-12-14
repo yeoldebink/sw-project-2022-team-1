@@ -2,6 +2,7 @@ package il.cshaifa.OCSFHmo.entities;
 import il.cshaifa.OCSFHmo.entities.Clinic;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Comparator;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -34,13 +35,7 @@ public class ServerFunctionalities implements Serializable {
    * @throws Exception
    */
 
-  public CriteriaQuery<Clinic> GetClinicListQ(){
-    CriteriaBuilder builder = session.getCriteriaBuilder();
-    CriteriaQuery<Clinic> query = builder.createQuery(Clinic.class);
-    query.from(Clinic.class);
 
-    return query;
-  }
   //
   public static Object GetClinicList() {
     ArrayList<Clinic> data = null;
@@ -48,10 +43,10 @@ public class ServerFunctionalities implements Serializable {
       SessionFactory sessionFactory = getSessionFactory();
       session = sessionFactory.openSession();
       session.beginTransaction();
-//      CriteriaBuilder builder = session.getCriteriaBuilder();
-//      CriteriaQuery<Clinic> query = builder.createQuery(Clinic.class);
-//      query.from(Clinic.class);
-      data = session.createQuery(GetClinicListQ()).getResultList();
+      CriteriaBuilder builder = session.getCriteriaBuilder();
+      CriteriaQuery<Clinic> query = builder.createQuery(Clinic.class);
+      query.from(Clinic.class);
+      data = (ArrayList<Clinic>) session.createQuery(query).getResultList();
       session.flush();
       session.getTransaction().commit();
       data.sort(Comparator.comparing(Clinic::getName));

@@ -1,4 +1,4 @@
-package il.ac.haifa.client_server.client.src.main.java.il.cshaifa.OCSFHmo.client;
+package il.cshaifa.OCSFHmo.client;
 
 public class Main {
 

@@ -96,7 +96,6 @@
 <!--  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"-->
 <!--  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">-->
 <!--  <modelVersion>4.0.0</modelVersion>-->
-<<<<<<< Updated upstream
 <!--  <parent>-->
 <!--    <artifactId>OCSFHmo</artifactId>-->
 <!--    <groupId>il.cshaifa</groupId>-->
@@ -104,11 +103,9 @@
 <!--  </parent>-->
 <!--  <groupId>il.cshaifa.OCSFHmo</groupId>-->
 <!--  <artifactId>client</artifactId>-->
-=======
 <!--  <artifactId>client</artifactId>-->
 <!--  <groupId>il.cshaifa.OCSFHmo</groupId>-->
 <!--  <version>0.0.1-SNAPSHOT</version>-->
->>>>>>> Stashed changes
 <!--  <dependencies>-->
 <!--    <dependency>-->
 <!--      <groupId>org.openjfx</groupId>-->
@@ -148,17 +145,14 @@
 <!--      <artifactId>eventbus</artifactId>-->
 <!--      <version>3.2.0</version>-->
 <!--    </dependency>-->
-<<<<<<< Updated upstream
 <!--    <dependency>-->
 <!--      <groupId>il.cshaifa.OCSFHmo</groupId>-->
 <!--      <artifactId>entities</artifactId>-->
 <!--    </dependency>-->
-=======
 <!--&lt;!&ndash;    <dependency>&ndash;&gt;-->
 <!--&lt;!&ndash;      <groupId>${groupId}</groupId>&ndash;&gt;-->
 <!--&lt;!&ndash;      <artifactId>entities</artifactId>&ndash;&gt;-->
 <!--&lt;!&ndash;    </dependency>&ndash;&gt;-->
->>>>>>> Stashed changes
 <!--  </dependencies>-->
 <!--  <build>-->
 <!--    <plugins>-->

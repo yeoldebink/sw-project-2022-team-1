@@ -1,11 +1,11 @@
-package server.src.main.java.il.cshaifa.OCSFHmo.server;
+package il.cshaifa.OCSFHmo.server;
 
-import il.ac.haifa.client_server.server.src.main.java.il.cshaifa.OCSFHmo.server.ocsf.AbstractServer;
-import il.ac.haifa.client_server.server.src.main.java.il.cshaifa.OCSFHmo.server.ocsf.ConnectionToClient;
+import il.cshaifa.OCSFHmo.entities.Warning;
+import il.cshaifa.OCSFHmo.server.ocsf.AbstractServer;
+import il.cshaifa.OCSFHmo.server.ocsf.ConnectionToClient;
 
 import java.io.IOException;
 
-import il.ac.haifa.client_server.entities.src.main.java.il.cshaifa.OCSFHmo.entities.Warning;
 import java.util.Objects;
 
 public class HMOServer extends AbstractServer {
@@ -54,8 +54,8 @@ public class HMOServer extends AbstractServer {
     if (args.length != 1) {
       System.out.println("Required argument: <port>");
     } else {
-      il.ac.haifa.client_server.server.src.main.java.il.cshaifa.OCSFHmo.server.HMOServer server =
-          new il.ac.haifa.client_server.server.src.main.java.il.cshaifa.OCSFHmo.server.HMOServer(
+      HMOServer server =
+          new HMOServer(
               Integer.parseInt(args[0]));
       server.listen();
     }

@@ -95,22 +95,15 @@
 </project>
 
 
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
   <!--<?xml version="1.0" encoding="UTF-8"?>-->
 <!--<project xmlns="http://maven.apache.org/POM/4.0.0"-->
 <!--  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"-->
 <!--  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">-->
 <!--  <modelVersion>4.0.0</modelVersion>-->
-<<<<<<< Updated upstream
 <!--  <groupId>il.cshaifasweng</groupId>-->
 <!--  <artifactId>OCSFMediatorExample</artifactId>-->
-=======
 <!--  <groupId>il.cshaifa</groupId>-->
 <!--  <artifactId>OCSFHmo</artifactId>-->
->>>>>>> Stashed changes
 <!--  <version>0.0.1-SNAPSHOT</version>-->
 <!--  <packaging>pom</packaging>-->
 <!--  <modules>-->
@@ -128,15 +121,12 @@
 <!--  <dependencyManagement>-->
 <!--    <dependencies>-->
 <!--      <dependency>-->
-<<<<<<< Updated upstream
 <!--        <groupId>il.cshaifasweng.OCSFMediatorExample</groupId>-->
 <!--        <artifactId>entities</artifactId>-->
 <!--        <version>${project.version}</version>-->
-=======
 <!--        <groupId>il.cshaifa.OCSFHmo</groupId>-->
 <!--        <artifactId>entities</artifactId>-->
 <!--        <version>0.0.1-SNAPSHOT</version>-->
->>>>>>> Stashed changes
 <!--      </dependency>-->
 <!--    </dependencies>-->
 <!--  </dependencyManagement>-->
@@ -156,11 +146,8 @@
 <!--        </plugin>-->
 <!--        <plugin>-->
 <!--          <artifactId>maven-compiler-plugin</artifactId>-->
-<<<<<<< Updated upstream
 <!--          <version>3.8.0</version>-->
-=======
 <!--          <version>7</version>-->
->>>>>>> Stashed changes
 <!--        </plugin>-->
 <!--        <plugin>-->
 <!--          <artifactId>maven-surefire-plugin</artifactId>-->

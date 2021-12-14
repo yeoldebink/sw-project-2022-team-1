@@ -2,7 +2,7 @@
 // "Object Oriented Software Engineering" and is issued under the open-source
 // license found at www.lloseng.com
 
-package il.ac.haifa.client_server.client.src.main.java.il.cshaifa.OCSFHmo.client.ocsf;
+package il.cshaifa.OCSFHmo.client.ocsf;
 
 import java.util.*;
 import java.io.*;

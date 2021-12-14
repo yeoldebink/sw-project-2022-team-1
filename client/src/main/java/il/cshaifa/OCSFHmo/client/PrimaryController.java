@@ -2,8 +2,6 @@ package il.cshaifa.OCSFHmo.client;
 
 import java.awt.event.ActionEvent;
 import java.io.IOException;
-
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
 public class PrimaryController {

@@ -1,8 +1,8 @@
 package il.cshaifa.OCSFHmo.client;
 import il.cshaifa.OCSFHmo.client.ocsf.AbstractClient;
-import entities.src.main.java.il.cshaifa.OCSFHmo.entities.ClinicFunctionalities;
-import entities.src.main.java.il.cshaifa.OCSFHmo.entities.ServerFunctionalities;
 
+import il.cshaifa.OCSFHmo.entities.ClinicFunctionalities;
+import il.cshaifa.OCSFHmo.entities.ServerFunctionalities;
 import org.greenrobot.eventbus.EventBus;
 
 public class HMOClient extends AbstractClient {

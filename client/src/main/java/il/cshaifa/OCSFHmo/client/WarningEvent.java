@@ -1,5 +1,5 @@
 package il.cshaifa.OCSFHmo.client;
-import entities.src.main.java.il.cshaifa.OCSFHmo.entities.ServerFunctionalities;
+import il.cshaifa.OCSFHmo.entities.ServerFunctionalities;
 
 public class WarningEvent {
 
