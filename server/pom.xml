@@ -41,7 +41,7 @@
         <artifactId>exec-maven-plugin</artifactId>
         <version>1.6.0</version>
         <configuration>
-          <mainClass>il.cshaifasweng.OCSFMediatorExample.server.App</mainClass>
+          <mainClass>il.cshaifa.hmo_system.server.App</mainClass>
         </configuration>
       </plugin>
       <plugin>
@@ -54,7 +54,7 @@
           </descriptorRefs>
           <archive>
             <manifest>
-              <mainClass>il.cshaifasweng.OCSFMediatorExample.server.App</mainClass>
+              <mainClass>il.cshaifa.hmo_system.server.App</mainClass>
             </manifest>
           </archive>
         </configuration>
