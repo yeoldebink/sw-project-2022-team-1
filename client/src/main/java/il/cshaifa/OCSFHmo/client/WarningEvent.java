@@ -1,14 +1,14 @@
 package il.cshaifa.OCSFHmo.client;
 
+import il.cshaifa.OCSFHmo.entities.Warning;
 public class WarningEvent {
+  private Warning warning;
 
-  private final ServerFunctionalities warning;
-
-  public ServerFunctionalities getWarning() {
+  public Warning getWarning() {
     return warning;
   }
 
-  public WarningEvent(ServerFunctionalities warning) {
+  public WarningEvent(Warning warning) {
     this.warning = warning;
   }
 }

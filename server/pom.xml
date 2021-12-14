@@ -6,7 +6,7 @@
   <parent>
     <artifactId>OCSFMediatorExample</artifactId>
     <groupId>il.cshaifasweng</groupId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>prototype</version>
   </parent>
 
   <groupId>il.cshaifasweng.OCSFMediatorExample</groupId>
@@ -29,7 +29,7 @@
       <version>5.4.23.Final</version>
     </dependency>
     <dependency>
-      <groupId>${groupId}</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>entities</artifactId>
     </dependency>
   </dependencies>

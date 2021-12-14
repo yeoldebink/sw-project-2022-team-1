@@ -1,4 +1,4 @@
-package il.ac.haifa.client_server.server.src.test.java.il.cshaifa.server;
+package il.cshaifa.server;
 
 import static org.junit.Assert.assertTrue;
 

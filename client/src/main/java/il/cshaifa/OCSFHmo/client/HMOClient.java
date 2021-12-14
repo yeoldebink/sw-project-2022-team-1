@@ -1,8 +1,9 @@
 package il.cshaifa.OCSFHmo.client;
 
-import il.cshaifa.OCSFHmo.client.ocsf.AbstractClient;
-import il.cshaifa.OCSFHmo.entities.ClinicFunctionalities;
 import org.greenrobot.eventbus.EventBus;
+
+import il.cshaifa.OCSFHmo.client.ocsf.AbstractClient;
+import il.cshaifa.OCSFHmo.entities.Warning;
 
 public class HMOClient extends AbstractClient {
 
@@ -13,10 +14,11 @@ public class HMOClient extends AbstractClient {
   }
 
   @Override
-  protected void handleMessageFromServer(Object response) {
-    if (response.getClass().equals(ClinicFunctionalities.class)) {
-      EventBus.getDefault().post(new WarningEvent((ServerFunctionalities) response));
+  protected void handleMessageFromServer(Object msg) {
+    if (msg.getClass().equals(Warning.class)) {
+      EventBus.getDefault().post(new WarningEvent((Warning) msg));
     }
+
   }
 
   public static HMOClient getClient() {
@@ -25,4 +27,5 @@ public class HMOClient extends AbstractClient {
     }
     return client;
   }
+
 }
