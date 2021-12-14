@@ -5,12 +5,12 @@ name: SW Eng CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ '**' ]
   pull_request:
     branches: [ main ]
 
 jobs:
-  formatting:
+  google-java-formatting:
     runs-on: ubuntu-latest
     steps:
       - if: github.event_name != 'pull_request'
@@ -23,10 +23,8 @@ jobs:
         with:
           args: "--replace"
 
-  build:
-
+  maven-build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 17
