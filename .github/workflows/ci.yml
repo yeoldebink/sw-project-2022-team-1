@@ -8,8 +8,6 @@ name: SW Eng CI
 on:
   push:
     branches: [ '**' ]
-  pull_request:
-    branches: [ main ]
 
 jobs:
   google-java-formatting:
