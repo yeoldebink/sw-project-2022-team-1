@@ -40,7 +40,7 @@ insert into clinics values
 
 delete from clinic_staff;
 
-insert into clinic_staff values
+insert into clinic_staff (clinic_id, user_id) values
   (1, 1618),
   (2, 8793),
   (1, 3141),

@@ -13,22 +13,27 @@ jobs:
   formatting:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - if: github.event_name != 'pull_request'
+        uses: actions/checkout@v2
+      - if: github.event_name == 'pull_request'
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
       - uses: axel-op/googlejavaformat-action@v3
         with:
-          args: "--set-exit-if-changed"
-          
+          args: "--replace"
+
   build:
 
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK 17
-      uses: actions/setup-java@v2
-      with:
-        java-version: '17'
-        distribution: 'adopt'
-        cache: maven
-    - name: Build with Maven
-      run: mvn clean package
+      - uses: actions/checkout@v2
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+          cache: maven
+      - name: Build with Maven
+        run: mvn clean package

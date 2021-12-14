@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>SoftwareEngineering2022</artifactId>
+    <groupId>HmoSystem</groupId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+
+  <groupId>il.cshaifa.OCSFHmo</groupId>
+  <artifactId>server</artifactId>
+  <packaging>jar</packaging>
+
+  <name>server</name>
+  <!-- FIXME change it to the project's website -->
+  <url>http://www.example.com</url>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.13.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>il.cshaifa.OCSFHmo</groupId>
+      <artifactId>entities</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.6.0</version>
+        <configuration>
+          <mainClass>il.cshaifa.OCSFHmo.server.App</mainClass>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>${maven.assemblyPlugin.version}</version>
+        <configuration>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+          <archive>
+            <manifest>
+              <mainClass>il.cshaifa.OCSFHmo.server.App</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+        <executions>
+          <execution>
+            <id>make-assembly</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+
+
+  <!--<?xml version="1.0" encoding="UTF-8"?>-->
+  <!--<project xmlns="http://maven.apache.org/POM/4.0.0"-->
+  <!--  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"-->
+  <!--  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">-->
+  <!--  <modelVersion>4.0.0</modelVersion>-->
+  <!--  <parent>-->
+  <!--    <artifactId>SoftwareEngineering2022</artifactId>-->
+  <!--    <groupId>HmoSystem</groupId>-->
+  <!--    <version>0.0.1-SNAPSHOT</version>-->
+  <!--  </parent>-->
+
+  <!--  <groupId>il.cshaifa.OCSFHmo</groupId>-->
+  <!--  <artifactId>server</artifactId>-->
+  <!--  <artifactId>server</artifactId>-->
+  <!--  <groupId>il.cshaifa.OCSFHmo</groupId>-->
+  <!--  <version>0.0.1-SNAPSHOT</version>-->
+  <!--  <packaging>jar</packaging>-->
+
+  <!--  <name>server</name>-->
+  <!--  &lt;!&ndash; FIXME change it to the project's website &ndash;&gt;-->
+  <!--  <url>http://www.example.com</url>-->
+  <!--  <dependencies>-->
+  <!--    <dependency>-->
+  <!--      <groupId>junit</groupId>-->
+  <!--      <artifactId>junit</artifactId>-->
+  <!--      <version>4.13.1</version>-->
+  <!--      <scope>test</scope>-->
+  <!--    </dependency>-->
+  <!--    <dependency>-->
+  <!--      <groupId>il.cshaifa.OCSFHmo</groupId>-->
+  <!--      <artifactId>entities</artifactId>-->
+  <!--    </dependency>-->
+  <!--&lt;!&ndash;    <dependency>&ndash;&gt;-->
+  <!--&lt;!&ndash;      <groupId>il.cshaifa.OCSFHmo</groupId>&ndash;&gt;-->
+  <!--&lt;!&ndash;      <artifactId>entities</artifactId>&ndash;&gt;-->
+  <!--&lt;!&ndash;    </dependency>&ndash;&gt;-->
+  <!--  </dependencies>-->
+
+  <!--  <build>-->
+  <!--    <plugins>-->
+  <!--      <plugin>-->
+  <!--        <groupId>org.codehaus.mojo</groupId>-->
+  <!--        <artifactId>exec-maven-plugin</artifactId>-->
+  <!--        <version>1.6.0</version>-->
+  <!--        <configuration>-->
+  <!--          <mainClass>il.cshaifa.OCSFHmo.server.App</mainClass>-->
+  <!--        </configuration>-->
+  <!--      </plugin>-->
+  <!--      <plugin>-->
+  <!--        <groupId>org.apache.maven.plugins</groupId>-->
+  <!--        <artifactId>maven-assembly-plugin</artifactId>-->
+  <!--        <version>${maven.assemblyPlugin.version}</version>-->
+  <!--        <configuration>-->
+  <!--          <descriptorRefs>-->
+  <!--            <descriptorRef>jar-with-dependencies</descriptorRef>-->
+  <!--          </descriptorRefs>-->
+  <!--          <archive>-->
+  <!--            <manifest>-->
+  <!--              <mainClass>il.cshaifa.OCSFHmo.server.App</mainClass>-->
+  <!--            </manifest>-->
+  <!--          </archive>-->
+  <!--        </configuration>-->
+  <!--        <artifactId>maven-shade-plugin</artifactId>-->
+  <!--        <version>3.2.3</version>-->
+  <!--        <executions>-->
+  <!--          <execution>-->
+  <!--            <phase>package</phase>-->
+  <!--            <goals>-->
+  <!--              <goal>shade</goal>-->
+  <!--            </goals>-->
+  <!--            <configuration>-->
+  <!--              <transformers>-->
+  <!--                <transformer-->
+  <!--                  implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">-->
+  <!--                  <mainClass>il.cshaifa.OCSFHmo.server.App</mainClass>-->
+  <!--                </transformer>-->
+  <!--              </transformers>-->
+  <!--            </configuration>-->
+  <!--          </execution>-->
+  <!--        </executions>-->
+  <!--&lt;!&ndash;        <configuration>&ndash;&gt;-->
+  <!--&lt;!&ndash;          <descriptorRefs>&ndash;&gt;-->
+  <!--&lt;!&ndash;            <descriptorRef>jar-with-dependencies</descriptorRef>&ndash;&gt;-->
+  <!--&lt;!&ndash;          </descriptorRefs>&ndash;&gt;-->
+  <!--&lt;!&ndash;          <archive>&ndash;&gt;-->
+  <!--&lt;!&ndash;            <manifest>&ndash;&gt;-->
+  <!--&lt;!&ndash;              <mainClass>il.cshaifa.OCSFHmo.server.App</mainClass>&ndash;&gt;-->
+  <!--&lt;!&ndash;            </manifest>&ndash;&gt;-->
+  <!--&lt;!&ndash;          </archive>&ndash;&gt;-->
+  <!--&lt;!&ndash;        </configuration>&ndash;&gt;-->
+  <!--        <executions>-->
+  <!--          <execution>-->
+  <!--            <id>make-assembly</id>-->
+  <!--            <phase>package</phase>-->
+  <!--            <goals>-->
+  <!--              <goal>single</goal>-->
+  <!--            </goals>-->
+  <!--          </execution>-->
+  <!--        </executions>-->
+  <!--      </plugin>-->
+  <!--    </plugins>-->
+  <!--  </build>-->
+  <!--</project>-->
