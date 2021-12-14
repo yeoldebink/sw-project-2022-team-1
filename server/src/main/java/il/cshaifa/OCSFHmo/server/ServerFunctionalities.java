@@ -1,5 +1,6 @@
-package il.cshaifa.OCSFHmo.entities;
+package il.cshaifa.OCSFHmo.server;
 
+import il.cshaifa.OCSFHmo.entities.Clinic;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
