@@ -3,9 +3,7 @@ package il.cshaifa.OCSFHmo.server;
 import il.cshaifa.OCSFHmo.entities.Warning;
 import il.cshaifa.OCSFHmo.server.ocsf.AbstractServer;
 import il.cshaifa.OCSFHmo.server.ocsf.ConnectionToClient;
-
 import java.io.IOException;
-
 import java.util.Objects;
 
 public class HMOServer extends AbstractServer {
@@ -54,9 +52,7 @@ public class HMOServer extends AbstractServer {
     if (args.length != 1) {
       System.out.println("Required argument: <port>");
     } else {
-      HMOServer server =
-          new HMOServer(
-              Integer.parseInt(args[0]));
+      HMOServer server = new HMOServer(Integer.parseInt(args[0]));
       server.listen();
     }
   }

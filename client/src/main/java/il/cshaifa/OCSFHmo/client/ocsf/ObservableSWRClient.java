@@ -4,9 +4,9 @@
 
 package il.cshaifa.OCSFHmo.client.ocsf;
 
-import java.util.*;
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class acts as a subclass of <code>AbstractClient</code> and is also an <code>Observable

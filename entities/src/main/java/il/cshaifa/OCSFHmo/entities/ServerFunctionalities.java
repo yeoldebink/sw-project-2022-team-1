@@ -1,9 +1,7 @@
 package il.cshaifa.OCSFHmo.entities;
-import il.cshaifa.OCSFHmo.entities.Clinic;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Comparator;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -34,7 +32,6 @@ public class ServerFunctionalities implements Serializable {
    * @return a list of all Clinic objects.
    * @throws Exception
    */
-
 
   //
   public static Object GetClinicList() {
@@ -84,26 +81,22 @@ public class ServerFunctionalities implements Serializable {
     return null;
   }
 
-  /**
-   * @param current_clinic - updated clinic object
-   */
+  /** @param current_clinic - updated clinic object */
   public void UpdateClinicData(Clinic current_clinic) {
     try {
       SessionFactory sessionFactory = getSessionFactory();
       session = sessionFactory.openSession();
       session.beginTransaction();
-//    Clinic current_clinic = (Clinic) session.get(Clinic.class, clinic_id);
+      //    Clinic current_clinic = (Clinic) session.get(Clinic.class, clinic_id);
       session.update(current_clinic);
       session.flush();
       session.getTransaction().commit();
     } catch (Exception exception) {
-        if (session != null)
-          session.getTransaction().rollback();
-        System.err.println("An error occurred, changes have been rolled back.");
-        exception.printStackTrace();
+      if (session != null) session.getTransaction().rollback();
+      System.err.println("An error occurred, changes have been rolled back.");
+      exception.printStackTrace();
     } finally {
-        if (session != null)
-          session.close();
+      if (session != null) session.close();
     }
   }
 }
