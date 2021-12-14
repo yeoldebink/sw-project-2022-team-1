@@ -1,9 +1,8 @@
 package il.cshaifa.hmo_system.client;
 
-import org.greenrobot.eventbus.EventBus;
-
 import il.cshaifa.hmo_system.client.ocsf.AbstractClient;
 import il.cshaifa.hmo_system.entities.Warning;
+import org.greenrobot.eventbus.EventBus;
 
 public class HMOClient extends AbstractClient {
 
@@ -18,7 +17,6 @@ public class HMOClient extends AbstractClient {
     if (msg.getClass().equals(Warning.class)) {
       EventBus.getDefault().post(new WarningEvent((Warning) msg));
     }
-
   }
 
   public static HMOClient getClient() {
@@ -27,5 +25,4 @@ public class HMOClient extends AbstractClient {
     }
     return client;
   }
-
 }
