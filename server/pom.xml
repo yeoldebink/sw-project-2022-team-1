@@ -4,12 +4,12 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <artifactId>OCSFMediatorExample</artifactId>
-    <groupId>il.cshaifasweng</groupId>
+    <groupId>il.cshaifa</groupId>
+    <artifactId>hmo_system</artifactId>
     <version>prototype</version>
   </parent>
 
-  <groupId>il.cshaifasweng.OCSFMediatorExample</groupId>
+  <groupId>il.cshaifa.hmo_system</groupId>
   <artifactId>server</artifactId>
   <packaging>jar</packaging>
 

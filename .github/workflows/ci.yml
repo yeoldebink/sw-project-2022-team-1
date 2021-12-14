@@ -3,6 +3,8 @@
 
 name: SW Eng CI
 
+# TODO: Add a job to check that the client and server jars execute
+
 on:
   push:
     branches: [ '**' ]
