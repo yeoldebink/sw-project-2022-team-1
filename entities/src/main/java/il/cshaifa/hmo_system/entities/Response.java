@@ -8,6 +8,7 @@ public class Response implements Serializable {
   public ResponseType response_type;
   public boolean confirmed;
   public List<?> results;
+
   public Response(ResponseType response_type, boolean confirmed, List<?> results) {
     this.response_type = response_type;
     this.confirmed = confirmed;

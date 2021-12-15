@@ -11,9 +11,11 @@ import javax.persistence.Table;
 @Table(name = "clinics")
 public class Clinic implements Serializable {
   public static final long serialVersionUID = 3L;
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
+
   private String name;
   private String address;
   private String sun_hours;
