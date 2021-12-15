@@ -92,7 +92,7 @@
         </Label>
         <VBox/>
         <VBox alignment="BASELINE_CENTER">
-          <Button onAction="#requestClinicUpate" text="Save Changes">
+          <Button onAction="#requestClinicUpdate" text="Save Changes">
             <VBox.margin>
               <Insets top="15.0"/>
             </VBox.margin>
