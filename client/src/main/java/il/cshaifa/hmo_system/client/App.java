@@ -23,6 +23,7 @@ public class App extends Application {
         new FXMLLoader(
             App.class.getResource("/il/cshaifa/hmo_system/client/AdminClinicListView.fxml"));
 
+    var c = new AdminClinicListController(loader.getController());
     var scene = new Scene(loader.load());
     primaryStage.setScene(scene);
     primaryStage.show();
