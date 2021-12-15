@@ -1,18 +1,20 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>il.cshaifa</groupId>
-    <artifactId>hmo_system</artifactId>
-    <version>prototype</version>
-  </parent>
-  <groupId>il.cshaifa.hmo_system</groupId>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <artifactId>entities</artifactId>
-  <packaging>jar</packaging>
   <dependencies>
     <dependency>
-      <groupId>javax.persistence</groupId>
       <artifactId>persistence-api</artifactId>
+      <groupId>javax.persistence</groupId>
       <version>1.0.2</version>
     </dependency>
   </dependencies>
+  <groupId>il.cshaifa.hmo_system</groupId>
+  <modelVersion>4.0.0</modelVersion>
+  <packaging>jar</packaging>
+  <parent>
+    <artifactId>hmo_system</artifactId>
+    <groupId>il.cshaifa</groupId>
+    <version>prototype</version>
+  </parent>
 </project>

@@ -10,10 +10,9 @@ import java.io.Serializable;
  * <p>This is an interim solution to the OCSF model and will be updated later on.
  */
 public class Request implements Serializable {
+  public static final long serialVersionUID = 114101113L;
   private final boolean is_update;
   private final Object entity;
-
-  public static final long serialVersionUID = 114101113L;
 
   public Request(boolean is_update, Object entity) {
     this.is_update = is_update;

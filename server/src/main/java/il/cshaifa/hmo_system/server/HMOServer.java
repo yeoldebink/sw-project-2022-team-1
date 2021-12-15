@@ -86,6 +86,8 @@ public class HMOServer extends AbstractServer {
                 "IOException while sending update affirmation message to client: " + ioException);
           }
 
+          session.getTransaction().commit();
+
         } catch (HibernateException hibernateException) {
           try {
             client.sendToClient(
@@ -106,14 +108,11 @@ public class HMOServer extends AbstractServer {
         Query<Clinic> query = session.createQuery(cr);
         List<Clinic> results = query.getResultList();
 
-        for (Clinic c : results) {
-          System.out.println(c.getName());
-        }
-
         try {
           client.sendToClient(new Response(ResponseType.QUERY_RESULTS, true, results));
         } catch (IOException ioException) {
-          System.out.println("IOException while sending warning message to client: " + ioException);
+          System.out.println(
+              "IOException while sending response message to client: " + ioException);
         }
       }
       session.close();

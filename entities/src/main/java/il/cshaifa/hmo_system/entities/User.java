@@ -12,7 +12,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "users")
 public class User {
-  @Id private final int id;
+  @Id private int id;
   private String password;
   private String salt;
   private String firstName;
@@ -20,6 +20,8 @@ public class User {
   private String email;
   private String phone;
   @ManyToOne private Role role;
+
+  public User() {}
 
   public User(
       int id,

@@ -1,5 +1,6 @@
 package il.cshaifa.hmo_system.entities;
 
+import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -8,11 +9,11 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "clinics")
-public class Clinic {
+public class Clinic implements Serializable {
+  public static final long serialVersionUID = 3L;
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
-
   private String name;
   private String address;
   private String sun_hours;
@@ -22,6 +23,8 @@ public class Clinic {
   private String thu_hours;
   private String fri_hours;
   private String sat_hours;
+
+  public Clinic() {}
 
   public Clinic(
       String name,

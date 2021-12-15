@@ -1,78 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>il.cshaifa</groupId>
-    <artifactId>hmo_system</artifactId>
-    <version>prototype</version>
-  </parent>
-
-  <groupId>il.cshaifa.hmo_system</groupId>
   <artifactId>server</artifactId>
-  <packaging>jar</packaging>
-
-  <name>server</name>
-  <!-- FIXME change it to the project's website -->
-  <url>http://www.example.com</url>
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.13.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-      <version>8.0.19</version>
-    </dependency>
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-core</artifactId>
-      <version>5.4.23.Final</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>entities</artifactId>
-    </dependency>
-  </dependencies>
-
   <build>
     <plugins>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
-        <version>1.6.0</version>
         <configuration>
           <mainClass>il.cshaifa.hmo_system.server.App</mainClass>
         </configuration>
+        <groupId>org.codehaus.mojo</groupId>
+        <version>1.6.0</version>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>${maven.assemblyPlugin.version}</version>
         <configuration>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
           <archive>
             <manifest>
               <mainClass>il.cshaifa.hmo_system.server.App</mainClass>
             </manifest>
           </archive>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
         </configuration>
         <executions>
           <execution>
-            <id>make-assembly</id>
-            <phase>package</phase>
             <goals>
               <goal>single</goal>
             </goals>
+            <id>make-assembly</id>
+            <phase>package</phase>
           </execution>
         </executions>
+        <groupId>org.apache.maven.plugins</groupId>
+        <version>${maven.assemblyPlugin.version}</version>
       </plugin>
     </plugins>
   </build>
+
+  <dependencies>
+    <dependency>
+      <artifactId>junit</artifactId>
+      <groupId>junit</groupId>
+      <scope>test</scope>
+      <version>4.13.1</version>
+    </dependency>
+    <dependency>
+      <artifactId>mysql-connector-java</artifactId>
+      <groupId>mysql</groupId>
+      <version>8.0.19</version>
+    </dependency>
+    <dependency>
+      <artifactId>hibernate-core</artifactId>
+      <groupId>org.hibernate</groupId>
+      <version>5.4.23.Final</version>
+    </dependency>
+    <dependency>
+      <artifactId>entities</artifactId>
+      <groupId>${project.groupId}</groupId>
+    </dependency>
+  </dependencies>
+  <groupId>il.cshaifa.hmo_system</groupId>
+  <modelVersion>4.0.0</modelVersion>
+
+  <name>server</name>
+  <!-- FIXME change it to the project's website -->
+  <packaging>jar</packaging>
+  <parent>
+    <artifactId>hmo_system</artifactId>
+    <groupId>il.cshaifa</groupId>
+    <version>prototype</version>
+  </parent>
+
+  <url>http://www.example.com</url>
 </project>

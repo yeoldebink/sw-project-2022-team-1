@@ -14,13 +14,15 @@ import javax.persistence.Table;
 public class Patient {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private final int id;
+  private int id;
 
   @OneToOne private User user;
 
   @ManyToOne private Clinic home_clinic;
 
   private LocalDateTime birthday;
+
+  public Patient() {}
 
   public Patient(int id, User user_id, Clinic home_clinic_id, LocalDateTime birthday) {
     this.id = id;

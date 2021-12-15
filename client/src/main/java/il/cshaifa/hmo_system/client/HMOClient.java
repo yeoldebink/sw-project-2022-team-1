@@ -1,5 +1,7 @@
 package il.cshaifa.hmo_system.client;
 
+import il.cshaifa.hmo_system.client.events.ResponseEvent;
+import il.cshaifa.hmo_system.client.events.WarningEvent;
 import il.cshaifa.hmo_system.client.ocsf.AbstractClient;
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.Request;
@@ -26,6 +28,10 @@ public class HMOClient extends AbstractClient {
 
   public void getClinics() throws IOException {
     client.sendToServer(new Request(false, Clinic.class));
+  }
+
+  public void updateClinic(Clinic clinic) throws IOException {
+    client.sendToServer(new Request(true, clinic));
   }
 
   @Override

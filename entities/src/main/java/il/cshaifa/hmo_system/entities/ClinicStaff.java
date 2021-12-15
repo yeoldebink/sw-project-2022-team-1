@@ -14,10 +14,12 @@ import javax.persistence.Table;
 public class ClinicStaff {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private final int id;
+  private int id;
 
   @ManyToOne private Clinic clinic;
   @ManyToOne private User user;
+
+  public ClinicStaff() {}
 
   public ClinicStaff(int id, Clinic clinic_id, User user_id) {
     this.id = id;

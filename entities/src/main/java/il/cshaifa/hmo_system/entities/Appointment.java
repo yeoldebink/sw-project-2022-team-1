@@ -13,7 +13,7 @@ import javax.persistence.Table;
 public class Appointment {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private final int id;
+  private int id;
 
   @ManyToOne private Patient patient;
 
@@ -29,6 +29,8 @@ public class Appointment {
   private boolean taken;
   private String comments;
   private LocalDateTime lock_time;
+
+  public Appointment() {}
 
   public Appointment(
       int id,
