@@ -17,10 +17,10 @@ public class AdminClinicListController extends Controller {
   }
 
   @Subscribe
-  private void editClinicRequestReceived(EditClinicEvent event) {}
+  public void editClinicRequestReceived(EditClinicEvent event) {}
 
   @Subscribe
-  private void clinicsReceived(ResponseEvent event) {
+  public void clinicsReceived(ResponseEvent event) {
     ((AdminClinicListViewController) this.view_controller)
         .populateClinicTable((ArrayList<Clinic>) event.response.results);
   }
