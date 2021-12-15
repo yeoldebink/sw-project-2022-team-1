@@ -32,6 +32,7 @@ public class HMOClient extends AbstractClient {
 
   public void updateClinic(Clinic clinic) throws IOException {
     client.sendToServer(new Request(true, clinic));
+    getClinics();
   }
 
   @Override

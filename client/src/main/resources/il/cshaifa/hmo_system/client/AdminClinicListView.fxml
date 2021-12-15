@@ -26,15 +26,16 @@
         </Label>
         <TableView prefHeight="437.0" prefWidth="1003.0" fx:id="clinicTable">
           <columns>
-            <TableColumn prefWidth="75.0" text="ID"/>
-            <TableColumn prefWidth="130.0" text="Clinic Name"/>
-            <TableColumn prefWidth="91.0" text="Address"/>
-            <TableColumn minWidth="4.0" prefWidth="114.0" text="Monday Hours"/>
-            <TableColumn prefWidth="132.0" text="Tuesday Hours"/>
-            <TableColumn minWidth="0.0" prefWidth="159.0" text="Wednesday Hours"/>
-            <TableColumn minWidth="0.0" prefWidth="134.0" text="Thursday Hours"/>
-            <TableColumn minWidth="0.0" prefWidth="113.0" text="Friday Hours"/>
-            <TableColumn minWidth="0.0" prefWidth="140.0" text="Saturday Hours"/>
+            <TableColumn prefWidth="160.0" text="ID" fx:id="id"/>
+            <TableColumn prefWidth="160.0" text="Clinic Name" fx:id="name"/>
+            <TableColumn prefWidth="160.0" text="Address" fx:id="address"/>
+            <TableColumn prefWidth="160.0" text="Sunday Hours" fx:id="sun_hours"/>
+            <TableColumn prefWidth="160.0" text="Monday Hours" fx:id="mon_hours"/>
+            <TableColumn prefWidth="160.0" text="Tuesday Hours" fx:id="tue_hours"/>
+            <TableColumn prefWidth="160.0" text="Wednesday Hours" fx:id="wed_hours"/>
+            <TableColumn prefWidth="160.0" text="Thursday Hours" fx:id="thu_hours"/>
+            <TableColumn prefWidth="160.0" text="Friday Hours" fx:id="fri_hours"/>
+            <TableColumn prefWidth="160.0" text="Saturday Hours" fx:id="sat_hours"/>
           </columns>
           <contextMenu>
             <ContextMenu>
