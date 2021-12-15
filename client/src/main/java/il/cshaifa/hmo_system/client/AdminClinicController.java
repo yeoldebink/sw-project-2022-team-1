@@ -8,8 +8,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 public class AdminClinicController extends Controller {
 
-  public AdminClinicController(
-      ViewController view_controller) {
+  public AdminClinicController(ViewController view_controller) {
     super(view_controller);
     EventBus.getDefault().register(this);
   }
