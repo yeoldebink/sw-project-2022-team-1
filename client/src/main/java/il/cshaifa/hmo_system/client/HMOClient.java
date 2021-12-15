@@ -6,7 +6,6 @@ import il.cshaifa.hmo_system.entities.Request;
 import il.cshaifa.hmo_system.entities.Response;
 import il.cshaifa.hmo_system.entities.Warning;
 import java.io.IOException;
-import java.util.ArrayList;
 import org.greenrobot.eventbus.EventBus;
 
 public class HMOClient extends AbstractClient {

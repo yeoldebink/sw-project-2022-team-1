@@ -1,7 +1,5 @@
 package il.cshaifa.hmo_system.client;
 
-import il.cshaifa.hmo_system.entities.Clinic;
-import il.cshaifa.hmo_system.entities.Request;
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

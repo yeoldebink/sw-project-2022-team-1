@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.util.List;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import javax.sound.midi.SysexMessage;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -83,14 +82,17 @@ public class HMOServer extends AbstractServer {
           try {
             client.sendToClient(new Response(ResponseType.CONFIRM_UPDATE, true, null));
           } catch (IOException ioException) {
-            System.out.println("IOException while sending update affirmation message to client: " + ioException);
+            System.out.println(
+                "IOException while sending update affirmation message to client: " + ioException);
           }
 
         } catch (HibernateException hibernateException) {
           try {
-            client.sendToClient(new Warning("HibernateException encountered during update: " + hibernateException));
+            client.sendToClient(
+                new Warning("HibernateException encountered during update: " + hibernateException));
           } catch (IOException ioException) {
-            System.out.println("IOException while sending warning message to client: " + ioException);
+            System.out.println(
+                "IOException while sending warning message to client: " + ioException);
           }
         }
 
