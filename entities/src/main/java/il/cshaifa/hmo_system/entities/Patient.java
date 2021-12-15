@@ -2,6 +2,8 @@ package il.cshaifa.hmo_system.entities;
 
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -10,32 +12,41 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "patients")
 public class Patient {
-  @Id @OneToOne private User user_id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private final int id;
 
-  @ManyToOne private Clinic home_clinic_id;
+  @OneToOne private User user;
+
+  @ManyToOne private Clinic home_clinic;
 
   private LocalDateTime birthday;
 
-  public Patient(User user_id, Clinic home_clinic_id, LocalDateTime birthday) {
-    this.user_id = user_id;
-    this.home_clinic_id = home_clinic_id;
+  public Patient(int id, User user_id, Clinic home_clinic_id, LocalDateTime birthday) {
+    this.id = id;
+    this.user = user_id;
+    this.home_clinic = home_clinic_id;
     this.birthday = birthday;
   }
 
-  public User getUser_id() {
-    return user_id;
+  public int getId() {
+    return id;
   }
 
-  public void setUser_id(User user_id) {
-    this.user_id = user_id;
+  public User getUser() {
+    return user;
   }
 
-  public Clinic getHome_clinic_id() {
-    return home_clinic_id;
+  public void setUser(User user) {
+    this.user = user;
   }
 
-  public void setHome_clinic_id(Clinic home_clinic_id) {
-    this.home_clinic_id = home_clinic_id;
+  public Clinic getHome_clinic() {
+    return home_clinic;
+  }
+
+  public void setHome_clinic(Clinic home_clinic) {
+    this.home_clinic = home_clinic;
   }
 
   public LocalDateTime getBirthday() {

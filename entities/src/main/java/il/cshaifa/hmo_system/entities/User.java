@@ -19,7 +19,7 @@ public class User {
   private String lastName;
   private String email;
   private String phone;
-  @ManyToOne private Role role_id;
+  @ManyToOne private Role role;
 
   public User(
       int id,
@@ -35,7 +35,7 @@ public class User {
     this.lastName = lastName;
     this.email = email;
     this.phone = phone;
-    this.role_id = role_id;
+    this.role = role_id;
 
     this.password = encodePassword(password);
   }
@@ -84,12 +84,12 @@ public class User {
     this.phone = phone;
   }
 
-  public Role getRole_id() {
-    return role_id;
+  public Role getRole() {
+    return role;
   }
 
-  public void setRole_id(Role role_id) {
-    this.role_id = role_id;
+  public void setRole(Role role) {
+    this.role = role;
   }
 
   public String getSalt() {

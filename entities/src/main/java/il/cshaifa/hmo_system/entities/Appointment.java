@@ -13,17 +13,17 @@ import javax.persistence.Table;
 public class Appointment {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
+  private final int id;
 
-  @ManyToOne private Patient patient_id;
+  @ManyToOne private Patient patient;
 
-  @ManyToOne private AppointmentType type_id;
+  @ManyToOne private AppointmentType type;
 
-  @ManyToOne private Role specialist_role_id;
+  @ManyToOne private Role specialist_role;
 
-  @ManyToOne private User staff_member_id;
+  @ManyToOne private User staff_member;
 
-  @ManyToOne private Clinic clinic_id;
+  @ManyToOne private Clinic clinic;
 
   private LocalDateTime appt_date;
   private boolean taken;
@@ -31,17 +31,19 @@ public class Appointment {
   private LocalDateTime lock_time;
 
   public Appointment(
+      int id,
       Patient patient_id,
       AppointmentType type_id,
       Role specialist_role_id,
       User staff_member_id,
       Clinic clinic_id,
       LocalDateTime appt_date) {
-    this.patient_id = patient_id;
-    this.type_id = type_id;
-    this.specialist_role_id = specialist_role_id;
-    this.staff_member_id = staff_member_id;
-    this.clinic_id = clinic_id;
+    this.id = id;
+    this.patient = patient_id;
+    this.type = type_id;
+    this.specialist_role = specialist_role_id;
+    this.staff_member = staff_member_id;
+    this.clinic = clinic_id;
     this.appt_date = appt_date;
     this.taken = false;
     this.comments = null;
@@ -52,44 +54,44 @@ public class Appointment {
     return id;
   }
 
-  public Patient getPatient_id() {
-    return patient_id;
+  public Patient getPatient() {
+    return patient;
   }
 
-  public void setPatient_id(Patient patient_id) {
-    this.patient_id = patient_id;
+  public void setPatient(Patient patient) {
+    this.patient = patient;
   }
 
-  public AppointmentType getType_id() {
-    return type_id;
+  public AppointmentType getType() {
+    return type;
   }
 
-  public void setType_id(AppointmentType type_id) {
-    this.type_id = type_id;
+  public void setType(AppointmentType type) {
+    this.type = type;
   }
 
-  public Role getSpecialist_role_id() {
-    return specialist_role_id;
+  public Role getSpecialist_role() {
+    return specialist_role;
   }
 
-  public void setSpecialist_role_id(Role specialist_role_id) {
-    this.specialist_role_id = specialist_role_id;
+  public void setSpecialist_role(Role specialist_role) {
+    this.specialist_role = specialist_role;
   }
 
-  public User getStaff_member_id() {
-    return staff_member_id;
+  public User getStaff_member() {
+    return staff_member;
   }
 
-  public void setStaff_member_id(User staff_member_id) {
-    this.staff_member_id = staff_member_id;
+  public void setStaff_member(User staff_member) {
+    this.staff_member = staff_member;
   }
 
-  public Clinic getClinic_id() {
-    return clinic_id;
+  public Clinic getClinic() {
+    return clinic;
   }
 
-  public void setClinic_id(Clinic clinic_id) {
-    this.clinic_id = clinic_id;
+  public void setClinic(Clinic clinic) {
+    this.clinic = clinic;
   }
 
   public LocalDateTime getDate() {

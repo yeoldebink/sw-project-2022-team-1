@@ -4,11 +4,11 @@ delete from roles where is_specialist = true;
 
 -- specialist roles may change, so we'll leave them outside the init
 insert into roles values
-  (null, "Cardiologist", true),
-  (null, "Endocrinologist", true),
-  (null, "Neurologist", true),
-  (null, "Orthopedist", true),
-  (null, "Dermatologist", true)
+  (null, true, "Cardiologist"),
+  (null, true, "Endocrinologist"),
+  (null, true, "Neurologist"),
+  (null, true, "Orthopedist"),
+  (null, true, "Dermatologist")
 ;
 
 delete from users;

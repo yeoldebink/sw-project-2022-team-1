@@ -5,8 +5,15 @@ import java.time.LocalTime;
 
 public class Warning implements Serializable {
 
-  private String message;
+  public static final long serialVersionUID = 11997114110L;
+
   private final LocalTime time;
+  private String message;
+
+  public Warning(String message) {
+    this.message = message;
+    this.time = LocalTime.now();
+  }
 
   public String getMessage() {
     return message;
@@ -14,11 +21,6 @@ public class Warning implements Serializable {
 
   public void setMessage(String message) {
     this.message = message;
-  }
-
-  public Warning(String message) {
-    this.message = message;
-    this.time = LocalTime.now();
   }
 
   public LocalTime getTime() {
