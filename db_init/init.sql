@@ -37,7 +37,8 @@ create table clinics (
 );
 
 create table patients (
-  user_id int primary key,
+  id int primary key auto_increment,
+  user_id int,
   home_clinic_id int,
   birthday datetime
 );

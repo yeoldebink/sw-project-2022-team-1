@@ -3,12 +3,12 @@ use hmo_system;
 delete from roles where is_specialist = true;
 
 -- specialist roles may change, so we'll leave them outside the init
-insert into roles values
-  (null, "Cardiologist", true),
-  (null, "Endocrinologist", true),
-  (null, "Neurologist", true),
-  (null, "Orthopedist", true),
-  (null, "Dermatologist", true)
+insert into roles (is_specialist, name) values
+  (true, "Cardiologist"),
+  (true, "Endocrinologist"),
+  (true, "Neurologist"),
+  (true, "Orthopedist"),
+  (true, "Dermatologist")
 ;
 
 delete from users;

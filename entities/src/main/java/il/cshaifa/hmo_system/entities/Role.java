@@ -16,6 +16,8 @@ public class Role {
   private String name;
   private boolean is_specialist;
 
+  public Role() {}
+
   public Role(String name, boolean is_specialist) {
     this.name = name;
     this.is_specialist = is_specialist;

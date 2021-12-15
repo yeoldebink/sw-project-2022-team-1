@@ -15,6 +15,8 @@ public class AppointmentType {
 
   private String name;
 
+  public AppointmentType() {}
+
   public AppointmentType(String name) {
     this.name = name;
   }

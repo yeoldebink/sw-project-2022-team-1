@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 // TODO: Composite primary key?
@@ -15,27 +16,34 @@ public class ClinicStaff {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
 
-  private int clinic_id;
-  private int user_id;
+  @ManyToOne private Clinic clinic;
+  @ManyToOne private User user;
 
-  public ClinicStaff(int clinic_id, int user_id) {
-    this.clinic_id = clinic_id;
-    this.user_id = user_id;
+  public ClinicStaff() {}
+
+  public ClinicStaff(int id, Clinic clinic_id, User user_id) {
+    this.id = id;
+    this.clinic = clinic_id;
+    this.user = user_id;
   }
 
-  public int getClinic_id() {
-    return clinic_id;
+  public int getId() {
+    return id;
   }
 
-  public void setClinic_id(int clinic_id) {
-    this.clinic_id = clinic_id;
+  public Clinic getClinic() {
+    return clinic;
   }
 
-  public int getUser_id() {
-    return user_id;
+  public void setClinic(Clinic clinic) {
+    this.clinic = clinic;
   }
 
-  public void setUser_id(int user_id) {
-    this.user_id = user_id;
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
   }
 }
