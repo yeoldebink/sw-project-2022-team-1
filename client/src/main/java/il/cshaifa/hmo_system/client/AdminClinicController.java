@@ -3,6 +3,7 @@ package il.cshaifa.hmo_system.client;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.EditClinicEvent;
+import il.cshaifa.hmo_system.client.events.EditClinicEvent.Phase;
 import java.io.IOException;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -16,6 +17,8 @@ public class AdminClinicController extends Controller {
 
   @Subscribe
   public void updateClinicRequested(EditClinicEvent event) {
+    if (event.phase == Phase.OPEN_WINDOW) return;
+
     var client = HMOClient.getClient();
     try {
       client.updateClinic(event.clinic);

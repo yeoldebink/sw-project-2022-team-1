@@ -19,13 +19,13 @@
         <GridPane>
           <children>
             <Label GridPane.rowIndex="0" text="Name: "/>
-            <Label GridPane.columnIndex="1" text="NAME"/>
+            <Label GridPane.columnIndex="1" text="NAME" fx:id="name"/>
 
             <Label GridPane.rowIndex="1" text="Address: "/>
-            <Label GridPane.columnIndex="1" GridPane.rowIndex="1" text="ADDRESS"/>
-
-            <Label GridPane.rowIndex="2" text="Manager: "/>
-            <Label GridPane.columnIndex="1" GridPane.rowIndex="2" text="MANAGER"/>
+            <Label GridPane.columnIndex="1" GridPane.rowIndex="1" text="ADDRESS" fx:id="address"/>
+            <!--Will add this back later-->
+            <!--            <Label GridPane.rowIndex="2" text="Manager: " fx:id="manager"/>-->
+            <!--            <Label GridPane.columnIndex="1" GridPane.rowIndex="2" text="MANAGER"/>-->
 
             <Label GridPane.rowIndex="3" text="Hours" underline="true"/>
 
@@ -77,17 +77,17 @@
             <RowConstraints/>
           </rowConstraints>
         </GridPane>
+        <Label text="Edit Clinic">
+          <font>
+            <Font name="DejaVu Sans Bold" size="22.0"/>
+          </font>
+        </Label>
         <Label prefHeight="18.0" prefWidth="91.0" text="Clinic Info" underline="true">
           <VBox.margin>
             <Insets top="5.0"/>
           </VBox.margin>
           <font>
             <Font name="DejaVu Sans Bold" size="14.0"/>
-          </font>
-        </Label>
-        <Label text="Edit Clinic">
-          <font>
-            <Font name="DejaVu Sans Bold" size="22.0"/>
           </font>
         </Label>
         <VBox/>

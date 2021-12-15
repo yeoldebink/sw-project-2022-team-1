@@ -2,18 +2,21 @@ package il.cshaifa.hmo_system.client;
 
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.EditClinicEvent;
+import il.cshaifa.hmo_system.client.events.EditClinicEvent.Phase;
 import il.cshaifa.hmo_system.entities.Clinic;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import org.greenrobot.eventbus.EventBus;
 
 public class AdminClinicViewController extends ViewController {
 
   private final Clinic clinic;
+
+  @FXML private Label name;
+  @FXML private Label address;
+  //  @FXML private Label manager; // will add this back later
 
   @FXML private TextField sunHoursTextField;
   @FXML private TextField monHoursTextField;
@@ -29,6 +32,8 @@ public class AdminClinicViewController extends ViewController {
 
   @FXML
   public void initialize() {
+    name.setText(clinic.getName());
+    address.setText(clinic.getAddress());
     sunHoursTextField.setText(clinic.getSun_hours());
     monHoursTextField.setText(clinic.getMon_hours());
     tueHoursTextField.setText(clinic.getTue_hours());
@@ -48,7 +53,7 @@ public class AdminClinicViewController extends ViewController {
     clinic.setFri_hours(friHoursTextField.getText());
     clinic.setSat_hours(satHoursTextField.getText());
 
-    EventBus.getDefault().post(new EditClinicEvent(this.clinic));
+    EventBus.getDefault().post(new EditClinicEvent(this.clinic, Phase.SEND));
 
     closeWindow(actionEvent);
   }

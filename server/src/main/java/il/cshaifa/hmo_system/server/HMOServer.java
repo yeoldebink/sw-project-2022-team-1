@@ -76,7 +76,7 @@ public class HMOServer extends AbstractServer {
       session.beginTransaction();
       if (req.isUpdate()) { // update the entity
         try {
-          session.save(req.getEntity());
+          session.update(req.getEntity());
           session.flush();
           // TODO: commit
           try {
@@ -118,6 +118,9 @@ public class HMOServer extends AbstractServer {
       session.close();
     } catch (Exception exception) {
       exception.printStackTrace();
+      if (session != null) {
+        session.getTransaction().rollback();
+      }
     }
   }
 
