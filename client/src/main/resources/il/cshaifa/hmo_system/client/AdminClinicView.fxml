@@ -16,6 +16,19 @@
   <children>
     <VBox layoutX="14.0" layoutY="14.0" prefHeight="401.0" prefWidth="276.0">
       <children>
+        <Label text="Edit Clinic">
+          <font>
+            <Font name="DejaVu Sans Bold" size="22.0"/>
+          </font>
+        </Label>
+        <Label prefHeight="18.0" prefWidth="91.0" text="Clinic Info" underline="true">
+          <VBox.margin>
+            <Insets top="5.0"/>
+          </VBox.margin>
+          <font>
+            <Font name="DejaVu Sans Bold" size="14.0"/>
+          </font>
+        </Label>
         <GridPane>
           <children>
             <Label GridPane.rowIndex="0" text="Name: "/>
@@ -77,19 +90,6 @@
             <RowConstraints/>
           </rowConstraints>
         </GridPane>
-        <Label text="Edit Clinic">
-          <font>
-            <Font name="DejaVu Sans Bold" size="22.0"/>
-          </font>
-        </Label>
-        <Label prefHeight="18.0" prefWidth="91.0" text="Clinic Info" underline="true">
-          <VBox.margin>
-            <Insets top="5.0"/>
-          </VBox.margin>
-          <font>
-            <Font name="DejaVu Sans Bold" size="14.0"/>
-          </font>
-        </Label>
         <VBox/>
         <VBox alignment="BASELINE_CENTER">
           <Button onAction="#requestClinicUpdate" text="Save Changes">
