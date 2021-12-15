@@ -23,22 +23,22 @@ public class AdminClinicListController extends Controller {
 
   @Subscribe
   public void editClinicRequestReceived(EditClinicEvent event) throws IOException {
-    //Navigate to AdminClinicView
-    FXMLLoader loader = new FXMLLoader(getClass().getResource("/il.cshaifa.hmo_system.client/AdminClinicView.fxml"));
+    // Navigate to AdminClinicView
+    FXMLLoader loader =
+        new FXMLLoader(
+            getClass().getResource("/il.cshaifa.hmo_system.client/AdminClinicView.fxml"));
 
     loader.setControllerFactory(
         c -> {
           return new AdminClinicViewController(event.clinic);
-        }
-    );
+        });
 
-    var c =  new AdminClinicController(loader.getController());
+    var c = new AdminClinicController(loader.getController());
 
     Stage stage = new Stage();
     Scene scene = new Scene(loader.load());
     stage.setScene(scene);
     stage.show();
-
   }
 
   @Subscribe
