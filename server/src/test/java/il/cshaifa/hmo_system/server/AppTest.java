@@ -1,4 +1,4 @@
-package il.cshaifa.server;
+package il.cshaifa.hmo_system.server;
 
 import static org.junit.Assert.assertTrue;
 
