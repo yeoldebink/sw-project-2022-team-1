@@ -1,10 +1,12 @@
-package il.cshaifa.hmo_system.client;
+package il.cshaifa.hmo_system.client.gui.clinic_administration;
 
+import il.cshaifa.hmo_system.client.HMOClient;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.EditClinicEvent;
 import il.cshaifa.hmo_system.client.events.EditClinicEvent.Phase;
 import il.cshaifa.hmo_system.client.events.ResponseEvent;
+import il.cshaifa.hmo_system.client.gui.ResourcePath;
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.Response.ResponseType;
 import java.io.IOException;
@@ -30,7 +32,7 @@ public class AdminClinicListController extends Controller {
     // Navigate to AdminClinicView
     FXMLLoader loader =
         new FXMLLoader(
-            getClass().getResource("/il/cshaifa/hmo_system/client/AdminClinicView.fxml"));
+            getClass().getResource(ResourcePath.get_fxml(AdminClinicViewController.class)));
 
     loader.setControllerFactory(
         c -> {
