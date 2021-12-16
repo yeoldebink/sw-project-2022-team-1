@@ -35,7 +35,9 @@ delete from clinics;
 
 insert into clinics values
       (null, "Carmel Center", "HaNassi 45, Haifa", "8:00-16:00", "8:00-16:00", "8:00-12:00, 16:00-20:00", "8:00-16:00", "8:00-16:00", "8:00-12:00", null),
-      (null, "Dizengoff", "Dizengoff 12, Tel Aviv", "8:00-16:00", "8:00-12:00, 16:00-20:00", "8:00-16:00", "8:00-16:00", "8:00-16:00", "8:00-12:00", null)
+      (null, "Dizengoff", "Dizengoff 12, Tel Aviv", "8:00-16:00", "8:00-12:00, 16:00-20:00", "8:00-16:00", "8:00-16:00", "8:00-16:00", "8:00-12:00", null),
+      (null, "Mile End", "Mile End 27, Edinburgh", "8:00-14:00", "8:00-14:00", "8:00-14:00", "8:00-14:00", "8:00-14:00", "8:00-14:00", null),
+      (null, "Sacred Heart", "Muriel 18, Miami, FL", "10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00" , null, null)
 ;
 
 delete from clinic_staff;
