@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -15,6 +16,8 @@ public class Clinic implements Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
+
+  @OneToOne private User manager_user;
 
   private String name;
   private String address;
@@ -29,6 +32,7 @@ public class Clinic implements Serializable {
   public Clinic() {}
 
   public Clinic(
+      User manager_user,
       String name,
       String address,
       String sun_hours,
@@ -38,6 +42,7 @@ public class Clinic implements Serializable {
       String thu_hours,
       String fri_hours,
       String sat_hours) {
+    this.manager_user = manager_user;
     this.name = name;
     this.address = address;
     this.sun_hours = sun_hours;
@@ -51,6 +56,14 @@ public class Clinic implements Serializable {
 
   public int getId() {
     return id;
+  }
+
+  public User getManager_user() {
+    return manager_user;
+  }
+
+  public void setManager_user(User manager_user) {
+    this.manager_user = manager_user;
   }
 
   public String getName() {
