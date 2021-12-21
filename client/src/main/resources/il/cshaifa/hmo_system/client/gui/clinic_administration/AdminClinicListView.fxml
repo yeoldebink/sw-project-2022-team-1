@@ -12,7 +12,7 @@
   minHeight="-Infinity"
   minWidth="-Infinity" prefHeight="507.0" prefWidth="1307.0"
   xmlns="http://javafx.com/javafx/17"
-  fx:controller="il.cshaifa.hmo_system.client.AdminClinicListViewController">
+  fx:controller="il.cshaifa.hmo_system.client.gui.clinic_administration.AdminClinicListViewController">
   <children>
     <VBox AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0"
       AnchorPane.topAnchor="15.0"

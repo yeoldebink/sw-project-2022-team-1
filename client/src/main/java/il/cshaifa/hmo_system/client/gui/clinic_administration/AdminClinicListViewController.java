@@ -1,4 +1,4 @@
-package il.cshaifa.hmo_system.client;
+package il.cshaifa.hmo_system.client.gui.clinic_administration;
 
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.EditClinicEvent;
