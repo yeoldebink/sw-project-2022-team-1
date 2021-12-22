@@ -34,4 +34,12 @@ to make sure you haven't missed any files.
 
 ## Building
 
-`mvn clean package`
+`mvn clean install`
+
+## Initializing a test DB
+
+1. Make sure MySQL is installed and running on your computer
+2. Either change the root password to `Admin@2021` or edit the `hibernate.properties` file found in 
+`testing_database_init/src/main/resources/hibernate.properties` (DO NOT COMMIT CHANGES TO THIS
+   FILE)
+3. Run `mvn clean compile exec:java` in the directory `testing_database_init`
