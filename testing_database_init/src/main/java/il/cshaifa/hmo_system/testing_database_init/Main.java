@@ -8,7 +8,9 @@ import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.entities.Role;
 import il.cshaifa.hmo_system.entities.User;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -87,6 +89,53 @@ public class Main {
         "Joan Rivers",
         new User(1979, null, "Joan", "Rviers", null, null, roles.get("Clinic Manager")));
 
+    users.put(
+        "Bob Kelso", new User(3141, null, "Bob", "Kelso", null, null, roles.get("Family Doctor")));
+
+    users.put(
+        "Elliot Reed",
+        new User(7893, null, "Elliot", "Reed", null, null, roles.get("Family Doctor")));
+
+    users.put(
+        "John Dorian",
+        new User(5123, null, "John", "Dorian", null, null, roles.get("Pediatrician")));
+
+    users.put(
+        "Sarah Tizdale", new User(5973, null, "Sarah", "Tizdale", null, null, roles.get("Nurse")));
+
+    users.put(
+        "LaVerne Roberts",
+        new User(4532, null, "LaVerne", "Roberts", null, null, roles.get("Nurse")));
+
+    users.put(
+        "Perry Cox",
+        new User(1499, null, "Perry", "Cox", null, null, roles.get("Endocrinologist")));
+
+    users.put(
+        "Christopher Turk",
+        new User(8561, null, "Christopher", "Turk", null, null, roles.get("Neurologist")));
+
+    users.put(
+        "Glen Matthews",
+        new User(2887, null, "Glen", "Matthews", null, null, roles.get("Lab Technician")));
+
+    users.put(
+        "Franklin Kurosawa",
+        new User(1967, null, "Franklin", "Kurowasa", null, null, roles.get("Lab Technician")));
+
+    users.put("Avi Ron", new User(459721591, null, "Avi", "Ron", null, null, roles.get("Patient")));
+
+    users.put(
+        "Tyler Durden",
+        new User(254789321, null, "Tyler", "Durden", null, null, roles.get("Patient")));
+
+    users.put(
+        "Marquis De Carabas",
+        new User(985241266, null, "Marquis", "De Carabas", null, null, roles.get("Patient")));
+
+    users.put(
+        "Jill Tracy", new User(309827022, null, "Jill", "Tracy", null, null, roles.get("Patient")));
+
     for (var user : users.entrySet()) {
       session.save(user.getValue());
       session.flush();
@@ -158,6 +207,34 @@ public class Main {
     return clinics;
   }
 
+  public static List<ClinicStaff> assignStaff(
+      Map<String, User> users, Map<String, Clinic> clinics) {
+    ArrayList<ClinicStaff> clinicStaff = new ArrayList<>();
+
+    var carmel = clinics.get("Carmel Center");
+    clinicStaff.add(new ClinicStaff(carmel, users.get("Carla Espinosa")));
+    clinicStaff.add(new ClinicStaff(carmel, users.get("John Dorian")));
+    clinicStaff.add(new ClinicStaff(carmel, users.get("Sarah Tizdale")));
+    clinicStaff.add(new ClinicStaff(carmel, users.get("Perry Cox")));
+    clinicStaff.add(new ClinicStaff(carmel, users.get("Christopher Turk")));
+    clinicStaff.add(new ClinicStaff(carmel, users.get("Glen Matthews")));
+
+    var dizengoff = clinics.get("Dizengoff");
+    clinicStaff.add(new ClinicStaff(dizengoff, users.get("Carmen Sandiego")));
+    clinicStaff.add(new ClinicStaff(dizengoff, users.get("Elliot Reed")));
+    clinicStaff.add(new ClinicStaff(dizengoff, users.get("John Dorian")));
+    clinicStaff.add(new ClinicStaff(dizengoff, users.get("LaVerne Roberts")));
+    clinicStaff.add(new ClinicStaff(dizengoff, users.get("Christopher Turk")));
+    clinicStaff.add(new ClinicStaff(dizengoff, users.get("Franklin Kurosawa")));
+
+    for (var cstaff : clinicStaff) {
+      session.save(cstaff);
+      session.flush();
+    }
+
+    return clinicStaff;
+  }
+
   public static void main(String[] args) throws NoSuchAlgorithmException {
     try {
       session = getSessionFactory().openSession();
@@ -165,6 +242,7 @@ public class Main {
       var roles = createRoles();
       var users = createUsers(roles);
       var clinics = createClinics(users);
+      var clinicStaff = assignStaff(users, clinics);
       session.getTransaction().commit();
     } catch (Exception e) {
       session.getTransaction().rollback();

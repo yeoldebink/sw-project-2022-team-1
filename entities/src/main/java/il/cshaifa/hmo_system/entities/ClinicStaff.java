@@ -21,8 +21,7 @@ public class ClinicStaff {
 
   public ClinicStaff() {}
 
-  public ClinicStaff(int id, Clinic clinic_id, User user_id) {
-    this.id = id;
+  public ClinicStaff(Clinic clinic_id, User user_id) {
     this.clinic = clinic_id;
     this.user = user_id;
   }
