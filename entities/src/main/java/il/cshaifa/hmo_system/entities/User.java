@@ -1,5 +1,6 @@
 package il.cshaifa.hmo_system.entities;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -11,7 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements Serializable {
   @Id private int id;
   private String password;
   private String salt;

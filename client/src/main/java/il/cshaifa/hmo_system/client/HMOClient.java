@@ -1,13 +1,12 @@
 package il.cshaifa.hmo_system.client;
 
-import il.cshaifa.hmo_system.client.events.ResponseEvent;
 import il.cshaifa.hmo_system.client.events.WarningEvent;
 import il.cshaifa.hmo_system.client.ocsf.AbstractClient;
 import il.cshaifa.hmo_system.entities.Clinic;
-import il.cshaifa.hmo_system.entities.Request;
-import il.cshaifa.hmo_system.entities.Response;
 import il.cshaifa.hmo_system.entities.Warning;
+import il.cshaifa.hmo_system.messages.ClinicMessage;
 import java.io.IOException;
+import java.util.ArrayList;
 import org.greenrobot.eventbus.EventBus;
 
 public class HMOClient extends AbstractClient {
@@ -27,11 +26,16 @@ public class HMOClient extends AbstractClient {
   }
 
   public void getClinics() throws IOException {
-    client.sendToServer(new Request(false, Clinic.class));
+    client.sendToServer(new ClinicMessage());
   }
 
   public void updateClinic(Clinic clinic) throws IOException {
-    client.sendToServer(new Request(true, clinic));
+    var clinic_list = new ArrayList<Clinic>();
+    clinic_list.add(clinic);
+    var clinic_message = new ClinicMessage();
+    clinic_message.clinics = clinic_list;
+
+    client.sendToServer(clinic_message);
     getClinics();
   }
 
@@ -40,8 +44,8 @@ public class HMOClient extends AbstractClient {
     this.msg = true;
     if (msg.getClass().equals(Warning.class)) {
       EventBus.getDefault().post(new WarningEvent((Warning) msg));
-    } else if (msg.getClass().equals(Response.class)) {
-      EventBus.getDefault().post(new ResponseEvent((Response) msg));
+    } else {
+      EventBus.getDefault().post(msg);
     }
   }
 }

@@ -1,11 +1,11 @@
 package il.cshaifa.hmo_system.client.events;
 
-import il.cshaifa.hmo_system.entities.Response;
+import il.cshaifa.hmo_system.messages.Message;
 
 public class ResponseEvent {
-  public Response response;
+  public Message response;
 
-  public ResponseEvent(Response response) {
+  public ResponseEvent(Message response) {
     this.response = response;
   }
 }
