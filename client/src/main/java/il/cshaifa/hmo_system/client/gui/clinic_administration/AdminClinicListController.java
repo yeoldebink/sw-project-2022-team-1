@@ -12,11 +12,8 @@ import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
 import il.cshaifa.hmo_system.messages.Message.messageType;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -48,10 +45,8 @@ public class AdminClinicListController extends Controller {
         c -> {
           return new AdminClinicViewController(event.clinic);
         });
-    Utils.OpenNewWindow("AdminClinicView",
-            AdminClinicViewController.class,
-            AdminClinicController.class,
-            loader);
+    Utils.OpenNewWindow(
+        "AdminClinicView", AdminClinicViewController.class, AdminClinicController.class, loader);
   }
 
   @Subscribe

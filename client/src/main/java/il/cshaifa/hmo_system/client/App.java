@@ -7,7 +7,6 @@ import il.cshaifa.hmo_system.client.gui.clinic_administration.AdminClinicListVie
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class App extends Application {
@@ -25,8 +24,14 @@ public class App extends Application {
     client = HMOClient.getClient();
     client.openConnection();
 
-    FXMLLoader loader = new FXMLLoader(App.class.getResource(ResourcePath.get_fxml(AdminClinicListViewController.class)));
-    Utils.OpenNewWindow("AdminClinicListView", AdminClinicListViewController.class, AdminClinicListController.class, loader);
+    FXMLLoader loader =
+        new FXMLLoader(
+            App.class.getResource(ResourcePath.get_fxml(AdminClinicListViewController.class)));
+    Utils.OpenNewWindow(
+        "AdminClinicListView",
+        AdminClinicListViewController.class,
+        AdminClinicListController.class,
+        loader);
   }
 
   @Override
