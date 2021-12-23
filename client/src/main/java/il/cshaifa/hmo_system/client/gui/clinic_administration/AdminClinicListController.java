@@ -1,6 +1,7 @@
 package il.cshaifa.hmo_system.client.gui.clinic_administration;
 
 import il.cshaifa.hmo_system.client.HMOClient;
+import il.cshaifa.hmo_system.client.Utils.Utils;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
@@ -11,6 +12,7 @@ import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
 import il.cshaifa.hmo_system.messages.Message.messageType;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -34,7 +36,7 @@ public class AdminClinicListController extends Controller {
   }
 
   @Subscribe
-  public void editClinicRequestReceived(EditClinicEvent event) throws IOException {
+  public void editClinicRequestReceived(EditClinicEvent event) throws Exception {
     if (event.phase == Phase.SEND) return;
 
     // Navigate to AdminClinicView
@@ -46,15 +48,10 @@ public class AdminClinicListController extends Controller {
         c -> {
           return new AdminClinicViewController(event.clinic);
         });
-
-    Scene scene = new Scene(loader.load());
-
-    var c = new AdminClinicController(loader.getController());
-
-    Stage stage = new Stage();
-    stage.setScene(scene);
-    stage.setTitle("AdminClinicView");
-    stage.show();
+    Utils.OpenNewWindow("AdminClinicView",
+            AdminClinicViewController.class,
+            AdminClinicController.class,
+            loader);
   }
 
   @Subscribe

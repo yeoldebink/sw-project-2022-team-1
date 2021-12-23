@@ -24,19 +24,9 @@ public class App extends Application {
   public void start(Stage primaryStage) throws Exception {
     client = HMOClient.getClient();
     client.openConnection();
-    Utils.OpenNewWindow("AdminClinicListView", AdminClinicListViewController.class, AdminClinicListController.class);
-//    var loader =
-//        new FXMLLoader(
-//            App.class.getResource(ResourcePath.get_fxml(AdminClinicListViewController.class)));
-//    var scene = new Scene(loader.load());
-//
-//
-//    var view_controller = (AdminClinicListViewController) loader.getController();
-//    var k = AdminClinicListViewController.class.cast(view_controller);
-//    var c = new AdminClinicListController(view_controller);
-//    primaryStage.setScene(scene);
-//    primaryStage.setTitle("AdminClinicListView");
-//    primaryStage.show();
+
+    FXMLLoader loader = new FXMLLoader(App.class.getResource(ResourcePath.get_fxml(AdminClinicListViewController.class)));
+    Utils.OpenNewWindow("AdminClinicListView", AdminClinicListViewController.class, AdminClinicListController.class, loader);
   }
 
   @Override
