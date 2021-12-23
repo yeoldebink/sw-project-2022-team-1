@@ -29,6 +29,7 @@ public class Appointment {
   private boolean taken;
   private String comments;
   private LocalDateTime lock_time;
+  private LocalDateTime called_time;
 
   public Appointment() {}
 
@@ -39,7 +40,8 @@ public class Appointment {
       Role specialist_role_id,
       User staff_member_id,
       Clinic clinic_id,
-      LocalDateTime appt_date) {
+      LocalDateTime appt_date,
+      LocalDateTime called_time) {
     this.id = id;
     this.patient = patient_id;
     this.type = type_id;
@@ -47,6 +49,7 @@ public class Appointment {
     this.staff_member = staff_member_id;
     this.clinic = clinic_id;
     this.appt_date = appt_date;
+    this.called_time = called_time;
     this.taken = false;
     this.comments = null;
     this.lock_time = null;
@@ -126,5 +129,13 @@ public class Appointment {
 
   public void setLock_time(LocalDateTime lock_time) {
     this.lock_time = lock_time;
+  }
+
+  public LocalDateTime getCalled_time() {
+    return called_time;
+  }
+
+  public void setCalled_time(LocalDateTime called_time) {
+    this.called_time = called_time;
   }
 }
