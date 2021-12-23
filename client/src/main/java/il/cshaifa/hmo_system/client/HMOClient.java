@@ -20,7 +20,7 @@ public class HMOClient extends AbstractClient {
 
   public static HMOClient getClient() {
     if (client == null) {
-      client = new HMOClient("localhost", 3010);
+      client = new HMOClient("localhost", 3000);
     }
     return client;
   }
