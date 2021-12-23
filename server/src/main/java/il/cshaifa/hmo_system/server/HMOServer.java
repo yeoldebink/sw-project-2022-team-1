@@ -5,12 +5,10 @@ import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.ClinicStaff;
 import il.cshaifa.hmo_system.entities.Patient;
-import il.cshaifa.hmo_system.entities.Request;
-import il.cshaifa.hmo_system.entities.Response;
-import il.cshaifa.hmo_system.entities.Response.ResponseType;
 import il.cshaifa.hmo_system.entities.Role;
 import il.cshaifa.hmo_system.entities.User;
-import il.cshaifa.hmo_system.entities.Warning;
+import il.cshaifa.hmo_system.messages.ClinicMessage;
+import il.cshaifa.hmo_system.messages.Message.messageType;
 import il.cshaifa.hmo_system.server.ocsf.AbstractServer;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import java.io.IOException;
@@ -62,6 +60,38 @@ public class HMOServer extends AbstractServer {
     }
   }
 
+  protected void sendClinicList(ConnectionToClient client) throws IOException {
+    var cb = session.getCriteriaBuilder();
+    CriteriaQuery<Clinic> cr = cb.createQuery(Clinic.class);
+    Root<Clinic> root = cr.from(Clinic.class);
+    cr.select(root);
+
+    Query<Clinic> query = session.createQuery(cr);
+    List<Clinic> results = query.getResultList();
+
+    ClinicMessage clinics_msg = new ClinicMessage();
+    clinics_msg.clinics = results;
+    clinics_msg.message_type = messageType.RESPONSE;
+
+    client.sendToClient(clinics_msg);
+  }
+
+  protected void processClinicMessage(ClinicMessage message, ConnectionToClient client)
+      throws IOException {
+    if (message.clinics == null) {
+      sendClinicList(client);
+    } else {
+      updateEntities(message.clinics);
+    }
+  }
+
+  protected void updateEntities(List<?> entity_list) {
+    for (var entity : entity_list) {
+      session.update(entity);
+      session.flush();
+    }
+  }
+
   /**
    * See documentation for entities.Request for defined behavior.
    *
@@ -71,50 +101,15 @@ public class HMOServer extends AbstractServer {
   @Override
   protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
     try {
-      Request req = (Request) msg;
       session = getSessionFactory().openSession();
       session.beginTransaction();
-      if (req.isUpdate()) { // update the entity
-        try {
-          session.update(req.getEntity());
-          session.flush();
-          // TODO: commit
-          try {
-            client.sendToClient(new Response(ResponseType.CONFIRM_UPDATE, true, null));
-          } catch (IOException ioException) {
-            System.out.println(
-                "IOException while sending update affirmation message to client: " + ioException);
-          }
 
-          session.getTransaction().commit();
+      Class<?> msg_class = msg.getClass();
 
-        } catch (HibernateException hibernateException) {
-          try {
-            client.sendToClient(
-                new Warning("HibernateException encountered during update: " + hibernateException));
-          } catch (IOException ioException) {
-            System.out.println(
-                "IOException while sending warning message to client: " + ioException);
-          }
-        }
-
-      } else { // select all from the entity table
-        Object entity = req.getEntity();
-        var cb = session.getCriteriaBuilder();
-        CriteriaQuery<Clinic> cr = cb.createQuery(Clinic.class);
-        Root<Clinic> root = cr.from(Clinic.class);
-        cr.select(root);
-
-        Query<Clinic> query = session.createQuery(cr);
-        List<Clinic> results = query.getResultList();
-
-        try {
-          client.sendToClient(new Response(ResponseType.QUERY_RESULTS, true, results));
-        } catch (IOException ioException) {
-          System.out.println(
-              "IOException while sending response message to client: " + ioException);
-        }
+      if (msg_class == ClinicMessage.class) {
+        processClinicMessage((ClinicMessage) msg, client);
       }
+
       session.close();
     } catch (Exception exception) {
       exception.printStackTrace();

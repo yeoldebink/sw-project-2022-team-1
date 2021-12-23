@@ -5,8 +5,6 @@ import java.time.LocalTime;
 
 public class Warning implements Serializable {
 
-  public static final long serialVersionUID = 11997114110L;
-
   private final LocalTime time;
   private String message;
 

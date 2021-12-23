@@ -5,10 +5,10 @@ import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.EditClinicEvent;
 import il.cshaifa.hmo_system.client.events.EditClinicEvent.Phase;
-import il.cshaifa.hmo_system.client.events.ResponseEvent;
 import il.cshaifa.hmo_system.client.gui.ResourcePath;
 import il.cshaifa.hmo_system.entities.Clinic;
-import il.cshaifa.hmo_system.entities.Response.ResponseType;
+import il.cshaifa.hmo_system.messages.ClinicMessage;
+import il.cshaifa.hmo_system.messages.Message.messageType;
 import java.io.IOException;
 import java.util.ArrayList;
 import javafx.fxml.FXMLLoader;
@@ -49,9 +49,9 @@ public class AdminClinicListController extends Controller {
   }
 
   @Subscribe
-  public void clinicsReceived(ResponseEvent event) {
-    if (event.response.response_type != ResponseType.QUERY_RESULTS) return;
+  public void clinicsReceived(ClinicMessage message) {
+    if (message.message_type != messageType.RESPONSE) return;
     ((AdminClinicListViewController) this.view_controller)
-        .populateClinicTable((ArrayList<Clinic>) event.response.results);
+        .populateClinicTable((ArrayList<Clinic>) message.clinics);
   }
 }
