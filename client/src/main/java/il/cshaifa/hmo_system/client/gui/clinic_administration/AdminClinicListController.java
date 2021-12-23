@@ -26,8 +26,10 @@ public class AdminClinicListController extends Controller {
     HMOClient.getClient().getClinics();
   }
 
+  @Subscribe
   @Override
-  protected void OnWindowCloseEvent(CloseWindowEvent event) {
+  public void OnWindowCloseEvent(CloseWindowEvent event) {
+    if (!event.getWindowTitle().equals("AdminClinicListView")) return;
     EventBus.getDefault().unregister(this);
   }
 
@@ -51,6 +53,7 @@ public class AdminClinicListController extends Controller {
 
     Stage stage = new Stage();
     stage.setScene(scene);
+    stage.setTitle("AdminClinicView");
     stage.show();
   }
 

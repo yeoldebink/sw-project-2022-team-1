@@ -11,6 +11,5 @@ public abstract class Controller {
     this.view_controller = view_controller;
   }
 
-  @Subscribe
-  protected abstract void OnWindowCloseEvent(CloseWindowEvent event);
+  public abstract void OnWindowCloseEvent(CloseWindowEvent event);
 }

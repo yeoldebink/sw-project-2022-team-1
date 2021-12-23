@@ -11,7 +11,7 @@ public class ViewController {
   protected void closeWindow(ActionEvent event) {
     Node source = (Node) event.getSource();
     Stage stage = (Stage) source.getScene().getWindow();
-    EventBus.getDefault().post(new CloseWindowEvent());
+    EventBus.getDefault().post(new CloseWindowEvent(stage.getTitle()));
     stage.close();
   }
 }

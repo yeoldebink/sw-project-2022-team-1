@@ -1,5 +1,6 @@
 package il.cshaifa.hmo_system.client;
 
+import il.cshaifa.hmo_system.client.Utils.Utils;
 import il.cshaifa.hmo_system.client.gui.ResourcePath;
 import il.cshaifa.hmo_system.client.gui.clinic_administration.AdminClinicListController;
 import il.cshaifa.hmo_system.client.gui.clinic_administration.AdminClinicListViewController;
@@ -23,17 +24,19 @@ public class App extends Application {
   public void start(Stage primaryStage) throws Exception {
     client = HMOClient.getClient();
     client.openConnection();
-
-    var loader =
-        new FXMLLoader(
-            App.class.getResource(ResourcePath.get_fxml(AdminClinicListViewController.class)));
-    var scene = new Scene(loader.load());
-
-    var view_controller = (AdminClinicListViewController) loader.getController();
-
-    var c = new AdminClinicListController(view_controller);
-    primaryStage.setScene(scene);
-    primaryStage.show();
+    Utils.OpenNewWindow("AdminClinicListView", AdminClinicListViewController.class, AdminClinicListController.class);
+//    var loader =
+//        new FXMLLoader(
+//            App.class.getResource(ResourcePath.get_fxml(AdminClinicListViewController.class)));
+//    var scene = new Scene(loader.load());
+//
+//
+//    var view_controller = (AdminClinicListViewController) loader.getController();
+//    var k = AdminClinicListViewController.class.cast(view_controller);
+//    var c = new AdminClinicListController(view_controller);
+//    primaryStage.setScene(scene);
+//    primaryStage.setTitle("AdminClinicListView");
+//    primaryStage.show();
   }
 
   @Override

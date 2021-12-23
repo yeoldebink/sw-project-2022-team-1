@@ -17,8 +17,10 @@ public class AdminClinicController extends Controller {
     EventBus.getDefault().register(this);
   }
 
+  @Subscribe
   @Override
-  protected void OnWindowCloseEvent(CloseWindowEvent event) {
+  public void OnWindowCloseEvent(CloseWindowEvent event) {
+    if (event.getWindowTitle().equals("AdminClinicView"))
     EventBus.getDefault().unregister(this);
   }
 
