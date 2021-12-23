@@ -3,6 +3,7 @@ package il.cshaifa.hmo_system.client.gui.clinic_administration;
 import il.cshaifa.hmo_system.client.HMOClient;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
+import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
 import il.cshaifa.hmo_system.client.events.EditClinicEvent;
 import il.cshaifa.hmo_system.client.events.EditClinicEvent.Phase;
 import il.cshaifa.hmo_system.client.gui.ResourcePath;
@@ -23,6 +24,11 @@ public class AdminClinicListController extends Controller {
     super(view_controller);
     EventBus.getDefault().register(this);
     HMOClient.getClient().getClinics();
+  }
+
+  @Override
+  protected void OnWindowCloseEvent(CloseWindowEvent event) {
+    EventBus.getDefault().unregister(this);
   }
 
   @Subscribe
