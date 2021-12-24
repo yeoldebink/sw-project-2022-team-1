@@ -45,9 +45,7 @@ public class AdminClinicListController extends Controller {
         c -> {
           return new AdminClinicViewController(event.clinic);
         });
-    Utils.OpenNewWindow(AdminClinicViewController.class,
-            AdminClinicController.class,
-            loader);
+    Utils.OpenNewWindow(AdminClinicViewController.class, AdminClinicController.class, loader);
   }
 
   @Subscribe
