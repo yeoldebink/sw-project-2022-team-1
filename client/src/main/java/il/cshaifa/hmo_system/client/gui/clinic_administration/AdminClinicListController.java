@@ -28,7 +28,7 @@ public class AdminClinicListController extends Controller {
   @Subscribe
   @Override
   public void OnWindowCloseEvent(CloseWindowEvent event) {
-    if (!event.getWindowTitle().equals("AdminClinicListView")) return;
+    if (!event.getViewControllerInstance().equals(view_controller)) return;
     EventBus.getDefault().unregister(this);
   }
 
@@ -45,8 +45,9 @@ public class AdminClinicListController extends Controller {
         c -> {
           return new AdminClinicViewController(event.clinic);
         });
-    Utils.OpenNewWindow(
-        "AdminClinicView", AdminClinicViewController.class, AdminClinicController.class, loader);
+    Utils.OpenNewWindow(AdminClinicViewController.class,
+            AdminClinicController.class,
+            loader);
   }
 
   @Subscribe

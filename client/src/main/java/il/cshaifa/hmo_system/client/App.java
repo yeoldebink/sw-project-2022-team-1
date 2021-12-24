@@ -24,14 +24,8 @@ public class App extends Application {
     client = HMOClient.getClient();
     client.openConnection();
 
-    FXMLLoader loader =
-        new FXMLLoader(
-            App.class.getResource(ResourcePath.get_fxml(AdminClinicListViewController.class)));
-    Utils.OpenNewWindow(
-        "AdminClinicListView",
-        AdminClinicListViewController.class,
-        AdminClinicListController.class,
-        loader);
+    FXMLLoader loader = new FXMLLoader(App.class.getResource(ResourcePath.get_fxml(AdminClinicListViewController.class)));
+    Utils.OpenNewWindow(AdminClinicListViewController.class, AdminClinicListController.class, loader);
   }
 
   @Override
