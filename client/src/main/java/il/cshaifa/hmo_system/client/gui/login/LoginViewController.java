@@ -1,8 +1,7 @@
 package il.cshaifa.hmo_system.client.gui.login;
 
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
-import il.cshaifa.hmo_system.messages.LoginMessage;
-import il.cshaifa.hmo_system.messages.Message.messageType;
+import il.cshaifa.hmo_system.client.events.LoginEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -36,10 +35,9 @@ public class LoginViewController extends ViewController {
     statusLabel.setText("Please wait");
 
     try {
-      LoginMessage msg =
-          new LoginMessage(Integer.parseInt(idTextField.getText()), passwordField.getText());
-      msg.message_type = messageType.REQUEST;
-      EventBus.getDefault().post(msg);
+      LoginEvent login_event =
+          new LoginEvent(Integer.parseInt(idTextField.getText()), passwordField.getText());
+      EventBus.getDefault().post(login_event);
     } catch (NumberFormatException e) {
       statusLabel.setTextFill(Color.DARKRED);
       statusLabel.setText("ID must be a number");
