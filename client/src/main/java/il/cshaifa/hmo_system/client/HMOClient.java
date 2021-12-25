@@ -38,7 +38,9 @@ public class HMOClient extends AbstractClient {
     return client;
   }
 
-  /** @param msg the message sent. This message can be of several types, handled by controller. */
+  /**
+   * @param msg the message sent. This message can be of several types, handled by controller.
+   */
   @Override
   protected void handleMessageFromServer(Object message) {
     this.msg = true;
@@ -46,8 +48,8 @@ public class HMOClient extends AbstractClient {
       EventBus.getDefault().post(new WarningEvent((Warning) message));
     } else {
       if (message.getClass().equals(LoginMessage.class)) {
-        this.connected_user = (LoginMessage) message.user;
-        this.connected_patient = (LoginMessage) message.patient_data;
+        this.connected_user = ((LoginMessage) message).user;
+        this.connected_patient = ((LoginMessage) message).patient_data;
       }
       EventBus.getDefault().post(message);
     }
@@ -79,7 +81,7 @@ public class HMOClient extends AbstractClient {
   }
 
   /**
-   * @param user The id of the login request
+   * @param user     The id of the login request
    * @param password The password the user has entered
    * @throws IOException SQL exception
    */
