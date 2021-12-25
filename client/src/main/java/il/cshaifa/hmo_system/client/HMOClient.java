@@ -48,8 +48,8 @@ public class HMOClient extends AbstractClient {
       EventBus.getDefault().post(new WarningEvent((Warning) message));
     } else {
       if (message.getClass().equals(LoginMessage.class)) {
-        this.connected_user = message.user;
-        this.connected_patient = message.patient;
+        this.connected_user = (LoginMessage) message.user;
+        this.connected_patient = (LoginMessage) message.patient;
       }
       EventBus.getDefault().post(message);
     }
