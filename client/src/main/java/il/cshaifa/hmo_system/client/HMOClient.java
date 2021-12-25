@@ -14,9 +14,19 @@ public class HMOClient extends AbstractClient {
 
   private static HMOClient client = null;
   public boolean msg = false;
+  private User connected_user;
+  private Patient connected_patient;
 
   private HMOClient(String host, int port) {
     super(host, port);
+  }
+
+  public User getConnected_user() {
+    return connected_user;
+  }
+
+  public Patient getConnected_patient() {
+    return connected_patient;
   }
 
   public static HMOClient getClient() {
@@ -28,12 +38,16 @@ public class HMOClient extends AbstractClient {
 
   /** @param msg the message sent. This message can be of several types, handled by controller. */
   @Override
-  protected void handleMessageFromServer(Object msg) {
+  protected void handleMessageFromServer(Object message) {
     this.msg = true;
-    if (msg.getClass().equals(Warning.class)) {
-      EventBus.getDefault().post(new WarningEvent((Warning) msg));
+    if (message.getClass().equals(Warning.class)) {
+      EventBus.getDefault().post(new WarningEvent((Warning) message));
     } else {
-      EventBus.getDefault().post(msg);
+      if (message.getClass().equals(LoginMessage.class)) {
+        this.connected_user = message.user;
+        this.connected_patient = message.patient;
+      }
+      EventBus.getDefault().post(message);
     }
   }
 
