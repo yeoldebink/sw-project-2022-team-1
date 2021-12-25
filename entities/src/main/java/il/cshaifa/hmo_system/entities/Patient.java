@@ -13,10 +13,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "patients")
 public class Patient implements Serializable {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
 
+  @Id
   @OneToOne private User user;
 
   @ManyToOne private Clinic home_clinic;
@@ -25,15 +23,10 @@ public class Patient implements Serializable {
 
   public Patient() {}
 
-  public Patient(int id, User user_id, Clinic home_clinic_id, LocalDateTime birthday) {
-    this.id = id;
+  public Patient(User user_id, Clinic home_clinic_id, LocalDateTime birthday) {
     this.user = user_id;
     this.home_clinic = home_clinic_id;
     this.birthday = birthday;
-  }
-
-  public int getId() {
-    return id;
   }
 
   public User getUser() {

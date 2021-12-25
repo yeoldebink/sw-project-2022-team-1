@@ -6,8 +6,10 @@ import il.cshaifa.hmo_system.entities.User;
 import java.util.List;
 
 public class LoginMessage extends Message {
+  /* Request fields */
   public int id;
   public String password;
+  /* Respond fields */
   public User user;
   public Patient patient_data;
   public List<Clinic> employee_clinics;
