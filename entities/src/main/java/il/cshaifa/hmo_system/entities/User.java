@@ -1,10 +1,7 @@
 package il.cshaifa.hmo_system.entities;
 
 import java.io.Serializable;
-import java.math.BigInteger;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -22,8 +19,10 @@ public class User implements Serializable {
   private String phone;
   @ManyToOne private Role role;
 
+  /* In case of getting a User from DB */
   public User() {}
 
+  /* In case of create a new User for DB */
   public User(
       int id,
       String password,
@@ -39,8 +38,8 @@ public class User implements Serializable {
     this.email = email;
     this.phone = phone;
     this.role = role_id;
-
-    this.password = encodePassword(password);
+    this.salt = HMOUtilities.generateSalt();
+    this.password = HMOUtilities.encodePassword(password, this.salt);
   }
 
   public int getId() {
@@ -52,7 +51,8 @@ public class User implements Serializable {
   }
 
   public void setPassword(String password) throws NoSuchAlgorithmException {
-    this.password = encodePassword(password);
+    this.salt = HMOUtilities.generateSalt();
+    this.password = HMOUtilities.encodePassword(password, this.salt);
   }
 
   public String getFirstName() {
@@ -97,26 +97,5 @@ public class User implements Serializable {
 
   public String getSalt() {
     return salt;
-  }
-
-  public void setSalt(byte[] salt) {
-    this.salt = new String(salt);
-  }
-
-  /** Before storing password in DB, we encoded it */
-  private String encodePassword(String password) throws NoSuchAlgorithmException {
-    /* Generate random salt */
-    SecureRandom random = new SecureRandom();
-    byte[] salt = new byte[16];
-    random.nextBytes(salt);
-    setSalt(salt);
-
-    /* Encode password+salt and return */
-    MessageDigest md = MessageDigest.getInstance("SHA-512");
-    byte[] messageDigest = md.digest((password + this.salt).getBytes());
-    BigInteger no = new BigInteger(1, messageDigest);
-    StringBuilder hashtext = new StringBuilder(no.toString(16));
-    while (hashtext.length() < 32) hashtext.insert(0, "0");
-    return hashtext.toString();
   }
 }
