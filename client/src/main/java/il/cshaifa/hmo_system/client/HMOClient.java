@@ -3,9 +3,9 @@ package il.cshaifa.hmo_system.client;
 import il.cshaifa.hmo_system.client.events.WarningEvent;
 import il.cshaifa.hmo_system.client.ocsf.AbstractClient;
 import il.cshaifa.hmo_system.entities.Clinic;
-import il.cshaifa.hmo_system.entities.Warning;
-import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.entities.Patient;
+import il.cshaifa.hmo_system.entities.User;
+import il.cshaifa.hmo_system.entities.Warning;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
 import il.cshaifa.hmo_system.messages.LoginMessage;
 import java.io.IOException;
@@ -38,9 +38,7 @@ public class HMOClient extends AbstractClient {
     return client;
   }
 
-  /**
-   * @param msg the message sent. This message can be of several types, handled by controller.
-   */
+  /** @param msg the message sent. This message can be of several types, handled by controller. */
   @Override
   protected void handleMessageFromServer(Object message) {
     this.msg = true;
@@ -81,7 +79,7 @@ public class HMOClient extends AbstractClient {
   }
 
   /**
-   * @param user     The id of the login request
+   * @param user The id of the login request
    * @param password The password the user has entered
    * @throws IOException SQL exception
    */
