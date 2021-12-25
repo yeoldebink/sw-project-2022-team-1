@@ -7,14 +7,10 @@ import javafx.scene.control.TextField;
 
 public class LoginViewController {
 
-  @FXML
-  private TextField idTextField;
+  @FXML private TextField idTextField;
+
+  @FXML private PasswordField passwordField;
 
   @FXML
-  private PasswordField passwordField;
-
-  @FXML
-  void requestLogin(ActionEvent event) {
-
-  }
+  void requestLogin(ActionEvent event) {}
 }
