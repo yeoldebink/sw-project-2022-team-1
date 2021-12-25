@@ -49,7 +49,7 @@ public class HMOClient extends AbstractClient {
     } else {
       if (message.getClass().equals(LoginMessage.class)) {
         this.connected_user = (LoginMessage) message.user;
-        this.connected_patient = (LoginMessage) message.patient;
+        this.connected_patient = (LoginMessage) message.patient_data;
       }
       EventBus.getDefault().post(message);
     }
