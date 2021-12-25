@@ -4,10 +4,10 @@ import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.ClinicStaff;
+import il.cshaifa.hmo_system.entities.HMOUtilities;
 import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.entities.Role;
 import il.cshaifa.hmo_system.entities.User;
-import il.cshaifa.hmo_system.entities.HMOUtilities;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
 import il.cshaifa.hmo_system.messages.LoginMessage;
 import il.cshaifa.hmo_system.messages.Message.messageType;
@@ -76,9 +76,7 @@ public class HMOServer extends AbstractServer {
     client.sendToClient(clinics_msg);
   }
 
-  /**
-   * @param entity_list Entities to be updated to DB
-   */
+  /** @param entity_list Entities to be updated to DB */
   protected void updateEntities(List<?> entity_list) {
     for (var entity : entity_list) {
       session.update(entity);
@@ -91,7 +89,7 @@ public class HMOServer extends AbstractServer {
    * made changes to this clinics and apply changes to DB
    *
    * @param message ClinicMessage
-   * @param client  The client that made the request
+   * @param client The client that made the request
    * @throws IOException SQL exception
    */
   protected void handleClinicMessage(ClinicMessage message, ConnectionToClient client)
@@ -107,8 +105,8 @@ public class HMOServer extends AbstractServer {
    * If login successful will send to client LoginMessage with user and his details
    *
    * @param message LoginMassage should be with user_id and password
-   * @param client  The client that request the login
-   * @throws IOException              SQL exception
+   * @param client The client that request the login
+   * @throws IOException SQL exception
    * @throws NoSuchAlgorithmException Encoding password exception
    */
   protected void handleLogin(LoginMessage message, ConnectionToClient client)
@@ -135,7 +133,7 @@ public class HMOServer extends AbstractServer {
   /**
    * See documentation for entities.Request for defined behavior.
    *
-   * @param msg    the message sent.
+   * @param msg the message sent.
    * @param client the connection connected to the client that sent the message.
    */
   @Override

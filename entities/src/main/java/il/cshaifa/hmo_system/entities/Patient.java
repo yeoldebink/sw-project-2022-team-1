@@ -3,8 +3,6 @@ package il.cshaifa.hmo_system.entities;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -14,8 +12,7 @@ import javax.persistence.Table;
 @Table(name = "patients")
 public class Patient implements Serializable {
 
-  @Id
-  @OneToOne private User user;
+  @Id @OneToOne private User user;
 
   @ManyToOne private Clinic home_clinic;
 

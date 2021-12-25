@@ -9,7 +9,7 @@ public class HMOUtilities {
 
   /**
    * @param password Unencoded string, user password
-   * @param salt     Random string use as a salt for SHA-512 encoding
+   * @param salt Random string use as a salt for SHA-512 encoding
    * @return encoded password
    */
   public static String encodePassword(String password, String salt)
@@ -25,9 +25,7 @@ public class HMOUtilities {
     return hashtext.toString();
   }
 
-  /**
-   * @return generated random salt
-   */
+  /** @return generated random salt */
   public static String generateSalt() {
     SecureRandom random = new SecureRandom();
     byte[] salt = new byte[16];
