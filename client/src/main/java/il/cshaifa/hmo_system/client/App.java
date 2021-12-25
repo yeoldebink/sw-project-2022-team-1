@@ -1,8 +1,8 @@
 package il.cshaifa.hmo_system.client;
 
 import il.cshaifa.hmo_system.client.gui.ResourcePath;
-import il.cshaifa.hmo_system.client.gui.clinic_administration.AdminClinicListController;
-import il.cshaifa.hmo_system.client.gui.clinic_administration.AdminClinicListViewController;
+import il.cshaifa.hmo_system.client.gui.login.LoginController;
+import il.cshaifa.hmo_system.client.gui.login.LoginViewController;
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -12,8 +12,6 @@ import javafx.stage.Stage;
 public class App extends Application {
 
   private HMOClient client;
-
-  public final String FXML_BASE_DIR = "";
 
   public static void main(String[] args) {
     launch();
@@ -25,14 +23,14 @@ public class App extends Application {
     client.openConnection();
 
     var loader =
-        new FXMLLoader(
-            App.class.getResource(ResourcePath.get_fxml(AdminClinicListViewController.class)));
+        new FXMLLoader(App.class.getResource(ResourcePath.get_fxml(LoginViewController.class)));
     var scene = new Scene(loader.load());
 
-    var view_controller = (AdminClinicListViewController) loader.getController();
+    var view_controller = (LoginViewController) loader.getController();
 
-    var c = new AdminClinicListController(view_controller);
+    var c = new LoginController(view_controller);
     primaryStage.setScene(scene);
+    primaryStage.setTitle("HMO System Login");
     primaryStage.show();
   }
 
