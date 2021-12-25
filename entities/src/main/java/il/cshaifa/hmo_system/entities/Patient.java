@@ -3,6 +3,8 @@ package il.cshaifa.hmo_system.entities;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -11,8 +13,11 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "patients")
 public class Patient implements Serializable {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private int id;
 
-  @Id @OneToOne private User user;
+  @OneToOne private User user;
 
   @ManyToOne private Clinic home_clinic;
 
@@ -24,6 +29,10 @@ public class Patient implements Serializable {
     this.user = user_id;
     this.home_clinic = home_clinic_id;
     this.birthday = birthday;
+  }
+
+  public int getId() {
+    return id;
   }
 
   public User getUser() {
