@@ -9,7 +9,6 @@ import il.cshaifa.hmo_system.entities.Warning;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
 import il.cshaifa.hmo_system.messages.LoginMessage;
 import java.io.IOException;
-import java.util.ArrayList;
 import org.greenrobot.eventbus.EventBus;
 
 public class HMOClient extends AbstractClient {
@@ -38,7 +37,9 @@ public class HMOClient extends AbstractClient {
     return client;
   }
 
-  /** @param msg the message sent. This message can be of several types, handled by controller. */
+  /**
+   * @param message the message sent. This message can be of several types, handled by controller.
+   */
   @Override
   protected void handleMessageFromServer(Object message) {
     this.msg = true;
@@ -69,10 +70,7 @@ public class HMOClient extends AbstractClient {
    * @throws IOException SQL exception
    */
   public void updateClinic(Clinic clinic) throws IOException {
-    var clinic_message = new ClinicMessage();
-    var clinic_list = new ArrayList<Clinic>();
-    clinic_list.add(clinic);
-    clinic_message.clinics = clinic_list;
+    var clinic_message = new ClinicMessage(clinic);
 
     client.sendToServer(clinic_message);
     getClinics();
