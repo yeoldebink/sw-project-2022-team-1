@@ -42,6 +42,17 @@ public class User implements Serializable {
     this.password = HMOUtilities.encodePassword(password, this.salt);
   }
 
+  public User(User user) {
+    this.id = user.getId();
+    this.firstName = user.getFirstName();
+    this.lastName = user.getLastName();
+    this.email = user.getEmail();
+    this.phone = user.getPhone();
+    this.role = user.getRole();
+    this.salt = user.getSalt();
+    this.password = user.getPassword();
+  }
+
   public int getId() {
     return id;
   }
