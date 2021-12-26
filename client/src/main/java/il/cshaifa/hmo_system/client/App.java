@@ -1,6 +1,5 @@
 package il.cshaifa.hmo_system.client;
 
-import il.cshaifa.hmo_system.client.Utils.Utils;
 import il.cshaifa.hmo_system.client.gui.ResourcePath;
 import il.cshaifa.hmo_system.client.gui.clinic_administration.AdminClinicListController;
 import il.cshaifa.hmo_system.client.gui.clinic_administration.AdminClinicListViewController;

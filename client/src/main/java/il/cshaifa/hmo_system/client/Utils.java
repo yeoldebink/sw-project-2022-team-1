@@ -1,4 +1,4 @@
-package il.cshaifa.hmo_system.client.Utils;
+package il.cshaifa.hmo_system.client;
 
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import javafx.fxml.FXMLLoader;
