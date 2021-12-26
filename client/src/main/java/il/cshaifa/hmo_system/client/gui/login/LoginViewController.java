@@ -4,6 +4,7 @@ import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.LoginEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -21,15 +22,18 @@ public class LoginViewController extends ViewController {
 
   @FXML private Label statusLabel;
 
-  private void setEditable(boolean f) {
-    idTextField.setEditable(f);
-    passwordField.setEditable(f);
+  @FXML private Button loginButton;
+
+  private void setDisable(boolean f) {
+    idTextField.setDisable(f);
+    passwordField.setDisable(f);
+    loginButton.setDisable(f);
   }
 
   @FXML
   void requestLogin(ActionEvent event) {
     // this is to prevent extra login attempts before the server responds
-    setEditable(false);
+    setDisable(true);
 
     statusLabel.setTextFill(Color.ALICEBLUE);
     statusLabel.setText("Please wait");
@@ -41,7 +45,7 @@ public class LoginViewController extends ViewController {
     } catch (NumberFormatException e) {
       statusLabel.setTextFill(Color.DARKRED);
       statusLabel.setText("ID must be a number");
-      setEditable(true);
+      setDisable(false);
     }
   }
 
@@ -54,7 +58,7 @@ public class LoginViewController extends ViewController {
     statusLabel.setTextFill(Color.DARKRED);
     statusLabel.setText("Incorrect ID or password");
 
-    // re-enable text entry
-    setEditable(true);
+    // re-enable changes
+    setDisable(false);
   }
 }
