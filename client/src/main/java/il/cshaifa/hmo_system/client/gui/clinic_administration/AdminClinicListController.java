@@ -36,7 +36,8 @@ public class AdminClinicListController extends Controller {
 
     loader.setControllerFactory(
         c -> {
-          return new AdminClinicViewController(event.clinic);
+          return new AdminClinicViewController(
+              event.clinic, HMOClient.getClient().getConnected_user().getRole());
         });
 
     Scene scene = new Scene(loader.load());

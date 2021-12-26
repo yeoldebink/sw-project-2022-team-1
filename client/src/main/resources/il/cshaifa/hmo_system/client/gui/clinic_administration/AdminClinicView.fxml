@@ -32,13 +32,11 @@
         <GridPane>
           <children>
             <Label GridPane.rowIndex="0" text="Name: "/>
-            <Label GridPane.columnIndex="1" text="NAME" fx:id="name"/>
-
+            <TextField GridPane.columnIndex="1" text="NAME" fx:id="name"/>
             <Label GridPane.rowIndex="1" text="Address: "/>
-            <Label GridPane.columnIndex="1" GridPane.rowIndex="1" text="ADDRESS" fx:id="address"/>
-            <!--Will add this back later-->
-            <!--            <Label GridPane.rowIndex="2" text="Manager: " fx:id="manager"/>-->
-            <!--            <Label GridPane.columnIndex="1" GridPane.rowIndex="2" text="MANAGER"/>-->
+            <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" text="ADDRESS" fx:id="address"/>
+            <Label GridPane.rowIndex="2" text="Manager: "/>
+            <Label GridPane.columnIndex="1" GridPane.rowIndex="2" text="MANAGER"  fx:id="manager"/>
 
             <Label GridPane.rowIndex="3" text="Hours" underline="true"/>
 

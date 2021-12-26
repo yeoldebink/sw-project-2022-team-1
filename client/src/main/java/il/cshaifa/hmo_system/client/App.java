@@ -13,8 +13,6 @@ public class App extends Application {
 
   private HMOClient client;
 
-  public final String FXML_BASE_DIR = "";
-
   public static void main(String[] args) {
     launch();
   }

@@ -4,6 +4,7 @@ import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.EditClinicEvent;
 import il.cshaifa.hmo_system.client.events.EditClinicEvent.Phase;
 import il.cshaifa.hmo_system.entities.Clinic;
+import il.cshaifa.hmo_system.entities.Role;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -12,11 +13,12 @@ import org.greenrobot.eventbus.EventBus;
 
 public class AdminClinicViewController extends ViewController {
 
-  private final Clinic clinic;
+  private final Role role;
 
-  @FXML private Label name;
-  @FXML private Label address;
-  //  @FXML private Label manager; // will add this back later
+  private final Clinic clinic;
+  @FXML private TextField name;
+  @FXML private TextField address;
+  @FXML private Label manager;
 
   @FXML private TextField sunHoursTextField;
   @FXML private TextField monHoursTextField;
@@ -26,14 +28,17 @@ public class AdminClinicViewController extends ViewController {
   @FXML private TextField friHoursTextField;
   @FXML private TextField satHoursTextField;
 
-  public AdminClinicViewController(Clinic clinic) {
+  public AdminClinicViewController(Clinic clinic, Role role) {
     this.clinic = clinic;
+    this.role = role;
   }
 
   @FXML
   public void initialize() {
     name.setText(clinic.getName());
     address.setText(clinic.getAddress());
+    manager.setText(
+        clinic.getManager_user().getFirstName() + clinic.getManager_user().getLastName());
     sunHoursTextField.setText(clinic.getSun_hours());
     monHoursTextField.setText(clinic.getMon_hours());
     tueHoursTextField.setText(clinic.getTue_hours());
@@ -41,6 +46,19 @@ public class AdminClinicViewController extends ViewController {
     thuHoursTextField.setText(clinic.getThu_hours());
     friHoursTextField.setText(clinic.getFri_hours());
     satHoursTextField.setText(clinic.getSat_hours());
+
+    if (role.getName().equals("HMO Manager")) {
+      sunHoursTextField.setEditable(false);
+      monHoursTextField.setEditable(false);
+      tueHoursTextField.setEditable(false);
+      wedHoursTextField.setEditable(false);
+      thuHoursTextField.setEditable(false);
+      friHoursTextField.setEditable(false);
+      satHoursTextField.setEditable(false);
+    } else {
+      name.setEditable(false);
+      address.setEditable(false);
+    }
   }
 
   @FXML
