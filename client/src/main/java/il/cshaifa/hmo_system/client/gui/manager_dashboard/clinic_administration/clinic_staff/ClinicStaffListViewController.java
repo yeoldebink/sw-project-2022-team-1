@@ -1,4 +1,4 @@
-package il.cshaifa.hmo_system.client.gui.clinic_administration;
+package il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_staff;
 
 import il.cshaifa.hmo_system.client.events.AssignStaffMembersEvent;
 import il.cshaifa.hmo_system.client.events.AssignStaffMembersEvent.Phase;
@@ -6,6 +6,7 @@ import il.cshaifa.hmo_system.entities.Role;
 import il.cshaifa.hmo_system.entities.User;
 import java.util.ArrayList;
 import java.util.Map;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -48,12 +49,12 @@ public class ClinicStaffListViewController {
   }
 
   @FXML
-  void assignSelectedStaffMembers() {
+  public void assignSelectedStaffMembers(ActionEvent event) {
     assignOrUnassignSelectedStaffMembers(Phase.ASSIGN);
   }
 
   @FXML
-  void unassignSelectedStaffMembers() {
+  public void unassignSelectedStaffMembers(ActionEvent event) {
     assignOrUnassignSelectedStaffMembers(Phase.UNASSIGN);
   }
 

@@ -7,9 +7,9 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.geometry.Insets?>
-<AnchorPane xmlns="http://javafx.com/javafx"
-  xmlns:fx="http://javafx.com/fxml"
-  fx:controller="il.cshaifa.hmo_system.client.gui.clinic_administration.manager_dashboard.ManagerDashboardViewController"
+<AnchorPane xmlns="http://javafx.com/javafx/17"
+  xmlns:fx="http://javafx.com/fxml/1"
+  fx:controller="il.cshaifa.hmo_system.client.gui.manager_dashboard.ManagerDashboardViewController"
   prefHeight="960.0" prefWidth="1280.0">
 
   <children>
@@ -18,11 +18,11 @@
       <TabPane fx:id="tabPane">
         <tabs>
           <Tab text="Staff Administration" fx:id="staffAdministrationTab">
-<!--            Placeholder -->
+<!--            <fx:include source="clinic_administration/clinic_staff/ClinicStaffListView.fxml" fx:id="clinicStaffListViewController"/>-->
           </Tab>
 
           <Tab text="Clinic Administration" fx:id="clinicAdministrationTab">
-<!--            Placeholder -->
+            <fx:include source="clinic_administration/clinic_list_view/AdminClinicListView.fxml" fx:id="adminClinicListViewController"/>
           </Tab>
 
           <Tab text="Reports" fx:id="reportsTab">
@@ -32,5 +32,4 @@
       </TabPane>
     </VBox>
   </children>
-
 </AnchorPane>

@@ -1,4 +1,4 @@
-package il.cshaifa.hmo_system.client.gui.clinic_administration;
+package il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_staff;
 
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
