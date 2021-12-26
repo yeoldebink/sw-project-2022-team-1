@@ -25,8 +25,7 @@ public class Patient implements Serializable {
 
   public Patient() {}
 
-  public Patient(int id, User user_id, Clinic home_clinic_id, LocalDateTime birthday) {
-    this.id = id;
+  public Patient(User user_id, Clinic home_clinic_id, LocalDateTime birthday) {
     this.user = user_id;
     this.home_clinic = home_clinic_id;
     this.birthday = birthday;

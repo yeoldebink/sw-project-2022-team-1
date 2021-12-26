@@ -12,7 +12,7 @@
 <?import javafx.scene.text.Font?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="423.0" prefWidth="301.0"
   xmlns="http://javafx.com/javafx/17"
-  fx:controller="il.cshaifa.hmo_system.client.gui.clinic_administration.AdminClinicViewController">
+  fx:controller="il.cshaifa.hmo_system.client.gui.clinic_administration.clinic_view.AdminClinicViewController">
   <children>
     <VBox layoutX="14.0" layoutY="14.0" prefHeight="401.0" prefWidth="276.0">
       <children>
@@ -32,13 +32,11 @@
         <GridPane>
           <children>
             <Label GridPane.rowIndex="0" text="Name: "/>
-            <Label GridPane.columnIndex="1" text="NAME" fx:id="name"/>
-
+            <TextField GridPane.columnIndex="1" text="NAME" fx:id="name"/>
             <Label GridPane.rowIndex="1" text="Address: "/>
-            <Label GridPane.columnIndex="1" GridPane.rowIndex="1" text="ADDRESS" fx:id="address"/>
-            <!--Will add this back later-->
-            <!--            <Label GridPane.rowIndex="2" text="Manager: " fx:id="manager"/>-->
-            <!--            <Label GridPane.columnIndex="1" GridPane.rowIndex="2" text="MANAGER"/>-->
+            <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" text="ADDRESS" fx:id="address"/>
+            <Label GridPane.rowIndex="2" text="Manager: "/>
+            <Label GridPane.columnIndex="1" GridPane.rowIndex="2" text="MANAGER"  fx:id="manager"/>
 
             <Label GridPane.rowIndex="3" text="Hours" underline="true"/>
 

@@ -8,6 +8,7 @@ import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.entities.Role;
 import il.cshaifa.hmo_system.entities.User;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,13 +27,13 @@ public class Main {
   private static SessionFactory getSessionFactory() throws HibernateException {
     Configuration configuration = new Configuration();
 
-    configuration.addAnnotatedClass(Appointment.class);
-    configuration.addAnnotatedClass(AppointmentType.class);
+    configuration.addAnnotatedClass(Role.class);
+    configuration.addAnnotatedClass(User.class);
     configuration.addAnnotatedClass(Clinic.class);
     configuration.addAnnotatedClass(ClinicStaff.class);
     configuration.addAnnotatedClass(Patient.class);
-    configuration.addAnnotatedClass(Role.class);
-    configuration.addAnnotatedClass(User.class);
+    configuration.addAnnotatedClass(AppointmentType.class);
+    configuration.addAnnotatedClass(Appointment.class);
 
     ServiceRegistry serviceRegistry =
         new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
@@ -235,6 +236,24 @@ public class Main {
     return clinicStaff;
   }
 
+  public static Map<String, Patient> createPatients(
+      Map<String, User> users, Map<String, Clinic> clinics) {
+    var patients = new HashMap<String, Patient>();
+    patients.put(
+        "Tyler Durden",
+        new Patient(
+            users.get("Tyler Durden"),
+            clinics.get("Carmel Center"),
+            LocalDateTime.of(1981, 1, 6, 14, 7)));
+
+    for (var patient : patients.values()) {
+      session.save(patient);
+      session.flush();
+    }
+
+    return patients;
+  }
+
   public static void main(String[] args) throws NoSuchAlgorithmException {
     try {
       session = getSessionFactory().openSession();
@@ -243,10 +262,11 @@ public class Main {
       var users = createUsers(roles);
       var clinics = createClinics(users);
       var clinicStaff = assignStaff(users, clinics);
+      var patients = createPatients(users, clinics);
       session.getTransaction().commit();
     } catch (Exception e) {
-      session.getTransaction().rollback();
       e.printStackTrace();
+      session.getTransaction().rollback();
     }
     session.close();
   }
