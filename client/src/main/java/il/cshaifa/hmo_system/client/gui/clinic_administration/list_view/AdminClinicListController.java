@@ -1,8 +1,10 @@
 package il.cshaifa.hmo_system.client.gui.clinic_administration.list_view;
 
 import il.cshaifa.hmo_system.client.HMOClient;
+import il.cshaifa.hmo_system.client.Utils;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
+import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
 import il.cshaifa.hmo_system.client.events.EditClinicEvent;
 import il.cshaifa.hmo_system.client.events.EditClinicEvent.Phase;
 import il.cshaifa.hmo_system.client.gui.ResourcePath;
@@ -14,8 +16,6 @@ import il.cshaifa.hmo_system.messages.Message.messageType;
 import java.io.IOException;
 import java.util.ArrayList;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -28,7 +28,14 @@ public class AdminClinicListController extends Controller {
   }
 
   @Subscribe
-  public void editClinicRequestReceived(EditClinicEvent event) throws IOException {
+  @Override
+  public void OnWindowCloseEvent(CloseWindowEvent event) {
+    if (!event.getViewControllerInstance().equals(view_controller)) return;
+    EventBus.getDefault().unregister(this);
+  }
+
+  @Subscribe
+  public void editClinicRequestReceived(EditClinicEvent event) throws Exception {
     if (event.phase == Phase.SEND) return;
 
     // Navigate to AdminClinicView
@@ -41,14 +48,7 @@ public class AdminClinicListController extends Controller {
           return new AdminClinicViewController(
               event.clinic, HMOClient.getClient().getConnected_user().getRole());
         });
-
-    Scene scene = new Scene(loader.load());
-
-    var c = new AdminClinicController(loader.getController());
-
-    Stage stage = new Stage();
-    stage.setScene(scene);
-    stage.show();
+    Utils.OpenNewWindow(AdminClinicViewController.class, AdminClinicController.class, loader);
   }
 
   @Subscribe
