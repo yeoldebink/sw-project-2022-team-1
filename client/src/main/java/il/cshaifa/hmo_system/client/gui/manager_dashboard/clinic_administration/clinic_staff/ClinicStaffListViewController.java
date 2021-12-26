@@ -1,5 +1,6 @@
 package il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_staff;
 
+import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.AssignStaffMembersEvent;
 import il.cshaifa.hmo_system.client.events.AssignStaffMembersEvent.Phase;
 import il.cshaifa.hmo_system.entities.Role;
@@ -13,7 +14,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.greenrobot.eventbus.EventBus;
 
-public class ClinicStaffListViewController {
+public class ClinicStaffListViewController extends ViewController {
 
   @FXML private TableView<User> staffTable;
   @FXML private TableColumn<User, String> first_name;

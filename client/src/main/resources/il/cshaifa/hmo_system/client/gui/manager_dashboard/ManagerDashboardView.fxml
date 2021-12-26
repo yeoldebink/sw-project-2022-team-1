@@ -1,35 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 
-<?import javafx.geometry.Insets?>
-<AnchorPane xmlns="http://javafx.com/javafx/17"
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+  prefHeight="960" prefWidth="1280" xmlns="http://javafx.com/javafx/17"
   xmlns:fx="http://javafx.com/fxml/1"
-  fx:controller="il.cshaifa.hmo_system.client.gui.manager_dashboard.ManagerDashboardViewController"
-  prefHeight="960.0" prefWidth="1280.0">
-
+  fx:controller="il.cshaifa.hmo_system.client.gui.manager_dashboard.ManagerDashboardViewController">
   <children>
-    <VBox>
-      <VBox.margin><Insets top="10" bottom="10" right="10" left="10"/></VBox.margin>
-      <TabPane fx:id="tabPane">
-        <tabs>
-          <Tab text="Staff Administration" fx:id="staffAdministrationTab">
-<!--            <fx:include source="clinic_administration/clinic_staff/ClinicStaffListView.fxml" fx:id="clinicStaffListViewController"/>-->
-          </Tab>
-
-          <Tab text="Clinic Administration" fx:id="clinicAdministrationTab">
-            <fx:include source="clinic_administration/clinic_list_view/AdminClinicListView.fxml" fx:id="adminClinicListViewController"/>
-          </Tab>
-
-          <Tab text="Reports" fx:id="reportsTab">
-<!--            Placeholder -->
-          </Tab>
-        </tabs>
-      </TabPane>
-    </VBox>
+    <TabPane layoutX="7.0" layoutY="14.0"
+      tabClosingPolicy="UNAVAILABLE" fx:id="tabPane">
+      <tabs>
+        <Tab text="Clinic Administration" fx:id="clinicAdministrationTab"/>
+        <Tab text="Staff Administration" fx:id="staffAdministrationTab"/>
+        <Tab text="Reports" fx:id="reportsTab"/>
+      </tabs>
+    </TabPane>
   </children>
 </AnchorPane>

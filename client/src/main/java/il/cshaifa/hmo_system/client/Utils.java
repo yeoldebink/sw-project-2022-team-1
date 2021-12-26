@@ -1,9 +1,13 @@
 package il.cshaifa.hmo_system.client;
 
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
+import il.cshaifa.hmo_system.client.gui.ResourcePath;
+import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 
 public class Utils {
   public static void OpenNewWindow(Class<?> view_controller, Class<?> controller, FXMLLoader loader)
@@ -15,5 +19,11 @@ public class Utils {
     Stage stage = new Stage();
     stage.setScene(scene);
     stage.show();
+  }
+
+  public static Pair<Pane, ViewController> loadFXML(Class<?> requestor, Class<?> target)
+      throws IOException {
+    var loader = new FXMLLoader(requestor.getResource(ResourcePath.get_fxml(target)));
+    return new Pair<Pane, ViewController>(loader.load(), loader.getController());
   }
 }
