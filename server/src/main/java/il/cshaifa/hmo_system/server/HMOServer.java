@@ -8,13 +8,19 @@ import il.cshaifa.hmo_system.entities.HMOUtilities;
 import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.entities.Role;
 import il.cshaifa.hmo_system.entities.User;
+import il.cshaifa.hmo_system.messages.AppointmentMessage;
+import il.cshaifa.hmo_system.messages.AppointmentMessage.appointmentRequest;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
 import il.cshaifa.hmo_system.messages.LoginMessage;
 import il.cshaifa.hmo_system.messages.Message.messageType;
 import il.cshaifa.hmo_system.server.ocsf.AbstractServer;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
+import java.awt.TrayIcon.MessageType;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -52,6 +58,37 @@ public class HMOServer extends AbstractServer {
     ServiceRegistry serviceRegistry =
         new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
     return configuration.buildSessionFactory(serviceRegistry);
+  }
+
+
+  private void handleAppointmentMessage(AppointmentMessage message, ConnectionToClient client)
+      throws IOException {
+    message.message_type = messageType.RESPONSE;
+    var cb = session.getCriteriaBuilder();
+    CriteriaQuery<Appointment> cr = cb.createQuery(Appointment.class);
+    Root<Appointment> root = cr.from(Appointment.class);
+    LocalDateTime start, end;
+    if (message.requestType == appointmentRequest.SCHEDULE_APPOINTMENT) {
+      start = LocalDateTime.now();
+      end = LocalDateTime.now().plusMonths(3);
+      cr.select(root).where(cb.equal(root.get("type"), message.type),
+          cb.equal(root.get("clinic"), message.clinic),
+          cb.between(root.get("appt_date"), start, end),
+          cb.equal(root.get("taken"), false),
+          cb.greaterThanOrEqualTo(root.get("lock_time"), start.plusMinutes(5)));
+
+    } else if (message.requestType == appointmentRequest.SHOW_STAFF_APPOINTMENTS){
+      start = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+      end = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
+      cr.select(root).where(cb.equal(root.get("staff_member"), message.user), cb.between(root.get("appt_date"), start, end));
+
+    } else if (message.requestType == appointmentRequest.SHOW_PATIENT_HISTORY){
+      cr.select(root).where(cb.equal(root.get("patient"), getUserPatient(message.user)));
+
+    }
+
+    message.appointments = session.createQuery(cr).getResultList();
+    client.sendToClient(message);
   }
 
   /**
@@ -155,6 +192,8 @@ public class HMOServer extends AbstractServer {
         handleClinicMessage((ClinicMessage) msg, client);
       } else if (msg_class == LoginMessage.class) {
         handleLogin((LoginMessage) msg, client);
+      } else if(msg_class == AppointmentMessage.class){
+        handleAppointmentMessage((AppointmentMessage) msg, client);
       }
 
       session.close();
