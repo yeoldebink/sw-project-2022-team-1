@@ -1,8 +1,8 @@
 package il.cshaifa.hmo_system.client;
 
 import il.cshaifa.hmo_system.client.gui.ResourcePath;
-import il.cshaifa.hmo_system.client.gui.clinic_administration.list_view.AdminClinicListController;
-import il.cshaifa.hmo_system.client.gui.clinic_administration.list_view.AdminClinicListViewController;
+import il.cshaifa.hmo_system.client.gui.login.LoginController;
+import il.cshaifa.hmo_system.client.gui.login.LoginViewController;
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -22,10 +22,8 @@ public class App extends Application {
     client.openConnection();
 
     FXMLLoader loader =
-        new FXMLLoader(
-            App.class.getResource(ResourcePath.get_fxml(AdminClinicListViewController.class)));
-    Utils.OpenNewWindow(
-        AdminClinicListViewController.class, AdminClinicListController.class, loader);
+        new FXMLLoader(App.class.getResource(ResourcePath.get_fxml(LoginViewController.class)));
+    Utils.OpenNewWindow(LoginViewController.class, LoginController.class, loader);
   }
 
   @Override
