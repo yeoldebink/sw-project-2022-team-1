@@ -101,6 +101,14 @@ public class HMOServer extends AbstractServer {
     }
   }
 
+  protected Patient getUserPatient(User user) {
+    var cb = session.getCriteriaBuilder();
+    CriteriaQuery<Patient> cr = cb.createQuery(Patient.class);
+    Root<Patient> root = cr.from(Patient.class);
+    cr.select(root).where(cb.equal(root.get("user"), user));
+    return session.createQuery(cr).getResultList().get(0);
+  }
+
   /**
    * If login successful will send to client LoginMessage with user and his details
    *
@@ -118,7 +126,7 @@ public class HMOServer extends AbstractServer {
     if (user_encoded_password.equals(entered_password)) {
       message.user = user;
       if (user.getRole().getName().equals("Patient")) {
-        message.patient_data = (Patient) session.get(Patient.class, user);
+        message.patient_data = getUserPatient(user);
       } else if (!user.getRole().getName().equals("HMO Manager")) {
         var cb = session.getCriteriaBuilder();
         CriteriaQuery<Clinic> cr = cb.createQuery(Clinic.class);
