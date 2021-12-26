@@ -6,7 +6,7 @@ import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.User;
 import java.util.List;
 
-public class AppointmentMessage extends Message{
+public class AppointmentMessage extends Message {
   public User user;
   public Clinic clinic;
   public AppointmentType type;
