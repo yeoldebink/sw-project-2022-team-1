@@ -22,11 +22,8 @@ public class App extends Application {
     client.openConnection();
 
     FXMLLoader loader =
-        new FXMLLoader(
-            App.class.getResource(ResourcePath.get_fxml(LoginViewController.class)));
-    Utils.OpenNewWindow(
-        LoginViewController.class, LoginController.class, loader);
-
+        new FXMLLoader(App.class.getResource(ResourcePath.get_fxml(LoginViewController.class)));
+    Utils.OpenNewWindow(LoginViewController.class, LoginController.class, loader);
   }
 
   @Override
