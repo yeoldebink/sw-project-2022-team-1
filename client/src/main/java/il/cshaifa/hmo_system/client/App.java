@@ -1,8 +1,8 @@
 package il.cshaifa.hmo_system.client;
 
 import il.cshaifa.hmo_system.client.gui.ResourcePath;
-import il.cshaifa.hmo_system.client.gui.clinic_administration.AdminClinicListController;
-import il.cshaifa.hmo_system.client.gui.clinic_administration.AdminClinicListViewController;
+import il.cshaifa.hmo_system.client.gui.clinic_administration.list_view.AdminClinicListController;
+import il.cshaifa.hmo_system.client.gui.clinic_administration.list_view.AdminClinicListViewController;
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

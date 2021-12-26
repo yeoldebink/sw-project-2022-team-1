@@ -1,6 +1,6 @@
-package il.cshaifa.hmo_system.client.gui.clinic_administration;
+package il.cshaifa.hmo_system.client.gui.clinic_administration.clinic_view;
 
-import il.cshaifa.hmo_system.client.base_controllers.ViewController;
+import il.cshaifa.hmo_system.client.base_controllers.RoleDefinedViewController;
 import il.cshaifa.hmo_system.client.events.EditClinicEvent;
 import il.cshaifa.hmo_system.client.events.EditClinicEvent.Phase;
 import il.cshaifa.hmo_system.entities.Clinic;
@@ -11,9 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import org.greenrobot.eventbus.EventBus;
 
-public class AdminClinicViewController extends ViewController {
-
-  private final Role role;
+public class AdminClinicViewController extends RoleDefinedViewController {
 
   private final Clinic clinic;
   @FXML private TextField name;
@@ -29,8 +27,8 @@ public class AdminClinicViewController extends ViewController {
   @FXML private TextField satHoursTextField;
 
   public AdminClinicViewController(Clinic clinic, Role role) {
+    super(role);
     this.clinic = clinic;
-    this.role = role;
   }
 
   @FXML
@@ -47,17 +45,21 @@ public class AdminClinicViewController extends ViewController {
     friHoursTextField.setText(clinic.getFri_hours());
     satHoursTextField.setText(clinic.getSat_hours());
 
+    applyRoleBehavior();
+  }
+
+  protected void applyRoleBehavior() {
     if (role.getName().equals("HMO Manager")) {
-      sunHoursTextField.setEditable(false);
-      monHoursTextField.setEditable(false);
-      tueHoursTextField.setEditable(false);
-      wedHoursTextField.setEditable(false);
-      thuHoursTextField.setEditable(false);
-      friHoursTextField.setEditable(false);
-      satHoursTextField.setEditable(false);
+      sunHoursTextField.setDisable(true);
+      monHoursTextField.setDisable(true);
+      tueHoursTextField.setDisable(true);
+      wedHoursTextField.setDisable(true);
+      thuHoursTextField.setDisable(true);
+      friHoursTextField.setDisable(true);
+      satHoursTextField.setDisable(true);
     } else {
-      name.setEditable(false);
-      address.setEditable(false);
+      name.setDisable(true);
+      address.setDisable(true);
     }
   }
 

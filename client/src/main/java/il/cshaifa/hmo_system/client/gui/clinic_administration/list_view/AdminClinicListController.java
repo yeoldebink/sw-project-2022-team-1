@@ -1,4 +1,4 @@
-package il.cshaifa.hmo_system.client.gui.clinic_administration;
+package il.cshaifa.hmo_system.client.gui.clinic_administration.list_view;
 
 import il.cshaifa.hmo_system.client.HMOClient;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
@@ -6,6 +6,8 @@ import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.EditClinicEvent;
 import il.cshaifa.hmo_system.client.events.EditClinicEvent.Phase;
 import il.cshaifa.hmo_system.client.gui.ResourcePath;
+import il.cshaifa.hmo_system.client.gui.clinic_administration.clinic_view.AdminClinicController;
+import il.cshaifa.hmo_system.client.gui.clinic_administration.clinic_view.AdminClinicViewController;
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
 import il.cshaifa.hmo_system.messages.Message.messageType;
