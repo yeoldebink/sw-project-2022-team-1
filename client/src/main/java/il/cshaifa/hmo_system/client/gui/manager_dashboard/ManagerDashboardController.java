@@ -5,9 +5,8 @@ import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_list_view.AdminClinicListController;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_staff.ClinicStaffListController;
-import org.greenrobot.eventbus.EventBus;
-
 import java.io.IOException;
+import org.greenrobot.eventbus.EventBus;
 
 public class ManagerDashboardController extends Controller {
   private AdminClinicListController adminClinicListController;
@@ -31,7 +30,7 @@ public class ManagerDashboardController extends Controller {
 
   @Override
   public void OnWindowCloseEvent(CloseWindowEvent event) {
-    if(event.getViewControllerInstance().equals(this.view_controller))
+    if (event.getViewControllerInstance().equals(this.view_controller))
       EventBus.getDefault().unregister(this);
   }
 }
