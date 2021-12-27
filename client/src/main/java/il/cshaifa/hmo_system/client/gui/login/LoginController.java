@@ -12,13 +12,11 @@ import il.cshaifa.hmo_system.client.gui.manager_dashboard.ManagerDashboardViewCo
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.LoginMessage;
 import il.cshaifa.hmo_system.messages.Message;
+import java.io.IOException;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-
-import java.io.IOException;
 
 public class LoginController extends Controller {
 
@@ -29,12 +27,12 @@ public class LoginController extends Controller {
 
   @Override
   public void OnWindowCloseEvent(CloseWindowEvent event) {
-    if(event.getViewControllerInstance().equals(this.view_controller))
+    if (event.getViewControllerInstance().equals(this.view_controller))
       EventBus.getDefault().unregister(this);
   }
 
   @Subscribe
-  public void OnLoginRequestEvent(LoginEvent event){
+  public void OnLoginRequestEvent(LoginEvent event) {
     try {
       String pass = event.password.equals("") ? null : event.password;
       HMOClient.getClient().loginRequest(event.id, pass);
@@ -45,10 +43,10 @@ public class LoginController extends Controller {
 
   @Subscribe
   public void OnLoginRequestResponse(LoginMessage message) throws Exception {
-    if(!message.message_type.equals(Message.messageType.RESPONSE)) return;
+    if (!message.message_type.equals(Message.messageType.RESPONSE)) return;
 
     var user = message.user;
-    if(user == null){
+    if (user == null) {
       incorrectUser();
       return;
     }
@@ -56,25 +54,30 @@ public class LoginController extends Controller {
     openPageByRole(user);
   }
 
-  private void incorrectUser(){
+  private void incorrectUser() {
     Platform.runLater(() -> ((LoginViewController) view_controller).setFailedText());
   }
 
   private void openPageByRole(User user) throws Exception {
-     var role_name  = user.getRole().getName();
+    var role_name = user.getRole().getName();
 
-     switch (role_name){
-       case ("Clinic Manager"):
-       case ("HMO Manager"):
-         FXMLLoader loader = new FXMLLoader(getClass().getResource(ResourcePath.get_fxml(ManagerDashboardViewController.class)));
-         loader.setControllerFactory(
-                 c-> { return new ManagerDashboardViewController(user);
-                 });
-         Utils.OpenNewWindow(ManagerDashboardViewController.class, ManagerDashboardController.class, loader);
+    switch (role_name) {
+      case ("Clinic Manager"):
+      case ("HMO Manager"):
+        FXMLLoader loader =
+            new FXMLLoader(
+                getClass()
+                    .getResource(ResourcePath.get_fxml(ManagerDashboardViewController.class)));
+        loader.setControllerFactory(
+            c -> {
+              return new ManagerDashboardViewController(user);
+            });
+        Utils.OpenNewWindow(
+            ManagerDashboardViewController.class, ManagerDashboardController.class, loader);
 
-         break;
-       default:
-         throw new Exception("Only manager implemented");
-     }
+        break;
+      default:
+        throw new Exception("Only manager implemented");
+    }
   }
 }

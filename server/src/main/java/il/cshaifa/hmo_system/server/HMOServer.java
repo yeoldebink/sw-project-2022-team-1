@@ -121,7 +121,7 @@ public class HMOServer extends AbstractServer {
       throws IOException, NoSuchAlgorithmException {
     message.message_type = messageType.RESPONSE;
     User user = (User) session.get(User.class, message.id);
-    if(user != null) {
+    if (user != null) {
       String user_encoded_password = user.getPassword();
       String entered_password = HMOUtilities.encodePassword(message.password, user.getSalt());
       if (user_encoded_password.equals(entered_password)) {
