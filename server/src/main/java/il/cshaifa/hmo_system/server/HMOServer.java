@@ -88,10 +88,13 @@ public class HMOServer extends AbstractServer {
               cb.equal(root.get("taken"), true));
 
     } else if (message.requestType == appointmentRequest.SHOW_PATIENT_HISTORY) {
-      cr.select(root).where(cb.equal(root.get("patient"), getUserPatient(message.user)),
+      cr.select(root)
+          .where(
+              cb.equal(root.get("patient"), getUserPatient(message.user)),
               cb.equal(root.get("taken"), true));
-    }else if (message.requestType == appointmentRequest.GENERATE_APPOINTMENTS){
-      //TODO for each appointment in message.appointments create a new row in the Appointments Table
+    } else if (message.requestType == appointmentRequest.GENERATE_APPOINTMENTS) {
+      // TODO for each appointment in message.appointments create a new row in the Appointments
+      // Table
     }
 
     message.appointments = session.createQuery(cr).getResultList();
@@ -128,9 +131,7 @@ public class HMOServer extends AbstractServer {
     }
   }
 
-  protected void createEntities(List<?> entity_list){
-
-  }
+  protected void createEntities(List<?> entity_list) {}
 
   /**
    * If message.clinics is null, this means client requested all of the clinics else, client has

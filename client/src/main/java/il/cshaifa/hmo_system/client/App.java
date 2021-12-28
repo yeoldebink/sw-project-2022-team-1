@@ -1,13 +1,11 @@
 package il.cshaifa.hmo_system.client;
 
 import il.cshaifa.hmo_system.client.gui.ResourcePath;
-
 import il.cshaifa.hmo_system.client.gui.login.LoginController;
 import il.cshaifa.hmo_system.client.gui.login.LoginViewController;
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class App extends Application {
@@ -22,7 +20,6 @@ public class App extends Application {
   public void start(Stage primaryStage) throws Exception {
     client = HMOClient.getClient();
     client.openConnection();
-
 
     FXMLLoader loader =
         new FXMLLoader(App.class.getResource(ResourcePath.get_fxml(LoginViewController.class)));

@@ -1,7 +1,6 @@
 package il.cshaifa.hmo_system.client.base_controllers;
 
 import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
-import il.cshaifa.hmo_system.client.events.EditClinicEvent;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.stage.Stage;
