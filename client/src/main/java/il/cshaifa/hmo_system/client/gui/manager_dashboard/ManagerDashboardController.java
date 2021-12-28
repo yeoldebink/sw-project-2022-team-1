@@ -5,7 +5,6 @@ import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_list_view.AdminClinicListController;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_staff.ClinicStaffListController;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -18,13 +17,11 @@ public class ManagerDashboardController extends Controller {
     EventBus.getDefault().register(this);
     adminClinicListController =
         new AdminClinicListController(
-            ((ManagerDashboardViewController) view_controller)
-                .getAdminClinicListViewController());
+            ((ManagerDashboardViewController) view_controller).getAdminClinicListViewController());
 
     clinicStaffListController =
         new ClinicStaffListController(
-            ((ManagerDashboardViewController) view_controller)
-                    .getClinicStaffListViewController());
+            ((ManagerDashboardViewController) view_controller).getClinicStaffListViewController());
   }
 
   @Subscribe

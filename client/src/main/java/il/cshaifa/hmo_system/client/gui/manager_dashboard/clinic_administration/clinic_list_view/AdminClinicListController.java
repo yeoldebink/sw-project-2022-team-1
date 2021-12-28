@@ -21,7 +21,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 public class AdminClinicListController extends Controller {
 
-  public AdminClinicListController(ViewController view_controller)  {
+  public AdminClinicListController(ViewController view_controller) {
     super(view_controller);
     EventBus.getDefault().register(this);
     try {

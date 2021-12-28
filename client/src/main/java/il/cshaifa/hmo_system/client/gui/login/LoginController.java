@@ -10,8 +10,6 @@ import il.cshaifa.hmo_system.client.gui.ResourcePath;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.ManagerDashboardController;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.ManagerDashboardViewController;
 import il.cshaifa.hmo_system.entities.User;
-import il.cshaifa.hmo_system.messages.LoginMessage;
-import il.cshaifa.hmo_system.messages.Message;
 import java.io.IOException;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -46,8 +44,7 @@ public class LoginController extends Controller {
   public void OnLoginRequestResponse(LoginEvent event) throws Exception {
     if (event.phase == LoginEvent.Phase.REJECT) {
       incorrectUser();
-    }
-    else if (event.phase == LoginEvent.Phase.AUTHORIZE) {
+    } else if (event.phase == LoginEvent.Phase.AUTHORIZE) {
       openMainScreenByRole(event.userData);
     }
   }
