@@ -13,11 +13,6 @@ import il.cshaifa.hmo_system.messages.LoginMessage;
 import il.cshaifa.hmo_system.messages.Message;
 import java.io.IOException;
 import java.util.ArrayList;
-<<<<<<< HEAD
-=======
-
-import il.cshaifa.hmo_system.messages.Message;
->>>>>>> ecc298d (No messages are sent between client objects)
 import org.greenrobot.eventbus.EventBus;
 
 public class HMOClient extends AbstractClient {
@@ -68,11 +63,7 @@ public class HMOClient extends AbstractClient {
 
   // TODO Create ClinicEvent class and send it instead of message
   private void handleClinicMessage(ClinicMessage message) {
-<<<<<<< HEAD
     if (message.message_type == Message.messageType.REQUEST) return;
-=======
-    if(message.message_type == Message.messageType.REQUEST) return;
->>>>>>> ecc298d (No messages are sent between client objects)
     ArrayList<Clinic> clinics = (ArrayList<Clinic>) message.clinics;
     ClinicEvent event = new ClinicEvent(clinics);
     EventBus.getDefault().post(event);
