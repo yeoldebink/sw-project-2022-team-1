@@ -21,10 +21,14 @@ import org.greenrobot.eventbus.Subscribe;
 
 public class AdminClinicListController extends Controller {
 
-  public AdminClinicListController(ViewController view_controller) throws IOException {
+  public AdminClinicListController(ViewController view_controller)  {
     super(view_controller);
     EventBus.getDefault().register(this);
-    HMOClient.getClient().getClinics();
+    try {
+      HMOClient.getClient().getClinics();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   @Subscribe
@@ -35,7 +39,7 @@ public class AdminClinicListController extends Controller {
   }
 
   @Subscribe
-  public void editClinicRequestReceived(EditClinicEvent event) throws Exception {
+  public void editClinicRequestReceived(EditClinicEvent event) {
     if (event.phase == Phase.SEND) return;
 
     // Navigate to AdminClinicView
@@ -48,7 +52,11 @@ public class AdminClinicListController extends Controller {
           return new AdminClinicViewController(
               event.clinic, HMOClient.getClient().getConnected_user().getRole());
         });
-    Utils.OpenNewWindow(AdminClinicViewController.class, AdminClinicController.class, loader);
+    try {
+      Utils.OpenNewWindow(AdminClinicViewController.class, AdminClinicController.class, loader);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   @Subscribe

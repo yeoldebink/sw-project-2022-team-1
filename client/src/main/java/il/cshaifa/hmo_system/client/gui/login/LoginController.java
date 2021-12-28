@@ -25,6 +25,7 @@ public class LoginController extends Controller {
     EventBus.getDefault().register(this);
   }
 
+  @Subscribe
   @Override
   public void OnWindowCloseEvent(CloseWindowEvent event) {
     if (event.getViewControllerInstance().equals(this.view_controller))
@@ -42,23 +43,21 @@ public class LoginController extends Controller {
   }
 
   @Subscribe
-  public void OnLoginRequestResponse(LoginMessage message) throws Exception {
-    if (!message.message_type.equals(Message.messageType.RESPONSE)) return;
-
-    var user = message.user;
-    if (user == null) {
+  public void OnLoginRequestResponse(LoginEvent event) throws Exception {
+    if (event.phase == LoginEvent.Phase.REJECT) {
       incorrectUser();
-      return;
     }
-
-    openPageByRole(user);
+    else if (event.phase == LoginEvent.Phase.AUTHORIZE) {
+      openMainScreenByRole(event.userData);
+    }
   }
 
   private void incorrectUser() {
+    // Letting the controller to call this function on the UI thread, and apply the changes
     Platform.runLater(() -> ((LoginViewController) view_controller).setFailedText());
   }
 
-  private void openPageByRole(User user) throws Exception {
+  private void openMainScreenByRole(User user) throws Exception {
     var role_name = user.getRole().getName();
 
     switch (role_name) {

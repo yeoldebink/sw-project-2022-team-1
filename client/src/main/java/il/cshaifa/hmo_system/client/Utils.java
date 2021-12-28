@@ -14,7 +14,8 @@ import javafx.util.Pair;
 public class Utils {
   public static void OpenNewWindow(Class<?> view_controller, Class<?> controller, FXMLLoader loader)
       throws Exception {
-    Platform.runLater(
+      //Letting us run things on the UI Thread, otherwise things won't change and an exception will be thrown.
+      Platform.runLater(
         () -> {
           try {
             var scene = new Scene(loader.load());
