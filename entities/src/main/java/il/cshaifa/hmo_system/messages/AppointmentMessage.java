@@ -16,7 +16,8 @@ public class AppointmentMessage extends Message {
   public enum appointmentRequest {
     SCHEDULE_APPOINTMENT,
     SHOW_STAFF_APPOINTMENTS,
-    SHOW_PATIENT_HISTORY
+    SHOW_PATIENT_HISTORY,
+    GENERATE_APPOINTMENTS
   }
 
   public AppointmentMessage(User user, appointmentRequest request) {

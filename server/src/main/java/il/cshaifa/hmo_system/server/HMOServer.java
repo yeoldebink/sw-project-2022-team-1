@@ -61,6 +61,7 @@ public class HMOServer extends AbstractServer {
 
   private void handleAppointmentMessage(AppointmentMessage message, ConnectionToClient client)
       throws IOException {
+
     message.message_type = messageType.RESPONSE;
     var cb = session.getCriteriaBuilder();
     CriteriaQuery<Appointment> cr = cb.createQuery(Appointment.class);
@@ -68,7 +69,7 @@ public class HMOServer extends AbstractServer {
     LocalDateTime start, end;
     if (message.requestType == appointmentRequest.SCHEDULE_APPOINTMENT) {
       start = LocalDateTime.now();
-      end = LocalDateTime.now().plusMonths(3);
+      end = LocalDateTime.now().plusWeeks(3);
       cr.select(root)
           .where(
               cb.equal(root.get("type"), message.type),
@@ -83,10 +84,14 @@ public class HMOServer extends AbstractServer {
       cr.select(root)
           .where(
               cb.equal(root.get("staff_member"), message.user),
-              cb.between(root.get("appt_date"), start, end));
+              cb.between(root.get("appt_date"), start, end),
+              cb.equal(root.get("taken"), true));
 
     } else if (message.requestType == appointmentRequest.SHOW_PATIENT_HISTORY) {
-      cr.select(root).where(cb.equal(root.get("patient"), getUserPatient(message.user)));
+      cr.select(root).where(cb.equal(root.get("patient"), getUserPatient(message.user)),
+              cb.equal(root.get("taken"), true));
+    }else if (message.requestType == appointmentRequest.GENERATE_APPOINTMENTS){
+      //TODO for each appointment in message.appointments create a new row in the Appointments Table
     }
 
     message.appointments = session.createQuery(cr).getResultList();
@@ -121,6 +126,10 @@ public class HMOServer extends AbstractServer {
       session.update(entity);
       session.flush();
     }
+  }
+
+  protected void createEntities(List<?> entity_list){
+
   }
 
   /**
