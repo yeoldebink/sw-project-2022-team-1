@@ -44,6 +44,7 @@ public class AddAppointmentViewController extends ViewController {
     @FXML
     void requestCreateAppointments(ActionEvent actionEvent) {
         // Disable button to prevent spam
+        error_text.setText("");
         create_appts.setDisable(true);
 
         try {
