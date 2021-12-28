@@ -1,8 +1,7 @@
 package il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_list_view;
 
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
-import il.cshaifa.hmo_system.client.events.EditClinicEvent;
-import il.cshaifa.hmo_system.client.events.EditClinicEvent.Phase;
+import il.cshaifa.hmo_system.client.events.ClinicEvent;
 import il.cshaifa.hmo_system.entities.Clinic;
 import java.util.ArrayList;
 import javafx.event.ActionEvent;
@@ -47,7 +46,7 @@ public class AdminClinicListViewController extends ViewController {
   @FXML
   void showEditClinicDialog(ActionEvent event) {
     var clinic = clinicTable.getSelectionModel().getSelectedItem();
-    EventBus.getDefault().post(new EditClinicEvent(clinic, Phase.OPEN_WINDOW));
+    EventBus.getDefault().post(new ClinicEvent(clinic, ClinicEvent.Phase.EDIT));
   }
 
   void populateClinicTable(ArrayList<Clinic> clinics) {
