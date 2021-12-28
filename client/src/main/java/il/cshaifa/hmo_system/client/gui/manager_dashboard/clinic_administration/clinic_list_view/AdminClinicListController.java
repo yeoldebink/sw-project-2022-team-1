@@ -10,6 +10,8 @@ import il.cshaifa.hmo_system.client.gui.ResourcePath;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_view.AdminClinicController;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_view.AdminClinicViewController;
 import java.io.IOException;
+
+
 import javafx.fxml.FXMLLoader;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

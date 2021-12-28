@@ -63,7 +63,9 @@ public class HMOClient extends AbstractClient {
 
   // TODO Create ClinicEvent class and send it instead of message
   private void handleClinicMessage(ClinicMessage message) {
+
     if (message.message_type == Message.messageType.REQUEST) return;
+
     ArrayList<Clinic> clinics = (ArrayList<Clinic>) message.clinics;
     ClinicEvent event = new ClinicEvent(clinics);
     EventBus.getDefault().post(event);
