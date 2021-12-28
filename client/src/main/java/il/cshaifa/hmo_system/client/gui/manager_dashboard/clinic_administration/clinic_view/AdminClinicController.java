@@ -5,7 +5,6 @@ import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.ClinicEvent;
 import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
-
 import java.io.IOException;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

@@ -10,10 +10,9 @@ import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.entities.Warning;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
 import il.cshaifa.hmo_system.messages.LoginMessage;
+import il.cshaifa.hmo_system.messages.Message;
 import java.io.IOException;
 import java.util.ArrayList;
-
-import il.cshaifa.hmo_system.messages.Message;
 import org.greenrobot.eventbus.EventBus;
 
 public class HMOClient extends AbstractClient {
@@ -55,26 +54,26 @@ public class HMOClient extends AbstractClient {
         this.connected_user = ((LoginMessage) message).user;
         this.connected_patient = ((LoginMessage) message).patient_data;
         handleLoginMessage((LoginMessage) message);
-      }else if (message.getClass().equals(ClinicMessage.class)){
+      } else if (message.getClass().equals(ClinicMessage.class)) {
         handleClinicMessage((ClinicMessage) message);
       }
-      //EventBus.getDefault().post(message);
+      // EventBus.getDefault().post(message);
     }
   }
 
-  //TODO Create ClinicEvent class and send it instead of message
+  // TODO Create ClinicEvent class and send it instead of message
   private void handleClinicMessage(ClinicMessage message) {
-    if(message.message_type == Message.messageType.REQUEST) return;
+    if (message.message_type == Message.messageType.REQUEST) return;
     ArrayList<Clinic> clinics = (ArrayList<Clinic>) message.clinics;
     ClinicEvent event = new ClinicEvent(clinics);
     EventBus.getDefault().post(event);
   }
 
-  private void handleLoginMessage(LoginMessage message){
+  private void handleLoginMessage(LoginMessage message) {
     LoginEvent event = new LoginEvent(0, "");
-    if (message.user == null){
+    if (message.user == null) {
       event.phase = LoginEvent.Phase.REJECT;
-    }else {
+    } else {
       event.id = message.id;
       event.password = message.password;
       event.phase = LoginEvent.Phase.AUTHORIZE;

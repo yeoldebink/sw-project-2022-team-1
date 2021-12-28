@@ -6,7 +6,7 @@ import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-//TODO Implement communication with client
+// TODO Implement communication with client
 public class ClinicStaffListController extends Controller {
   public ClinicStaffListController(ViewController view_controller) {
     super(view_controller);
