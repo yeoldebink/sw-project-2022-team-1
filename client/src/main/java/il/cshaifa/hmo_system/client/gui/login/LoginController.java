@@ -6,12 +6,10 @@ import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
 
 public class LoginController extends Controller {
 
-    public LoginController(ViewController view_controller) {
-        super(view_controller);
-    }
+  public LoginController(ViewController view_controller) {
+    super(view_controller);
+  }
 
-    @Override
-    public void OnWindowCloseEvent(CloseWindowEvent event) {
-
-    }
+  @Override
+  public void OnWindowCloseEvent(CloseWindowEvent event) {}
 }
