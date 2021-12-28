@@ -23,16 +23,10 @@ public class App extends Application {
     client = HMOClient.getClient();
     client.openConnection();
 
-    var loader =
+
+    FXMLLoader loader =
         new FXMLLoader(App.class.getResource(ResourcePath.get_fxml(LoginViewController.class)));
-    var scene = new Scene(loader.load());
-
-    var view_controller = (LoginViewController) loader.getController();
-
-    var c = new LoginController(view_controller);
-    primaryStage.setScene(scene);
-    primaryStage.setTitle("HMO System Login");
-    primaryStage.show();
+    Utils.OpenNewWindow(LoginViewController.class, LoginController.class, loader);
   }
 
   @Override
