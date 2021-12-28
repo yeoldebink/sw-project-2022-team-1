@@ -6,12 +6,10 @@ import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
 
 public class AppointmentListController extends Controller {
 
-    public AppointmentListController(ViewController view_controller) {
-        super(view_controller);
-    }
+  public AppointmentListController(ViewController view_controller) {
+    super(view_controller);
+  }
 
-    @Override
-    public void OnWindowCloseEvent(CloseWindowEvent event) {
-
-    }
+  @Override
+  public void OnWindowCloseEvent(CloseWindowEvent event) {}
 }
