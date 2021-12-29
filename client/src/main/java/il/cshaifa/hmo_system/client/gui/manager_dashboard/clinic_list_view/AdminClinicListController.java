@@ -18,7 +18,6 @@ public class AdminClinicListController extends Controller {
 
   public AdminClinicListController(ViewController view_controller) {
     super(view_controller, null);
-
     EventBus.getDefault().register(this);
     try {
       HMOClient.getClient().getClinics();
