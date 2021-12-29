@@ -13,6 +13,7 @@ import il.cshaifa.hmo_system.messages.AppointmentMessage.appointmentRequest;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
 import il.cshaifa.hmo_system.messages.LoginMessage;
 import il.cshaifa.hmo_system.messages.Message.messageType;
+import il.cshaifa.hmo_system.messages.StaffMessage;
 import il.cshaifa.hmo_system.server.ocsf.AbstractServer;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import java.io.IOException;
@@ -59,6 +60,20 @@ public class HMOServer extends AbstractServer {
     return configuration.buildSessionFactory(serviceRegistry);
   }
 
+  private void handleStaffMessage(StaffMessage message, ConnectionToClient client)
+      throws IOException {
+    message.message_type = messageType.RESPONSE;
+    var cb = session.getCriteriaBuilder();
+    CriteriaQuery<Appointment> cr = cb.createQuery(ClinicStaff.class);
+    Root<ClinicStaff> root = cr.from(ClinicStaff.class);
+    cr.select(root);
+
+    Query<ClinicStaff> query = session.createQuery(cr);
+
+    message.staff_list = query.getResultList();
+    client.sendToClient(message);
+  }
+
   private void handleAppointmentMessage(AppointmentMessage message, ConnectionToClient client)
       throws IOException {
 
@@ -93,8 +108,8 @@ public class HMOServer extends AbstractServer {
               cb.equal(root.get("patient"), getUserPatient(message.user)),
               cb.equal(root.get("taken"), true));
     } else if (message.requestType == appointmentRequest.GENERATE_APPOINTMENTS) {
-      // TODO for each appointment in message.appointments create a new row in the Appointments
-      // Table
+      addEntities(message.appointments);
+      return;
     }
 
     message.appointments = session.createQuery(cr).getResultList();
@@ -123,7 +138,9 @@ public class HMOServer extends AbstractServer {
     client.sendToClient(clinics_msg);
   }
 
-  /** @param entity_list Entities to be updated to DB */
+  /**
+   * @param entity_list Entities to be updated to DB
+   */
   protected void updateEntities(List<?> entity_list) {
     for (var entity : entity_list) {
       session.update(entity);
@@ -131,14 +148,22 @@ public class HMOServer extends AbstractServer {
     }
   }
 
-  protected void createEntities(List<?> entity_list) {}
+  protected void addEntities(List<?> entity_list) {
+    for (var entity : entity_list) {
+      session.persist(entity);
+      session.flush();
+    }
+  }
+
+  protected void createEntities(List<?> entity_list) {
+  }
 
   /**
    * If message.clinics is null, this means client requested all of the clinics else, client has
    * made changes to this clinics and apply changes to DB
    *
    * @param message ClinicMessage
-   * @param client The client that made the request
+   * @param client  The client that made the request
    * @throws IOException SQL exception
    */
   protected void handleClinicMessage(ClinicMessage message, ConnectionToClient client)
@@ -162,8 +187,8 @@ public class HMOServer extends AbstractServer {
    * If login successful will send to client LoginMessage with user and his details
    *
    * @param message LoginMassage should be with user_id and password
-   * @param client The client that request the login
-   * @throws IOException SQL exception
+   * @param client  The client that request the login
+   * @throws IOException              SQL exception
    * @throws NoSuchAlgorithmException Encoding password exception
    */
   protected void handleLogin(LoginMessage message, ConnectionToClient client)
@@ -190,7 +215,7 @@ public class HMOServer extends AbstractServer {
   /**
    * See documentation for entities.Request for defined behavior.
    *
-   * @param msg the message sent.
+   * @param msg    the message sent.
    * @param client the connection connected to the client that sent the message.
    */
   @Override
@@ -206,6 +231,8 @@ public class HMOServer extends AbstractServer {
         handleLogin((LoginMessage) msg, client);
       } else if (msg_class == AppointmentMessage.class) {
         handleAppointmentMessage((AppointmentMessage) msg, client);
+      } else if (msg_class == StaffMessage.class) {
+        handleStaffMessage((StaffMessage) msg_class, client);
       }
 
       session.close();

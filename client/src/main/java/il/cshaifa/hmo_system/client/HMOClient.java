@@ -8,6 +8,7 @@ import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.entities.Warning;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
 import il.cshaifa.hmo_system.messages.LoginMessage;
+import il.cshaifa.hmo_system.messages.StaffMessage;
 import java.io.IOException;
 import org.greenrobot.eventbus.EventBus;
 
@@ -61,6 +62,10 @@ public class HMOClient extends AbstractClient {
    */
   public void getClinics() throws IOException {
     client.sendToServer(new ClinicMessage());
+  }
+
+  public void getStaff() throws IOException{
+    client.sendToServer(new StaffMessage());
   }
 
   /**
