@@ -7,13 +7,14 @@ import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
 import il.cshaifa.hmo_system.client.events.EditClinicEvent;
 import il.cshaifa.hmo_system.client.events.EditClinicEvent.Phase;
 import java.io.IOException;
+import javafx.stage.Stage;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 public class AdminClinicController extends Controller {
 
-  public AdminClinicController(ViewController view_controller) {
-    super(view_controller);
+  public AdminClinicController(ViewController view_controller, Stage stage) {
+    super(view_controller, stage);
     EventBus.getDefault().register(this);
   }
 
