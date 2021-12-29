@@ -6,7 +6,6 @@ import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_staff.ClinicStaffListController;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_list_view.AdminClinicListController;
 import javafx.stage.Stage;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
