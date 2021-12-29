@@ -232,7 +232,7 @@ public class HMOServer extends AbstractServer {
       } else if (msg_class == AppointmentMessage.class) {
         handleAppointmentMessage((AppointmentMessage) msg, client);
       } else if (msg_class == StaffMessage.class) {
-        handleStaffMessage((StaffMessage) msg_class, client);
+        handleStaffMessage((StaffMessage) msg, client);
       }
 
       session.close();
