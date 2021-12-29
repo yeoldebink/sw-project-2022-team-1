@@ -13,15 +13,15 @@ import il.cshaifa.hmo_system.entities.User;
 import java.io.IOException;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import jdk.jshell.spi.ExecutionControl;
+import javafx.stage.Stage;
 import jdk.jshell.spi.ExecutionControl.NotImplementedException;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 public class LoginController extends Controller {
 
-  public LoginController(ViewController view_controller) {
-    super(view_controller);
+  public LoginController(ViewController view_controller, Stage stage) {
+    super(view_controller, stage);
     EventBus.getDefault().register(this);
   }
 
@@ -77,5 +77,7 @@ public class LoginController extends Controller {
       default:
         throw new NotImplementedException("Only manager implemented");
     }
+
+    Platform.runLater(() -> this.stage.close());
   }
 }

@@ -19,11 +19,11 @@ public class Utils {
     Platform.runLater(
         () -> {
           try {
+            Stage stage = new Stage();
             var scene = new Scene(loader.load());
             var v_controller = view_controller.cast(loader.getController());
-            var ctor = controller.getConstructor(ViewController.class);
-            var control = controller.cast(ctor.newInstance(v_controller));
-            Stage stage = new Stage();
+            var ctor = controller.getConstructor(ViewController.class, Stage.class);
+            var control = controller.cast(ctor.newInstance(v_controller, stage));
             stage.setScene(scene);
             stage.show();
           } catch (IOException
