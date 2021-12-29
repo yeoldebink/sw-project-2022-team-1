@@ -64,7 +64,7 @@ public class HMOClient extends AbstractClient {
     client.sendToServer(new ClinicMessage());
   }
 
-  public void getStaff() throws IOException{
+  public void getStaff() throws IOException {
     client.sendToServer(new StaffMessage());
   }
 
