@@ -1,6 +1,5 @@
 package il.cshaifa.hmo_system.client.events;
 
-
 import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.entities.User;
 
