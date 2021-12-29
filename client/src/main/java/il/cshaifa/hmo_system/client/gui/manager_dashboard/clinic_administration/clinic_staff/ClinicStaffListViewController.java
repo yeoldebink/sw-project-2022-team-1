@@ -66,6 +66,8 @@ public class ClinicStaffListViewController extends ViewController {
   }
 }
 
+// Extends the User entity with a boolean field to indicate whether this user
+// is assigned to this clinic or not
 class AssignedUser extends User {
   Boolean assigned;
 
