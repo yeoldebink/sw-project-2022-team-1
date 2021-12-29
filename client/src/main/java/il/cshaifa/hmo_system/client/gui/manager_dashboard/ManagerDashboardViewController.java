@@ -2,8 +2,8 @@ package il.cshaifa.hmo_system.client.gui.manager_dashboard;
 
 import il.cshaifa.hmo_system.client.Utils;
 import il.cshaifa.hmo_system.client.base_controllers.RoleDefinedViewController;
-import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_list_view.AdminClinicListViewController;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_staff.ClinicStaffListViewController;
+import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_list_view.AdminClinicListViewController;
 import il.cshaifa.hmo_system.entities.User;
 import java.io.IOException;
 import javafx.fxml.FXML;

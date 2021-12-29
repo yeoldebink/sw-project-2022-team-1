@@ -8,7 +8,6 @@ public class ClinicEvent {
   public Clinic clinic;
   public Phase phase;
 
-
   public ClinicEvent() {
     this.phase = Phase.REQUEST;
   }
