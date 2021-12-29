@@ -13,6 +13,8 @@ import il.cshaifa.hmo_system.entities.User;
 import java.io.IOException;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import jdk.jshell.spi.ExecutionControl;
+import jdk.jshell.spi.ExecutionControl.NotImplementedException;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -73,7 +75,7 @@ public class LoginController extends Controller {
 
         break;
       default:
-        throw new Exception("Only manager implemented");
+        throw new NotImplementedException("Only manager implemented");
     }
   }
 }
