@@ -62,25 +62,25 @@ public class HMOServer extends AbstractServer {
 
   private void handleStaffMessage(StaffMessage message, ConnectionToClient client)
       throws IOException {
-    message.message_type = messageType.RESPONSE;
     var cb = session.getCriteriaBuilder();
     CriteriaQuery<ClinicStaff> cr = cb.createQuery(ClinicStaff.class);
     Root<ClinicStaff> root = cr.from(ClinicStaff.class);
     cr.select(root);
-
     message.staff_list = session.createQuery(cr).getResultList();
+
+    message.message_type = messageType.RESPONSE;
     client.sendToClient(message);
   }
 
   private void handleAppointmentMessage(AppointmentMessage message, ConnectionToClient client)
       throws IOException {
-
-    message.message_type = messageType.RESPONSE;
     var cb = session.getCriteriaBuilder();
     CriteriaQuery<Appointment> cr = cb.createQuery(Appointment.class);
     Root<Appointment> root = cr.from(Appointment.class);
     LocalDateTime start, end;
-    if (message.requestType == appointmentRequest.SCHEDULE_APPOINTMENT) {
+
+    //
+    if (message.requestType == appointmentRequest.GET_CLINIC_APPOINTMENTS) {
       start = LocalDateTime.now();
       end = LocalDateTime.now().plusWeeks(3);
       cr.select(root)
@@ -111,6 +111,8 @@ public class HMOServer extends AbstractServer {
     }
 
     message.appointments = session.createQuery(cr).getResultList();
+
+    message.message_type = messageType.RESPONSE;
     client.sendToClient(message);
   }
 
@@ -151,8 +153,6 @@ public class HMOServer extends AbstractServer {
     }
   }
 
-  protected void createEntities(List<?> entity_list) {}
-
   /**
    * If message.clinics is null, this means client requested all of the clinics else, client has
    * made changes to this clinics and apply changes to DB
@@ -188,7 +188,6 @@ public class HMOServer extends AbstractServer {
    */
   protected void handleLogin(LoginMessage message, ConnectionToClient client)
       throws IOException, NoSuchAlgorithmException {
-    message.message_type = messageType.RESPONSE;
     User user = (User) session.get(User.class, message.id);
     if (user != null) {
       String user_encoded_password = user.getPassword();
@@ -206,6 +205,8 @@ public class HMOServer extends AbstractServer {
         }
       }
     }
+
+    message.message_type = messageType.RESPONSE;
     client.sendToClient(message);
   }
 
