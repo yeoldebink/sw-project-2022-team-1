@@ -1,40 +1,45 @@
-package il.cshaifa.hmo_system.client.gui.clinic_administration.list_view;
+package il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_list_view;
 
 import il.cshaifa.hmo_system.client.HMOClient;
+import il.cshaifa.hmo_system.client.Utils;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
 import il.cshaifa.hmo_system.client.events.EditClinicEvent;
 import il.cshaifa.hmo_system.client.events.EditClinicEvent.Phase;
 import il.cshaifa.hmo_system.client.gui.ResourcePath;
-import il.cshaifa.hmo_system.client.gui.clinic_administration.clinic_view.AdminClinicController;
-import il.cshaifa.hmo_system.client.gui.clinic_administration.clinic_view.AdminClinicViewController;
+import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_view.AdminClinicController;
+import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_view.AdminClinicViewController;
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
 import il.cshaifa.hmo_system.messages.Message.messageType;
 import java.io.IOException;
 import java.util.ArrayList;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 public class AdminClinicListController extends Controller {
 
-  public AdminClinicListController(ViewController view_controller) throws IOException {
-    super(view_controller);
+  public AdminClinicListController(ViewController view_controller) {
+    super(view_controller, null);
     EventBus.getDefault().register(this);
-    HMOClient.getClient().getClinics();
+    try {
+      HMOClient.getClient().getClinics();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
+  @Subscribe
   @Override
-  protected void OnWindowCloseEvent(CloseWindowEvent event) {
+  public void OnWindowCloseEvent(CloseWindowEvent event) {
+    if (!event.getViewControllerInstance().equals(view_controller)) return;
     EventBus.getDefault().unregister(this);
   }
 
   @Subscribe
-  public void editClinicRequestReceived(EditClinicEvent event) throws IOException {
+  public void editClinicRequestReceived(EditClinicEvent event) {
     if (event.phase == Phase.SEND) return;
 
     // Navigate to AdminClinicView
@@ -47,14 +52,11 @@ public class AdminClinicListController extends Controller {
           return new AdminClinicViewController(
               event.clinic, HMOClient.getClient().getConnected_user().getRole());
         });
-
-    Scene scene = new Scene(loader.load());
-
-    var c = new AdminClinicController(loader.getController());
-
-    Stage stage = new Stage();
-    stage.setScene(scene);
-    stage.show();
+    try {
+      Utils.OpenNewWindow(AdminClinicViewController.class, AdminClinicController.class, loader);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   @Subscribe

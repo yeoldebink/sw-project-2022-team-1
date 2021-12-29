@@ -1,9 +1,16 @@
 package il.cshaifa.hmo_system.client.events;
 
+
+import il.cshaifa.hmo_system.entities.Patient;
+import il.cshaifa.hmo_system.entities.User;
+
 public class LoginEvent {
   public int id;
   public String password;
   public Phase phase;
+
+  public User userData;
+  public Patient patientData;
 
   public enum Phase {
     SEND,

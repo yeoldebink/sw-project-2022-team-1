@@ -1,15 +1,16 @@
 package il.cshaifa.hmo_system.client.base_controllers;
 
 import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
-import org.greenrobot.eventbus.Subscribe;
+import javafx.stage.Stage;
 
 public abstract class Controller {
   protected ViewController view_controller;
+  protected Stage stage;
 
-  public Controller(ViewController view_controller) {
+  public Controller(ViewController view_controller, Stage stage) {
     this.view_controller = view_controller;
+    this.stage = stage;
   }
 
-  @Subscribe
-  protected abstract void OnWindowCloseEvent(CloseWindowEvent event);
+  public abstract void OnWindowCloseEvent(CloseWindowEvent event);
 }

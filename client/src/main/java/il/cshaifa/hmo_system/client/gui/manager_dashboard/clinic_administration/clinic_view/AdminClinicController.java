@@ -1,4 +1,4 @@
-package il.cshaifa.hmo_system.client.gui.clinic_administration.clinic_view;
+package il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_view;
 
 import il.cshaifa.hmo_system.client.HMOClient;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
@@ -7,19 +7,22 @@ import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
 import il.cshaifa.hmo_system.client.events.EditClinicEvent;
 import il.cshaifa.hmo_system.client.events.EditClinicEvent.Phase;
 import java.io.IOException;
+import javafx.stage.Stage;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 public class AdminClinicController extends Controller {
 
-  public AdminClinicController(ViewController view_controller) {
-    super(view_controller);
+  public AdminClinicController(ViewController view_controller, Stage stage) {
+    super(view_controller, stage);
     EventBus.getDefault().register(this);
   }
 
+  @Subscribe
   @Override
-  protected void OnWindowCloseEvent(CloseWindowEvent event) {
-    EventBus.getDefault().unregister(this);
+  public void OnWindowCloseEvent(CloseWindowEvent event) {
+    if (event.getViewControllerInstance().equals(view_controller))
+      EventBus.getDefault().unregister(this);
   }
 
   @Subscribe

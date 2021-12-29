@@ -1,5 +1,6 @@
 package il.cshaifa.hmo_system.client;
 
+import il.cshaifa.hmo_system.client.events.LoginEvent;
 import il.cshaifa.hmo_system.client.events.WarningEvent;
 import il.cshaifa.hmo_system.client.ocsf.AbstractClient;
 import il.cshaifa.hmo_system.entities.Clinic;
@@ -50,9 +51,30 @@ public class HMOClient extends AbstractClient {
       if (message.getClass().equals(LoginMessage.class)) {
         this.connected_user = ((LoginMessage) message).user;
         this.connected_patient = ((LoginMessage) message).patient_data;
+        handleLoginMessage((LoginMessage) message);
+      } else if (message.getClass().equals(ClinicMessage.class)) {
+        handleClinicMessage((ClinicMessage) message);
       }
-      EventBus.getDefault().post(message);
     }
+  }
+
+  // TODO Create ClinicEvent class and send it instead of message
+  private void handleClinicMessage(ClinicMessage message) {
+    EventBus.getDefault().post(message);
+  }
+
+  private void handleLoginMessage(LoginMessage message) {
+    LoginEvent event = new LoginEvent(0, "");
+    if (message.user == null) {
+      event.phase = LoginEvent.Phase.REJECT;
+    } else {
+      event.id = message.id;
+      event.password = message.password;
+      event.phase = LoginEvent.Phase.AUTHORIZE;
+      event.userData = message.user;
+      event.patientData = message.patient_data;
+    }
+    EventBus.getDefault().post(event);
   }
 
   /**

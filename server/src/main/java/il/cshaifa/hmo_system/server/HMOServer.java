@@ -190,18 +190,20 @@ public class HMOServer extends AbstractServer {
       throws IOException, NoSuchAlgorithmException {
     message.message_type = messageType.RESPONSE;
     User user = (User) session.get(User.class, message.id);
-    String user_encoded_password = user.getPassword();
-    String entered_password = HMOUtilities.encodePassword(message.password, user.getSalt());
-    if (user_encoded_password.equals(entered_password)) {
-      message.user = user;
-      if (user.getRole().getName().equals("Patient")) {
-        message.patient_data = getUserPatient(user);
-      } else if (!user.getRole().getName().equals("HMO Manager")) {
-        var cb = session.getCriteriaBuilder();
-        CriteriaQuery<Clinic> cr = cb.createQuery(Clinic.class);
-        Root<ClinicStaff> root = cr.from(ClinicStaff.class);
-        cr.select(root.get("clinic")).where(cb.equal(root.get("user"), user));
-        message.employee_clinics = session.createQuery(cr).getResultList();
+    if (user != null) {
+      String user_encoded_password = user.getPassword();
+      String entered_password = HMOUtilities.encodePassword(message.password, user.getSalt());
+      if (user_encoded_password.equals(entered_password)) {
+        message.user = user;
+        if (user.getRole().getName().equals("Patient")) {
+          message.patient_data = getUserPatient(user);
+        } else if (!user.getRole().getName().equals("HMO Manager")) {
+          var cb = session.getCriteriaBuilder();
+          CriteriaQuery<Clinic> cr = cb.createQuery(Clinic.class);
+          Root<ClinicStaff> root = cr.from(ClinicStaff.class);
+          cr.select(root.get("clinic")).where(cb.equal(root.get("user"), user));
+          message.employee_clinics = session.createQuery(cr).getResultList();
+        }
       }
     }
     client.sendToClient(message);
