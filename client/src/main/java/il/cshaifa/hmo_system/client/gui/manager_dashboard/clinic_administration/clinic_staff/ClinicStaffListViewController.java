@@ -1,9 +1,9 @@
 package il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_staff;
 
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
+import il.cshaifa.hmo_system.client.events.AssignStaffEvent;
+import il.cshaifa.hmo_system.client.events.AssignStaffEvent.Phase;
 import il.cshaifa.hmo_system.client.events.AppointmentListEvent;
-import il.cshaifa.hmo_system.client.events.AssignStaffMembersEvent;
-import il.cshaifa.hmo_system.client.events.AssignStaffMembersEvent.Phase;
 import il.cshaifa.hmo_system.entities.Role;
 import il.cshaifa.hmo_system.entities.User;
 import java.util.ArrayList;
@@ -54,7 +54,7 @@ public class ClinicStaffListViewController extends ViewController {
   void assignOrUnassignSelectedStaffMembers(Phase phase) {
     ArrayList<User> users = new ArrayList<User>(staff_table.getSelectionModel().getSelectedItems());
 
-    EventBus.getDefault().post(new AssignStaffMembersEvent(users, phase));
+    EventBus.getDefault().post(new AssignStaffEvent(users, phase));
   }
 
   @FXML
@@ -74,6 +74,8 @@ public class ClinicStaffListViewController extends ViewController {
   }
 }
 
+// Extends the User entity with a boolean field to indicate whether this user
+// is assigned to this clinic or not
 class AssignedUser extends User {
   Boolean assigned;
 

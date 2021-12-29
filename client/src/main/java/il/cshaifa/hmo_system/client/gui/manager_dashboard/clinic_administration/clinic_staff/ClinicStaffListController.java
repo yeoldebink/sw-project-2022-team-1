@@ -9,7 +9,7 @@ import org.greenrobot.eventbus.Subscribe;
 // TODO Implement communication with client
 public class ClinicStaffListController extends Controller {
   public ClinicStaffListController(ViewController view_controller) {
-    super(view_controller);
+    super(view_controller, null);
     EventBus.getDefault().register(this);
   }
 
