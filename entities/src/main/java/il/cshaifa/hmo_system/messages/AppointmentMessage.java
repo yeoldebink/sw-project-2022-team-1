@@ -4,7 +4,6 @@ import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.User;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +21,7 @@ public class AppointmentMessage extends Message {
     GENERATE_APPOINTMENTS
   }
 
-  public AppointmentMessage(ArrayList<Appointment> appointments){
+  public AppointmentMessage(ArrayList<Appointment> appointments) {
     super(messageType.REQUEST);
     this.appointments = appointments;
     this.requestType = appointmentRequest.GENERATE_APPOINTMENTS;

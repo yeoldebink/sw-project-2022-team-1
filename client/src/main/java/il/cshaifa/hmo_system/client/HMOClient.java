@@ -91,9 +91,7 @@ public class HMOClient extends AbstractClient {
     client.sendToServer(new ClinicMessage());
   }
 
-  /**
-   * Requests all HMO staff
-   */
+  /** Requests all HMO staff */
   public void getStaff() throws IOException {
     client.sendToServer(new StaffMessage());
   }
@@ -107,9 +105,7 @@ public class HMOClient extends AbstractClient {
     client.sendToServer(new AppointmentMessage(new_appointments));
   }
 
-  /**
-   * Requests from server all of the connected patients appointments, past & future
-   */
+  /** Requests from server all of the connected patients appointments, past & future */
   public void getPatientAppointments() throws IOException {
     client.sendToServer(
         new AppointmentMessage(this.connected_user, appointmentRequest.SHOW_PATIENT_HISTORY));
@@ -121,16 +117,14 @@ public class HMOClient extends AbstractClient {
    * @param type The type of appointment the user requested family doctor/covid test...
    */
   public void getClinicAppointments(AppointmentType type) throws IOException {
-    AppointmentMessage appt_msg = new AppointmentMessage(this.connected_user,
-        appointmentRequest.GET_CLINIC_APPOINTMENTS);
+    AppointmentMessage appt_msg =
+        new AppointmentMessage(this.connected_user, appointmentRequest.GET_CLINIC_APPOINTMENTS);
     appt_msg.type = type;
     appt_msg.clinic = connected_patient.getHome_clinic();
     client.sendToServer(appt_msg);
   }
 
-  /**
-   * Requests from server all of today's appointments of current connected staff member client
-   */
+  /** Requests from server all of today's appointments of current connected staff member client */
   public void getStaffDailyAppointments() throws IOException {
     client.sendToServer(
         new AppointmentMessage(this.connected_user, appointmentRequest.SHOW_STAFF_APPOINTMENTS));
@@ -150,7 +144,7 @@ public class HMOClient extends AbstractClient {
   }
 
   /**
-   * @param user     The id of the login request
+   * @param user The id of the login request
    * @param password The password the user has entered
    * @throws IOException SQL exception
    */
