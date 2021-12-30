@@ -1,4 +1,4 @@
-package il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_list_view;
+package il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_list_view;
 
 import il.cshaifa.hmo_system.client.HMOClient;
 import il.cshaifa.hmo_system.client.Utils;

@@ -9,32 +9,37 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_staff.ClinicStaffListViewController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+            prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_staff.ClinicStaffListViewController">
     <VBox layoutX="14.0" layoutY="14.0" prefHeight="376.0" prefWidth="574.0">
         <Label text="Clinic Staff List">
             <font>
-                <Font name="DejaVu Sans Bold" size="22.0" />
+                <Font name="DejaVu Sans Bold" size="22.0"/>
             </font>
         </Label>
-        <TableView fx:id="staffTable" prefHeight="370.0" prefWidth="574.0" tableMenuButtonVisible="true">
+        <TableView fx:id="staff_table" prefHeight="370.0" prefWidth="574.0" tableMenuButtonVisible="true">
             <columns>
-                <TableColumn fx:id="last_name" prefWidth="75.0" text="Last Name" />
-                <TableColumn fx:id="first_name" prefWidth="75.0" text="First Name" />
-                <TableColumn fx:id="email" prefWidth="75.0" text="Email" />
-                <TableColumn fx:id="phone" prefWidth="75.0" text="Phone" />
-                <TableColumn fx:id="role" prefWidth="75.0" text="Role" />
-                <TableColumn fx:id="assigned" prefWidth="75.0" text="Assigned" />
+                <TableColumn fx:id="last_name" prefWidth="75.0" text="Last Name"/>
+                <TableColumn fx:id="first_name" prefWidth="75.0" text="First Name"/>
+                <TableColumn fx:id="email" prefWidth="75.0" text="Email"/>
+                <TableColumn fx:id="phone" prefWidth="75.0" text="Phone"/>
+                <TableColumn fx:id="role" prefWidth="75.0" text="Role"/>
+                <TableColumn fx:id="assigned" prefWidth="75.0" text="Assigned"/>
             </columns>
             <contextMenu>
                 <ContextMenu>
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#assignSelectedStaffMembers" text="Assign to clinic" />
-                        <MenuItem mnemonicParsing="false" onAction="#unassignSelectedStaffMembers" text="Unassign to clinic" />
+                        <MenuItem mnemonicParsing="false" onAction="#assignSelectedStaffMembers"
+                                  text="Assign to clinic"/>
+                        <MenuItem mnemonicParsing="false" onAction="#unassignSelectedStaffMembers"
+                                  text="Unassign to clinic"/>
+                        <MenuItem mnemonicParsing="false" onAction="#showAppointmentListView" text="Show appointments"/>
                     </items>
                 </ContextMenu>
             </contextMenu>
             <columnResizePolicy>
-                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
             </columnResizePolicy>
         </TableView>
     </VBox>

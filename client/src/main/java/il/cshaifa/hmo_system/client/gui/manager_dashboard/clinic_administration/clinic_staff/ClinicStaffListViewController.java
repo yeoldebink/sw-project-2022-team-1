@@ -1,6 +1,7 @@
 package il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_staff;
 
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
+import il.cshaifa.hmo_system.client.events.AppointmentListEvent;
 import il.cshaifa.hmo_system.client.events.AssignStaffEvent;
 import il.cshaifa.hmo_system.client.events.AssignStaffEvent.Phase;
 import il.cshaifa.hmo_system.entities.Role;
@@ -16,7 +17,7 @@ import org.greenrobot.eventbus.EventBus;
 
 public class ClinicStaffListViewController extends ViewController {
 
-  @FXML private TableView<User> staffTable;
+  @FXML private TableView<User> staff_table;
   @FXML private TableColumn<User, String> first_name;
   @FXML private TableColumn<User, String> last_name;
   @FXML private TableColumn<User, String> email;
@@ -29,15 +30,6 @@ public class ClinicStaffListViewController extends ViewController {
     setCellValueFactory();
   }
 
-  private void setCellValueFactory() {
-    first_name.setCellValueFactory((new PropertyValueFactory<>("First_name")));
-    last_name.setCellValueFactory((new PropertyValueFactory<>("Last_name")));
-    email.setCellValueFactory((new PropertyValueFactory<>("Email")));
-    phone.setCellValueFactory((new PropertyValueFactory<>("Phone")));
-    role.setCellValueFactory((new PropertyValueFactory<>("Role")));
-    assigned.setCellValueFactory((new PropertyValueFactory<>("Assigned")));
-  }
-
   void populateStaffTable(Map<User, Boolean> staff_assignments) {
 
     ArrayList<AssignedUser> assigned_staff = new ArrayList<AssignedUser>();
@@ -46,23 +38,39 @@ public class ClinicStaffListViewController extends ViewController {
       assigned_staff.add(new AssignedUser(entry.getKey(), entry.getValue()));
     }
 
-    staffTable.getItems().setAll(assigned_staff);
+    staff_table.getItems().setAll(assigned_staff);
   }
 
   @FXML
-  public void assignSelectedStaffMembers(ActionEvent event) {
+  void assignSelectedStaffMembers(ActionEvent event) {
     assignOrUnassignSelectedStaffMembers(Phase.ASSIGN);
   }
 
   @FXML
-  public void unassignSelectedStaffMembers(ActionEvent event) {
+  void unassignSelectedStaffMembers(ActionEvent event) {
     assignOrUnassignSelectedStaffMembers(Phase.UNASSIGN);
   }
 
   void assignOrUnassignSelectedStaffMembers(Phase phase) {
-    ArrayList<User> users = new ArrayList<User>(staffTable.getSelectionModel().getSelectedItems());
+    ArrayList<User> users = new ArrayList<User>(staff_table.getSelectionModel().getSelectedItems());
 
     EventBus.getDefault().post(new AssignStaffEvent(users, phase));
+  }
+
+  @FXML
+  void showAppointmentListView() {
+    User selected_staff_member = staff_table.getSelectionModel().getSelectedItem();
+
+    EventBus.getDefault().post(new AppointmentListEvent(selected_staff_member));
+  }
+
+  void setCellValueFactory() {
+    first_name.setCellValueFactory((new PropertyValueFactory<>("First_name")));
+    last_name.setCellValueFactory((new PropertyValueFactory<>("Last_name")));
+    email.setCellValueFactory((new PropertyValueFactory<>("Email")));
+    phone.setCellValueFactory((new PropertyValueFactory<>("Phone")));
+    role.setCellValueFactory((new PropertyValueFactory<>("Role")));
+    assigned.setCellValueFactory((new PropertyValueFactory<>("Assigned")));
   }
 }
 
