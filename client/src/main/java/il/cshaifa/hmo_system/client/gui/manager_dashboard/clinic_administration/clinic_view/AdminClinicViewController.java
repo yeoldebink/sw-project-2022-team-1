@@ -1,8 +1,7 @@
 package il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_view;
 
 import il.cshaifa.hmo_system.client.base_controllers.RoleDefinedViewController;
-import il.cshaifa.hmo_system.client.events.EditClinicEvent;
-import il.cshaifa.hmo_system.client.events.EditClinicEvent.Phase;
+import il.cshaifa.hmo_system.client.events.ClinicEvent;
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.Role;
 import javafx.event.ActionEvent;
@@ -73,7 +72,7 @@ public class AdminClinicViewController extends RoleDefinedViewController {
     clinic.setFri_hours(friHoursTextField.getText());
     clinic.setSat_hours(satHoursTextField.getText());
 
-    EventBus.getDefault().post(new EditClinicEvent(this.clinic, Phase.SEND));
+    EventBus.getDefault().post(new ClinicEvent(this.clinic, ClinicEvent.Phase.REQUEST));
 
     closeWindow(actionEvent);
   }

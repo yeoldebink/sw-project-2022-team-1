@@ -1,5 +1,6 @@
 package il.cshaifa.hmo_system.client;
 
+import il.cshaifa.hmo_system.client.events.ClinicEvent;
 import il.cshaifa.hmo_system.client.events.LoginEvent;
 import il.cshaifa.hmo_system.client.events.WarningEvent;
 import il.cshaifa.hmo_system.client.ocsf.AbstractClient;
@@ -9,7 +10,9 @@ import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.entities.Warning;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
 import il.cshaifa.hmo_system.messages.LoginMessage;
+import il.cshaifa.hmo_system.messages.Message;
 import java.io.IOException;
+import java.util.ArrayList;
 import org.greenrobot.eventbus.EventBus;
 
 public class HMOClient extends AbstractClient {
@@ -60,7 +63,10 @@ public class HMOClient extends AbstractClient {
 
   // TODO Create ClinicEvent class and send it instead of message
   private void handleClinicMessage(ClinicMessage message) {
-    EventBus.getDefault().post(message);
+    if (message.message_type == Message.messageType.REQUEST) return;
+    ArrayList<Clinic> clinics = (ArrayList<Clinic>) message.clinics;
+    ClinicEvent event = new ClinicEvent(clinics);
+    EventBus.getDefault().post(event);
   }
 
   private void handleLoginMessage(LoginMessage message) {
