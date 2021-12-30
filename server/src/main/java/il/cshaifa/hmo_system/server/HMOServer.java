@@ -8,13 +8,19 @@ import il.cshaifa.hmo_system.entities.HMOUtilities;
 import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.entities.Role;
 import il.cshaifa.hmo_system.entities.User;
+import il.cshaifa.hmo_system.messages.AppointmentMessage;
+import il.cshaifa.hmo_system.messages.AppointmentMessage.appointmentRequest;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
 import il.cshaifa.hmo_system.messages.LoginMessage;
 import il.cshaifa.hmo_system.messages.Message.messageType;
+import il.cshaifa.hmo_system.messages.StaffMessage;
 import il.cshaifa.hmo_system.server.ocsf.AbstractServer;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -54,6 +60,62 @@ public class HMOServer extends AbstractServer {
     return configuration.buildSessionFactory(serviceRegistry);
   }
 
+  private void handleStaffMessage(StaffMessage message, ConnectionToClient client)
+      throws IOException {
+    var cb = session.getCriteriaBuilder();
+    CriteriaQuery<ClinicStaff> cr = cb.createQuery(ClinicStaff.class);
+    Root<ClinicStaff> root = cr.from(ClinicStaff.class);
+    cr.select(root);
+    message.staff_list = session.createQuery(cr).getResultList();
+
+    message.message_type = messageType.RESPONSE;
+    client.sendToClient(message);
+  }
+
+  private void handleAppointmentMessage(AppointmentMessage message, ConnectionToClient client)
+      throws IOException {
+    var cb = session.getCriteriaBuilder();
+    CriteriaQuery<Appointment> cr = cb.createQuery(Appointment.class);
+    Root<Appointment> root = cr.from(Appointment.class);
+    LocalDateTime start, end;
+
+    //
+    if (message.requestType == appointmentRequest.GET_CLINIC_APPOINTMENTS) {
+      start = LocalDateTime.now();
+      end = LocalDateTime.now().plusWeeks(3);
+      cr.select(root)
+          .where(
+              cb.equal(root.get("type"), message.type),
+              cb.equal(root.get("clinic"), message.clinic),
+              cb.between(root.get("appt_date"), start, end),
+              cb.equal(root.get("taken"), false),
+              cb.greaterThanOrEqualTo(root.get("lock_time"), start.plusMinutes(5)));
+
+    } else if (message.requestType == appointmentRequest.SHOW_STAFF_APPOINTMENTS) {
+      start = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+      end = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
+      cr.select(root)
+          .where(
+              cb.equal(root.get("staff_member"), message.user),
+              cb.between(root.get("appt_date"), start, end),
+              cb.equal(root.get("taken"), true));
+
+    } else if (message.requestType == appointmentRequest.SHOW_PATIENT_HISTORY) {
+      cr.select(root)
+          .where(
+              cb.equal(root.get("patient"), getUserPatient(message.user)),
+              cb.equal(root.get("taken"), true));
+    } else if (message.requestType == appointmentRequest.GENERATE_APPOINTMENTS) {
+      addEntities(message.appointments);
+      return;
+    }
+
+    message.appointments = session.createQuery(cr).getResultList();
+
+    message.message_type = messageType.RESPONSE;
+    client.sendToClient(message);
+  }
+
   /**
    * Get clinics list and send this list to client
    *
@@ -80,6 +142,13 @@ public class HMOServer extends AbstractServer {
   protected void updateEntities(List<?> entity_list) {
     for (var entity : entity_list) {
       session.update(entity);
+      session.flush();
+    }
+  }
+
+  protected void addEntities(List<?> entity_list) {
+    for (var entity : entity_list) {
+      session.persist(entity);
       session.flush();
     }
   }
@@ -119,7 +188,6 @@ public class HMOServer extends AbstractServer {
    */
   protected void handleLogin(LoginMessage message, ConnectionToClient client)
       throws IOException, NoSuchAlgorithmException {
-    message.message_type = messageType.RESPONSE;
     User user = (User) session.get(User.class, message.id);
     if (user != null) {
       String user_encoded_password = user.getPassword();
@@ -137,6 +205,8 @@ public class HMOServer extends AbstractServer {
         }
       }
     }
+
+    message.message_type = messageType.RESPONSE;
     client.sendToClient(message);
   }
 
@@ -157,6 +227,10 @@ public class HMOServer extends AbstractServer {
         handleClinicMessage((ClinicMessage) msg, client);
       } else if (msg_class == LoginMessage.class) {
         handleLogin((LoginMessage) msg, client);
+      } else if (msg_class == AppointmentMessage.class) {
+        handleAppointmentMessage((AppointmentMessage) msg, client);
+      } else if (msg_class == StaffMessage.class) {
+        handleStaffMessage((StaffMessage) msg, client);
       }
 
       session.close();

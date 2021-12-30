@@ -4,13 +4,17 @@ import il.cshaifa.hmo_system.client.events.ClinicEvent;
 import il.cshaifa.hmo_system.client.events.LoginEvent;
 import il.cshaifa.hmo_system.client.events.WarningEvent;
 import il.cshaifa.hmo_system.client.ocsf.AbstractClient;
+import il.cshaifa.hmo_system.entities.Appointment;
+import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.entities.Warning;
+import il.cshaifa.hmo_system.messages.AppointmentMessage;
+import il.cshaifa.hmo_system.messages.AppointmentMessage.appointmentRequest;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
 import il.cshaifa.hmo_system.messages.LoginMessage;
-import il.cshaifa.hmo_system.messages.Message;
+import il.cshaifa.hmo_system.messages.StaffMessage;
 import java.io.IOException;
 import java.util.ArrayList;
 import org.greenrobot.eventbus.EventBus;
@@ -57,13 +61,12 @@ public class HMOClient extends AbstractClient {
       } else if (message.getClass().equals(ClinicMessage.class)) {
         handleClinicMessage((ClinicMessage) message);
       }
-      // EventBus.getDefault().post(message);
     }
   }
 
   // TODO Create ClinicEvent class and send it instead of message
   private void handleClinicMessage(ClinicMessage message) {
-    if (message.message_type == Message.messageType.REQUEST) return;
+    if (message.message_type == ClinicMessage.messageType.REQUEST) return;
     ArrayList<Clinic> clinics = (ArrayList<Clinic>) message.clinics;
     ClinicEvent event = new ClinicEvent(clinics);
     EventBus.getDefault().post(event);
@@ -90,6 +93,45 @@ public class HMOClient extends AbstractClient {
    */
   public void getClinics() throws IOException {
     client.sendToServer(new ClinicMessage());
+  }
+
+  /** Requests all HMO staff */
+  public void getStaff() throws IOException {
+    client.sendToServer(new StaffMessage());
+  }
+
+  /**
+   * Opens in DB new appointments
+   *
+   * @param new_appointments ArrayList of Appointment entities client requested to open
+   */
+  public void createAppointments(ArrayList<Appointment> new_appointments) throws IOException {
+    client.sendToServer(new AppointmentMessage(new_appointments));
+  }
+
+  /** Requests from server all of the connected patients appointments, past & future */
+  public void getPatientAppointments() throws IOException {
+    client.sendToServer(
+        new AppointmentMessage(this.connected_user, appointmentRequest.SHOW_PATIENT_HISTORY));
+  }
+
+  /**
+   * Requests from server available appointments for next 3 weeks in home clinic of certain type
+   *
+   * @param type The type of appointment the user requested family doctor/covid test...
+   */
+  public void getClinicAppointments(AppointmentType type) throws IOException {
+    AppointmentMessage appt_msg =
+        new AppointmentMessage(this.connected_user, appointmentRequest.GET_CLINIC_APPOINTMENTS);
+    appt_msg.type = type;
+    appt_msg.clinic = connected_patient.getHome_clinic();
+    client.sendToServer(appt_msg);
+  }
+
+  /** Requests from server all of today's appointments of current connected staff member client */
+  public void getStaffDailyAppointments() throws IOException {
+    client.sendToServer(
+        new AppointmentMessage(this.connected_user, appointmentRequest.SHOW_STAFF_APPOINTMENTS));
   }
 
   /**
