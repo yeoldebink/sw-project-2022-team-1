@@ -213,7 +213,6 @@ public class Main {
     ArrayList<ClinicStaff> clinicStaff = new ArrayList<>();
 
     var carmel = clinics.get("Carmel Center");
-    clinicStaff.add(new ClinicStaff(carmel, users.get("Carla Espinosa")));
     clinicStaff.add(new ClinicStaff(carmel, users.get("John Dorian")));
     clinicStaff.add(new ClinicStaff(carmel, users.get("Sarah Tizdale")));
     clinicStaff.add(new ClinicStaff(carmel, users.get("Perry Cox")));
@@ -221,7 +220,6 @@ public class Main {
     clinicStaff.add(new ClinicStaff(carmel, users.get("Glen Matthews")));
 
     var dizengoff = clinics.get("Dizengoff");
-    clinicStaff.add(new ClinicStaff(dizengoff, users.get("Carmen Sandiego")));
     clinicStaff.add(new ClinicStaff(dizengoff, users.get("Elliot Reed")));
     clinicStaff.add(new ClinicStaff(dizengoff, users.get("John Dorian")));
     clinicStaff.add(new ClinicStaff(dizengoff, users.get("LaVerne Roberts")));

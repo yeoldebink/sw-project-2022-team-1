@@ -9,11 +9,11 @@ import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.entities.Role;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.AppointmentMessage;
-import il.cshaifa.hmo_system.messages.AppointmentMessage.appointmentRequest;
+import il.cshaifa.hmo_system.messages.AppointmentMessage.AppointmentRequestType;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
+import il.cshaifa.hmo_system.messages.ClinicStaffMessage;
 import il.cshaifa.hmo_system.messages.LoginMessage;
 import il.cshaifa.hmo_system.messages.Message.messageType;
-import il.cshaifa.hmo_system.messages.StaffMessage;
 import il.cshaifa.hmo_system.server.ocsf.AbstractServer;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import java.io.IOException;
@@ -60,7 +60,7 @@ public class HMOServer extends AbstractServer {
     return configuration.buildSessionFactory(serviceRegistry);
   }
 
-  private void handleStaffMessage(StaffMessage message, ConnectionToClient client)
+  private void handleStaffMessage(ClinicStaffMessage message, ConnectionToClient client)
       throws IOException {
     var cb = session.getCriteriaBuilder();
     CriteriaQuery<ClinicStaff> cr = cb.createQuery(ClinicStaff.class);
@@ -80,7 +80,7 @@ public class HMOServer extends AbstractServer {
     LocalDateTime start, end;
 
     //
-    if (message.requestType == appointmentRequest.GET_CLINIC_APPOINTMENTS) {
+    if (message.requestType == AppointmentRequestType.CLINIC_APPOINTMENTS) {
       start = LocalDateTime.now();
       end = LocalDateTime.now().plusWeeks(3);
       cr.select(root)
@@ -91,7 +91,7 @@ public class HMOServer extends AbstractServer {
               cb.equal(root.get("taken"), false),
               cb.greaterThanOrEqualTo(root.get("lock_time"), start.plusMinutes(5)));
 
-    } else if (message.requestType == appointmentRequest.SHOW_STAFF_APPOINTMENTS) {
+    } else if (message.requestType == AppointmentRequestType.STAFF_MEMBER_DAILY_APPOINTMENTS) {
       start = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
       end = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
       cr.select(root)
@@ -100,12 +100,18 @@ public class HMOServer extends AbstractServer {
               cb.between(root.get("appt_date"), start, end),
               cb.equal(root.get("taken"), true));
 
-    } else if (message.requestType == appointmentRequest.SHOW_PATIENT_HISTORY) {
+    } else if (message.requestType == AppointmentRequestType.STAFF_FUTURE_APPOINTMENTS) {
+      cr.select(root)
+          .where(
+              cb.equal(root.get("staff_member"), message.user),
+              cb.greaterThanOrEqualTo(root.get("appt_date"), LocalDateTime.now()));
+
+    } else if (message.requestType == AppointmentRequestType.PATIENT_HISTORY) {
       cr.select(root)
           .where(
               cb.equal(root.get("patient"), getUserPatient(message.user)),
               cb.equal(root.get("taken"), true));
-    } else if (message.requestType == appointmentRequest.GENERATE_APPOINTMENTS) {
+    } else if (message.requestType == AppointmentRequestType.CREATE_APPOINTMENTS) {
       addEntities(message.appointments);
       return;
     }
@@ -229,8 +235,8 @@ public class HMOServer extends AbstractServer {
         handleLogin((LoginMessage) msg, client);
       } else if (msg_class == AppointmentMessage.class) {
         handleAppointmentMessage((AppointmentMessage) msg, client);
-      } else if (msg_class == StaffMessage.class) {
-        handleStaffMessage((StaffMessage) msg, client);
+      } else if (msg_class == ClinicStaffMessage.class) {
+        handleStaffMessage((ClinicStaffMessage) msg, client);
       }
 
       session.close();

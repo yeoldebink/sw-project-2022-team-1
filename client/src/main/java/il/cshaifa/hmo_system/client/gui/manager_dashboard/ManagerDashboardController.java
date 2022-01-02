@@ -27,7 +27,7 @@ public class ManagerDashboardController extends Controller {
 
   @Subscribe
   @Override
-  public void OnWindowCloseEvent(CloseWindowEvent event) {
+  public void onWindowCloseEvent(CloseWindowEvent event) {
     if (event.getViewControllerInstance().equals(this.view_controller))
       EventBus.getDefault().unregister(this);
   }

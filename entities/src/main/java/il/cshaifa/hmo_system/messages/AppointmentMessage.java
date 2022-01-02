@@ -11,23 +11,26 @@ public class AppointmentMessage extends Message {
   public User user;
   public Clinic clinic;
   public AppointmentType type;
-  public appointmentRequest requestType;
+  public AppointmentRequestType requestType;
   public List<Appointment> appointments;
 
-  public enum appointmentRequest {
-    GET_CLINIC_APPOINTMENTS,
-    SHOW_STAFF_APPOINTMENTS,
-    SHOW_PATIENT_HISTORY,
-    GENERATE_APPOINTMENTS
+  public enum AppointmentRequestType {
+    CLINIC_APPOINTMENTS,
+    STAFF_MEMBER_DAILY_APPOINTMENTS,
+    STAFF_FUTURE_APPOINTMENTS,
+    PATIENT_HISTORY,
+    CREATE_APPOINTMENTS,
+    DELETE_APPOINTMENTS
   }
 
-  public AppointmentMessage(ArrayList<Appointment> appointments) {
+  public AppointmentMessage(
+      ArrayList<Appointment> appointments, AppointmentRequestType requestType) {
     super(messageType.REQUEST);
     this.appointments = appointments;
-    this.requestType = appointmentRequest.GENERATE_APPOINTMENTS;
+    this.requestType = requestType;
   }
 
-  public AppointmentMessage(User user, appointmentRequest request) {
+  public AppointmentMessage(User user, AppointmentRequestType request) {
     super(messageType.REQUEST);
     this.user = user;
     this.requestType = request;

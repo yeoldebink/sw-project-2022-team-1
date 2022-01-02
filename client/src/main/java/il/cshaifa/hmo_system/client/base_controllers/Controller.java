@@ -12,5 +12,5 @@ public abstract class Controller {
     this.stage = stage;
   }
 
-  public abstract void OnWindowCloseEvent(CloseWindowEvent event);
+  public abstract void onWindowCloseEvent(CloseWindowEvent event);
 }

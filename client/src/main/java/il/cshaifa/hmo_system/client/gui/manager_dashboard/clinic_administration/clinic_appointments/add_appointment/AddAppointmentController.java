@@ -12,5 +12,5 @@ public class AddAppointmentController extends Controller {
   }
 
   @Override
-  public void OnWindowCloseEvent(CloseWindowEvent event) {}
+  public void onWindowCloseEvent(CloseWindowEvent event) {}
 }

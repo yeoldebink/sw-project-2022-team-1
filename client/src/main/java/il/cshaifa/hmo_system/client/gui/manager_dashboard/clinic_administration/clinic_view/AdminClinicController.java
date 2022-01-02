@@ -19,7 +19,7 @@ public class AdminClinicController extends Controller {
 
   @Subscribe
   @Override
-  public void OnWindowCloseEvent(CloseWindowEvent event) {
+  public void onWindowCloseEvent(CloseWindowEvent event) {
     if (event.getViewControllerInstance().equals(view_controller))
       EventBus.getDefault().unregister(this);
   }
