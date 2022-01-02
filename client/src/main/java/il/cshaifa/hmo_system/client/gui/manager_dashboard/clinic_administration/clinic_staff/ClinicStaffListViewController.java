@@ -9,12 +9,18 @@ import java.util.ArrayList;
 import java.util.Map;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.ContextMenuEvent;
 import org.greenrobot.eventbus.EventBus;
 
 public class ClinicStaffListViewController extends ViewController {
+
+  @FXML private MenuItem assignMenuItem;
+  @FXML private MenuItem unassignMenuItem;
+  @FXML private MenuItem showAppointmentsMenuItem;
 
   @FXML private TableView<AssignedUser> staff_table;
   @FXML private TableColumn<AssignedUser, String> first_name;
@@ -70,5 +76,20 @@ public class ClinicStaffListViewController extends ViewController {
     phone.setCellValueFactory((new PropertyValueFactory<>("Phone")));
     role.setCellValueFactory((new PropertyValueFactory<>("RoleName")));
     assigned.setCellValueFactory((new PropertyValueFactory<>("Assigned")));
+  }
+
+  @FXML
+  void contextMenuRequested(ContextMenuEvent contextMenuEvent) {
+    AssignedUser selected_staff_member = staff_table.getSelectionModel().getSelectedItem();
+
+    if (selected_staff_member.getAssigned()) {
+      assignMenuItem.setVisible(false);
+      unassignMenuItem.setVisible(true);
+      showAppointmentsMenuItem.setVisible(true);
+    } else {
+      assignMenuItem.setVisible(true);
+      unassignMenuItem.setVisible(false);
+      showAppointmentsMenuItem.setVisible(false);
+    }
   }
 }

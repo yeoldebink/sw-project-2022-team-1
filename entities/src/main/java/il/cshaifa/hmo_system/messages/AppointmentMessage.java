@@ -25,13 +25,13 @@ public class AppointmentMessage extends Message {
 
   public AppointmentMessage(
       ArrayList<Appointment> appointments, AppointmentRequestType requestType) {
-    super(messageType.REQUEST);
+    super(MessageType.REQUEST);
     this.appointments = appointments;
     this.requestType = requestType;
   }
 
   public AppointmentMessage(User user, AppointmentRequestType request) {
-    super(messageType.REQUEST);
+    super(MessageType.REQUEST);
     this.user = user;
     this.requestType = request;
   }

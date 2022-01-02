@@ -14,6 +14,7 @@ public class AssignStaffEvent {
 
   public enum Phase {
     ASSIGN,
-    UNASSIGN
+    UNASSIGN,
+    RESPOND
   }
 }

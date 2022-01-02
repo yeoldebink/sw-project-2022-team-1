@@ -18,7 +18,7 @@
                 <Font name="DejaVu Sans Bold" size="22.0"/>
             </font>
         </Label>
-        <TableView fx:id="staff_table" prefHeight="370.0" prefWidth="574.0" tableMenuButtonVisible="true">
+        <TableView fx:id="staff_table" prefHeight="370.0" prefWidth="574.0" tableMenuButtonVisible="true" onContextMenuRequested="#contextMenuRequested">
             <columns>
                 <TableColumn fx:id="last_name" prefWidth="75.0" text="Last Name"/>
                 <TableColumn fx:id="first_name" prefWidth="75.0" text="First Name"/>
@@ -31,10 +31,11 @@
                 <ContextMenu>
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#assignSelectedStaffMembers"
-                                  text="Assign to clinic"/>
+                                  text="Assign to clinic" fx:id="assignMenuItem"/>
                         <MenuItem mnemonicParsing="false" onAction="#unassignSelectedStaffMembers"
-                                  text="Unassign to clinic"/>
-                        <MenuItem mnemonicParsing="false" onAction="#showAppointmentListView" text="Show appointments"/>
+                                  text="Unassign from clinic" fx:id="unassignMenuItem"/>
+                        <MenuItem mnemonicParsing="false" onAction="#showAppointmentListView"
+                          text="Show appointments" fx:id="showAppointmentsMenuItem"/>
                     </items>
                 </ContextMenu>
             </contextMenu>

@@ -3,11 +3,17 @@ package il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration
 import il.cshaifa.hmo_system.client.HMOClient;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
+import il.cshaifa.hmo_system.client.events.AssignStaffEvent;
+import il.cshaifa.hmo_system.client.events.AssignStaffEvent.Phase;
 import il.cshaifa.hmo_system.client.events.ClinicStaffEvent;
 import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
 import il.cshaifa.hmo_system.entities.User;
+import il.cshaifa.hmo_system.messages.StaffAssignmentMessage;
+import il.cshaifa.hmo_system.messages.StaffAssignmentMessage.Type;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.TreeMap;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -24,10 +30,15 @@ public class ClinicStaffListController extends Controller {
     }
   }
 
+  /**
+   * Handles incoming clinicstaff events from the servers
+   *
+   * @param event
+   */
   @Subscribe
   public void clinicStaffListReceived(ClinicStaffEvent event) {
     var current_clinic_manager = HMOClient.getClient().getConnected_user();
-    HashMap<User, Boolean> assignment_map = new HashMap<>();
+    var assignment_map = new TreeMap<User, Boolean>(Comparator.comparing(User::getLastName));
 
     for (var clinic_staff_row : event.clinic_staff) {
       var staff_member = clinic_staff_row.getUser();
@@ -38,11 +49,38 @@ public class ClinicStaffListController extends Controller {
       // assignment to this clinic
       if (!assignment_map.containsKey(staff_member) || !assignment_map.get(staff_member)) {
         assignment_map.put(
-            staff_member, row_clinic_manager.getId() == current_clinic_manager.getId());
+            staff_member,
+            row_clinic_manager != null
+                && row_clinic_manager.getId() == current_clinic_manager.getId());
       }
     }
 
     ((ClinicStaffListViewController) this.view_controller).populateStaffTable(assignment_map);
+  }
+
+  @Subscribe
+  public void clinicStaffAssignmentRequestReceived(AssignStaffEvent event) {
+    if (event.phase == Phase.RESPOND) {
+      try {
+        HMOClient.getClient().getStaff();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    } else {
+      StaffAssignmentMessage.Type type = event.phase == Phase.ASSIGN ? Type.ASSIGN : Type.UNASSIGN;
+      try {
+        // need to copy construct the users so the server doesn't throw a hissy fit over
+        // AssignedUser
+        ArrayList<User> staff_users = new ArrayList<>();
+        for (var a_user : event.staff) {
+          staff_users.add(new User(a_user));
+        }
+
+        HMOClient.getClient().assignOrUnassignStaff(staff_users, type);
+      } catch (IOException ioException) {
+        ioException.printStackTrace();
+      }
+    }
   }
 
   @Subscribe

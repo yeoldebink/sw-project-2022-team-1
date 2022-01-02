@@ -1,6 +1,7 @@
 package il.cshaifa.hmo_system.client;
 
 import il.cshaifa.hmo_system.client.events.AdminAppointmentListEvent;
+import il.cshaifa.hmo_system.client.events.AssignStaffEvent;
 import il.cshaifa.hmo_system.client.events.ClinicEvent;
 import il.cshaifa.hmo_system.client.events.ClinicStaffEvent;
 import il.cshaifa.hmo_system.client.events.ClinicStaffEvent.Phase;
@@ -19,8 +20,11 @@ import il.cshaifa.hmo_system.messages.AppointmentMessage.AppointmentRequestType;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
 import il.cshaifa.hmo_system.messages.ClinicStaffMessage;
 import il.cshaifa.hmo_system.messages.LoginMessage;
+import il.cshaifa.hmo_system.messages.Message.MessageType;
+import il.cshaifa.hmo_system.messages.StaffAssignmentMessage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import org.greenrobot.eventbus.EventBus;
 
 public class HMOClient extends AbstractClient {
@@ -28,6 +32,7 @@ public class HMOClient extends AbstractClient {
   private static HMOClient client = null;
   public boolean msg = false;
   private User connected_user;
+  private List<Clinic> connected_employee_clinics;
   private Patient connected_patient;
 
   private HMOClient(String host, int port) {
@@ -36,6 +41,10 @@ public class HMOClient extends AbstractClient {
 
   public User getConnected_user() {
     return connected_user;
+  }
+
+  public List<Clinic> getConnected_employee_clinics() {
+    return connected_employee_clinics;
   }
 
   public Patient getConnected_patient() {
@@ -68,6 +77,8 @@ public class HMOClient extends AbstractClient {
         handleStaffMessage((ClinicStaffMessage) message);
       } else if (message.getClass().equals(AppointmentMessage.class)) {
         handleAppointmentMessage((AppointmentMessage) message);
+      } else if (message.getClass().equals(StaffAssignmentMessage.class)) {
+        handleStaffAssignmentMessage((StaffAssignmentMessage) message);
       }
     }
   }
@@ -90,8 +101,13 @@ public class HMOClient extends AbstractClient {
     EventBus.getDefault().post(event);
   }
 
+  private void handleStaffAssignmentMessage(StaffAssignmentMessage message) {
+    AssignStaffEvent event = new AssignStaffEvent(null, AssignStaffEvent.Phase.RESPOND);
+    EventBus.getDefault().post(event);
+  }
+
   private void handleClinicMessage(ClinicMessage message) {
-    if (message.message_type == ClinicMessage.messageType.REQUEST) return;
+    if (message.message_type == MessageType.REQUEST) return;
     ArrayList<Clinic> clinics = (ArrayList<Clinic>) message.clinics;
     ClinicEvent event = new ClinicEvent(clinics);
     EventBus.getDefault().post(event);
@@ -107,6 +123,7 @@ public class HMOClient extends AbstractClient {
       event.phase = LoginEvent.Phase.AUTHORIZE;
       event.userData = message.user;
       event.patientData = message.patient_data;
+      this.connected_employee_clinics = message.employee_clinics;
     }
     EventBus.getDefault().post(event);
   }
@@ -184,6 +201,16 @@ public class HMOClient extends AbstractClient {
 
     client.sendToServer(clinic_message);
     getClinics();
+  }
+
+  /**
+   * Receives a list of staff members to assign or unassign from the current Clinic Manager's clinic
+   */
+  public void assignOrUnassignStaff(List<User> staff, StaffAssignmentMessage.Type type)
+      throws IOException {
+    StaffAssignmentMessage message =
+        new StaffAssignmentMessage(staff, connected_employee_clinics.get(0), type);
+    client.sendToServer(message);
   }
 
   /**

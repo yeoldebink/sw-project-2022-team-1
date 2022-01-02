@@ -7,6 +7,6 @@ public class ClinicStaffMessage extends Message {
   public List<ClinicStaff> staff_list;
 
   public ClinicStaffMessage() {
-    super(messageType.REQUEST);
+    super(MessageType.REQUEST);
   }
 }
