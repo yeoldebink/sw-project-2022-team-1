@@ -20,7 +20,6 @@ import il.cshaifa.hmo_system.messages.AppointmentMessage.AppointmentRequestType;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
 import il.cshaifa.hmo_system.messages.ClinicStaffMessage;
 import il.cshaifa.hmo_system.messages.LoginMessage;
-import il.cshaifa.hmo_system.messages.Message;
 import il.cshaifa.hmo_system.messages.Message.MessageType;
 import il.cshaifa.hmo_system.messages.StaffAssignmentMessage;
 import java.io.IOException;
@@ -90,7 +89,9 @@ public class HMOClient extends AbstractClient {
     if (message.requestType == AppointmentRequestType.STAFF_FUTURE_APPOINTMENTS) {
       event =
           new AdminAppointmentListEvent(
-              message.user, (ArrayList<Appointment>) message.appointments, AdminAppointmentListEvent.Phase.RECEIVE);
+              message.user,
+              (ArrayList<Appointment>) message.appointments,
+              AdminAppointmentListEvent.Phase.RECEIVE);
     }
 
     EventBus.getDefault().post(event);
@@ -192,7 +193,8 @@ public class HMOClient extends AbstractClient {
   }
 
   public void getStaffAppointments(User staff_member) throws IOException {
-    var message = new AppointmentMessage(staff_member, AppointmentRequestType.STAFF_FUTURE_APPOINTMENTS);
+    var message =
+        new AppointmentMessage(staff_member, AppointmentRequestType.STAFF_FUTURE_APPOINTMENTS);
     client.sendToServer(message);
   }
 

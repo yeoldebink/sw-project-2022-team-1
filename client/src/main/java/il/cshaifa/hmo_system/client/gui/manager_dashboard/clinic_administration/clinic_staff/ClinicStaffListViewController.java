@@ -66,7 +66,10 @@ public class ClinicStaffListViewController extends ViewController {
   void showAppointmentListView() {
     User selected_staff_member = staff_table.getSelectionModel().getSelectedItem();
 
-    EventBus.getDefault().post(new AdminAppointmentListEvent(selected_staff_member, null, AdminAppointmentListEvent.Phase.REQUEST));
+    EventBus.getDefault()
+        .post(
+            new AdminAppointmentListEvent(
+                selected_staff_member, null, AdminAppointmentListEvent.Phase.REQUEST));
   }
 
   void setCellValueFactory() {

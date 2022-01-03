@@ -90,7 +90,7 @@ public class ClinicStaffListController extends Controller {
   }
 
   @Subscribe
-  public void onShowAppointmentEvent(AdminAppointmentListEvent event){
+  public void onShowAppointmentEvent(AdminAppointmentListEvent event) {
     if (event.phase != AdminAppointmentListEvent.Phase.REQUEST) return;
     User staff_member = new User(event.staff_member);
     try {
@@ -101,23 +101,22 @@ public class ClinicStaffListController extends Controller {
   }
 
   @Subscribe
-  public void onAppointmentListEventRecieved(AdminAppointmentListEvent event){
-    if(event.phase != AdminAppointmentListEvent.Phase.RECEIVE) return;
+  public void onAppointmentListEventRecieved(AdminAppointmentListEvent event) {
+    if (event.phase != AdminAppointmentListEvent.Phase.RECEIVE) return;
     User staff_member = new User(event.staff_member);
-    FXMLLoader loader = new FXMLLoader(getClass().getResource(ResourcePath.get_fxml(
-        AppointmentListViewController.class)));
-
+    FXMLLoader loader =
+        new FXMLLoader(
+            getClass().getResource(ResourcePath.get_fxml(AppointmentListViewController.class)));
 
     loader.setControllerFactory(
-        c->{
+        c -> {
           return new AppointmentListViewController(
-              staff_member, HMOClient.getClient().getConnected_employee_clinics().get(0)
-          );
-        }
-    );
+              staff_member, HMOClient.getClient().getConnected_employee_clinics().get(0));
+        });
 
     try {
-      Utils.OpenNewWindow(AppointmentListViewController.class, AppointmentListController.class, loader);
+      Utils.OpenNewWindow(
+          AppointmentListViewController.class, AppointmentListController.class, loader);
     } catch (Exception e) {
       e.printStackTrace();
     }

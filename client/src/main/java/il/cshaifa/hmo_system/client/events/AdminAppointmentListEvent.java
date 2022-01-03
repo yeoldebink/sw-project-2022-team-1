@@ -14,7 +14,8 @@ public class AdminAppointmentListEvent {
     RECEIVE
   }
 
-  public AdminAppointmentListEvent(User staff_member, ArrayList<Appointment> appointments, Phase phase) {
+  public AdminAppointmentListEvent(
+      User staff_member, ArrayList<Appointment> appointments, Phase phase) {
     this.staff_member = staff_member;
     this.appointments = appointments;
     this.phase = phase;
