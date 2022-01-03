@@ -30,9 +30,13 @@ public class ManagerDashboardViewController extends RoleDefinedViewController {
     var clinic_list = Utils.loadFXML(getClass(), AdminClinicListViewController.class);
     var clinic_staff_list = Utils.loadFXML(getClass(), ClinicStaffListViewController.class);
 
+    clinic_list.getKey().prefWidthProperty().bind(tabPane.widthProperty());
+    clinic_list.getKey().prefHeightProperty().bind(tabPane.heightProperty());
     clinicAdministrationTab.setContent(clinic_list.getKey());
     adminClinicListViewController = (AdminClinicListViewController) clinic_list.getValue();
 
+    clinic_staff_list.getKey().prefWidthProperty().bind(tabPane.widthProperty());
+    clinic_staff_list.getKey().prefHeightProperty().bind(tabPane.heightProperty());
     staffAdministrationTab.setContent(clinic_staff_list.getKey());
     clinicStaffListViewController = (ClinicStaffListViewController) clinic_staff_list.getValue();
 

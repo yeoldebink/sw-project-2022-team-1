@@ -10,6 +10,7 @@ public class AdminAppointmentListEvent {
   public Phase phase;
 
   public enum Phase {
+    OPEN_WINDOW,
     REQUEST,
     RECEIVE
   }

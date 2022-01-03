@@ -12,16 +12,15 @@
   xmlns="http://javafx.com/javafx/17"
   fx:controller="il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_list_view.AdminClinicListViewController">
   <children>
-    <VBox AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0"
-      AnchorPane.topAnchor="15.0"
-      layoutX="14.0" layoutY="14.0">
+    <VBox AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0"
+      AnchorPane.topAnchor="10.0">
       <children>
         <Label prefHeight="41.0" prefWidth="294.0" text="Clinic Administration">
           <font>
             <Font name="DejaVu Sans Bold" size="22.0"/>
           </font>
         </Label>
-        <TableView prefHeight="437.0" prefWidth="1003.0" fx:id="clinicTable">
+        <TableView fx:id="clinicTable">
           <columns>
             <TableColumn prefWidth="160.0" text="ID" fx:id="id"/>
             <TableColumn prefWidth="160.0" text="Clinic Name" fx:id="name"/>

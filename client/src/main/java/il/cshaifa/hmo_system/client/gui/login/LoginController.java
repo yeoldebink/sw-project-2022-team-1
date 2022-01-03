@@ -75,7 +75,7 @@ public class LoginController extends Controller {
               return new ManagerDashboardViewController(user);
             });
         Utils.OpenNewWindow(
-            ManagerDashboardViewController.class, ManagerDashboardController.class, loader);
+            ManagerDashboardViewController.class, ManagerDashboardController.class, loader, true);
 
         break;
       default:

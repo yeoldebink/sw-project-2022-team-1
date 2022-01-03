@@ -1,5 +1,6 @@
 package il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.add_appointment;
 
+import com.sun.javafx.scene.control.IntegerField;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.AddAppointmentEvent;
 import il.cshaifa.hmo_system.client.events.AddAppointmentEvent.Phase;
@@ -18,7 +19,7 @@ public class AddAppointmentViewController extends ViewController {
   private final User staff_member;
   private final Clinic clinic;
 
-  @FXML private TextField num_appts;
+  @FXML private IntegerField num_appts;
   @FXML private DatePicker start_date;
   @FXML private TextField start_time;
   @FXML private Label error_text;
@@ -45,7 +46,7 @@ public class AddAppointmentViewController extends ViewController {
           new Time(new SimpleDateFormat("HH:mm").parse(start_time.getText()).getTime());
       LocalDateTime start_datetime =
           LocalDateTime.of(start_date.getValue(), time_value.toLocalTime());
-      Integer count_appointments = Integer.parseInt((num_appts.getText()));
+      Integer count_appointments = num_appts.getValue();
 
       EventBus.getDefault()
           .post(

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -18,6 +19,7 @@ import org.greenrobot.eventbus.EventBus;
 
 public class ClinicStaffListViewController extends ViewController {
 
+  @FXML private ContextMenu contextMenu;
   @FXML private MenuItem assignMenuItem;
   @FXML private MenuItem unassignMenuItem;
   @FXML private MenuItem showAppointmentsMenuItem;
@@ -64,12 +66,13 @@ public class ClinicStaffListViewController extends ViewController {
 
   @FXML
   void showAppointmentListView() {
+    contextMenu.hide();
     User selected_staff_member = staff_table.getSelectionModel().getSelectedItem();
 
     EventBus.getDefault()
         .post(
             new AdminAppointmentListEvent(
-                selected_staff_member, null, AdminAppointmentListEvent.Phase.REQUEST));
+                selected_staff_member, null, AdminAppointmentListEvent.Phase.OPEN_WINDOW));
   }
 
   void setCellValueFactory() {

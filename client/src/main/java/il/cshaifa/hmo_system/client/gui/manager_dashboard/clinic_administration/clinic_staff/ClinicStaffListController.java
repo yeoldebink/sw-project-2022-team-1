@@ -91,7 +91,7 @@ public class ClinicStaffListController extends Controller {
 
   @Subscribe
   public void onShowAppointmentEvent(AdminAppointmentListEvent event) {
-    if (event.phase != AdminAppointmentListEvent.Phase.REQUEST) return;
+    if (event.phase != AdminAppointmentListEvent.Phase.OPEN_WINDOW) return;
     User staff_member = new User(event.staff_member);
     try {
       HMOClient.getClient().getStaffAppointments(staff_member);
@@ -103,7 +103,6 @@ public class ClinicStaffListController extends Controller {
   @Subscribe
   public void onAppointmentListEventRecieved(AdminAppointmentListEvent event) {
     if (event.phase != AdminAppointmentListEvent.Phase.RECEIVE) return;
-    User staff_member = new User(event.staff_member);
     FXMLLoader loader =
         new FXMLLoader(
             getClass().getResource(ResourcePath.get_fxml(AppointmentListViewController.class)));
@@ -111,12 +110,12 @@ public class ClinicStaffListController extends Controller {
     loader.setControllerFactory(
         c -> {
           return new AppointmentListViewController(
-              staff_member, HMOClient.getClient().getConnected_employee_clinics().get(0));
+              event.staff_member, HMOClient.getClient().getConnected_employee_clinics().get(0));
         });
 
     try {
       Utils.OpenNewWindow(
-          AppointmentListViewController.class, AppointmentListController.class, loader);
+          AppointmentListViewController.class, AppointmentListController.class, loader, true);
     } catch (Exception e) {
       e.printStackTrace();
     }

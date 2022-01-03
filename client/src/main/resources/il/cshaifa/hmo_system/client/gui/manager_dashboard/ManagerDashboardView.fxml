@@ -4,18 +4,16 @@
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-  prefHeight="960" prefWidth="1280" xmlns="http://javafx.com/javafx/17"
+<AnchorPane
+  minHeight="420" minWidth="720" xmlns="http://javafx.com/javafx/17"
   xmlns:fx="http://javafx.com/fxml/1"
   fx:controller="il.cshaifa.hmo_system.client.gui.manager_dashboard.ManagerDashboardViewController">
-  <children>
-    <TabPane layoutX="7.0" layoutY="14.0"
-      tabClosingPolicy="UNAVAILABLE" fx:id="tabPane">
-      <tabs>
-        <Tab text="Clinic Administration" fx:id="clinicAdministrationTab"/>
-        <Tab text="Staff Administration" fx:id="staffAdministrationTab"/>
-        <Tab text="Reports" fx:id="reportsTab"/>
-      </tabs>
-    </TabPane>
-  </children>
+  <TabPane AnchorPane.topAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.bottomAnchor="10.0"
+    tabClosingPolicy="UNAVAILABLE" fx:id="tabPane">
+    <tabs>
+      <Tab text="Clinic Administration" fx:id="clinicAdministrationTab"/>
+      <Tab text="Staff Administration" fx:id="staffAdministrationTab"/>
+      <Tab text="Reports" fx:id="reportsTab"/>
+    </tabs>
+  </TabPane>
 </AnchorPane>
