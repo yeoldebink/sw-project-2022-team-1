@@ -304,6 +304,8 @@ public class HMOServer extends AbstractServer {
         handleStaffMessage((ClinicStaffMessage) msg, client);
       } else if (msg_class == StaffAssignmentMessage.class) {
         handleStaffAssignmentMessage((StaffAssignmentMessage) msg, client);
+      }else if (msg_class == AppointmentMessage.class){
+        handleAppointmentMessage((AppointmentMessage) msg, client);
       }
 
       session.close();

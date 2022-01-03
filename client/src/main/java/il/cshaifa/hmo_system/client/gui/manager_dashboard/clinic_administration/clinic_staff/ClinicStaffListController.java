@@ -1,12 +1,17 @@
 package il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_staff;
 
 import il.cshaifa.hmo_system.client.HMOClient;
+import il.cshaifa.hmo_system.client.Utils;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
+import il.cshaifa.hmo_system.client.events.AdminAppointmentListEvent;
 import il.cshaifa.hmo_system.client.events.AssignStaffEvent;
 import il.cshaifa.hmo_system.client.events.AssignStaffEvent.Phase;
 import il.cshaifa.hmo_system.client.events.ClinicStaffEvent;
 import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
+import il.cshaifa.hmo_system.client.gui.ResourcePath;
+import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.appointment_list.AppointmentListController;
+import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.appointment_list.AppointmentListViewController;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.StaffAssignmentMessage;
 import il.cshaifa.hmo_system.messages.StaffAssignmentMessage.Type;
@@ -14,6 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.TreeMap;
+import javafx.fxml.FXMLLoader;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -80,6 +86,40 @@ public class ClinicStaffListController extends Controller {
       } catch (IOException ioException) {
         ioException.printStackTrace();
       }
+    }
+  }
+
+  @Subscribe
+  public void onShowAppointmentEvent(AdminAppointmentListEvent event){
+    if (event.phase != AdminAppointmentListEvent.Phase.REQUEST) return;
+    User staff_member = new User(event.staff_member);
+    try {
+      HMOClient.getClient().getStaffAppointments(staff_member);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Subscribe
+  public void onAppointmentListEventRecieved(AdminAppointmentListEvent event){
+    if(event.phase != AdminAppointmentListEvent.Phase.RECEIVE) return;
+    User staff_member = new User(event.staff_member);
+    FXMLLoader loader = new FXMLLoader(getClass().getResource(ResourcePath.get_fxml(
+        AppointmentListViewController.class)));
+
+
+    loader.setControllerFactory(
+        c->{
+          return new AppointmentListViewController(
+              staff_member, HMOClient.getClient().getConnected_employee_clinics().get(0)
+          );
+        }
+    );
+
+    try {
+      Utils.OpenNewWindow(AppointmentListViewController.class, AppointmentListController.class, loader);
+    } catch (Exception e) {
+      e.printStackTrace();
     }
   }
 
