@@ -17,7 +17,7 @@ import org.greenrobot.eventbus.EventBus;
 public class AddDoctorAppointmentsViewController extends ViewController {
   private final User staff_member;
 
-  @FXML private IntegerField num_appts;
+  @FXML private TextField num_appts;
   @FXML private DatePicker start_date;
   @FXML private TextField start_time;
   @FXML private Label error_text;
@@ -43,7 +43,7 @@ public class AddDoctorAppointmentsViewController extends ViewController {
           new Time(new SimpleDateFormat("HH:mm").parse(start_time.getText()).getTime());
       LocalDateTime start_datetime =
           LocalDateTime.of(start_date.getValue(), time_value.toLocalTime());
-      Integer count_appointments = num_appts.getValue();
+      Integer count_appointments = Integer.parseInt(num_appts.getText());
 
       EventBus.getDefault()
           .post(

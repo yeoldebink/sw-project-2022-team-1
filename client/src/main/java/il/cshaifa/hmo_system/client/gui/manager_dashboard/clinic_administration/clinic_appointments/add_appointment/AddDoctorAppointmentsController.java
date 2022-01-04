@@ -7,6 +7,7 @@ import il.cshaifa.hmo_system.client.events.AddAppointmentEvent;
 import il.cshaifa.hmo_system.client.events.AddAppointmentEvent.Phase;
 import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
 import il.cshaifa.hmo_system.entities.AppointmentType;
+import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.AdminAppointmentMessage.AdminAppointmentMessageType;
 import java.io.IOException;
 import javafx.application.Platform;
@@ -28,10 +29,10 @@ public class AddDoctorAppointmentsController extends Controller {
     AppointmentType appt_type;
     if (event.staff_member.getRole().isSpecialist()) appt_type = new AppointmentType("Specialist");
     else appt_type = new AppointmentType(event.staff_member.getRole().getName());
-
+    User staff_member = new User(event.staff_member);
     try {
       HMOClient.getClient()
-          .createAppointments(event.staff_member, event.start_datetime, event.count, appt_type);
+          .createAppointments(staff_member, event.start_datetime, event.count, appt_type);
     } catch (IOException e) {
       e.printStackTrace();
     }

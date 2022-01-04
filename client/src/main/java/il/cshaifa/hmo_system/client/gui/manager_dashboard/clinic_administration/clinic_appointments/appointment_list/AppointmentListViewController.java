@@ -27,7 +27,7 @@ public class AppointmentListViewController extends ViewController {
 
   @FXML private Label staff_member_name;
 
-  private final User staff_member;
+  public final User staff_member;
   private final Clinic clinic;
 
   public AppointmentListViewController(User staff_member, Clinic clinic) {
@@ -60,7 +60,7 @@ public class AppointmentListViewController extends ViewController {
     called_time.setCellValueFactory((new PropertyValueFactory<>("Called_time")));
     comments.setCellValueFactory((new PropertyValueFactory<>("Comments")));
     taken.setCellValueFactory((new PropertyValueFactory<>("Taken")));
-    patient_assigned.setCellValueFactory((new PropertyValueFactory<>("Patient_assigned")));
+    patient_assigned.setCellValueFactory((new PropertyValueFactory<>("Patient_name")));
   }
 
   void populateAppointmentsTable(ArrayList<Appointment> appt_list) {
@@ -81,46 +81,5 @@ public class AppointmentListViewController extends ViewController {
   }
 }
 
-class AppointmentForTableView {
-  String type_name;
-  LocalDateTime appt_date;
-  LocalDateTime called_time;
-  String comments;
-  Boolean taken;
-  String patient_name;
 
-  public AppointmentForTableView(
-      AppointmentType type,
-      LocalDateTime appt_date,
-      LocalDateTime called_time,
-      String comments,
-      Boolean taken,
-      Patient patient) {
-    this.type_name = type.getName();
-    this.appt_date = appt_date;
-    this.called_time = called_time;
-    this.comments = comments;
-    this.taken = taken;
-    this.patient_name = patient.getUser().getFirstName() + " " + patient.getUser().getLastName();
-  }
 
-  public String getType_name() {
-    return type_name;
-  }
-
-  public LocalDateTime getAppt_date() {
-    return appt_date;
-  }
-
-  public LocalDateTime getCalled_time() {
-    return called_time;
-  }
-
-  public String getComments() {
-    return comments;
-  }
-
-  public Boolean getTaken() {
-    return taken;
-  }
-}

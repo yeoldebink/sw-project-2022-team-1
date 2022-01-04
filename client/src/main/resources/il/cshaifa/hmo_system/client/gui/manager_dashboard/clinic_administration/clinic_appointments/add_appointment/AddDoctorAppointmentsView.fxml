@@ -36,7 +36,7 @@
                         <TextField fx:id="start_time" promptText="HH:MM" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
 
                         <Label text="# Appointments" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
-                        <IntegerField fx:id="num_appts" GridPane.rowIndex="3" GridPane.columnIndex="2" />
+                        <TextField fx:id="num_appts" GridPane.rowIndex="3" GridPane.columnIndex="2" />
                     </children>
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="132.0" minWidth="10.0" />

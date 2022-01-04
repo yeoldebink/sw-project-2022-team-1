@@ -93,20 +93,11 @@ public class ClinicStaffListController extends Controller {
     }
   }
 
-  @Subscribe
-  public void onShowAppointmentEvent(AdminAppointmentListEvent event) {
-    if (event.phase != AdminAppointmentListEvent.Phase.OPEN_WINDOW) return;
-    User staff_member = new User(event.staff_member);
-    try {
-      HMOClient.getClient().getStaffAppointments(staff_member);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
+
 
   @Subscribe
   public void onAppointmentListEventRecieved(AdminAppointmentListEvent event) {
-    if (event.phase != AdminAppointmentListEvent.Phase.RECEIVE) return;
+    if (event.phase != AdminAppointmentListEvent.Phase.OPEN_WINDOW) return;
     FXMLLoader loader =
         new FXMLLoader(
             getClass().getResource(ResourcePath.get_fxml(AppointmentListViewController.class)));
