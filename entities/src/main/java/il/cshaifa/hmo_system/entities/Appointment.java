@@ -35,7 +35,6 @@ public class Appointment implements Serializable {
   public Appointment() {}
 
   public Appointment(
-      int id,
       Patient patient_id,
       AppointmentType type_id,
       Role specialist_role_id,
@@ -43,7 +42,6 @@ public class Appointment implements Serializable {
       Clinic clinic_id,
       LocalDateTime appt_date,
       LocalDateTime called_time) {
-    this.id = id;
     this.patient = patient_id;
     this.type = type_id;
     this.specialist_role = specialist_role_id;

@@ -1,5 +1,6 @@
 package il.cshaifa.hmo_system.client;
 
+import il.cshaifa.hmo_system.client.events.AddAppointmentEvent;
 import il.cshaifa.hmo_system.client.events.AdminAppointmentListEvent;
 import il.cshaifa.hmo_system.client.events.AssignStaffEvent;
 import il.cshaifa.hmo_system.client.events.ClinicEvent;
@@ -15,6 +16,8 @@ import il.cshaifa.hmo_system.entities.ClinicStaff;
 import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.entities.Warning;
+import il.cshaifa.hmo_system.messages.AdminAppointmentMessage;
+import il.cshaifa.hmo_system.messages.AdminAppointmentMessage.AdminAppointmentMessageType;
 import il.cshaifa.hmo_system.messages.AppointmentMessage;
 import il.cshaifa.hmo_system.messages.AppointmentMessage.AppointmentRequestType;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
@@ -23,6 +26,7 @@ import il.cshaifa.hmo_system.messages.LoginMessage;
 import il.cshaifa.hmo_system.messages.Message.MessageType;
 import il.cshaifa.hmo_system.messages.StaffAssignmentMessage;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.greenrobot.eventbus.EventBus;
@@ -79,8 +83,16 @@ public class HMOClient extends AbstractClient {
         handleAppointmentMessage((AppointmentMessage) message);
       } else if (message.getClass().equals(StaffAssignmentMessage.class)) {
         handleStaffAssignmentMessage((StaffAssignmentMessage) message);
+      } else if (message.getClass().equals(AdminAppointmentMessage.class)) {
+        handleAdminAppointmentMessage((AdminAppointmentMessage) message);
       }
     }
+  }
+
+  private void handleAdminAppointmentMessage(AdminAppointmentMessage message) {
+    var event = new AddAppointmentEvent(null, null, null, AddAppointmentEvent.Phase.RECEIVE);
+    event.response_type = message.type;
+    EventBus.getDefault().post(event);
   }
 
   private void handleAppointmentMessage(AppointmentMessage message) {
@@ -151,14 +163,19 @@ public class HMOClient extends AbstractClient {
             staff_member_user, AppointmentRequestType.STAFF_FUTURE_APPOINTMENTS));
   }
 
-  /**
-   * Opens in DB new appointments
-   *
-   * @param new_appointments ArrayList of Appointment entities client requested to open
-   */
-  public void createAppointments(ArrayList<Appointment> new_appointments) throws IOException {
+  /** Opens in DB new appointments */
+  public void createAppointments(
+      User staff_member, LocalDateTime start_time, int count, AppointmentType appt_type)
+      throws IOException {
     client.sendToServer(
-        new AppointmentMessage(new_appointments, AppointmentRequestType.CREATE_APPOINTMENTS));
+        new AdminAppointmentMessage(
+            AdminAppointmentMessageType.CREATE,
+            staff_member,
+            connected_employee_clinics.get(0),
+            start_time,
+            count,
+            null,
+            appt_type));
   }
 
   public void deleteAppointments(ArrayList<Appointment> appointments_to_delete) throws IOException {

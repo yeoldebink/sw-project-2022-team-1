@@ -7,8 +7,8 @@ import il.cshaifa.hmo_system.client.events.AddAppointmentEvent;
 import il.cshaifa.hmo_system.client.events.AddAppointmentEvent.Phase;
 import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
 import il.cshaifa.hmo_system.client.gui.ResourcePath;
-import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.add_appointment.AddAppointmentController;
-import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.add_appointment.AddAppointmentViewController;
+import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.add_appointment.AddDoctorAppointmentsController;
+import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.add_appointment.AddDoctorAppointmentsViewController;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import org.greenrobot.eventbus.EventBus;
@@ -19,6 +19,7 @@ public class AppointmentListController extends Controller {
   public AppointmentListController(ViewController view_controller, Stage stage) {
     super(view_controller, stage);
     EventBus.getDefault().register(this);
+    // TODO : pull the doctor's future appointments
   }
 
   @Subscribe
@@ -26,12 +27,15 @@ public class AppointmentListController extends Controller {
     if (event.phase != Phase.OPEN_WINDOW) return;
     var loader =
         new FXMLLoader(
-            getClass().getResource(ResourcePath.get_fxml(AddAppointmentViewController.class)));
+            getClass().getResource(ResourcePath.get_fxml(AddDoctorAppointmentsViewController.class)));
 
-    loader.setControllerFactory(c -> {return new AddAppointmentViewController(event.staff_member, event.clinic);});
+    loader.setControllerFactory(
+        c -> {
+          return new AddDoctorAppointmentsViewController(event.staff_member);
+        });
 
-    Utils.OpenNewWindow(AddAppointmentViewController.class, AddAppointmentController.class, loader,
-        false);
+    Utils.OpenNewWindow(
+        AddDoctorAppointmentsViewController.class, AddDoctorAppointmentsController.class, loader, false);
   }
 
   @Override

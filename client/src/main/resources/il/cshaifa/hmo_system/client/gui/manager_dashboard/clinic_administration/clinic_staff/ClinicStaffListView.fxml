@@ -17,7 +17,7 @@
                 <Font name="DejaVu Sans Bold" size="22.0"/>
             </font>
         </Label>
-        <TableView fx:id="staff_table" tableMenuButtonVisible="true" onContextMenuRequested="#contextMenuRequested" >
+        <TableView fx:id="staff_table" tableMenuButtonVisible="true" onContextMenuRequested="#contextMenuRequested">
             <columns>
                 <TableColumn fx:id="last_name" prefWidth="75.0" text="Last Name"/>
                 <TableColumn fx:id="first_name" prefWidth="75.0" text="First Name"/>

@@ -4,7 +4,6 @@ import com.sun.javafx.scene.control.IntegerField;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.AddAppointmentEvent;
 import il.cshaifa.hmo_system.client.events.AddAppointmentEvent.Phase;
-import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.User;
 import java.sql.Time;
 import java.text.ParseException;
@@ -15,9 +14,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import org.greenrobot.eventbus.EventBus;
 
-public class AddAppointmentViewController extends ViewController {
+public class AddDoctorAppointmentsViewController extends ViewController {
   private final User staff_member;
-  private final Clinic clinic;
 
   @FXML private IntegerField num_appts;
   @FXML private DatePicker start_date;
@@ -26,9 +24,8 @@ public class AddAppointmentViewController extends ViewController {
   @FXML private Button create_appts;
   @FXML private Label staff_member_name;
 
-  public AddAppointmentViewController(User staff_member, Clinic clinic) {
+  public AddDoctorAppointmentsViewController(User staff_member) {
     this.staff_member = staff_member;
-    this.clinic = clinic;
   }
 
   public void initialize() {
@@ -51,9 +48,8 @@ public class AddAppointmentViewController extends ViewController {
       EventBus.getDefault()
           .post(
               new AddAppointmentEvent(
-                  this.staff_member, this.clinic, start_datetime, count_appointments, Phase.SEND));
+                  this.staff_member, start_datetime, count_appointments, Phase.SEND));
 
-      closeWindow(actionEvent);
     } catch (ParseException e) {
       e.printStackTrace();
       error_text.setText("Invalid time format");

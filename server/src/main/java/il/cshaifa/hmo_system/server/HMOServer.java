@@ -8,6 +8,8 @@ import il.cshaifa.hmo_system.entities.HMOUtilities;
 import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.entities.Role;
 import il.cshaifa.hmo_system.entities.User;
+import il.cshaifa.hmo_system.messages.AdminAppointmentMessage;
+import il.cshaifa.hmo_system.messages.AdminAppointmentMessage.AdminAppointmentMessageType;
 import il.cshaifa.hmo_system.messages.AppointmentMessage;
 import il.cshaifa.hmo_system.messages.AppointmentMessage.AppointmentRequestType;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
@@ -37,6 +39,10 @@ import org.hibernate.query.Query;
 import org.hibernate.service.ServiceRegistry;
 
 public class HMOServer extends AbstractServer {
+
+  private static final int VACCINE_APPT_MINUTES = 10;
+  private static final int FAMILY_DOCTOR_APPT_MINUTES = 15;
+  private static final int SPECIALIST_APPT_MINUTES = 20;
 
   private static Session session;
 
@@ -133,9 +139,6 @@ public class HMOServer extends AbstractServer {
           .where(
               cb.equal(root.get("patient"), getUserPatient(message.user)),
               cb.equal(root.get("taken"), true));
-    } else if (message.requestType == AppointmentRequestType.CREATE_APPOINTMENTS) {
-      addEntities(message.appointments);
-      return;
     }
 
     message.appointments = session.createQuery(cr).getResultList();
@@ -281,6 +284,68 @@ public class HMOServer extends AbstractServer {
     client.sendToClient(msg);
   }
 
+  private void handleAdminAppointmentMessage(
+      AdminAppointmentMessage msg, ConnectionToClient client) throws IOException {
+    if (msg.type == AdminAppointmentMessageType.DELETE) {
+      for (var appt : msg.appointments) {
+        session.delete(appt);
+        session.flush();
+      }
+
+      msg.type = AdminAppointmentMessageType.ACCEPT;
+    } else if (msg.staff_member != null) { // will be null for vaccines
+      // verify that this staff member has no appointments in any clinic during these times
+      int len;
+      Role specialist_role;
+      if (msg.staff_member.getRole().isSpecialist()) {
+        len = SPECIALIST_APPT_MINUTES;
+        specialist_role = msg.staff_member.getRole();
+      } else {
+        len = FAMILY_DOCTOR_APPT_MINUTES;
+        specialist_role = null;
+      }
+
+      LocalDateTime end_datetime = msg.start_datetime.plusMinutes((long) msg.count * len);
+
+      var cb = session.getCriteriaBuilder();
+      var cr = cb.createQuery(Appointment.class);
+      var root = cr.from(Appointment.class);
+      cr.select(root)
+          .where(
+              cb.equal(root.get("staff_member"), msg.staff_member),
+              cb.between(root.get("appt_date"), msg.start_datetime, end_datetime));
+
+      // if this staff member already has appointments at these times, reject
+      if (session.createQuery(cr).getResultList().size() > 0) {
+        msg.type = AdminAppointmentMessageType.REJECT;
+
+      } else {
+        var current_datetime = LocalDateTime.from(msg.start_datetime);
+        // TODO: validate by clinic hours as well
+        while (current_datetime.isBefore(end_datetime)) {
+          var appt =
+              new Appointment(
+                  null,
+                  msg.appt_type,
+                  specialist_role,
+                  msg.staff_member,
+                  msg.clinic,
+                  current_datetime,
+                  null);
+          session.save(appt);
+          session.flush();
+
+          current_datetime = current_datetime.plusMinutes(len);
+        }
+
+        msg.type = AdminAppointmentMessageType.ACCEPT;
+      }
+    }
+
+    msg.message_type = MessageType.RESPONSE;
+    client.sendToClient(msg);
+  }
+
   /**
    * See documentation for entities.Request for defined behavior.
    *
@@ -304,8 +369,8 @@ public class HMOServer extends AbstractServer {
         handleStaffMessage((ClinicStaffMessage) msg, client);
       } else if (msg_class == StaffAssignmentMessage.class) {
         handleStaffAssignmentMessage((StaffAssignmentMessage) msg, client);
-      } else if (msg_class == AppointmentMessage.class) {
-        handleAppointmentMessage((AppointmentMessage) msg, client);
+      } else if (msg_class == AdminAppointmentMessage.class) {
+        handleAdminAppointmentMessage((AdminAppointmentMessage) msg, client);
       }
 
       session.close();

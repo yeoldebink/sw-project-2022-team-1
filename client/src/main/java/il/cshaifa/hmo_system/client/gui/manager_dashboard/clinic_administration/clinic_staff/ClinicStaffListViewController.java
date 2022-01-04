@@ -11,6 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -34,6 +35,7 @@ public class ClinicStaffListViewController extends ViewController {
 
   @FXML
   public void initialize() {
+    staff_table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     setCellValueFactory();
   }
 
@@ -59,14 +61,13 @@ public class ClinicStaffListViewController extends ViewController {
   }
 
   void assignOrUnassignSelectedStaffMembers(Phase phase) {
-    ArrayList<User> users = new ArrayList<User>(staff_table.getSelectionModel().getSelectedItems());
+    var users = new ArrayList<AssignedUser>(staff_table.getSelectionModel().getSelectedItems());
 
     EventBus.getDefault().post(new AssignStaffEvent(users, phase));
   }
 
   @FXML
   void showAppointmentListView() {
-    contextMenu.hide();
     User selected_staff_member = staff_table.getSelectionModel().getSelectedItem();
 
     EventBus.getDefault()
@@ -86,16 +87,23 @@ public class ClinicStaffListViewController extends ViewController {
 
   @FXML
   void contextMenuRequested(ContextMenuEvent contextMenuEvent) {
+    if (staff_table.getSelectionModel().getSelectedItems().size() > 1) {
+      assignMenuItem.setDisable(false);
+      unassignMenuItem.setDisable(false);
+      showAppointmentsMenuItem.setDisable(true);
+      return;
+    }
+
     AssignedUser selected_staff_member = staff_table.getSelectionModel().getSelectedItem();
 
     if (selected_staff_member.getAssigned()) {
-      assignMenuItem.setVisible(false);
-      unassignMenuItem.setVisible(true);
-      showAppointmentsMenuItem.setVisible(true);
+      assignMenuItem.setDisable(true);
+      unassignMenuItem.setDisable(false);
+      showAppointmentsMenuItem.setDisable(false);
     } else {
-      assignMenuItem.setVisible(true);
-      unassignMenuItem.setVisible(false);
-      showAppointmentsMenuItem.setVisible(false);
+      assignMenuItem.setDisable(false);
+      unassignMenuItem.setDisable(true);
+      showAppointmentsMenuItem.setDisable(true);
     }
   }
 }

@@ -51,7 +51,7 @@ public class AppointmentListViewController extends ViewController {
   @FXML
   void showAddAppointmentDialog(ActionEvent event) {
     EventBus.getDefault()
-        .post(new AddAppointmentEvent(this.staff_member, this.clinic, null, 0, Phase.OPEN_WINDOW));
+        .post(new AddAppointmentEvent(this.staff_member, null, 0, Phase.OPEN_WINDOW));
   }
 
   void setCellValueFactory() {

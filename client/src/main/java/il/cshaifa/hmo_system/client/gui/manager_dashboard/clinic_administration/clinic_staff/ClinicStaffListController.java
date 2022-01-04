@@ -79,7 +79,11 @@ public class ClinicStaffListController extends Controller {
         // AssignedUser
         ArrayList<User> staff_users = new ArrayList<>();
         for (var a_user : event.staff) {
-          staff_users.add(new User(a_user));
+          // this condition is true iff the user is assigned and the phase is unassign
+          // or the other way around - that the user is unassigned and the phase is assign
+          if (a_user.getAssigned() != (event.phase == Phase.ASSIGN)) {
+            staff_users.add(new User(a_user));
+          }
         }
 
         HMOClient.getClient().assignOrUnassignStaff(staff_users, type);
