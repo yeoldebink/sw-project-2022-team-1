@@ -27,7 +27,8 @@ public class AppointmentListController extends Controller {
     if (event.phase != Phase.OPEN_WINDOW) return;
     var loader =
         new FXMLLoader(
-            getClass().getResource(ResourcePath.get_fxml(AddDoctorAppointmentsViewController.class)));
+            getClass()
+                .getResource(ResourcePath.get_fxml(AddDoctorAppointmentsViewController.class)));
 
     loader.setControllerFactory(
         c -> {
@@ -35,7 +36,10 @@ public class AppointmentListController extends Controller {
         });
 
     Utils.OpenNewWindow(
-        AddDoctorAppointmentsViewController.class, AddDoctorAppointmentsController.class, loader, false);
+        AddDoctorAppointmentsViewController.class,
+        AddDoctorAppointmentsController.class,
+        loader,
+        false);
   }
 
   @Override

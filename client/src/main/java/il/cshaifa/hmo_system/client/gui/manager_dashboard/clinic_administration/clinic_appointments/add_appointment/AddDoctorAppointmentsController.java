@@ -30,7 +30,8 @@ public class AddDoctorAppointmentsController extends Controller {
     else appt_type = new AppointmentType(event.staff_member.getRole().getName());
 
     try {
-      HMOClient.getClient().createAppointments(event.staff_member, event.start_datetime, event.count, appt_type);
+      HMOClient.getClient()
+          .createAppointments(event.staff_member, event.start_datetime, event.count, appt_type);
     } catch (IOException e) {
       e.printStackTrace();
     }

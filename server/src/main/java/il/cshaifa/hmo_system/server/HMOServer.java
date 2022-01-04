@@ -284,8 +284,8 @@ public class HMOServer extends AbstractServer {
     client.sendToClient(msg);
   }
 
-  private void handleAdminAppointmentMessage(
-      AdminAppointmentMessage msg, ConnectionToClient client) throws IOException {
+  private void handleAdminAppointmentMessage(AdminAppointmentMessage msg, ConnectionToClient client)
+      throws IOException {
     if (msg.type == AdminAppointmentMessageType.DELETE) {
       for (var appt : msg.appointments) {
         session.delete(appt);
