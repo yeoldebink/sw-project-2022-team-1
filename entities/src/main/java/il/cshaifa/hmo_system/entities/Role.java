@@ -10,7 +10,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "roles")
 public class Role implements Serializable {
-  @Id
+  @Id // TODO: use name as primary key
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
 
@@ -36,7 +36,7 @@ public class Role implements Serializable {
     this.name = name;
   }
 
-  public boolean isIs_specialist() {
+  public boolean isSpecialist() {
     return is_specialist;
   }
 

@@ -12,7 +12,8 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 
 public class Utils {
-  public static void OpenNewWindow(Class<?> view_controller, Class<?> controller, FXMLLoader loader)
+  public static void OpenNewWindow(
+      Class<?> view_controller, Class<?> controller, FXMLLoader loader, boolean resizeable)
       throws Exception {
     // Letting us run things on the UI Thread, otherwise things won't change and an exception will
     // be thrown.
@@ -20,6 +21,7 @@ public class Utils {
         () -> {
           try {
             Stage stage = new Stage();
+            stage.setResizable(resizeable);
             var scene = new Scene(loader.load());
             var v_controller = view_controller.cast(loader.getController());
             var ctor = controller.getConstructor(ViewController.class, Stage.class);

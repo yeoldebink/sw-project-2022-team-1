@@ -1,4 +1,4 @@
-package il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_list_view;
+package il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_list_view;
 
 import il.cshaifa.hmo_system.client.HMOClient;
 import il.cshaifa.hmo_system.client.Utils;
@@ -28,7 +28,7 @@ public class AdminClinicListController extends Controller {
 
   @Subscribe
   @Override
-  public void OnWindowCloseEvent(CloseWindowEvent event) {
+  public void onWindowCloseEvent(CloseWindowEvent event) {
     if (!event.getViewControllerInstance().equals(view_controller)) return;
     EventBus.getDefault().unregister(this);
   }
@@ -48,7 +48,8 @@ public class AdminClinicListController extends Controller {
               event.clinic, HMOClient.getClient().getConnected_user().getRole());
         });
     try {
-      Utils.OpenNewWindow(AdminClinicViewController.class, AdminClinicController.class, loader);
+      Utils.OpenNewWindow(
+          AdminClinicViewController.class, AdminClinicController.class, loader, true);
     } catch (Exception e) {
       e.printStackTrace();
     }

@@ -6,6 +6,7 @@ import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
 import il.cshaifa.hmo_system.client.events.LoginEvent;
+import il.cshaifa.hmo_system.client.events.LoginEvent.Phase;
 import il.cshaifa.hmo_system.client.gui.ResourcePath;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.ManagerDashboardController;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.ManagerDashboardViewController;
@@ -27,18 +28,20 @@ public class LoginController extends Controller {
 
   @Subscribe
   @Override
-  public void OnWindowCloseEvent(CloseWindowEvent event) {
+  public void onWindowCloseEvent(CloseWindowEvent event) {
     if (event.getViewControllerInstance().equals(this.view_controller))
       EventBus.getDefault().unregister(this);
   }
 
   @Subscribe
   public void OnLoginRequestEvent(LoginEvent event) {
-    try {
-      String pass = event.password.equals("") ? null : event.password;
-      HMOClient.getClient().loginRequest(event.id, pass);
-    } catch (IOException e) {
-      e.printStackTrace();
+    if (event.phase == Phase.SEND) {
+      try {
+        String pass = event.password.equals("") ? null : event.password;
+        HMOClient.getClient().loginRequest(event.id, pass);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
   }
 
@@ -48,6 +51,7 @@ public class LoginController extends Controller {
       incorrectUser();
     } else if (event.phase == LoginEvent.Phase.AUTHORIZE) {
       openMainScreenByRole(event.userData);
+      Platform.runLater(() -> this.stage.close());
     }
   }
 
@@ -71,13 +75,11 @@ public class LoginController extends Controller {
               return new ManagerDashboardViewController(user);
             });
         Utils.OpenNewWindow(
-            ManagerDashboardViewController.class, ManagerDashboardController.class, loader);
+            ManagerDashboardViewController.class, ManagerDashboardController.class, loader, true);
 
         break;
       default:
         throw new NotImplementedException("Only manager implemented");
     }
-
-    Platform.runLater(() -> this.stage.close());
   }
 }

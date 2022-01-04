@@ -88,7 +88,7 @@ public class Main {
         new User(5487, null, "Billy", "Crystal", null, null, roles.get("Clinic Manager")));
     users.put(
         "Joan Rivers",
-        new User(1979, null, "Joan", "Rviers", null, null, roles.get("Clinic Manager")));
+        new User(1979, null, "Joan", "Rivers", null, null, roles.get("Clinic Manager")));
 
     users.put(
         "Bob Kelso", new User(3141, null, "Bob", "Kelso", null, null, roles.get("Family Doctor")));
@@ -213,7 +213,6 @@ public class Main {
     ArrayList<ClinicStaff> clinicStaff = new ArrayList<>();
 
     var carmel = clinics.get("Carmel Center");
-    clinicStaff.add(new ClinicStaff(carmel, users.get("Carla Espinosa")));
     clinicStaff.add(new ClinicStaff(carmel, users.get("John Dorian")));
     clinicStaff.add(new ClinicStaff(carmel, users.get("Sarah Tizdale")));
     clinicStaff.add(new ClinicStaff(carmel, users.get("Perry Cox")));
@@ -221,7 +220,6 @@ public class Main {
     clinicStaff.add(new ClinicStaff(carmel, users.get("Glen Matthews")));
 
     var dizengoff = clinics.get("Dizengoff");
-    clinicStaff.add(new ClinicStaff(dizengoff, users.get("Carmen Sandiego")));
     clinicStaff.add(new ClinicStaff(dizengoff, users.get("Elliot Reed")));
     clinicStaff.add(new ClinicStaff(dizengoff, users.get("John Dorian")));
     clinicStaff.add(new ClinicStaff(dizengoff, users.get("LaVerne Roberts")));
@@ -254,6 +252,29 @@ public class Main {
     return patients;
   }
 
+  public static List<AppointmentType> createAppointmentTypes() {
+    String[] appt_type_names = {
+      "Family Doctor",
+      "Pediatrician",
+      "Specialist",
+      "COVID Test",
+      "COVID Vaccine",
+      "Flu Vaccine",
+      "Nurse",
+      "Lab Tests"
+    };
+
+    ArrayList<AppointmentType> appt_types = new ArrayList<>();
+    for (var name : appt_type_names) {
+      var appt_type = new AppointmentType(name);
+      appt_types.add(appt_type);
+      session.save(appt_type);
+      session.flush();
+    }
+
+    return appt_types;
+  }
+
   public static void main(String[] args) throws NoSuchAlgorithmException {
     try {
       session = getSessionFactory().openSession();
@@ -263,6 +284,7 @@ public class Main {
       var clinics = createClinics(users);
       var clinicStaff = assignStaff(users, clinics);
       var patients = createPatients(users, clinics);
+      var appointment_types = createAppointmentTypes();
       session.getTransaction().commit();
     } catch (Exception e) {
       e.printStackTrace();

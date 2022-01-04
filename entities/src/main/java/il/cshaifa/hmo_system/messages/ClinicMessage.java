@@ -8,12 +8,12 @@ public class ClinicMessage extends Message {
   public List<Clinic> clinics;
 
   public ClinicMessage() {
-    super(messageType.REQUEST);
+    super(MessageType.REQUEST);
     clinics = null;
   }
 
   public ClinicMessage(Clinic edited_clinic) {
-    super(messageType.REQUEST);
+    super(MessageType.REQUEST);
     clinics = Collections.singletonList(edited_clinic);
   }
 }

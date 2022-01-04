@@ -15,7 +15,7 @@ public class LoginMessage extends Message {
   public List<Clinic> employee_clinics;
 
   public LoginMessage(int id, String password) {
-    super(messageType.REQUEST);
+    super(MessageType.REQUEST);
     this.id = id;
     this.password = password;
     this.user = null;

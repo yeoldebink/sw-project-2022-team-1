@@ -7,6 +7,7 @@ public class LoginEvent {
   public int id;
   public String password;
   public Phase phase;
+
   public User userData;
   public Patient patientData;
 
