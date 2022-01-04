@@ -26,7 +26,8 @@ public class AppointmentListController extends Controller {
     super(view_controller, stage);
     EventBus.getDefault().register(this);
     // TODO : pull the doctor's future appointments
-    User staff_member = new User(((AppointmentListViewController)this.view_controller).staff_member);
+    User staff_member =
+        new User(((AppointmentListViewController) this.view_controller).staff_member);
     try {
       HMOClient.getClient().getStaffAppointments(staff_member);
     } catch (IOException e) {
@@ -35,17 +36,20 @@ public class AppointmentListController extends Controller {
   }
 
   @Subscribe
-  public void onAppointmentsAdded(AddAppointmentEvent event){
-    if(event.phase != Phase.RECEIVE || event.response_type != AdminAppointmentMessageType.ACCEPT) return;
-    User staff_member = new User(((AppointmentListViewController)this.view_controller).staff_member);
+  public void onAppointmentsAdded(AddAppointmentEvent event) {
+    if (event.phase != Phase.RECEIVE || event.response_type != AdminAppointmentMessageType.ACCEPT)
+      return;
+    User staff_member =
+        new User(((AppointmentListViewController) this.view_controller).staff_member);
     try {
       HMOClient.getClient().getStaffAppointments(staff_member);
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
+
   @Subscribe
-  public void onAddAppointmentsWindowOpened(AddAppointmentEvent event)  {
+  public void onAddAppointmentsWindowOpened(AddAppointmentEvent event) {
     if (event.phase != Phase.OPEN_WINDOW) return;
     var loader =
         new FXMLLoader(
@@ -69,12 +73,13 @@ public class AppointmentListController extends Controller {
   }
 
   @Subscribe
-  public void onAppointmentListReceived(AdminAppointmentListEvent event){
+  public void onAppointmentListReceived(AdminAppointmentListEvent event) {
     if (event.phase != AdminAppointmentListEvent.Phase.RECEIVE) return;
 
     var vc = ((AppointmentListViewController) this.view_controller);
-    Platform.runLater(()->vc.populateAppointmentsTable(event.appointments));
+    Platform.runLater(() -> vc.populateAppointmentsTable(event.appointments));
   }
+
   @Override
   public void onWindowCloseEvent(CloseWindowEvent event) {}
 }

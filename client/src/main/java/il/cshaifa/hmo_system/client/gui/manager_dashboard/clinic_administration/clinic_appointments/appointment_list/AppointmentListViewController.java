@@ -80,6 +80,3 @@ public class AppointmentListViewController extends ViewController {
     appt_table.getItems().setAll(appt_list_table);
   }
 }
-
-
-

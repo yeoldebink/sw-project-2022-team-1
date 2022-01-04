@@ -48,7 +48,11 @@ public class AppointmentForTableView {
     return taken;
   }
 
-  public String getPatient_name() {return patient_name;}
+  public String getPatient_name() {
+    return patient_name;
+  }
 
-  public String getAppt_type() {return type_name;}
+  public String getAppt_type() {
+    return type_name;
+  }
 }

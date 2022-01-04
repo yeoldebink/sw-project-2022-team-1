@@ -93,8 +93,6 @@ public class ClinicStaffListController extends Controller {
     }
   }
 
-
-
   @Subscribe
   public void onAppointmentListEventRecieved(AdminAppointmentListEvent event) {
     if (event.phase != AdminAppointmentListEvent.Phase.OPEN_WINDOW) return;
