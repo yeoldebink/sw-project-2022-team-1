@@ -6,8 +6,8 @@ name: SW Eng CI
 # TODO: Add a job to check that the client and server jars execute
 
 on:
-  push:
-    branches: [ '**' ]
+  pull_request:
+    branches: [ 'main' ]
 
 jobs:
   google-java-formatting:
@@ -21,7 +21,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
       - uses: axel-op/googlejavaformat-action@v3
         with:
-          args: "--replace"
+          args: "--set-exit-if-changed"
 
   maven-build:
     runs-on: ubuntu-latest
