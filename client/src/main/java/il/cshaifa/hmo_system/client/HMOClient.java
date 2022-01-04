@@ -24,6 +24,7 @@ import il.cshaifa.hmo_system.messages.ClinicMessage;
 import il.cshaifa.hmo_system.messages.ClinicStaffMessage;
 import il.cshaifa.hmo_system.messages.LoginMessage;
 import il.cshaifa.hmo_system.messages.Message.MessageType;
+import il.cshaifa.hmo_system.messages.ReportMessage.ReportType;
 import il.cshaifa.hmo_system.messages.StaffAssignmentMessage;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -105,7 +106,7 @@ public class HMOClient extends AbstractClient {
               message.user,
               (ArrayList<Appointment>) message.appointments,
               AdminAppointmentListEvent.Phase.RECEIVE);
-    }
+    } // TODO : handle patient history request
 
     EventBus.getDefault().post(event);
   }
@@ -179,6 +180,7 @@ public class HMOClient extends AbstractClient {
             appt_type));
   }
 
+  /** delete given appts from db * */
   public void deleteAppointments(ArrayList<Appointment> appointments_to_delete) throws IOException {
     client.sendToServer(
         new AppointmentMessage(appointments_to_delete, AppointmentRequestType.DELETE_APPOINTMENTS));
@@ -215,6 +217,13 @@ public class HMOClient extends AbstractClient {
         new AppointmentMessage(staff_member, AppointmentRequestType.STAFF_FUTURE_APPOINTMENTS);
     client.sendToServer(message);
   }
+
+  // TODO: Implement and document me!
+  public void requestReports(
+      List<Clinic> clinics,
+      LocalDateTime start_date,
+      LocalDateTime end_date,
+      ReportType report_type) {}
 
   /**
    * Receives a changed clinic object and updates it in DB
