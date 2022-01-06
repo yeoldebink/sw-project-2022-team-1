@@ -7,7 +7,8 @@ public class AppointmentListEvent {
   public enum Phase {
     OPEN_WINDOW,
     REQUEST,
-    RECEIVE
+    RECEIVE,
+    DELETE
   }
 
   public ArrayList<Appointment> appointments;

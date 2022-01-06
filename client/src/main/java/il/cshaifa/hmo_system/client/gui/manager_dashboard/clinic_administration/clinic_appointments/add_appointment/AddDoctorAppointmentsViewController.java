@@ -10,7 +10,10 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import org.greenrobot.eventbus.EventBus;
 
 public class AddDoctorAppointmentsViewController extends ViewController {

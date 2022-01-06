@@ -7,6 +7,7 @@ import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.AddAppointmentEvent;
 import il.cshaifa.hmo_system.client.events.AddAppointmentEvent.Phase;
 import il.cshaifa.hmo_system.client.events.AdminAppointmentListEvent;
+import il.cshaifa.hmo_system.client.events.AppointmentListEvent;
 import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
 import il.cshaifa.hmo_system.client.gui.ResourcePath;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.add_appointment.AddDoctorAppointmentsController;
@@ -25,7 +26,6 @@ public class AppointmentListController extends Controller {
   public AppointmentListController(ViewController view_controller, Stage stage) {
     super(view_controller, stage);
     EventBus.getDefault().register(this);
-    // TODO : pull the doctor's future appointments
     User staff_member =
         new User(((AppointmentListViewController) this.view_controller).staff_member);
     try {
@@ -78,6 +78,17 @@ public class AppointmentListController extends Controller {
 
     var vc = ((AppointmentListViewController) this.view_controller);
     Platform.runLater(() -> vc.populateAppointmentsTable(event.appointments));
+  }
+
+  @Subscribe
+  public void onDeleteAppointmentsRequest(AdminAppointmentListEvent event) {
+    if (event.phase != AppointmentListEvent.Phase.DELETE) return;
+
+    try {
+      HMOClient.getClient().deleteAppointments(event.appointments);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
