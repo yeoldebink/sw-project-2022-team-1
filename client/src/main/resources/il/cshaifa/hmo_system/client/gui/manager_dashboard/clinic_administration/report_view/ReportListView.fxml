@@ -4,21 +4,50 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.Pane?>
 <AnchorPane xmlns="http://javafx.com/javafx/17"
   xmlns:fx="http://javafx.com/fxml/1"
-  fx:controller="il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.report_view.ReportListViewController"
-  prefHeight="400.0" prefWidth="600.0">
+  fx:controller="il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.report_view.ReportListViewController">
 
-  <VBox AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.bottomAnchor="0"
-    AnchorPane.topAnchor="0">
+<!--  <HBox AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.bottomAnchor="0"-->
+<!--    AnchorPane.topAnchor="0">-->
 
-    <TableView columnResizePolicy="ALWAYS" fx:id="reportsTable">
-      <columns>
-        <TableColumn fx:id="clinicNameTableColumn" />
-        <TableColumn fx:id="reportDateTableColumn" />
-      </columns>
-    </TableView>
+<!--    <VBox HBox.hgrow="SOMETIMES">-->
+<!--      <ListView fx:id="clinicList" VBox.vgrow="ALWAYS">-->
+<!--      </ListView>-->
+<!--    </VBox>-->
 
+<!--    <TableView fx:id="reportsTable" HBox.hgrow="ALWAYS">-->
+<!--      <columns>-->
+<!--        <TableColumn fx:id="clinicNameTableColumn" />-->
+<!--        <TableColumn fx:id="reportDateTableColumn" />-->
+<!--      </columns>-->
+<!--    </TableView>-->
+
+<!--  </HBox>-->
+
+  <VBox AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+    <SplitPane VBox.vgrow="ALWAYS">
+      <AnchorPane SplitPane.resizableWithParent="NO" maxWidth="350">
+          <ListView fx:id="clinicList" AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="0">
+          </ListView>
+      </AnchorPane>
+      <AnchorPane>
+        <TableView fx:id="reportsTable" AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="0">
+          <columnResizePolicy>
+            <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
+          </columnResizePolicy>
+          <columns>
+            <TableColumn fx:id="clinicNameTableColumn" text="Clinic" prefWidth="350" />
+            <TableColumn fx:id="reportDateTableColumn" text="Report Date" prefWidth="220"/>
+          </columns>
+        </TableView>
+      </AnchorPane>
+    </SplitPane>
   </VBox>
 
 </AnchorPane>
