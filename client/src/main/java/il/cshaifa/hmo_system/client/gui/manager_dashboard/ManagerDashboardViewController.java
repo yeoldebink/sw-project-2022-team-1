@@ -2,14 +2,17 @@ package il.cshaifa.hmo_system.client.gui.manager_dashboard;
 
 import il.cshaifa.hmo_system.client.utils.Utils;
 import il.cshaifa.hmo_system.client.base_controllers.RoleDefinedViewController;
+import il.cshaifa.hmo_system.client.gui.ResourcePath;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_list_view.AdminClinicListViewController;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_staff.ClinicStaffListViewController;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.report_view.ReportListViewController;
 import il.cshaifa.hmo_system.entities.User;
 import java.io.IOException;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.Pane;
 
 public class ManagerDashboardViewController extends RoleDefinedViewController {
 
@@ -31,7 +34,6 @@ public class ManagerDashboardViewController extends RoleDefinedViewController {
   public void initialize() throws IOException {
     var clinic_list = Utils.loadFXML(getClass(), AdminClinicListViewController.class);
     var clinic_staff_list = Utils.loadFXML(getClass(), ClinicStaffListViewController.class);
-    var report_list = Utils.loadFXML(getClass(), ReportListViewController.class);
 
     clinic_list.pane.prefWidthProperty().bind(tabPane.widthProperty());
     clinic_list.pane.prefHeightProperty().bind(tabPane.heightProperty());
@@ -43,10 +45,19 @@ public class ManagerDashboardViewController extends RoleDefinedViewController {
     staffAdministrationTab.setContent(clinic_staff_list.pane);
     clinicStaffListViewController = (ClinicStaffListViewController) clinic_staff_list.view_controller;
 
-    report_list.getKey().prefWidthProperty().bind(tabPane.widthProperty());
-    report_list.getKey().prefHeightProperty().bind(tabPane.heightProperty());
-    reportsTab.setContent(report_list.getKey());
-    reportListViewController = (ReportListViewController) report_list.getValue();
+    var loader =
+        new FXMLLoader(
+            getClass().getResource(ResourcePath.get_fxml(ReportListViewController.class)));
+    loader.setControllerFactory(
+        c -> {
+          return new ReportListViewController(role);
+        });
+
+    Pane reportsPane = loader.load();
+    reportsPane.prefWidthProperty().bind(tabPane.widthProperty());
+    reportsPane.prefHeightProperty().bind(tabPane.heightProperty());
+    reportsTab.setContent(reportsPane);
+    reportListViewController = loader.getController();
 
     applyRoleBehavior();
   }

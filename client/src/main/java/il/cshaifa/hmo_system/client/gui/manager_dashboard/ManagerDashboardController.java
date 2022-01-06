@@ -11,9 +11,9 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 public class ManagerDashboardController extends Controller {
-  private AdminClinicListController adminClinicListController;
-  private ClinicStaffListController clinicStaffListController;
-  private ReportListController reportListController;
+  private final AdminClinicListController adminClinicListController;
+  private final ClinicStaffListController clinicStaffListController;
+  private final ReportListController reportListController;
 
   public ManagerDashboardController(ViewController view_controller, Stage stage) {
     super(view_controller, stage);
