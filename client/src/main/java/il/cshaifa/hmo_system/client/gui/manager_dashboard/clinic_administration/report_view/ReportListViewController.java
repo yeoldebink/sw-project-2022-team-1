@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 public class ReportListViewController extends ViewController {
 
@@ -16,7 +17,15 @@ public class ReportListViewController extends ViewController {
   @FXML private TableColumn<DailyReport, String> clinicNameTableColumn;
   @FXML private TableColumn<DailyReport, LocalDateTime> reportDateTableColumn;
 
-  public void populateReportsTable(List<DailyReport> reports) {}
+  @FXML
+  public void initialize() {
+    clinicNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("ClinicName"));
+    reportDateTableColumn.setCellValueFactory(new PropertyValueFactory<>("Date"));
+  }
+
+  public void populateReportsTable(List<DailyReport> reports) {
+    reportsTable.getItems().setAll(reports);
+  }
 
   @FXML
   public void requestReports(ActionEvent event) {}
