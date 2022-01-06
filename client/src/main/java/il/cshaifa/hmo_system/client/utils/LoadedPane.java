@@ -5,11 +5,11 @@ import javafx.scene.layout.Pane;
 
 public class LoadedPane {
 
-  public final ViewController view_controller;
   public final Pane pane;
+  public final ViewController view_controller;
 
-  public LoadedPane(ViewController view_controller, Pane pane) {
-    this.view_controller = view_controller;
+  public LoadedPane(Pane pane, ViewController view_controller) {
     this.pane = pane;
+    this.view_controller = view_controller;
   }
 }
