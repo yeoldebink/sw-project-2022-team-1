@@ -24,6 +24,7 @@ import il.cshaifa.hmo_system.messages.ClinicMessage;
 import il.cshaifa.hmo_system.messages.ClinicStaffMessage;
 import il.cshaifa.hmo_system.messages.LoginMessage;
 import il.cshaifa.hmo_system.messages.Message.MessageType;
+import il.cshaifa.hmo_system.messages.ReportMessage;
 import il.cshaifa.hmo_system.messages.ReportMessage.ReportType;
 import il.cshaifa.hmo_system.messages.StaffAssignmentMessage;
 import java.io.IOException;
@@ -86,9 +87,13 @@ public class HMOClient extends AbstractClient {
         handleStaffAssignmentMessage((StaffAssignmentMessage) message);
       } else if (message.getClass().equals(AdminAppointmentMessage.class)) {
         handleAdminAppointmentMessage((AdminAppointmentMessage) message);
+      } else if (message.getClass().equals(ReportMessage.class)) {
+        handleReportMessage((ReportMessage) message);
       }
     }
   }
+
+  private void handleReportMessage(ReportMessage message) {}
 
   private void handleAdminAppointmentMessage(AdminAppointmentMessage message) {
     var event = new AddAppointmentEvent(null, null, null, AddAppointmentEvent.Phase.RECEIVE);
@@ -213,17 +218,27 @@ public class HMOClient extends AbstractClient {
   }
 
   public void getStaffAppointments(User staff_member) throws IOException {
-    var message =
-        new AppointmentMessage(staff_member, AppointmentRequestType.STAFF_FUTURE_APPOINTMENTS);
-    client.sendToServer(message);
+    client.sendToServer(
+        new AppointmentMessage(staff_member, AppointmentRequestType.STAFF_FUTURE_APPOINTMENTS));
   }
 
-  // TODO: Implement and document me!
+  /**
+   * Sends to server a request to get report
+   *
+   * @param clinics list of clinics we want to get reports about
+   * @param start_date the day we want the report to begin
+   * @param end_date the day we want the report to end
+   * @param report_type attendance / missed / avg. waiting time
+   * @throws IOException
+   */
   public void requestReports(
       List<Clinic> clinics,
       LocalDateTime start_date,
       LocalDateTime end_date,
-      ReportType report_type) {}
+      ReportType report_type)
+      throws IOException {
+    client.sendToServer(new ReportMessage(clinics, report_type, start_date, end_date));
+  }
 
   /**
    * Receives a changed clinic object and updates it in DB
@@ -232,9 +247,7 @@ public class HMOClient extends AbstractClient {
    * @throws IOException SQL exception
    */
   public void updateClinic(Clinic clinic) throws IOException {
-    var clinic_message = new ClinicMessage(clinic);
-
-    client.sendToServer(clinic_message);
+    client.sendToServer(new ClinicMessage(clinic));
     getClinics();
   }
 
@@ -254,7 +267,6 @@ public class HMOClient extends AbstractClient {
    * @throws IOException SQL exception
    */
   public void loginRequest(int user, String password) throws IOException {
-    LoginMessage message = new LoginMessage(user, password);
-    client.sendToServer(message);
+    client.sendToServer(new LoginMessage(user, password));
   }
 }
