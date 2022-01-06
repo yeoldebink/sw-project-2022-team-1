@@ -1,6 +1,6 @@
 package il.cshaifa.hmo_system.client.gui.manager_dashboard;
 
-import il.cshaifa.hmo_system.client.Utils;
+import il.cshaifa.hmo_system.client.utils.Utils;
 import il.cshaifa.hmo_system.client.base_controllers.RoleDefinedViewController;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_list_view.AdminClinicListViewController;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_staff.ClinicStaffListViewController;
@@ -30,15 +30,15 @@ public class ManagerDashboardViewController extends RoleDefinedViewController {
     var clinic_list = Utils.loadFXML(getClass(), AdminClinicListViewController.class);
     var clinic_staff_list = Utils.loadFXML(getClass(), ClinicStaffListViewController.class);
 
-    clinic_list.getKey().prefWidthProperty().bind(tabPane.widthProperty());
-    clinic_list.getKey().prefHeightProperty().bind(tabPane.heightProperty());
-    clinicAdministrationTab.setContent(clinic_list.getKey());
-    adminClinicListViewController = (AdminClinicListViewController) clinic_list.getValue();
+    clinic_list.pane.prefWidthProperty().bind(tabPane.widthProperty());
+    clinic_list.pane.prefHeightProperty().bind(tabPane.heightProperty());
+    clinicAdministrationTab.setContent(clinic_list.pane);
+    adminClinicListViewController = (AdminClinicListViewController) clinic_list.view_controller;
 
-    clinic_staff_list.getKey().prefWidthProperty().bind(tabPane.widthProperty());
-    clinic_staff_list.getKey().prefHeightProperty().bind(tabPane.heightProperty());
-    staffAdministrationTab.setContent(clinic_staff_list.getKey());
-    clinicStaffListViewController = (ClinicStaffListViewController) clinic_staff_list.getValue();
+    clinic_staff_list.pane.prefWidthProperty().bind(tabPane.widthProperty());
+    clinic_staff_list.pane.prefHeightProperty().bind(tabPane.heightProperty());
+    staffAdministrationTab.setContent(clinic_staff_list.pane);
+    clinicStaffListViewController = (ClinicStaffListViewController) clinic_staff_list.view_controller;
 
     applyRoleBehavior();
   }

@@ -3,6 +3,7 @@ package il.cshaifa.hmo_system.client;
 import il.cshaifa.hmo_system.client.gui.ResourcePath;
 import il.cshaifa.hmo_system.client.gui.login.LoginController;
 import il.cshaifa.hmo_system.client.gui.login.LoginViewController;
+import il.cshaifa.hmo_system.client.utils.Utils;
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
