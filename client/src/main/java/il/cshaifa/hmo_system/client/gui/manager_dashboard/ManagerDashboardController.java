@@ -5,6 +5,7 @@ import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_list_view.AdminClinicListController;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_staff.ClinicStaffListController;
+import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.report_view.ReportListController;
 import javafx.stage.Stage;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -12,6 +13,7 @@ import org.greenrobot.eventbus.Subscribe;
 public class ManagerDashboardController extends Controller {
   private AdminClinicListController adminClinicListController;
   private ClinicStaffListController clinicStaffListController;
+  private ReportListController reportListController;
 
   public ManagerDashboardController(ViewController view_controller, Stage stage) {
     super(view_controller, stage);
@@ -23,6 +25,10 @@ public class ManagerDashboardController extends Controller {
     clinicStaffListController =
         new ClinicStaffListController(
             ((ManagerDashboardViewController) view_controller).getClinicStaffListViewController());
+
+    reportListController =
+        new ReportListController(
+            ((ManagerDashboardViewController) view_controller).getReportListViewController());
   }
 
   @Subscribe

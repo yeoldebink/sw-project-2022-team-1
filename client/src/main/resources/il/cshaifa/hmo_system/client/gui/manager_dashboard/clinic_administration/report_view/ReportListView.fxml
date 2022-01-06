@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<AnchorPane xmlns="http://javafx.com/javafx/17"
+  xmlns:fx="http://javafx.com/fxml/1"
+  fx:controller="il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.report_view.ReportListViewController"
+  prefHeight="400.0" prefWidth="600.0">
+
+  <VBox AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.bottomAnchor="0"
+    AnchorPane.topAnchor="0">
+
+    <TableView columnResizePolicy="ALWAYS" fx:id="reportsTable">
+      <columns>
+        <TableColumn fx:id="clinicNameTableColumn" />
+        <TableColumn fx:id="reportDateTableColumn" />
+      </columns>
+    </TableView>
+
+  </VBox>
+
+</AnchorPane>
