@@ -35,7 +35,7 @@ public class AdminClinicViewController extends RoleDefinedViewController {
     name.setText(clinic.getName());
     address.setText(clinic.getAddress());
     manager.setText(
-        clinic.getManager_user().getFirstName() + clinic.getManager_user().getLastName());
+        clinic.getManager_user().getFirstName() + " " + clinic.getManager_user().getLastName());
     sunHoursTextField.setText(clinic.getSun_hours());
     monHoursTextField.setText(clinic.getMon_hours());
     tueHoursTextField.setText(clinic.getTue_hours());

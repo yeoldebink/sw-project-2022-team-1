@@ -42,6 +42,11 @@ public class AdminClinicListController extends Controller {
         new FXMLLoader(
             getClass().getResource(ResourcePath.get_fxml(AdminClinicViewController.class)));
 
+    // this is for the HMO manager
+    if (event.clinic == null) {
+      event.clinic = HMOClient.getClient().getConnected_employee_clinics().get(0);
+    }
+
     loader.setControllerFactory(
         c -> {
           return new AdminClinicViewController(
