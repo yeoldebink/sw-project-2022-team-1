@@ -4,7 +4,6 @@ import il.cshaifa.hmo_system.client.HMOClient;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.AddAppointmentEvent;
-import il.cshaifa.hmo_system.client.events.AddAppointmentEvent.Phase;
 import il.cshaifa.hmo_system.client.events.AdminAppointmentListEvent;
 import il.cshaifa.hmo_system.client.events.AppointmentListEvent;
 import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
@@ -37,7 +36,7 @@ public class AppointmentListController extends Controller {
 
   @Subscribe
   public void onAppointmentsAdded(AddAppointmentEvent event) {
-    if (event.phase != Phase.RECEIVE || event.response_type != AdminAppointmentMessageType.ACCEPT)
+    if (!event.senderInstance.equals(HMOClient.getClient())|| event.response_type != AdminAppointmentMessageType.ACCEPT)
       return;
     User staff_member =
         new User(((AppointmentListViewController) this.view_controller).staff_member);
@@ -49,8 +48,8 @@ public class AppointmentListController extends Controller {
   }
 
   @Subscribe
-  public void onAddAppointmentsWindowOpened(AddAppointmentEvent event) {
-    if (event.phase != Phase.OPEN_WINDOW) return;
+  public void onShowAddAppointmentDialog(AddAppointmentEvent event) {
+    if (!event.senderInstance.equals(this.view_controller)) return;
     var loader =
         new FXMLLoader(
             getClass()

@@ -4,7 +4,6 @@ import il.cshaifa.hmo_system.client.HMOClient;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.AddAppointmentEvent;
-import il.cshaifa.hmo_system.client.events.AddAppointmentEvent.Phase;
 import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
 import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.User;
@@ -25,7 +24,7 @@ public class AddDoctorAppointmentsController extends Controller {
 
   @Subscribe
   public void addAppointments(AddAppointmentEvent event) {
-    if (event.phase != Phase.SEND) return;
+    if (!event.senderInstance.equals(this.view_controller)) return;
 
     AppointmentType appt_type;
     if (event.staff_member.getRole().isSpecialist()) appt_type = new AppointmentType("Specialist");
@@ -41,7 +40,7 @@ public class AddDoctorAppointmentsController extends Controller {
 
   @Subscribe
   public void onAppointmentCreationResponse(AddAppointmentEvent event) {
-    if (event.phase != Phase.RECEIVE) return;
+    if (!event.senderInstance.equals(HMOClient.getClient())) return;
     else if (event.response_type == AdminAppointmentMessageType.REJECT) {
       String rejectionMessage = "";
       if (event.rejectionType == RejectionType.OVERLAPPING) {

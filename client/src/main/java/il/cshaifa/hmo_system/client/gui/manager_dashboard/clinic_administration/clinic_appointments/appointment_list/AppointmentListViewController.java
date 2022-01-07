@@ -2,7 +2,6 @@ package il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration
 
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.AddAppointmentEvent;
-import il.cshaifa.hmo_system.client.events.AddAppointmentEvent.Phase;
 import il.cshaifa.hmo_system.client.events.AdminAppointmentListEvent;
 import il.cshaifa.hmo_system.client.events.AppointmentListEvent;
 import il.cshaifa.hmo_system.entities.Appointment;
@@ -69,7 +68,7 @@ public class AppointmentListViewController extends ViewController {
     EventBus.getDefault()
         .post(
             new AdminAppointmentListEvent(
-                this.staff_member, appts_to_delete, AppointmentListEvent.Phase.DELETE));
+                this.staff_member, appts_to_delete, this));
   }
 
   @FXML
@@ -78,7 +77,7 @@ public class AppointmentListViewController extends ViewController {
   @FXML
   void showAddAppointmentDialog(ActionEvent event) {
     EventBus.getDefault()
-        .post(new AddAppointmentEvent(this.staff_member, null, 0, Phase.OPEN_WINDOW));
+        .post(new AddAppointmentEvent(this.staff_member, null, 0, this));
   }
 
   void setCellValueFactory() {
