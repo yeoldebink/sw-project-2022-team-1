@@ -163,4 +163,9 @@ public class Clinic implements Serializable {
       default:
     }
   }
+
+  @Override
+  public String toString() {
+    return this.name;
+  }
 }
