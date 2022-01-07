@@ -42,9 +42,10 @@ public class AddDoctorAppointmentsController extends Controller {
   public void onAppointmentCreationResponse(AddAppointmentEvent event) {
     if (event.phase != Phase.RECEIVE) return;
     else if (event.response_type == AdminAppointmentMessageType.REJECT) {
-      // TODO: DO SOMETHING
+      Platform.runLater(
+          () -> ((AddDoctorAppointmentsViewController)this.view_controller).setErrorMessage("Appointment creation rejected")
+      );
     } else {
-      // TODO: DO SOMETHING ELSE
       Platform.runLater(() -> stage.close());
     }
   }
