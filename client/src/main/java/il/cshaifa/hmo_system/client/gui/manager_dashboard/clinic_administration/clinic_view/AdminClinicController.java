@@ -25,12 +25,13 @@ public class AdminClinicController extends Controller {
   }
 
   @Subscribe
-  public void updateClinicRequested(ClinicEvent event) {
-    if (event.phase != ClinicEvent.Phase.REQUEST) return;
+  public void onRequestClinicUpdate(ClinicEvent event) {
+    if (!event.senderInstance.equals(this.view_controller)) return;
 
     var client = HMOClient.getClient();
     try {
       client.updateClinic(event.clinic);
+      client.getClinics();
     } catch (IOException e) {
       e.printStackTrace();
     }

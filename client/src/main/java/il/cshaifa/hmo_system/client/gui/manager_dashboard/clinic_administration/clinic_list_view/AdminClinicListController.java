@@ -31,8 +31,8 @@ public class AdminClinicListController extends Controller {
   }
 
   @Subscribe
-  public void editClinicRequestReceived(ClinicEvent event) {
-    if (event.phase != ClinicEvent.Phase.EDIT) return;
+  public void onShowEditClinicDialog(ClinicEvent event) {
+    if (!event.senderInstance.equals(this.view_controller)) return;
 
     // Navigate to AdminClinicView
     FXMLLoader loader =

@@ -146,7 +146,7 @@ public class HMOClient extends AbstractClient {
   private void handleClinicMessage(ClinicMessage message) {
     if (message.message_type == MessageType.REQUEST) return;
     ArrayList<Clinic> clinics = (ArrayList<Clinic>) message.clinics;
-    ClinicEvent event = new ClinicEvent(clinics);
+    ClinicEvent event = new ClinicEvent(clinics, this);
     EventBus.getDefault().post(event);
   }
 
@@ -265,7 +265,6 @@ public class HMOClient extends AbstractClient {
    */
   public void updateClinic(Clinic clinic) throws IOException {
     client.sendToServer(new ClinicMessage(clinic));
-    getClinics();
   }
 
   /**
