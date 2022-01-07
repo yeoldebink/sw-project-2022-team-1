@@ -324,10 +324,12 @@ public class HMOServer extends AbstractServer {
       var cb = session.getCriteriaBuilder();
       var cr = cb.createQuery(Appointment.class);
       var root = cr.from(Appointment.class);
+
       cr.select(root)
           .where(
               cb.equal(root.get("staff_member"), msg.staff_member),
-              cb.between(root.get("appt_date"), msg.start_datetime, end_datetime));
+              cb.between(root.get("appt_date"), msg.start_datetime, end_datetime.plusSeconds(-1)));
+
 
       // if this staff member already has appointments at these times, reject
       if (session.createQuery(cr).getResultList().size() > 0) {

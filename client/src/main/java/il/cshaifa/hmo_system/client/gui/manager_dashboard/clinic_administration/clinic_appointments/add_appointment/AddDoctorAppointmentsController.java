@@ -50,5 +50,8 @@ public class AddDoctorAppointmentsController extends Controller {
   }
 
   @Override
-  public void onWindowCloseEvent(CloseWindowEvent event) {}
+  public void onWindowCloseEvent(CloseWindowEvent event) {
+    if (event.getViewControllerInstance().equals(this.view_controller))
+      EventBus.getDefault().unregister(this);
+  }
 }
