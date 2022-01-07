@@ -5,16 +5,17 @@ import java.util.ArrayList;
 
 public class AssignStaffEvent {
   public ArrayList<AssignedUser> staff;
-  public Phase phase;
+  public Object senderInstance;
+  public StaffStatus status;
 
-  public AssignStaffEvent(ArrayList<AssignedUser> staff, Phase phase) {
-    this.staff = staff;
-    this.phase = phase;
+  public enum StaffStatus{
+    ASSIGN,
+    UNASSIGN
   }
 
-  public enum Phase {
-    ASSIGN,
-    UNASSIGN,
-    RESPOND
+  public AssignStaffEvent(ArrayList<AssignedUser> staff, Object senderInstance, StaffStatus status) {
+    this.staff = staff;
+    this.senderInstance = senderInstance;
+    this.status = status;
   }
 }

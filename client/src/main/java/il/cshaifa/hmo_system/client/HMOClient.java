@@ -139,7 +139,7 @@ public class HMOClient extends AbstractClient {
   }
 
   private void handleStaffAssignmentMessage(StaffAssignmentMessage message) {
-    AssignStaffEvent event = new AssignStaffEvent(null, AssignStaffEvent.Phase.RESPOND);
+    AssignStaffEvent event = new AssignStaffEvent(null, this, null);
     EventBus.getDefault().post(event);
   }
 

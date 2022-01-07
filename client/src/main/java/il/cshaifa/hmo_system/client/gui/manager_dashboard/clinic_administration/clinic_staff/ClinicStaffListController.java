@@ -5,7 +5,7 @@ import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.AdminAppointmentListEvent;
 import il.cshaifa.hmo_system.client.events.AssignStaffEvent;
-import il.cshaifa.hmo_system.client.events.AssignStaffEvent.Phase;
+import il.cshaifa.hmo_system.client.events.AssignStaffEvent.StaffStatus;
 import il.cshaifa.hmo_system.client.events.ClinicStaffEvent;
 import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
 import il.cshaifa.hmo_system.client.gui.ResourcePath;
@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.TreeMap;
 import javafx.fxml.FXMLLoader;
+import javafx.util.Pair;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -66,30 +67,41 @@ public class ClinicStaffListController extends Controller {
   }
 
   @Subscribe
-  public void clinicStaffAssignmentRequestReceived(AssignStaffEvent event) {
-    if (event.phase == Phase.RESPOND) {
+  public void onClinicStaffAssignmentRequest(AssignStaffEvent event) {
+    if (!event.senderInstance.equals(this.view_controller)) return;
+
+    try {
+      var data = getClinicStaffAssignmentChange(event.staff, event.status);
+      HMOClient.getClient().assignOrUnassignStaff(data.getKey(), data.getValue());
+    } catch (IOException ioException) {
+      ioException.printStackTrace();
+    }
+    }
+
+  private Pair<ArrayList<User>, Type> getClinicStaffAssignmentChange(ArrayList<AssignedUser> assignedUsers, StaffStatus status){
+    StaffAssignmentMessage.Type type =
+        status == StaffStatus.ASSIGN ? Type.ASSIGN : Type.UNASSIGN;
+      // need to copy construct the users so the server doesn't throw a hissy fit over
+      // AssignedUser
+      ArrayList<User> staff_users = new ArrayList<>();
+      for (var a_user : assignedUsers) {
+        // this condition is true iff the user is assigned and the phase is unassign
+        // or the other way around - that the user is unassigned and the phase is assign
+        if (a_user.getAssigned() != (status == StaffStatus.ASSIGN)) {
+          staff_users.add(new User(a_user));
+        }
+      }
+
+      return new Pair<>(staff_users, type);
+  }
+
+  @Subscribe
+  public void onClinicStaffAssignmentRespond(AssignStaffEvent event){
+    if (event.senderInstance.equals(HMOClient.getClient())) {
       try {
         HMOClient.getClient().getStaff();
       } catch (IOException e) {
         e.printStackTrace();
-      }
-    } else {
-      StaffAssignmentMessage.Type type = event.phase == Phase.ASSIGN ? Type.ASSIGN : Type.UNASSIGN;
-      try {
-        // need to copy construct the users so the server doesn't throw a hissy fit over
-        // AssignedUser
-        ArrayList<User> staff_users = new ArrayList<>();
-        for (var a_user : event.staff) {
-          // this condition is true iff the user is assigned and the phase is unassign
-          // or the other way around - that the user is unassigned and the phase is assign
-          if (a_user.getAssigned() != (event.phase == Phase.ASSIGN)) {
-            staff_users.add(new User(a_user));
-          }
-        }
-
-        HMOClient.getClient().assignOrUnassignStaff(staff_users, type);
-      } catch (IOException ioException) {
-        ioException.printStackTrace();
       }
     }
   }
