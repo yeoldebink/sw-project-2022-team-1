@@ -20,14 +20,6 @@ public class AdminClinicListController extends Controller {
 
   public AdminClinicListController(ViewController view_controller) {
     super(view_controller, null);
-    EventBus.getDefault().register(this);
-  }
-
-  @Subscribe
-  @Override
-  public void onWindowCloseEvent(CloseWindowEvent event) {
-    if (!event.getViewControllerInstance().equals(view_controller)) return;
-    EventBus.getDefault().unregister(this);
   }
 
   @Subscribe

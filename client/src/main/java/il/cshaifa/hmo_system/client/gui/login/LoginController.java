@@ -15,21 +15,12 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import jdk.jshell.spi.ExecutionControl.NotImplementedException;
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 public class LoginController extends Controller {
 
   public LoginController(ViewController view_controller, Stage stage) {
     super(view_controller, stage);
-    EventBus.getDefault().register(this);
-  }
-
-  @Subscribe
-  @Override
-  public void onWindowCloseEvent(CloseWindowEvent event) {
-    if (event.getViewControllerInstance().equals(this.view_controller))
-      EventBus.getDefault().unregister(this);
   }
 
   @Subscribe

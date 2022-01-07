@@ -28,8 +28,6 @@ public class ClinicStaffListController extends Controller {
 
   public ClinicStaffListController(ViewController view_controller) {
     super(view_controller, null);
-    EventBus.getDefault().register(this);
-
     try {
       HMOClient.getClient().getStaff();
     } catch (IOException e) {
@@ -125,12 +123,5 @@ public class ClinicStaffListController extends Controller {
     } catch (Exception e) {
       e.printStackTrace();
     }
-  }
-
-  @Subscribe
-  @Override
-  public void onWindowCloseEvent(CloseWindowEvent event) {
-    if (event.getViewControllerInstance().equals(this.view_controller))
-      EventBus.getDefault().unregister(this);
   }
 }

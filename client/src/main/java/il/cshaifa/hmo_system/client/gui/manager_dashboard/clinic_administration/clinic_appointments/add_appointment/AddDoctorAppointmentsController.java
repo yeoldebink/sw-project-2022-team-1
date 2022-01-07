@@ -19,7 +19,6 @@ public class AddDoctorAppointmentsController extends Controller {
 
   public AddDoctorAppointmentsController(ViewController view_controller, Stage stage) {
     super(view_controller, stage);
-    EventBus.getDefault().register(this);
   }
 
   @Subscribe
@@ -58,11 +57,5 @@ public class AddDoctorAppointmentsController extends Controller {
     } else {
       Platform.runLater(() -> stage.close());
     }
-  }
-
-  @Override
-  public void onWindowCloseEvent(CloseWindowEvent event) {
-    if (event.getViewControllerInstance().equals(this.view_controller))
-      EventBus.getDefault().unregister(this);
   }
 }

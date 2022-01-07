@@ -24,7 +24,6 @@ public class AppointmentListController extends Controller {
 
   public AppointmentListController(ViewController view_controller, Stage stage) {
     super(view_controller, stage);
-    EventBus.getDefault().register(this);
     User staff_member =
         new User(((AppointmentListViewController) this.view_controller).staff_member);
     try {
@@ -81,8 +80,7 @@ public class AppointmentListController extends Controller {
 
   @Subscribe
   public void onDeleteAppointmentsRequest(AdminAppointmentListEvent event) {
-    if (event.phase != AppointmentListEvent.Phase.DELETE) return;
-
+    if (!event.senderInstance.equals(this.view_controller)) return;
     try {
       HMOClient.getClient().deleteAppointments(event.appointments);
     } catch (IOException e) {
@@ -90,6 +88,4 @@ public class AppointmentListController extends Controller {
     }
   }
 
-  @Override
-  public void onWindowCloseEvent(CloseWindowEvent event) {}
 }

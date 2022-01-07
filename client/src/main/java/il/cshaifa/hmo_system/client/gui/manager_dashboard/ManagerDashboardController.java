@@ -21,7 +21,6 @@ public class ManagerDashboardController extends Controller {
 
   public ManagerDashboardController(ViewController view_controller, Stage stage) {
     super(view_controller, stage);
-    EventBus.getDefault().register(this);
     adminClinicListController =
         new AdminClinicListController(
             ((ManagerDashboardViewController) view_controller).getAdminClinicListViewController());
@@ -49,10 +48,4 @@ public class ManagerDashboardController extends Controller {
     reportListController.updateClinics(event.receivedClinics);
   }
 
-  @Subscribe
-  @Override
-  public void onWindowCloseEvent(CloseWindowEvent event) {
-    if (event.getViewControllerInstance().equals(this.view_controller))
-      EventBus.getDefault().unregister(this);
-  }
 }
