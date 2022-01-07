@@ -73,7 +73,7 @@ public class ClinicStaffListViewController extends ViewController {
     EventBus.getDefault()
         .post(
             new AdminAppointmentListEvent(
-                selected_staff_member, null, AdminAppointmentListEvent.Phase.OPEN_WINDOW));
+                selected_staff_member, null, this));
   }
 
   void setCellValueFactory() {

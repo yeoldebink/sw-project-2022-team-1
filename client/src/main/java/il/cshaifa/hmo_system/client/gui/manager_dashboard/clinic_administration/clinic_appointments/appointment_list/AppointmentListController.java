@@ -74,7 +74,7 @@ public class AppointmentListController extends Controller {
 
   @Subscribe
   public void onAppointmentListReceived(AdminAppointmentListEvent event) {
-    if (event.phase != AdminAppointmentListEvent.Phase.RECEIVE) return;
+    if (!event.senderInstance.equals(HMOClient.getClient())) return;
 
     var vc = ((AppointmentListViewController) this.view_controller);
     Platform.runLater(() -> vc.populateAppointmentsTable(event.appointments));

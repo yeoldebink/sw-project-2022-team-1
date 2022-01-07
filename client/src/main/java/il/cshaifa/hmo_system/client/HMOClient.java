@@ -121,14 +121,14 @@ public class HMOClient extends AbstractClient {
       event =
           new AdminAppointmentListEvent(
               message.user,
-              (ArrayList<Appointment>) message.appointments,
-              AdminAppointmentListEvent.Phase.RECEIVE);
+              (ArrayList<Appointment>) message.appointments,this);
     } else if (message.requestType == AppointmentRequestType.PATIENT_HISTORY) {
       event =
           new AppointmentListEvent(
-              (ArrayList<Appointment>) message.appointments, AppointmentListEvent.Phase.RECEIVE);
+              (ArrayList<Appointment>) message.appointments, this);
     }
 
+    // TODO : handle patient history request
     EventBus.getDefault().post(event);
   }
 

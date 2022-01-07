@@ -107,8 +107,8 @@ public class ClinicStaffListController extends Controller {
   }
 
   @Subscribe
-  public void onAppointmentListEventRecieved(AdminAppointmentListEvent event) {
-    if (event.phase != AdminAppointmentListEvent.Phase.OPEN_WINDOW) return;
+  public void onShowAppointmentListView(AdminAppointmentListEvent event) {
+    if (!event.senderInstance.equals(this.view_controller)) return;
     FXMLLoader loader =
         new FXMLLoader(
             getClass().getResource(ResourcePath.get_fxml(AppointmentListViewController.class)));

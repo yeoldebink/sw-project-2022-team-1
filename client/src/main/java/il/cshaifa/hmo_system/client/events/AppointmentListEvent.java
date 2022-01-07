@@ -4,18 +4,12 @@ import il.cshaifa.hmo_system.entities.Appointment;
 import java.util.ArrayList;
 
 public class AppointmentListEvent {
-  public enum Phase {
-    OPEN_WINDOW,
-    REQUEST,
-    RECEIVE,
-    DELETE
-  }
 
   public ArrayList<Appointment> appointments;
-  public Phase phase;
+  public Object senderInstance;
 
-  public AppointmentListEvent(ArrayList<Appointment> appointments, Phase phase) {
+  public AppointmentListEvent(ArrayList<Appointment> appointments, Object senderInstance) {
     this.appointments = appointments;
-    this.phase = phase;
+    this.senderInstance = senderInstance;
   }
 }
