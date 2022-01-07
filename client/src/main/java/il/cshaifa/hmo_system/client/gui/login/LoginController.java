@@ -5,7 +5,6 @@ import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
 import il.cshaifa.hmo_system.client.events.LoginEvent;
-import il.cshaifa.hmo_system.client.events.LoginEvent.Phase;
 import il.cshaifa.hmo_system.client.gui.ResourcePath;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.ManagerDashboardController;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.ManagerDashboardViewController;
@@ -35,7 +34,7 @@ public class LoginController extends Controller {
 
   @Subscribe
   public void OnLoginRequestEvent(LoginEvent event) {
-    if (event.phase == Phase.SEND) {
+    if (event.senderInstance.equals(this.view_controller)){
       try {
         String pass = event.password.equals("") ? null : event.password;
         HMOClient.getClient().loginRequest(event.id, pass);
@@ -47,14 +46,15 @@ public class LoginController extends Controller {
 
   @Subscribe
   public void OnLoginRequestResponse(LoginEvent event) throws Exception {
-    if (event.phase == LoginEvent.Phase.REJECT) {
-      incorrectUser();
-    } else if (event.phase == LoginEvent.Phase.AUTHORIZE) {
-      openMainScreenByRole(event.userData);
-      Platform.runLater(() -> this.stage.close());
+    if (event.senderInstance.equals(HMOClient.getClient())) {
+      if (event.status == LoginEvent.Status.REJECT) {
+        incorrectUser();
+      } else if (event.status == LoginEvent.Status.AUTHORIZE) {
+        openMainScreenByRole(event.userData);
+        Platform.runLater(() -> this.stage.close());
+      }
     }
-  }
-
+}
   private void incorrectUser() {
     // Letting the controller to call this function on the UI thread, and apply the changes
     Platform.runLater(() -> ((LoginViewController) view_controller).setFailedText());

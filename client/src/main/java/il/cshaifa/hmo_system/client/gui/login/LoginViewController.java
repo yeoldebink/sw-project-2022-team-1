@@ -40,7 +40,7 @@ public class LoginViewController extends ViewController {
 
     try {
       LoginEvent login_event =
-          new LoginEvent(Integer.parseInt(idTextField.getText()), passwordField.getText());
+          new LoginEvent(Integer.parseInt(idTextField.getText()), passwordField.getText(), this);
       EventBus.getDefault().post(login_event);
     } catch (NumberFormatException e) {
       statusLabel.setTextFill(Color.DARKRED);

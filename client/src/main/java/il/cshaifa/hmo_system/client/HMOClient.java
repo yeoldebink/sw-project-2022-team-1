@@ -9,6 +9,7 @@ import il.cshaifa.hmo_system.client.events.ClinicStaffEvent;
 import il.cshaifa.hmo_system.client.events.ClinicStaffEvent.Phase;
 import il.cshaifa.hmo_system.client.events.LoginEvent;
 import il.cshaifa.hmo_system.client.events.ReportEvent;
+import il.cshaifa.hmo_system.client.events.LoginEvent.Status;
 import il.cshaifa.hmo_system.client.events.WarningEvent;
 import il.cshaifa.hmo_system.client.ocsf.AbstractClient;
 import il.cshaifa.hmo_system.entities.Appointment;
@@ -151,13 +152,13 @@ public class HMOClient extends AbstractClient {
   }
 
   private void handleLoginMessage(LoginMessage message) {
-    LoginEvent event = new LoginEvent(0, "");
+    LoginEvent event = new LoginEvent(0, "", this);
     if (message.user == null) {
-      event.phase = LoginEvent.Phase.REJECT;
+      event.status = Status.REJECT;
     } else {
       event.id = message.id;
       event.password = message.password;
-      event.phase = LoginEvent.Phase.AUTHORIZE;
+      event.status = LoginEvent.Status.AUTHORIZE;
       event.userData = message.user;
       event.patientData = message.patient_data;
       this.connected_employee_clinics = message.employee_clinics;

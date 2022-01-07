@@ -4,22 +4,22 @@ import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.entities.User;
 
 public class LoginEvent {
-  public int id;
-  public String password;
-  public Phase phase;
-
-  public User userData;
-  public Patient patientData;
-
-  public enum Phase {
-    SEND,
+  public enum Status {
     AUTHORIZE,
     REJECT
   }
 
-  public LoginEvent(int id, String password) {
+  public int id;
+  public String password;
+  public User userData;
+  public Patient patientData;
+  public Object senderInstance;
+  public Status status;
+
+
+  public LoginEvent(int id, String password, Object senderInstance) {
     this.id = id;
     this.password = password;
-    this.phase = Phase.SEND;
+    this.senderInstance = senderInstance;
   }
 }
