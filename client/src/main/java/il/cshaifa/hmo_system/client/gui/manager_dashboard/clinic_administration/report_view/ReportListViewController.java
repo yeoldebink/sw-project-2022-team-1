@@ -19,6 +19,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.SplitPane;
@@ -56,7 +57,15 @@ public class ReportListViewController extends RoleDefinedViewController {
   }
 
   @FXML
-  public void initialize() throws IOException {
+  public void initialize() {
+    clinicList.setCellFactory(clinic -> new ListCell<>() {
+      @Override
+      protected void updateItem(Clinic clinic, boolean b) {
+        super.updateItem(clinic, b);
+        setText(clinic == null ? null : clinic.getName());
+      }
+    });
+
     clinicList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
     reportsTable.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
