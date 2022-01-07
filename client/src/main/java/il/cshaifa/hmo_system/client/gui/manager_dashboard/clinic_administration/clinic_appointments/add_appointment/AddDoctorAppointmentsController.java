@@ -9,6 +9,7 @@ import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
 import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.AdminAppointmentMessage.AdminAppointmentMessageType;
+import il.cshaifa.hmo_system.messages.AdminAppointmentMessage.RejectionType;
 import java.io.IOException;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -42,9 +43,19 @@ public class AddDoctorAppointmentsController extends Controller {
   public void onAppointmentCreationResponse(AddAppointmentEvent event) {
     if (event.phase != Phase.RECEIVE) return;
     else if (event.response_type == AdminAppointmentMessageType.REJECT) {
+      String rejectionMessage = "";
+      if (event.rejectionType == RejectionType.OVERLAPPING) {
+        rejectionMessage = "Creation rejected due to overlapping appointments";
+      }
+      else if (event.rejectionType == RejectionType.IN_THE_PAST) {
+        rejectionMessage = "Creation rejected due to start date being in the past";
+      }
+
+      String finalRejectionMessage = rejectionMessage; // Java requested this... didn't like that I changed the value...
       Platform.runLater(
-          () -> ((AddDoctorAppointmentsViewController)this.view_controller).setErrorMessage("Appointment creation rejected")
-      );
+          () ->
+              ((AddDoctorAppointmentsViewController) this.view_controller)
+                  .setErrorMessage(finalRejectionMessage));
     } else {
       Platform.runLater(() -> stage.close());
     }

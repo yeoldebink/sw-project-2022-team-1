@@ -10,6 +10,7 @@ import il.cshaifa.hmo_system.entities.Role;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.AdminAppointmentMessage;
 import il.cshaifa.hmo_system.messages.AdminAppointmentMessage.AdminAppointmentMessageType;
+import il.cshaifa.hmo_system.messages.AdminAppointmentMessage.RejectionType;
 import il.cshaifa.hmo_system.messages.AppointmentMessage;
 import il.cshaifa.hmo_system.messages.AppointmentMessage.AppointmentRequestType;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
@@ -39,6 +40,7 @@ import javassist.compiler.ast.Pair;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import net.bytebuddy.asm.Advice.Local;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -325,39 +327,45 @@ public class HMOServer extends AbstractServer {
       var cr = cb.createQuery(Appointment.class);
       var root = cr.from(Appointment.class);
 
-      cr.select(root)
-          .where(
-              cb.equal(root.get("staff_member"), msg.staff_member),
-              cb.between(root.get("appt_date"), msg.start_datetime, end_datetime.plusSeconds(-1)));
+      if (msg.start_datetime.isAfter(LocalDateTime.now())) {
+        cr.select(root)
+            .where(
+                cb.equal(root.get("staff_member"), msg.staff_member),
+                cb.between(
+                    root.get("appt_date"), msg.start_datetime, end_datetime.plusSeconds(-1)));
 
+        // if this staff member already has appointments at these times, reject
+        if (session.createQuery(cr).getResultList().size() > 0) {
+          msg.type = AdminAppointmentMessageType.REJECT;
+          msg.rejectionType = RejectionType.OVERLAPPING;
+        } else {
+          var current_datetime = LocalDateTime.from(msg.start_datetime);
+          // TODO: validate by clinic hours as well
+          while (current_datetime.isBefore(end_datetime)) {
+            var appt =
+                new Appointment(
+                    null,
+                    msg.appt_type,
+                    specialist_role,
+                    msg.staff_member,
+                    msg.clinic,
+                    current_datetime,
+                    null);
+            session.save(appt);
+            session.flush();
 
-      // if this staff member already has appointments at these times, reject
-      if (session.createQuery(cr).getResultList().size() > 0) {
-        msg.type = AdminAppointmentMessageType.REJECT;
+            current_datetime = current_datetime.plusMinutes(len);
+          }
 
-      } else {
-        var current_datetime = LocalDateTime.from(msg.start_datetime);
-        // TODO: validate by clinic hours as well
-        while (current_datetime.isBefore(end_datetime)) {
-          var appt =
-              new Appointment(
-                  null,
-                  msg.appt_type,
-                  specialist_role,
-                  msg.staff_member,
-                  msg.clinic,
-                  current_datetime,
-                  null);
-          session.save(appt);
-          session.flush();
-
-          current_datetime = current_datetime.plusMinutes(len);
+          msg.type = AdminAppointmentMessageType.ACCEPT;
         }
-
-        msg.type = AdminAppointmentMessageType.ACCEPT;
       }
-    }
 
+      else {
+        msg.type = AdminAppointmentMessageType.REJECT;
+        msg.rejectionType = RejectionType.IN_THE_PAST;
+      }
+}
     msg.message_type = MessageType.RESPONSE;
     client.sendToClient(msg);
   }

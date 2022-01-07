@@ -103,7 +103,7 @@ public class HMOClient extends AbstractClient {
   private void handleAdminAppointmentMessage(AdminAppointmentMessage message) {
     var event = new AddAppointmentEvent(null, null, null, AddAppointmentEvent.Phase.RECEIVE);
     event.response_type = message.type;
-
+    event.rejectionType = message.rejectionType;
     EventBus.getDefault().post(event);
   }
 

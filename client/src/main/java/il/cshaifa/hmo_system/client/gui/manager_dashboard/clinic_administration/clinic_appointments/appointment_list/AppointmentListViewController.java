@@ -10,6 +10,7 @@ import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.User;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -91,7 +92,7 @@ public class AppointmentListViewController extends ViewController {
 
   void populateAppointmentsTable(ArrayList<Appointment> appt_list) {
     this.appt_list = appt_list;
-
+    this.appt_list.sort(Comparator.comparing(Appointment::getDate));
     ArrayList<AppointmentForTableView> appt_list_table = new ArrayList<AppointmentForTableView>();
 
     for (var appt : appt_list) {
