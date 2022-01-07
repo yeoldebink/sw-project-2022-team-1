@@ -43,6 +43,7 @@ public class ClinicStaffListController extends Controller {
    */
   @Subscribe
   public void clinicStaffListReceived(ClinicStaffEvent event) {
+    if (!event.senderInstance.equals(HMOClient.getClient())) return;
     var current_clinic_manager = HMOClient.getClient().getConnected_user();
     var assignment_map = new TreeMap<User, Boolean>(Comparator.comparing(User::getLastName));
 

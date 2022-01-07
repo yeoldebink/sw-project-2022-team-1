@@ -5,15 +5,10 @@ import java.util.ArrayList;
 
 public class ClinicStaffEvent {
   public ArrayList<ClinicStaff> clinic_staff;
-  public Phase phase;
+  public Object senderInstance;
 
-  public ClinicStaffEvent(ArrayList<ClinicStaff> clinic_staff, Phase phase) {
+  public ClinicStaffEvent(ArrayList<ClinicStaff> clinic_staff, Object senderInstance) {
     this.clinic_staff = clinic_staff;
-    this.phase = phase;
-  }
-
-  public enum Phase {
-    REQUEST,
-    RECEIVE
+    this.senderInstance = senderInstance;
   }
 }

@@ -6,7 +6,6 @@ import il.cshaifa.hmo_system.client.events.AppointmentListEvent;
 import il.cshaifa.hmo_system.client.events.AssignStaffEvent;
 import il.cshaifa.hmo_system.client.events.ClinicEvent;
 import il.cshaifa.hmo_system.client.events.ClinicStaffEvent;
-import il.cshaifa.hmo_system.client.events.ClinicStaffEvent.Phase;
 import il.cshaifa.hmo_system.client.events.LoginEvent;
 import il.cshaifa.hmo_system.client.events.ReportEvent;
 import il.cshaifa.hmo_system.client.events.LoginEvent.Status;
@@ -135,7 +134,7 @@ public class HMOClient extends AbstractClient {
 
   private void handleStaffMessage(ClinicStaffMessage message) {
     ClinicStaffEvent event =
-        new ClinicStaffEvent((ArrayList<ClinicStaff>) message.staff_list, Phase.RECEIVE);
+        new ClinicStaffEvent((ArrayList<ClinicStaff>) message.staff_list, this);
     EventBus.getDefault().post(event);
   }
 
