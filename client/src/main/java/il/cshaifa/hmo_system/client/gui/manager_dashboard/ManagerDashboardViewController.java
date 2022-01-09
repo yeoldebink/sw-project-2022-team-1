@@ -46,8 +46,6 @@ public class ManagerDashboardViewController extends RoleDefinedViewController {
     clinicStaffListViewController =
         (ClinicStaffListViewController) clinic_staff_list.view_controller;
 
-    //    report_list.pane.prefWidthProperty().bind(tabPane.widthProperty());
-    //    report_list.pane.prefHeightProperty().bind(tabPane.heightProperty());
     reportsTab.setContent(report_list.pane);
     reportListViewController = (ReportListViewController) report_list.view_controller;
 

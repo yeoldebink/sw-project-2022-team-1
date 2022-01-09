@@ -15,23 +15,6 @@
   xmlns:fx="http://javafx.com/fxml/1"
   fx:controller="il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.report_view.ReportListViewController">
 
-  <!--  <HBox AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.bottomAnchor="0"-->
-  <!--    AnchorPane.topAnchor="0">-->
-
-  <!--    <VBox HBox.hgrow="SOMETIMES">-->
-  <!--      <ListView fx:id="clinicList" VBox.vgrow="ALWAYS">-->
-  <!--      </ListView>-->
-  <!--    </VBox>-->
-
-  <!--    <TableView fx:id="reportsTable" HBox.hgrow="ALWAYS">-->
-  <!--      <columns>-->
-  <!--        <TableColumn fx:id="clinicNameTableColumn" />-->
-  <!--        <TableColumn fx:id="reportDateTableColumn" />-->
-  <!--      </columns>-->
-  <!--    </TableView>-->
-
-  <!--  </HBox>-->
-
   <VBox AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0"
     AnchorPane.rightAnchor="0">
     <SplitPane VBox.vgrow="ALWAYS" fx:id="splitPane">
