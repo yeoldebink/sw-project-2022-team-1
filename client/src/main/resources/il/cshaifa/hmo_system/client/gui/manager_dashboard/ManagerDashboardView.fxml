@@ -4,11 +4,19 @@
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuItem?>
 <AnchorPane
   minHeight="420" minWidth="720" xmlns="http://javafx.com/javafx/17"
   xmlns:fx="http://javafx.com/fxml/1"
   fx:controller="il.cshaifa.hmo_system.client.gui.manager_dashboard.ManagerDashboardViewController">
-  <TabPane AnchorPane.topAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.bottomAnchor="10.0"
+  <MenuBar AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+    <Menu text="My Clinic" fx:id="myClinicMenu">
+      <MenuItem text="Edit Hours" onAction="#editMyClinicHours" />
+    </Menu>
+  </MenuBar>
+  <TabPane AnchorPane.topAnchor="30.0" AnchorPane.rightAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.bottomAnchor="0.0"
     tabClosingPolicy="UNAVAILABLE" fx:id="tabPane">
     <tabs>
       <Tab text="Clinic Administration" fx:id="clinicAdministrationTab"/>
