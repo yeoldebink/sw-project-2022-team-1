@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<AnchorPane xmlns="http://javafx.com/javafx/17"
+  xmlns:fx="http://javafx.com/fxml/1"
+  fx:controller="il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.report_view.ReportListViewController">
+
+  <VBox AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0"
+    AnchorPane.rightAnchor="0">
+    <SplitPane VBox.vgrow="ALWAYS" fx:id="splitPane">
+      <AnchorPane SplitPane.resizableWithParent="NO" maxWidth="350">
+        <ListView fx:id="clinicList" AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="0"
+          AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="0"/>
+      </AnchorPane>
+      <AnchorPane>
+        <TableView fx:id="reportsTable" AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="0"
+          AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="0">
+          <columnResizePolicy>
+            <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
+          </columnResizePolicy>
+          <columns>
+            <TableColumn fx:id="clinicNameTableColumn" text="Clinic" prefWidth="350"/>
+            <TableColumn fx:id="reportDateTableColumn" text="Report Date" prefWidth="220"/>
+          </columns>
+        </TableView>
+      </AnchorPane>
+      <AnchorPane fx:id="reportViewAnchorPane" />
+    </SplitPane>
+
+    <HBox>
+      <VBox.margin>
+        <Insets top="10"/>
+      </VBox.margin>
+      <HBox>
+        <DatePicker fx:id="startDatePicker" promptText="Start date"/>
+        <DatePicker fx:id="endDatePicker" promptText="End date">
+          <HBox.margin>
+            <Insets left="10"/>
+          </HBox.margin>
+        </DatePicker>
+        <ComboBox fx:id="reportTypeComboBox">
+          <HBox.margin>
+            <Insets left="10"/>
+          </HBox.margin>
+        </ComboBox>
+      </HBox>
+      <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+        <Button text="Get reports" onAction="#requestReports">
+          <HBox.margin>
+            <Insets left="10"/>
+          </HBox.margin>
+        </Button>
+      </HBox>
+    </HBox>
+  </VBox>
+
+</AnchorPane>
