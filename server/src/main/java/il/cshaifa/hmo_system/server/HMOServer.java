@@ -110,6 +110,11 @@ public class HMOServer extends AbstractServer {
     client.sendToClient(message);
   }
 
+  /**
+   * @param message
+   * @param client
+   * @throws IOException
+   */
   private void handleAppointmentMessage(AppointmentMessage message, ConnectionToClient client)
       throws IOException {
     var cb = session.getCriteriaBuilder();
