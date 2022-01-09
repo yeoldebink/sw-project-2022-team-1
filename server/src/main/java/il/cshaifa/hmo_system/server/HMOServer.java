@@ -455,6 +455,9 @@ public class HMOServer extends AbstractServer {
     for (LocalDate date : daily_reports_map.keySet()) {
       msg.reports.addAll(daily_reports_map.get(date).values());
     }
+
+    msg.message_type = MessageType.RESPONSE;
+    client.sendToClient(msg);
   }
 
   /**
@@ -482,6 +485,8 @@ public class HMOServer extends AbstractServer {
         handleStaffAssignmentMessage((StaffAssignmentMessage) msg, client);
       } else if (msg_class == AdminAppointmentMessage.class) {
         handleAdminAppointmentMessage((AdminAppointmentMessage) msg, client);
+      } else if(msg_class==ReportMessage.class){
+        handleReportMessage((ReportMessage) msg, client);
       }
 
       session.close();

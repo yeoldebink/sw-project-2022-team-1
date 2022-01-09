@@ -2,11 +2,13 @@ package il.cshaifa.hmo_system.client;
 
 import il.cshaifa.hmo_system.client.events.AddAppointmentEvent;
 import il.cshaifa.hmo_system.client.events.AdminAppointmentListEvent;
+import il.cshaifa.hmo_system.client.events.AppointmentListEvent;
 import il.cshaifa.hmo_system.client.events.AssignStaffEvent;
 import il.cshaifa.hmo_system.client.events.ClinicEvent;
 import il.cshaifa.hmo_system.client.events.ClinicStaffEvent;
 import il.cshaifa.hmo_system.client.events.ClinicStaffEvent.Phase;
 import il.cshaifa.hmo_system.client.events.LoginEvent;
+import il.cshaifa.hmo_system.client.events.ReportEvent;
 import il.cshaifa.hmo_system.client.events.WarningEvent;
 import il.cshaifa.hmo_system.client.ocsf.AbstractClient;
 import il.cshaifa.hmo_system.entities.Appointment;
@@ -93,7 +95,10 @@ public class HMOClient extends AbstractClient {
     }
   }
 
-  private void handleReportMessage(ReportMessage message) {}
+  private void handleReportMessage(ReportMessage message) {
+    ReportEvent event = new ReportEvent(message.clinics, message.report_type, message.start_date, message.end_date, message.reports);
+    EventBus.getDefault().post(event);
+  }
 
   private void handleAdminAppointmentMessage(AdminAppointmentMessage message) {
     var event = new AddAppointmentEvent(null, null, null, AddAppointmentEvent.Phase.RECEIVE);
@@ -111,7 +116,12 @@ public class HMOClient extends AbstractClient {
               message.user,
               (ArrayList<Appointment>) message.appointments,
               AdminAppointmentListEvent.Phase.RECEIVE);
-    } // TODO : handle patient history request
+    } else if(message.requestType == AppointmentRequestType.PATIENT_HISTORY){
+      event =
+          new AppointmentListEvent(
+              (ArrayList<Appointment>) message.appointments,
+              AppointmentListEvent.Phase.RECEIVE);
+    }
 
     EventBus.getDefault().post(event);
   }
