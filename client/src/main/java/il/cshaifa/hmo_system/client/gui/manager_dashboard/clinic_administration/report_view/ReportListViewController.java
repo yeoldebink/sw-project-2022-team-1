@@ -4,19 +4,16 @@ import il.cshaifa.hmo_system.client.HMOClient;
 import il.cshaifa.hmo_system.client.base_controllers.RoleDefinedViewController;
 import il.cshaifa.hmo_system.client.events.ReportEvent;
 import il.cshaifa.hmo_system.client.events.ReportEvent.Phase;
-import il.cshaifa.hmo_system.client.gui.login.LoginViewController;
-import il.cshaifa.hmo_system.client.utils.Utils;
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.Role;
 import il.cshaifa.hmo_system.messages.ReportMessage.ReportType;
 import il.cshaifa.hmo_system.reports.DailyReport;
-import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListCell;
@@ -51,20 +48,24 @@ public class ReportListViewController extends RoleDefinedViewController {
   @Override
   protected void applyRoleBehavior() {
     if (role.getName().equals("Clinic Manager")) {
-      clinicList.getSelectionModel().select(HMOClient.getClient().getConnected_employee_clinics().get(0));
+      clinicList
+          .getSelectionModel()
+          .select(HMOClient.getClient().getConnected_employee_clinics().get(0));
       clinicList.setDisable(true);
     }
   }
 
   @FXML
   public void initialize() {
-    clinicList.setCellFactory(clinic -> new ListCell<>() {
-      @Override
-      protected void updateItem(Clinic clinic, boolean b) {
-        super.updateItem(clinic, b);
-        setText(clinic == null ? null : clinic.getName());
-      }
-    });
+    clinicList.setCellFactory(
+        clinic ->
+            new ListCell<>() {
+              @Override
+              protected void updateItem(Clinic clinic, boolean b) {
+                super.updateItem(clinic, b);
+                setText(clinic == null ? null : clinic.getName());
+              }
+            });
 
     clinicList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
@@ -102,13 +103,14 @@ public class ReportListViewController extends RoleDefinedViewController {
 
   @FXML
   public void requestReports(ActionEvent event) {
-    var selected_clinics = clinicList.getSelectionModel().getSelectedItems();
+    var selected_clinics = new ArrayList<>(clinicList.getSelectionModel().getSelectedItems());
+
     var report_type = reportTypeComboBox.getValue().reportType;
-    var startDate = LocalDateTime.from(startDatePicker.getValue());
-    var endDate = LocalDateTime.from(endDatePicker.getValue());
+    var startDate = startDatePicker.getValue().atStartOfDay();
+    var endDate = endDatePicker.getValue().atStartOfDay();
 
     var report_event =
-        new ReportEvent(Phase.REQUEST, selected_clinics, reportTypeComboBox.getValue().reportType, startDate, endDate,null);
+        new ReportEvent(Phase.REQUEST, selected_clinics, report_type, startDate, endDate, null);
 
     EventBus.getDefault().post(report_event);
   }

@@ -42,8 +42,8 @@ public class ManagerDashboardController extends Controller {
   }
 
   @Subscribe
-  public void onClinicsReceived(ClinicEvent event){
-    if(event.phase != Phase.LIST) return;
+  public void onClinicsReceived(ClinicEvent event) {
+    if (event.phase != Phase.LIST) return;
 
     adminClinicListController.updateClinics(event.receivedClinics);
     reportListController.updateClinics(event.receivedClinics);

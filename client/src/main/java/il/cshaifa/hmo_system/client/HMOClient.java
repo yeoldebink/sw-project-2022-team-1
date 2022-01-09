@@ -96,7 +96,14 @@ public class HMOClient extends AbstractClient {
   }
 
   private void handleReportMessage(ReportMessage message) {
-    ReportEvent event = new ReportEvent(message.clinics, message.report_type, message.start_date, message.end_date, message.reports);
+    ReportEvent event =
+        new ReportEvent(
+            ReportEvent.Phase.RECEIVE,
+            message.clinics,
+            message.report_type,
+            message.start_date,
+            message.end_date,
+            message.reports);
     EventBus.getDefault().post(event);
   }
 
@@ -116,11 +123,10 @@ public class HMOClient extends AbstractClient {
               message.user,
               (ArrayList<Appointment>) message.appointments,
               AdminAppointmentListEvent.Phase.RECEIVE);
-    } else if(message.requestType == AppointmentRequestType.PATIENT_HISTORY){
+    } else if (message.requestType == AppointmentRequestType.PATIENT_HISTORY) {
       event =
           new AppointmentListEvent(
-              (ArrayList<Appointment>) message.appointments,
-              AppointmentListEvent.Phase.RECEIVE);
+              (ArrayList<Appointment>) message.appointments, AppointmentListEvent.Phase.RECEIVE);
     }
 
     EventBus.getDefault().post(event);

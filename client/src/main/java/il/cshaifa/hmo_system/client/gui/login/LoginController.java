@@ -1,7 +1,6 @@
 package il.cshaifa.hmo_system.client.gui.login;
 
 import il.cshaifa.hmo_system.client.HMOClient;
-import il.cshaifa.hmo_system.client.utils.Utils;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
@@ -10,6 +9,7 @@ import il.cshaifa.hmo_system.client.events.LoginEvent.Phase;
 import il.cshaifa.hmo_system.client.gui.ResourcePath;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.ManagerDashboardController;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.ManagerDashboardViewController;
+import il.cshaifa.hmo_system.client.utils.Utils;
 import il.cshaifa.hmo_system.entities.User;
 import java.io.IOException;
 import javafx.application.Platform;

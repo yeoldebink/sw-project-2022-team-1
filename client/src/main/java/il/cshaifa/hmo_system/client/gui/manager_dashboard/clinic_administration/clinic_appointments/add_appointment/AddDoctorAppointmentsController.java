@@ -45,13 +45,13 @@ public class AddDoctorAppointmentsController extends Controller {
     else if (event.response_type == AdminAppointmentMessageType.REJECT) {
       String rejectionMessage = "";
       if (event.rejectionType == RejectionType.OVERLAPPING) {
-        rejectionMessage = "Creation rejected due to overlapping appointments";
-      }
-      else if (event.rejectionType == RejectionType.IN_THE_PAST) {
-        rejectionMessage = "Creation rejected due to start date being in the past";
+        rejectionMessage = "Staff member is busy at this time";
+      } else if (event.rejectionType == RejectionType.IN_THE_PAST) {
+        rejectionMessage = "Cannot open appointments in the past";
       }
 
-      String finalRejectionMessage = rejectionMessage; // Java requested this... didn't like that I changed the value...
+      String finalRejectionMessage =
+          rejectionMessage; // Java requested this... didn't like that I changed the value...
       Platform.runLater(
           () ->
               ((AddDoctorAppointmentsViewController) this.view_controller)

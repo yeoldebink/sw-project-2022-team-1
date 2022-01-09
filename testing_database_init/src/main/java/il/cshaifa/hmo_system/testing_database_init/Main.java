@@ -244,6 +244,20 @@ public class Main {
             clinics.get("Carmel Center"),
             LocalDateTime.of(1981, 1, 6, 14, 7)));
 
+    patients.put(
+        "Marquis De Carabas",
+        new Patient(
+            users.get("Marquis De Carabas"),
+            clinics.get("Dizengoff"),
+            LocalDateTime.of(1921, 4, 1, 17, 40)));
+
+    patients.put(
+        "Jill Tracy",
+        new Patient(
+            users.get("Jill Tracy"),
+            clinics.get("Mile End"),
+            LocalDateTime.of(1977, 12, 5, 2, 34)));
+
     for (var patient : patients.values()) {
       session.save(patient);
       session.flush();
@@ -252,7 +266,7 @@ public class Main {
     return patients;
   }
 
-  public static List<AppointmentType> createAppointmentTypes() {
+  public static Map<String, AppointmentType> createAppointmentTypes() {
     String[] appt_type_names = {
       "Family Doctor",
       "Pediatrician",
@@ -264,15 +278,40 @@ public class Main {
       "Lab Tests"
     };
 
-    ArrayList<AppointmentType> appt_types = new ArrayList<>();
+    HashMap<String, AppointmentType> appt_types = new HashMap<>();
     for (var name : appt_type_names) {
       var appt_type = new AppointmentType(name);
-      appt_types.add(appt_type);
+      appt_types.put(name, appt_type);
       session.save(appt_type);
       session.flush();
     }
 
     return appt_types;
+  }
+
+  public static List<Appointment> createAppointments(
+      Map<String, Patient> patients,
+      Map<String, User> users,
+      Map<String, Clinic> clinics,
+      Map<String, AppointmentType> appt_types) {
+    ArrayList<Appointment> appointments = new ArrayList<>();
+
+    appointments.add(
+        new Appointment(
+            patients.get("Tyler Durden"),
+            appt_types.get("Family Doctor"),
+            null,
+            users.get("John Dorian"),
+            clinics.get("Carmel Center"),
+            LocalDateTime.of(2022, 2, 1, 12, 20),
+            LocalDateTime.of(2022, 2, 1, 12, 22, 41)));
+
+    for (var appt : appointments) {
+      session.save(appt);
+      session.flush();
+    }
+
+    return appointments;
   }
 
   public static void main(String[] args) throws NoSuchAlgorithmException {
@@ -285,6 +324,7 @@ public class Main {
       var clinicStaff = assignStaff(users, clinics);
       var patients = createPatients(users, clinics);
       var appointment_types = createAppointmentTypes();
+      var appointments = createAppointments(patients, users, clinics, appointment_types);
       session.getTransaction().commit();
     } catch (Exception e) {
       e.printStackTrace();

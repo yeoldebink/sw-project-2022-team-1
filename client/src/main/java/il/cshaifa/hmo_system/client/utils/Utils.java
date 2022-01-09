@@ -37,7 +37,8 @@ public class Utils<C> {
         });
   }
 
-  public static LoadedPane loadFXML (Class<?> requestor, Class<?> target, Callback<Class<?>, Object> ctrl_factory)
+  public static LoadedPane loadFXML(
+      Class<?> requestor, Class<?> target, Callback<Class<?>, Object> ctrl_factory)
       throws IOException {
     var loader = new FXMLLoader(requestor.getResource(ResourcePath.get_fxml(target)));
 
@@ -48,8 +49,7 @@ public class Utils<C> {
     return new LoadedPane(loader.load(), loader.getController());
   }
 
-  public static LoadedPane loadFXML(Class <?> requestor, Class<?> target) throws IOException {
+  public static LoadedPane loadFXML(Class<?> requestor, Class<?> target) throws IOException {
     return loadFXML(requestor, target, null);
   }
 }
-

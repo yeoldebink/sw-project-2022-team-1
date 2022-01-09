@@ -1,7 +1,6 @@
 package il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_list_view;
 
 import il.cshaifa.hmo_system.client.HMOClient;
-import il.cshaifa.hmo_system.client.utils.Utils;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.ClinicEvent;
@@ -9,10 +8,9 @@ import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
 import il.cshaifa.hmo_system.client.gui.ResourcePath;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_view.AdminClinicController;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_view.AdminClinicViewController;
+import il.cshaifa.hmo_system.client.utils.Utils;
 import il.cshaifa.hmo_system.entities.Clinic;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import org.greenrobot.eventbus.EventBus;
@@ -59,10 +57,8 @@ public class AdminClinicListController extends Controller {
     }
   }
 
-  public void updateClinics(ArrayList<Clinic> clinics){
+  public void updateClinics(ArrayList<Clinic> clinics) {
     Platform.runLater(
-        ()-> ((AdminClinicListViewController) this.view_controller)
-            .populateClinicTable(clinics)
-    );
+        () -> ((AdminClinicListViewController) this.view_controller).populateClinicTable(clinics));
   }
 }

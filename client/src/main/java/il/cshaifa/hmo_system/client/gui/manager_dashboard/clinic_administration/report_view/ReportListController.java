@@ -2,7 +2,6 @@ package il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration
 
 import il.cshaifa.hmo_system.client.HMOClient;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
-import il.cshaifa.hmo_system.client.events.ClinicEvent;
 import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
 import il.cshaifa.hmo_system.client.events.ReportEvent;
 import il.cshaifa.hmo_system.client.events.ReportEvent.Phase;
@@ -17,38 +16,31 @@ public class ReportListController extends Controller {
   public ReportListController(ReportListViewController view_controller) {
     super(view_controller, null);
     EventBus.getDefault().register(this);
-
   }
 
   @Subscribe
-  public void onReportsRequest(ReportEvent event){
-    if (event.phase != Phase.REQUEST) return;
+  public void onReportsRequest(ReportEvent event) {
+    if (event.phase != Phase.REQUEST || event.clinics.size() == 0) return;
     try {
-      HMOClient.getClient().requestReports(
-          event.clinics,
-          event.start_date,
-          event.end_date,
-          event.type
-      );
+      HMOClient.getClient()
+          .requestReports(event.clinics, event.start_date, event.end_date, event.type);
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
   @Subscribe
-  public void onReportRespond(ReportEvent event){
-    if (event.phase != Phase.RECEIVE) return;
+  public void onReportRespond(ReportEvent event) {
+    if (event.phase != Phase.RECEIVE || event.reports.size() == 0) return;
 
     Platform.runLater(
-        () -> ((ReportListViewController) this.view_controller)
-            .populateReportsTable(event.reports)
-    );
+        () ->
+            ((ReportListViewController) this.view_controller).populateReportsTable(event.reports));
   }
 
-  public void updateClinics(ArrayList<Clinic> clinics){
+  public void updateClinics(ArrayList<Clinic> clinics) {
     Platform.runLater(
-        ()->((ReportListViewController) this.view_controller).populateClinicList(clinics)
-    );
+        () -> ((ReportListViewController) this.view_controller).populateClinicList(clinics));
   }
 
   @Override

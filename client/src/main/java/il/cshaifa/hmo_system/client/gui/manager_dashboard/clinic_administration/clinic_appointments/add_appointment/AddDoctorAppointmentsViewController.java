@@ -58,16 +58,16 @@ public class AddDoctorAppointmentsViewController extends ViewController {
     } catch (ParseException e) {
       e.printStackTrace();
       setErrorMessage("Invalid time format");
-    } catch (NumberFormatException e){
+    } catch (NumberFormatException e) {
       e.printStackTrace();
       setErrorMessage("# appointment cannot be empty");
-    } catch (NullPointerException e){
+    } catch (NullPointerException e) {
       e.printStackTrace();
       setErrorMessage("Missing Date");
     }
   }
 
-  public void setErrorMessage(String message){
+  public void setErrorMessage(String message) {
     error_text.setText(message);
     create_appts.setDisable(false);
   }

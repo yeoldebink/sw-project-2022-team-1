@@ -1,10 +1,8 @@
 package il.cshaifa.hmo_system.reports;
 
-import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.Clinic;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Map;
 
 public class DailyReport implements Serializable {
   public LocalDateTime date;

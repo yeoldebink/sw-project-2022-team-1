@@ -8,7 +8,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuItem?>
 <AnchorPane
-  minHeight="420" minWidth="720" xmlns="http://javafx.com/javafx/17"
+  minHeight="600" minWidth="900" xmlns="http://javafx.com/javafx/17"
   xmlns:fx="http://javafx.com/fxml/1"
   fx:controller="il.cshaifa.hmo_system.client.gui.manager_dashboard.ManagerDashboardViewController">
   <MenuBar AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">

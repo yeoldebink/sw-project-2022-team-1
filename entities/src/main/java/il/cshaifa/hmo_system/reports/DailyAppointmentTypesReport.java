@@ -9,8 +9,7 @@ import java.util.Map;
 public class DailyAppointmentTypesReport extends DailyReport {
   public Map<AppointmentType, Integer> report_data;
 
-  public DailyAppointmentTypesReport(LocalDateTime date,
-      Clinic clinic) {
+  public DailyAppointmentTypesReport(LocalDateTime date, Clinic clinic) {
     super(date, clinic);
     report_data = new HashMap<AppointmentType, Integer>();
   }

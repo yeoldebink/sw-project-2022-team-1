@@ -32,15 +32,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.function.Function;
-import javassist.compiler.ast.Pair;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import net.bytebuddy.asm.Advice.Local;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -359,26 +358,28 @@ public class HMOServer extends AbstractServer {
 
           msg.type = AdminAppointmentMessageType.ACCEPT;
         }
-      }
-
-      else {
+      } else {
         msg.type = AdminAppointmentMessageType.REJECT;
         msg.rejectionType = RejectionType.IN_THE_PAST;
       }
-}
+    }
     msg.message_type = MessageType.RESPONSE;
     client.sendToClient(msg);
   }
 
   private void handleReportMessage(ReportMessage msg, ConnectionToClient client)
       throws IOException {
+
+    // we ALWAYS want to return a list, even if it's empty
+    msg.reports = new ArrayList<DailyReport>();
+
     CriteriaBuilder cb = session.getCriteriaBuilder();
     CriteriaQuery<Appointment> cr = cb.createQuery(Appointment.class);
     Root<Appointment> root = cr.from(Appointment.class);
 
     cr.select(root)
         .where(
-            cb.between(root.get("date"), msg.start_date, msg.end_date),
+            cb.between(root.get("appt_date"), msg.start_date, msg.end_date),
             cb.isTrue(root.get("taken")),
             root.get("clinic").in(msg.clinics));
 
@@ -500,7 +501,7 @@ public class HMOServer extends AbstractServer {
         handleStaffAssignmentMessage((StaffAssignmentMessage) msg, client);
       } else if (msg_class == AdminAppointmentMessage.class) {
         handleAdminAppointmentMessage((AdminAppointmentMessage) msg, client);
-      } else if(msg_class==ReportMessage.class){
+      } else if (msg_class == ReportMessage.class) {
         handleReportMessage((ReportMessage) msg, client);
       }
 
