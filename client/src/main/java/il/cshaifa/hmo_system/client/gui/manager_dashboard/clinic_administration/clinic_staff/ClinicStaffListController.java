@@ -1,7 +1,7 @@
 package il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_staff;
 
 import il.cshaifa.hmo_system.client.HMOClient;
-import il.cshaifa.hmo_system.client.Utils;
+import il.cshaifa.hmo_system.client.utils.Utils;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.AdminAppointmentListEvent;
