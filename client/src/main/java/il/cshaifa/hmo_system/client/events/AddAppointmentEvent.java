@@ -2,6 +2,7 @@ package il.cshaifa.hmo_system.client.events;
 
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.AdminAppointmentMessage.AdminAppointmentMessageType;
+import il.cshaifa.hmo_system.messages.AdminAppointmentMessage.RejectionType;
 import java.time.LocalDateTime;
 
 public class AddAppointmentEvent {
@@ -10,6 +11,7 @@ public class AddAppointmentEvent {
   public Phase phase;
   public Integer count;
   public AdminAppointmentMessageType response_type;
+  public RejectionType rejectionType;
 
   public AddAppointmentEvent(
       User staff_member, LocalDateTime start_datetime, Integer count_appointments, Phase phase) {

@@ -103,7 +103,7 @@ public class HMOClient extends AbstractClient {
   private void handleAdminAppointmentMessage(AdminAppointmentMessage message) {
     var event = new AddAppointmentEvent(null, null, null, AddAppointmentEvent.Phase.RECEIVE);
     event.response_type = message.type;
-
+    event.rejectionType = message.rejectionType;
     EventBus.getDefault().post(event);
   }
 
@@ -198,7 +198,8 @@ public class HMOClient extends AbstractClient {
   /** delete given appts from db * */
   public void deleteAppointments(ArrayList<Appointment> appointments_to_delete) throws IOException {
     client.sendToServer(
-        new AppointmentMessage(appointments_to_delete, AppointmentRequestType.DELETE_APPOINTMENTS));
+        new AdminAppointmentMessage(
+            AdminAppointmentMessageType.DELETE, null, null, null, 0, appointments_to_delete, null));
   }
 
   /** Requests from server all of the connected patients appointments, past & future */

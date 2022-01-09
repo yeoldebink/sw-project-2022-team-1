@@ -10,7 +10,10 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import org.greenrobot.eventbus.EventBus;
 
 public class AddDoctorAppointmentsViewController extends ViewController {
@@ -28,6 +31,7 @@ public class AddDoctorAppointmentsViewController extends ViewController {
   }
 
   public void initialize() {
+    this.start_date.getEditor().setDisable(true); // Block from writing text into the DatePicker
     this.staff_member_name.setText(staff_member.getFirstName() + " " + staff_member.getLastName());
   }
 
@@ -40,8 +44,10 @@ public class AddDoctorAppointmentsViewController extends ViewController {
     try {
       Time time_value =
           new Time(new SimpleDateFormat("HH:mm").parse(start_time.getText()).getTime());
+
       LocalDateTime start_datetime =
           LocalDateTime.of(start_date.getValue(), time_value.toLocalTime());
+
       Integer count_appointments = Integer.parseInt(num_appts.getText());
 
       EventBus.getDefault()
@@ -51,8 +57,18 @@ public class AddDoctorAppointmentsViewController extends ViewController {
 
     } catch (ParseException e) {
       e.printStackTrace();
-      error_text.setText("Invalid time format");
-      create_appts.setDisable(false);
+      setErrorMessage("Invalid time format");
+    } catch (NumberFormatException e){
+      e.printStackTrace();
+      setErrorMessage("# appointment cannot be empty");
+    } catch (NullPointerException e){
+      e.printStackTrace();
+      setErrorMessage("Missing Date");
     }
+  }
+
+  public void setErrorMessage(String message){
+    error_text.setText(message);
+    create_appts.setDisable(false);
   }
 }
