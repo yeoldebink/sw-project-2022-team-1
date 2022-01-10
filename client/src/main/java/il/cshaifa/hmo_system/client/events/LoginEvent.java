@@ -3,7 +3,7 @@ package il.cshaifa.hmo_system.client.events;
 import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.entities.User;
 
-public class LoginEvent {
+public class LoginEvent extends Event {
   public enum Status {
     AUTHORIZE,
     REJECT
@@ -13,13 +13,12 @@ public class LoginEvent {
   public String password;
   public User userData;
   public Patient patientData;
-  public Object senderInstance;
   public Status status;
 
 
   public LoginEvent(int id, String password, Object senderInstance) {
+    super(senderInstance);
     this.id = id;
     this.password = password;
-    this.senderInstance = senderInstance;
   }
 }

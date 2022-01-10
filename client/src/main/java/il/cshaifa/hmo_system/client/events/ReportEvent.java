@@ -6,26 +6,21 @@ import il.cshaifa.hmo_system.reports.DailyReport;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class ReportEvent {
-  public enum Phase {
-    REQUEST,
-    RECEIVE
-  }
+public class ReportEvent extends Event{
 
   public List<Clinic> clinics;
   public ReportType type;
   public LocalDateTime start_date, end_date;
   public List<DailyReport> reports;
-  public Phase phase;
 
   public ReportEvent(
-      Phase phase,
       List<Clinic> clinics,
       ReportType type,
       LocalDateTime start_date,
       LocalDateTime end_date,
-      List<DailyReport> reports) {
-    this.phase = phase;
+      List<DailyReport> reports,
+      Object senderInstance) {
+    super(senderInstance);
     this.clinics = clinics;
     this.type = type;
     this.start_date = start_date;

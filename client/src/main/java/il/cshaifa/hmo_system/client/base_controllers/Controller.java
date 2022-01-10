@@ -17,7 +17,7 @@ public abstract class Controller {
 
   @Subscribe
   public void onWindowCloseEvent(CloseWindowEvent event){
-    if (event.getViewControllerInstance().equals(this.view_controller))
+    if (event.senderInstance.equals(this.view_controller))
       EventBus.getDefault().unregister(this);
   }
 }

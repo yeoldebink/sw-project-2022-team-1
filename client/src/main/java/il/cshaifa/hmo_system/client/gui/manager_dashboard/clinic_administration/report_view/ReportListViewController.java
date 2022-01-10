@@ -3,7 +3,6 @@ package il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration
 import il.cshaifa.hmo_system.client.HMOClient;
 import il.cshaifa.hmo_system.client.base_controllers.RoleDefinedViewController;
 import il.cshaifa.hmo_system.client.events.ReportEvent;
-import il.cshaifa.hmo_system.client.events.ReportEvent.Phase;
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.Role;
 import il.cshaifa.hmo_system.messages.ReportMessage.ReportType;
@@ -110,7 +109,7 @@ public class ReportListViewController extends RoleDefinedViewController {
     var endDate = endDatePicker.getValue().atStartOfDay();
 
     var report_event =
-        new ReportEvent(Phase.REQUEST, selected_clinics, report_type, startDate, endDate, null);
+        new ReportEvent(selected_clinics, report_type, startDate, endDate, null, this);
 
     EventBus.getDefault().post(report_event);
   }

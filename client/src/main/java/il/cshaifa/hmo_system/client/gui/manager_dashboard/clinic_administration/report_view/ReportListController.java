@@ -4,7 +4,6 @@ import il.cshaifa.hmo_system.client.HMOClient;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
 import il.cshaifa.hmo_system.client.events.ReportEvent;
-import il.cshaifa.hmo_system.client.events.ReportEvent.Phase;
 import il.cshaifa.hmo_system.entities.Clinic;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,7 +18,7 @@ public class ReportListController extends Controller {
 
   @Subscribe
   public void onReportsRequest(ReportEvent event) {
-    if (event.phase != Phase.REQUEST || event.clinics.size() == 0) return;
+    if (!event.senderInstance.equals(this.view_controller) || event.clinics.size() == 0) return;
     try {
       HMOClient.getClient()
           .requestReports(event.clinics, event.start_date, event.end_date, event.type);
@@ -30,7 +29,7 @@ public class ReportListController extends Controller {
 
   @Subscribe
   public void onReportRespond(ReportEvent event) {
-    if (event.phase != Phase.RECEIVE || event.reports.size() == 0) return;
+    if (!event.senderInstance.equals(HMOClient.getClient()) || event.reports.size() == 0) return;
 
     Platform.runLater(
         () ->

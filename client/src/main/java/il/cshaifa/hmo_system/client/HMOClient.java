@@ -98,12 +98,12 @@ public class HMOClient extends AbstractClient {
   private void handleReportMessage(ReportMessage message) {
     ReportEvent event =
         new ReportEvent(
-            ReportEvent.Phase.RECEIVE,
             message.clinics,
             message.report_type,
             message.start_date,
             message.end_date,
-            message.reports);
+            message.reports,
+            this);
     EventBus.getDefault().post(event);
   }
 
