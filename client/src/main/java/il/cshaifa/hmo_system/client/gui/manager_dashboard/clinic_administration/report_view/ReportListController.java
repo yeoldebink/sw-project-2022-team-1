@@ -14,6 +14,10 @@ public class ReportListController extends Controller {
     super(view_controller, null);
   }
 
+  /**
+   * Event the handle user request to see reports
+   * @param event GUI data on which reports the user requested
+   */
   @Subscribe
   public void onReportsRequest(ReportEvent event) {
     if (!event.getSender().equals(this.view_controller) || event.clinics.size() == 0) return;
@@ -25,6 +29,10 @@ public class ReportListController extends Controller {
     }
   }
 
+  /**
+   * Event that handle the client respond with reports and populate the reports view
+   * @param event Hold the reports that the user requested
+   */
   @Subscribe
   public void onReportRespond(ReportEvent event) {
     if (!event.getSender().equals(HMOClient.getClient()) || event.reports.size() == 0) return;
@@ -34,6 +42,10 @@ public class ReportListController extends Controller {
             ((ReportListViewController) this.view_controller).populateReportsTable(event.reports));
   }
 
+  /**
+   * Update the clinic list in the view
+   * @param clinics List of clinics that returned from the server
+   */
   public void updateClinics(ArrayList<Clinic> clinics) {
     Platform.runLater(
         () -> ((ReportListViewController) this.view_controller).populateClinicList(clinics));
