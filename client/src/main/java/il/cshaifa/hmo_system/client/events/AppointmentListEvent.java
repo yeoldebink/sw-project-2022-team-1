@@ -7,8 +7,8 @@ public class AppointmentListEvent extends Event {
 
   public ArrayList<Appointment> appointments;
 
-  public AppointmentListEvent(ArrayList<Appointment> appointments, Object senderInstance) {
-    super(senderInstance);
+  public AppointmentListEvent(ArrayList<Appointment> appointments, Object sender) {
+    super(sender);
     this.appointments = appointments;
   }
 }

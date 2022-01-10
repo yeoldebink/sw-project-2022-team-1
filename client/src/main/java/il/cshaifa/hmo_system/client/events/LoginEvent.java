@@ -15,8 +15,8 @@ public class LoginEvent extends Event {
   public Patient patientData;
   public Response response;
 
-  public LoginEvent(int id, String password, Object senderInstance) {
-    super(senderInstance);
+  public LoginEvent(int id, String password, Object sender) {
+    super(sender);
     this.id = id;
     this.password = password;
   }

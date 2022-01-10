@@ -12,8 +12,8 @@ public class AssignStaffEvent extends Event {
     UNASSIGN
   }
 
-  public AssignStaffEvent(ArrayList<AssignedUser> staff, Object senderInstance, Action status) {
-    super(senderInstance);
+  public AssignStaffEvent(ArrayList<AssignedUser> staff, Object sender, Action status) {
+    super(sender);
     this.staff = staff;
     this.status = status;
   }

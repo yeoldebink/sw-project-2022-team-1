@@ -19,8 +19,8 @@ public class ReportEvent extends Event {
       LocalDateTime start_date,
       LocalDateTime end_date,
       List<DailyReport> reports,
-      Object senderInstance) {
-    super(senderInstance);
+      Object sender) {
+    super(sender);
     this.clinics = clinics;
     this.type = type;
     this.start_date = start_date;

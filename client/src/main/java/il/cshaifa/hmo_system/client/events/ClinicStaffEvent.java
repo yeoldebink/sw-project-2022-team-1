@@ -6,8 +6,8 @@ import java.util.ArrayList;
 public class ClinicStaffEvent extends Event {
   public ArrayList<ClinicStaff> clinic_staff;
 
-  public ClinicStaffEvent(ArrayList<ClinicStaff> clinic_staff, Object senderInstance) {
-    super(senderInstance);
+  public ClinicStaffEvent(ArrayList<ClinicStaff> clinic_staff, Object sender) {
+    super(sender);
     this.clinic_staff = clinic_staff;
   }
 }

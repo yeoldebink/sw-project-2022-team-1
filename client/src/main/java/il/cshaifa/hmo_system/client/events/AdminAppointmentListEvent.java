@@ -8,8 +8,8 @@ public class AdminAppointmentListEvent extends AppointmentListEvent {
   public User staff_member;
 
   public AdminAppointmentListEvent(
-      User staff_member, ArrayList<Appointment> appointments, Object senderInstance) {
-    super(appointments, senderInstance);
+      User staff_member, ArrayList<Appointment> appointments, Object sender) {
+    super(appointments, sender);
     this.staff_member = staff_member;
   }
 }

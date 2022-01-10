@@ -125,7 +125,6 @@ public class HMOClient extends AbstractClient {
       event = new AppointmentListEvent((ArrayList<Appointment>) message.appointments, this);
     }
 
-    // TODO : handle patient history request
     EventBus.getDefault().post(event);
   }
 
@@ -223,6 +222,12 @@ public class HMOClient extends AbstractClient {
     appt_msg.clinic = connected_patient.getHome_clinic();
     client.sendToServer(appt_msg);
   }
+
+  /** locks the requested appointment **/
+  public void lockAppointment(Appointment appointment) {}
+
+  /** takes the requested appointment **/
+  public void takeAppointment(Appointment appointment) {}
 
   /** Requests from server all of today's appointments of current connected staff member client */
   public void getStaffDailyAppointments() throws IOException {
