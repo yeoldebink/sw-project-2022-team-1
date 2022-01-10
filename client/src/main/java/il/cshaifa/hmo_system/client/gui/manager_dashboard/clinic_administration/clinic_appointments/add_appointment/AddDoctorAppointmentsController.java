@@ -21,7 +21,7 @@ public class AddDoctorAppointmentsController extends Controller {
 
   @Subscribe
   public void addAppointments(AddAppointmentEvent event) {
-    if (!event.senderInstance.equals(this.view_controller)) return;
+    if (!event.getSender().equals(this.view_controller)) return;
 
     AppointmentType appt_type;
     if (event.staff_member.getRole().isSpecialist()) appt_type = new AppointmentType("Specialist");
@@ -37,7 +37,7 @@ public class AddDoctorAppointmentsController extends Controller {
 
   @Subscribe
   public void onAppointmentCreationResponse(AddAppointmentEvent event) {
-    if (!event.senderInstance.equals(HMOClient.getClient())) return;
+    if (!event.getSender().equals(HMOClient.getClient())) return;
     else if (event.response_type == AdminAppointmentMessageType.REJECT) {
       String rejectionMessage = "";
       if (event.rejectionType == RejectionType.OVERLAPPING) {

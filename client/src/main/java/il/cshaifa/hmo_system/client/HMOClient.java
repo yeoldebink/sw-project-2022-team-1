@@ -7,8 +7,8 @@ import il.cshaifa.hmo_system.client.events.AssignStaffEvent;
 import il.cshaifa.hmo_system.client.events.ClinicEvent;
 import il.cshaifa.hmo_system.client.events.ClinicStaffEvent;
 import il.cshaifa.hmo_system.client.events.LoginEvent;
+import il.cshaifa.hmo_system.client.events.LoginEvent.Response;
 import il.cshaifa.hmo_system.client.events.ReportEvent;
-import il.cshaifa.hmo_system.client.events.LoginEvent.Status;
 import il.cshaifa.hmo_system.client.events.WarningEvent;
 import il.cshaifa.hmo_system.client.ocsf.AbstractClient;
 import il.cshaifa.hmo_system.entities.Appointment;
@@ -120,12 +120,9 @@ public class HMOClient extends AbstractClient {
     if (message.requestType == AppointmentRequestType.STAFF_FUTURE_APPOINTMENTS) {
       event =
           new AdminAppointmentListEvent(
-              message.user,
-              (ArrayList<Appointment>) message.appointments,this);
+              message.user, (ArrayList<Appointment>) message.appointments, this);
     } else if (message.requestType == AppointmentRequestType.PATIENT_HISTORY) {
-      event =
-          new AppointmentListEvent(
-              (ArrayList<Appointment>) message.appointments, this);
+      event = new AppointmentListEvent((ArrayList<Appointment>) message.appointments, this);
     }
 
     // TODO : handle patient history request
@@ -153,11 +150,11 @@ public class HMOClient extends AbstractClient {
   private void handleLoginMessage(LoginMessage message) {
     LoginEvent event = new LoginEvent(0, "", this);
     if (message.user == null) {
-      event.status = Status.REJECT;
+      event.response = Response.REJECT;
     } else {
       event.id = message.id;
       event.password = message.password;
-      event.status = LoginEvent.Status.AUTHORIZE;
+      event.response = Response.AUTHORIZE;
       event.userData = message.user;
       event.patientData = message.patient_data;
       this.connected_employee_clinics = message.employee_clinics;

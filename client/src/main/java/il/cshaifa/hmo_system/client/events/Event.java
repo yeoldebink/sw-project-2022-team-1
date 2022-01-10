@@ -1,10 +1,13 @@
 package il.cshaifa.hmo_system.client.events;
 
 public class Event {
-  public Object senderInstance;
+  private final Object sender;
 
-  public Event(Object senderInstance){
-    this.senderInstance = senderInstance;
+  public Event(Object sender) {
+    this.sender = sender;
   }
 
+  public Object getSender() {
+    return sender;
+  }
 }

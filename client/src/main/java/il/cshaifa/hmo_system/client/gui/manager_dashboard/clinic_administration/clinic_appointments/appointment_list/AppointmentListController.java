@@ -5,8 +5,6 @@ import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.AddAppointmentEvent;
 import il.cshaifa.hmo_system.client.events.AdminAppointmentListEvent;
-import il.cshaifa.hmo_system.client.events.AppointmentListEvent;
-import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
 import il.cshaifa.hmo_system.client.gui.ResourcePath;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.add_appointment.AddDoctorAppointmentsController;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.add_appointment.AddDoctorAppointmentsViewController;
@@ -17,7 +15,6 @@ import java.io.IOException;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 public class AppointmentListController extends Controller {
@@ -35,8 +32,8 @@ public class AppointmentListController extends Controller {
 
   @Subscribe
   public void onAppointmentsAdded(AddAppointmentEvent event) {
-    if (!event.senderInstance.equals(HMOClient.getClient())|| event.response_type != AdminAppointmentMessageType.ACCEPT)
-      return;
+    if (!event.getSender().equals(HMOClient.getClient())
+        || event.response_type != AdminAppointmentMessageType.ACCEPT) return;
     User staff_member =
         new User(((AppointmentListViewController) this.view_controller).staff_member);
     try {
@@ -48,7 +45,7 @@ public class AppointmentListController extends Controller {
 
   @Subscribe
   public void onShowAddAppointmentDialog(AddAppointmentEvent event) {
-    if (!event.senderInstance.equals(this.view_controller)) return;
+    if (!event.getSender().equals(this.view_controller)) return;
     var loader =
         new FXMLLoader(
             getClass()
@@ -72,7 +69,7 @@ public class AppointmentListController extends Controller {
 
   @Subscribe
   public void onAppointmentListReceived(AdminAppointmentListEvent event) {
-    if (!event.senderInstance.equals(HMOClient.getClient())) return;
+    if (!event.getSender().equals(HMOClient.getClient())) return;
 
     var vc = ((AppointmentListViewController) this.view_controller);
     Platform.runLater(() -> vc.populateAppointmentsTable(event.appointments));
@@ -80,12 +77,11 @@ public class AppointmentListController extends Controller {
 
   @Subscribe
   public void onDeleteAppointmentsRequest(AdminAppointmentListEvent event) {
-    if (!event.senderInstance.equals(this.view_controller)) return;
+    if (!event.getSender().equals(this.view_controller)) return;
     try {
       HMOClient.getClient().deleteAppointments(event.appointments);
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
-
 }

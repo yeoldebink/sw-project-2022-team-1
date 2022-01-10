@@ -51,8 +51,7 @@ public class AddDoctorAppointmentsViewController extends ViewController {
 
       EventBus.getDefault()
           .post(
-              new AddAppointmentEvent(
-                  this.staff_member, start_datetime, count_appointments, this));
+              new AddAppointmentEvent(this.staff_member, start_datetime, count_appointments, this));
 
     } catch (ParseException e) {
       e.printStackTrace();

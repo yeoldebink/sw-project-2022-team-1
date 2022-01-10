@@ -4,7 +4,6 @@ import il.cshaifa.hmo_system.client.HMOClient;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.ClinicEvent;
-import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
 import il.cshaifa.hmo_system.client.gui.ResourcePath;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_list_view.AdminClinicListController;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_staff.ClinicStaffListController;
@@ -15,7 +14,6 @@ import il.cshaifa.hmo_system.client.utils.Utils;
 import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 public class ManagerDashboardController extends Controller {
@@ -46,15 +44,15 @@ public class ManagerDashboardController extends Controller {
 
   @Subscribe
   public void onClinicsReceived(ClinicEvent event) {
-    if (!event.senderInstance.equals(HMOClient.getClient())) return;
+    if (!event.getSender().equals(HMOClient.getClient())) return;
 
     adminClinicListController.updateClinics(event.receivedClinics);
     reportListController.updateClinics(event.receivedClinics);
   }
 
   @Subscribe
-  public void onEditMyClinicHours(ClinicEvent event){
-    if(!event.senderInstance.equals(this.view_controller)) return;
+  public void onEditMyClinicHours(ClinicEvent event) {
+    if (!event.getSender().equals(this.view_controller)) return;
 
     FXMLLoader loader =
         new FXMLLoader(

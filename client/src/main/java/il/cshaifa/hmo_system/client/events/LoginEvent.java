@@ -4,7 +4,7 @@ import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.entities.User;
 
 public class LoginEvent extends Event {
-  public enum Status {
+  public enum Response {
     AUTHORIZE,
     REJECT
   }
@@ -13,8 +13,7 @@ public class LoginEvent extends Event {
   public String password;
   public User userData;
   public Patient patientData;
-  public Status status;
-
+  public Response response;
 
   public LoginEvent(int id, String password, Object senderInstance) {
     super(senderInstance);

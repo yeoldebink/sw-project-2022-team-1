@@ -4,10 +4,8 @@ import il.cshaifa.hmo_system.client.HMOClient;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.ClinicEvent;
-import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
 import java.io.IOException;
 import javafx.stage.Stage;
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 public class AdminClinicController extends Controller {
@@ -18,7 +16,7 @@ public class AdminClinicController extends Controller {
 
   @Subscribe
   public void onRequestClinicUpdate(ClinicEvent event) {
-    if (!event.senderInstance.equals(this.view_controller)) return;
+    if (!event.getSender().equals(this.view_controller)) return;
 
     var client = HMOClient.getClient();
     try {

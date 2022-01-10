@@ -3,16 +3,16 @@ package il.cshaifa.hmo_system.client.events;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_staff.AssignedUser;
 import java.util.ArrayList;
 
-public class AssignStaffEvent extends Event{
+public class AssignStaffEvent extends Event {
   public ArrayList<AssignedUser> staff;
-  public StaffStatus status;
+  public Action status;
 
-  public enum StaffStatus{
+  public enum Action {
     ASSIGN,
     UNASSIGN
   }
 
-  public AssignStaffEvent(ArrayList<AssignedUser> staff, Object senderInstance, StaffStatus status) {
+  public AssignStaffEvent(ArrayList<AssignedUser> staff, Object senderInstance, Action status) {
     super(senderInstance);
     this.staff = staff;
     this.status = status;

@@ -6,7 +6,7 @@ import il.cshaifa.hmo_system.reports.DailyReport;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class ReportEvent extends Event{
+public class ReportEvent extends Event {
 
   public List<Clinic> clinics;
   public ReportType type;

@@ -3,7 +3,7 @@ package il.cshaifa.hmo_system.client.events;
 import il.cshaifa.hmo_system.entities.Clinic;
 import java.util.ArrayList;
 
-public class ClinicEvent extends Event{
+public class ClinicEvent extends Event {
 
   public ArrayList<Clinic> receivedClinics;
   public Clinic clinic;
