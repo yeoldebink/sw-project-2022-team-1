@@ -18,7 +18,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.greenrobot.eventbus.EventBus;
 
-public class AppointmentListViewController extends ViewController {
+public class AdminAppointmentListViewController extends ViewController {
 
   @FXML private TableView<AppointmentForTableView> appt_table;
 
@@ -36,7 +36,7 @@ public class AppointmentListViewController extends ViewController {
   private final Clinic clinic;
   private ArrayList<Appointment> appt_list = null;
 
-  public AppointmentListViewController(User staff_member, Clinic clinic) {
+  public AdminAppointmentListViewController(User staff_member, Clinic clinic) {
     this.staff_member = staff_member;
     this.clinic = clinic;
   }

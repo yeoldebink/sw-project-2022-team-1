@@ -17,12 +17,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import org.greenrobot.eventbus.Subscribe;
 
-public class AppointmentListController extends Controller {
+public class AdminAppointmentListController extends Controller {
 
-  public AppointmentListController(ViewController view_controller, Stage stage) {
+  public AdminAppointmentListController(ViewController view_controller, Stage stage) {
     super(view_controller, stage);
     User staff_member =
-        new User(((AppointmentListViewController) this.view_controller).staff_member);
+        new User(((AdminAppointmentListViewController) this.view_controller).staff_member);
     try {
       HMOClient.getClient().getStaffAppointments(staff_member);
     } catch (IOException e) {
@@ -35,7 +35,7 @@ public class AppointmentListController extends Controller {
     if (!event.getSender().equals(HMOClient.getClient())
         || event.response_type != AdminAppointmentMessageType.ACCEPT) return;
     User staff_member =
-        new User(((AppointmentListViewController) this.view_controller).staff_member);
+        new User(((AdminAppointmentListViewController) this.view_controller).staff_member);
     try {
       HMOClient.getClient().getStaffAppointments(staff_member);
     } catch (IOException e) {
@@ -71,7 +71,7 @@ public class AppointmentListController extends Controller {
   public void onAppointmentListReceived(AdminAppointmentListEvent event) {
     if (!event.getSender().equals(HMOClient.getClient())) return;
 
-    var vc = ((AppointmentListViewController) this.view_controller);
+    var vc = ((AdminAppointmentListViewController) this.view_controller);
     Platform.runLater(() -> vc.populateAppointmentsTable(event.appointments));
   }
 

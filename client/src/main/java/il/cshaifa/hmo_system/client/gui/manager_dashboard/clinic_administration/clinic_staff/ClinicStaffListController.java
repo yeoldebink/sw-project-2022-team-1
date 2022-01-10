@@ -8,8 +8,8 @@ import il.cshaifa.hmo_system.client.events.AssignStaffEvent;
 import il.cshaifa.hmo_system.client.events.AssignStaffEvent.Action;
 import il.cshaifa.hmo_system.client.events.ClinicStaffEvent;
 import il.cshaifa.hmo_system.client.gui.ResourcePath;
-import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.appointment_list.AppointmentListController;
-import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.appointment_list.AppointmentListViewController;
+import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.appointment_list.AdminAppointmentListController;
+import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.appointment_list.AdminAppointmentListViewController;
 import il.cshaifa.hmo_system.client.utils.Utils;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.StaffAssignmentMessage;
@@ -107,17 +107,21 @@ public class ClinicStaffListController extends Controller {
     if (!event.getSender().equals(this.view_controller)) return;
     FXMLLoader loader =
         new FXMLLoader(
-            getClass().getResource(ResourcePath.get_fxml(AppointmentListViewController.class)));
+            getClass()
+                .getResource(ResourcePath.get_fxml(AdminAppointmentListViewController.class)));
 
     loader.setControllerFactory(
         c -> {
-          return new AppointmentListViewController(
+          return new AdminAppointmentListViewController(
               event.staff_member, HMOClient.getClient().getConnected_employee_clinics().get(0));
         });
 
     try {
       Utils.OpenNewWindow(
-          AppointmentListViewController.class, AppointmentListController.class, loader, true);
+          AdminAppointmentListViewController.class,
+          AdminAppointmentListController.class,
+          loader,
+          true);
     } catch (Exception e) {
       e.printStackTrace();
     }

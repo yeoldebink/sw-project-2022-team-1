@@ -206,7 +206,7 @@ public class HMOClient extends AbstractClient {
   }
 
   /** Requests from server all of the connected patients appointments, past & future */
-  public void getPatientAppointments() throws IOException {
+  public void getPatientHistory() throws IOException {
     client.sendToServer(
         new AppointmentMessage(this.connected_user, AppointmentRequestType.PATIENT_HISTORY));
   }
@@ -216,7 +216,7 @@ public class HMOClient extends AbstractClient {
    *
    * @param type The type of appointment the user requested family doctor/covid test...
    */
-  public void getClinicAppointments(AppointmentType type) throws IOException {
+  public void getFamilyDoctorAppointments(AppointmentType type) throws IOException {
     AppointmentMessage appt_msg =
         new AppointmentMessage(this.connected_user, AppointmentRequestType.CLINIC_APPOINTMENTS);
     appt_msg.type = type;
