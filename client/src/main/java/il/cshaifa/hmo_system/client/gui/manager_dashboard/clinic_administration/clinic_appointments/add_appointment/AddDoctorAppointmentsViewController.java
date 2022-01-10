@@ -2,7 +2,6 @@ package il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration
 
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.AddAppointmentEvent;
-import il.cshaifa.hmo_system.client.events.AddAppointmentEvent.Phase;
 import il.cshaifa.hmo_system.entities.User;
 import java.sql.Time;
 import java.text.ParseException;
@@ -52,8 +51,7 @@ public class AddDoctorAppointmentsViewController extends ViewController {
 
       EventBus.getDefault()
           .post(
-              new AddAppointmentEvent(
-                  this.staff_member, start_datetime, count_appointments, Phase.SEND));
+              new AddAppointmentEvent(this.staff_member, start_datetime, count_appointments, this));
 
     } catch (ParseException e) {
       e.printStackTrace();

@@ -4,7 +4,6 @@ import il.cshaifa.hmo_system.client.HMOClient;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.ClinicEvent;
-import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
 import il.cshaifa.hmo_system.client.gui.ResourcePath;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_view.AdminClinicController;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_view.AdminClinicViewController;
@@ -13,26 +12,17 @@ import il.cshaifa.hmo_system.entities.Clinic;
 import java.util.ArrayList;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 public class AdminClinicListController extends Controller {
 
   public AdminClinicListController(ViewController view_controller) {
     super(view_controller, null);
-    EventBus.getDefault().register(this);
   }
 
   @Subscribe
-  @Override
-  public void onWindowCloseEvent(CloseWindowEvent event) {
-    if (!event.getViewControllerInstance().equals(view_controller)) return;
-    EventBus.getDefault().unregister(this);
-  }
-
-  @Subscribe
-  public void editClinicRequestReceived(ClinicEvent event) {
-    if (event.phase != ClinicEvent.Phase.EDIT) return;
+  public void onShowEditClinicDialog(ClinicEvent event) {
+    if (!event.getSender().equals(this.view_controller)) return;
 
     // Navigate to AdminClinicView
     FXMLLoader loader =

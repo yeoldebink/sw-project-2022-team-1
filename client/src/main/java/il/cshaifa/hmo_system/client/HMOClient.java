@@ -6,8 +6,8 @@ import il.cshaifa.hmo_system.client.events.AppointmentListEvent;
 import il.cshaifa.hmo_system.client.events.AssignStaffEvent;
 import il.cshaifa.hmo_system.client.events.ClinicEvent;
 import il.cshaifa.hmo_system.client.events.ClinicStaffEvent;
-import il.cshaifa.hmo_system.client.events.ClinicStaffEvent.Phase;
 import il.cshaifa.hmo_system.client.events.LoginEvent;
+import il.cshaifa.hmo_system.client.events.LoginEvent.Response;
 import il.cshaifa.hmo_system.client.events.ReportEvent;
 import il.cshaifa.hmo_system.client.events.WarningEvent;
 import il.cshaifa.hmo_system.client.ocsf.AbstractClient;
@@ -98,17 +98,17 @@ public class HMOClient extends AbstractClient {
   private void handleReportMessage(ReportMessage message) {
     ReportEvent event =
         new ReportEvent(
-            ReportEvent.Phase.RECEIVE,
             message.clinics,
             message.report_type,
             message.start_date,
             message.end_date,
-            message.reports);
+            message.reports,
+            this);
     EventBus.getDefault().post(event);
   }
 
   private void handleAdminAppointmentMessage(AdminAppointmentMessage message) {
-    var event = new AddAppointmentEvent(null, null, null, AddAppointmentEvent.Phase.RECEIVE);
+    var event = new AddAppointmentEvent(null, null, null, this);
     event.response_type = message.type;
     event.rejectionType = message.rejectionType;
     EventBus.getDefault().post(event);
@@ -120,44 +120,41 @@ public class HMOClient extends AbstractClient {
     if (message.requestType == AppointmentRequestType.STAFF_FUTURE_APPOINTMENTS) {
       event =
           new AdminAppointmentListEvent(
-              message.user,
-              (ArrayList<Appointment>) message.appointments,
-              AdminAppointmentListEvent.Phase.RECEIVE);
+              message.user, (ArrayList<Appointment>) message.appointments, this);
     } else if (message.requestType == AppointmentRequestType.PATIENT_HISTORY) {
-      event =
-          new AppointmentListEvent(
-              (ArrayList<Appointment>) message.appointments, AppointmentListEvent.Phase.RECEIVE);
+      event = new AppointmentListEvent((ArrayList<Appointment>) message.appointments, this);
     }
 
+    // TODO : handle patient history request
     EventBus.getDefault().post(event);
   }
 
   private void handleStaffMessage(ClinicStaffMessage message) {
     ClinicStaffEvent event =
-        new ClinicStaffEvent((ArrayList<ClinicStaff>) message.staff_list, Phase.RECEIVE);
+        new ClinicStaffEvent((ArrayList<ClinicStaff>) message.staff_list, this);
     EventBus.getDefault().post(event);
   }
 
   private void handleStaffAssignmentMessage(StaffAssignmentMessage message) {
-    AssignStaffEvent event = new AssignStaffEvent(null, AssignStaffEvent.Phase.RESPOND);
+    AssignStaffEvent event = new AssignStaffEvent(null, this, null);
     EventBus.getDefault().post(event);
   }
 
   private void handleClinicMessage(ClinicMessage message) {
     if (message.message_type == MessageType.REQUEST) return;
     ArrayList<Clinic> clinics = (ArrayList<Clinic>) message.clinics;
-    ClinicEvent event = new ClinicEvent(clinics);
+    ClinicEvent event = new ClinicEvent(clinics, this);
     EventBus.getDefault().post(event);
   }
 
   private void handleLoginMessage(LoginMessage message) {
-    LoginEvent event = new LoginEvent(0, "");
+    LoginEvent event = new LoginEvent(0, "", this);
     if (message.user == null) {
-      event.phase = LoginEvent.Phase.REJECT;
+      event.response = Response.REJECT;
     } else {
       event.id = message.id;
       event.password = message.password;
-      event.phase = LoginEvent.Phase.AUTHORIZE;
+      event.response = Response.AUTHORIZE;
       event.userData = message.user;
       event.patientData = message.patient_data;
       this.connected_employee_clinics = message.employee_clinics;
@@ -265,7 +262,6 @@ public class HMOClient extends AbstractClient {
    */
   public void updateClinic(Clinic clinic) throws IOException {
     client.sendToServer(new ClinicMessage(clinic));
-    getClinics();
   }
 
   /**

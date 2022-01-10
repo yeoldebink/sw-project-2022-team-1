@@ -3,31 +3,20 @@ package il.cshaifa.hmo_system.client.events;
 import il.cshaifa.hmo_system.entities.Clinic;
 import java.util.ArrayList;
 
-public class ClinicEvent {
+public class ClinicEvent extends Event {
 
   public ArrayList<Clinic> receivedClinics;
   public Clinic clinic;
-  public Phase phase;
 
-  public ClinicEvent() {
-    this.phase = Phase.REQUEST;
-  }
-
-  public ClinicEvent(ArrayList<Clinic> clinics) {
+  public ClinicEvent(ArrayList<Clinic> clinics, Object senderInstance) {
+    super(senderInstance);
     this.receivedClinics = clinics;
     this.clinic = null;
-    this.phase = Phase.LIST;
   }
 
-  public ClinicEvent(Clinic clinic, Phase phase) {
+  public ClinicEvent(Clinic clinic, Object senderInstance) {
+    super(senderInstance);
     this.clinic = clinic;
     this.receivedClinics = null;
-    this.phase = phase;
-  }
-
-  public enum Phase {
-    EDIT,
-    REQUEST,
-    LIST
   }
 }

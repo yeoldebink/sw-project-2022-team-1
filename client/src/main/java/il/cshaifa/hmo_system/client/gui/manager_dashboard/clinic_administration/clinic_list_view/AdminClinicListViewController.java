@@ -46,7 +46,7 @@ public class AdminClinicListViewController extends ViewController {
   @FXML
   void showEditClinicDialog(ActionEvent event) {
     var clinic = clinicTable.getSelectionModel().getSelectedItem();
-    EventBus.getDefault().post(new ClinicEvent(clinic, ClinicEvent.Phase.EDIT));
+    EventBus.getDefault().post(new ClinicEvent(clinic, this));
   }
 
   void populateClinicTable(ArrayList<Clinic> clinics) {

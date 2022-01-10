@@ -4,33 +4,24 @@ import il.cshaifa.hmo_system.client.HMOClient;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.ClinicEvent;
-import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
 import java.io.IOException;
 import javafx.stage.Stage;
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 public class AdminClinicController extends Controller {
 
   public AdminClinicController(ViewController view_controller, Stage stage) {
     super(view_controller, stage);
-    EventBus.getDefault().register(this);
   }
 
   @Subscribe
-  @Override
-  public void onWindowCloseEvent(CloseWindowEvent event) {
-    if (event.getViewControllerInstance().equals(view_controller))
-      EventBus.getDefault().unregister(this);
-  }
-
-  @Subscribe
-  public void updateClinicRequested(ClinicEvent event) {
-    if (event.phase != ClinicEvent.Phase.REQUEST) return;
+  public void onRequestClinicUpdate(ClinicEvent event) {
+    if (!event.getSender().equals(this.view_controller)) return;
 
     var client = HMOClient.getClient();
     try {
       client.updateClinic(event.clinic);
+      client.getClinics();
     } catch (IOException e) {
       e.printStackTrace();
     }
