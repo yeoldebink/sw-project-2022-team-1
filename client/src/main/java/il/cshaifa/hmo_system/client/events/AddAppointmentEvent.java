@@ -13,10 +13,7 @@ public class AddAppointmentEvent extends Event {
   public RejectionType rejectionType;
 
   public AddAppointmentEvent(
-      User staff_member,
-      LocalDateTime start_datetime,
-      Integer count_appointments,
-      Object sender) {
+      User staff_member, LocalDateTime start_datetime, Integer count_appointments, Object sender) {
     super(sender);
     this.staff_member = staff_member;
     this.start_datetime = start_datetime;

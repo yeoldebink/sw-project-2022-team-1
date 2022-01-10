@@ -16,8 +16,8 @@ public class SetAppointmentEvent extends Event {
   public Patient patient;
   public Appointment appointment;
 
-  public SetAppointmentEvent(Object sender,
-      Action action, Patient patient, Appointment appointment) {
+  public SetAppointmentEvent(
+      Object sender, Action action, Patient patient, Appointment appointment) {
     super(sender);
     this.action = action;
     this.patient = patient;
