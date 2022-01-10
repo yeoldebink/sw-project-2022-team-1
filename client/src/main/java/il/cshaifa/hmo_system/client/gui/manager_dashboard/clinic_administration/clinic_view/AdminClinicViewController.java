@@ -71,6 +71,8 @@ public class AdminClinicViewController extends RoleDefinedViewController {
     clinic.setThu_hours(thuHoursTextField.getText());
     clinic.setFri_hours(friHoursTextField.getText());
     clinic.setSat_hours(satHoursTextField.getText());
+    clinic.setName(name.getText());
+    clinic.setAddress(address.getText());
 
     EventBus.getDefault().post(new ClinicEvent(this.clinic, this));
 

@@ -2,11 +2,11 @@ package il.cshaifa.hmo_system.client.gui.manager_dashboard;
 
 import il.cshaifa.hmo_system.client.base_controllers.RoleDefinedViewController;
 import il.cshaifa.hmo_system.client.events.ClinicEvent;
-import il.cshaifa.hmo_system.client.events.ClinicEvent.Phase;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_list_view.AdminClinicListViewController;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_staff.ClinicStaffListViewController;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.report_view.ReportListViewController;
 import il.cshaifa.hmo_system.client.utils.Utils;
+import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.User;
 import java.io.IOException;
 import javafx.event.ActionEvent;
@@ -61,7 +61,7 @@ public class ManagerDashboardViewController extends RoleDefinedViewController {
 
   @FXML
   public void editMyClinicHours(ActionEvent event) {
-    ClinicEvent clinic_event = new ClinicEvent(null, Phase.EDIT);
+    ClinicEvent clinic_event = new ClinicEvent((Clinic) null, this);
     EventBus.getDefault().post(clinic_event);
   }
 

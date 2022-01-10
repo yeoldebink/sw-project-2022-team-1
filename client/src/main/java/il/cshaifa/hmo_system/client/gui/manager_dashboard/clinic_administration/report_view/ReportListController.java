@@ -15,7 +15,6 @@ import org.greenrobot.eventbus.Subscribe;
 public class ReportListController extends Controller {
   public ReportListController(ReportListViewController view_controller) {
     super(view_controller, null);
-    EventBus.getDefault().register(this);
   }
 
   @Subscribe
@@ -42,7 +41,4 @@ public class ReportListController extends Controller {
     Platform.runLater(
         () -> ((ReportListViewController) this.view_controller).populateClinicList(clinics));
   }
-
-  @Override
-  public void onWindowCloseEvent(CloseWindowEvent event) {}
 }
