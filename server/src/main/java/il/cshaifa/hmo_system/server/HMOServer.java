@@ -28,10 +28,10 @@ import il.cshaifa.hmo_system.server.ocsf.AbstractServer;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -433,7 +433,7 @@ public class HMOServer extends AbstractServer {
       }
 
       if (msg.report_type == ReportType.AVERAGE_WAIT_TIMES) {
-        int wait_time = (int) ChronoUnit.SECONDS.between(appt_date, appt.getCalled_time());
+        int wait_time = (int) Duration.between(appt.getDate(), appt.getCalled_time()).toSeconds();
         DailyAverageWaitTimeReport report =
             (DailyAverageWaitTimeReport) daily_clinics_reports.get(appt_clinic);
         if (!report.report_data.containsKey(appt_staff_member)) {

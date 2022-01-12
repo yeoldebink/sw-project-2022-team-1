@@ -29,8 +29,6 @@ import org.greenrobot.eventbus.EventBus;
 
 public class ReportListViewController extends RoleDefinedViewController {
 
-  private boolean first_clinic_population;
-
   @FXML private SplitPane splitPane;
   @FXML private TableView<DailyReport> reportsTable;
 
@@ -73,6 +71,7 @@ public class ReportListViewController extends RoleDefinedViewController {
     reportsTable.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
     clinicNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("ClinicName"));
     reportDateTableColumn.setCellValueFactory(new PropertyValueFactory<>("Date"));
+    reportsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
     reportTypeComboBox
         .getItems()
@@ -106,6 +105,8 @@ public class ReportListViewController extends RoleDefinedViewController {
 
   @FXML
   public void requestReports(ActionEvent event) {
+    // clear the pane and the list
+    splitPane.getItems().set(2, new Pane());
     reportsTable.getItems().clear();
 
     var selected_clinics = new ArrayList<>(clinicList.getSelectionModel().getSelectedItems());

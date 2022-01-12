@@ -109,4 +109,9 @@ public class User implements Serializable {
   public String getSalt() {
     return salt;
   }
+
+  @Override
+  public String toString() {
+    return firstName + " " + lastName;
+  }
 }

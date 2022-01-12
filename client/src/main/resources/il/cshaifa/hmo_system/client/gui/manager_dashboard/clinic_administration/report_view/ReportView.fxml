@@ -20,8 +20,8 @@
                 </Label>
                 <TableView fx:id="report_table" prefHeight="350.0" prefWidth="280.0">
                     <columns>
-                        <TableColumn fx:id="key" prefWidth="75.0" text="Key"/>
-                        <TableColumn fx:id="value" prefWidth="75.0" text="Value"/>
+                        <TableColumn fx:id="keyColumn" prefWidth="75.0" text="Key"/>
+                        <TableColumn fx:id="valueColumn" prefWidth="75.0" text="Value"/>
                     </columns>
                     <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>

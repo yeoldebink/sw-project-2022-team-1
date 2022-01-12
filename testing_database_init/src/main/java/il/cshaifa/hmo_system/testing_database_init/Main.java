@@ -308,6 +308,18 @@ public class Main {
             null,
             true));
 
+    appointments.add(
+        new Appointment(
+            patients.get("Marquis De Carabas"),
+            appt_types.get("Family Doctor"),
+            null,
+            users.get("John Dorian"),
+            clinics.get("Carmel Center"),
+            LocalDateTime.of(2022, 2, 3, 10, 40),
+            LocalDateTime.of(2022, 2, 3, 10, 45, 11),
+            null,
+            true));
+
     for (var appt : appointments) {
       session.save(appt);
       session.flush();
