@@ -223,10 +223,10 @@ public class HMOClient extends AbstractClient {
     client.sendToServer(appt_msg);
   }
 
-  /** locks the requested appointment **/
+  /** locks the requested appointment * */
   public void lockAppointment(Appointment appointment) {}
 
-  /** takes the requested appointment **/
+  /** takes the requested appointment * */
   public void takeAppointment(Appointment appointment) {}
 
   /** Requests from server all of today's appointments of current connected staff member client */
