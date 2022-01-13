@@ -28,6 +28,8 @@ import il.cshaifa.hmo_system.messages.LoginMessage;
 import il.cshaifa.hmo_system.messages.Message.MessageType;
 import il.cshaifa.hmo_system.messages.ReportMessage;
 import il.cshaifa.hmo_system.messages.ReportMessage.ReportType;
+import il.cshaifa.hmo_system.messages.SetAppointmentMessage;
+import il.cshaifa.hmo_system.messages.SetAppointmentMessage.Action;
 import il.cshaifa.hmo_system.messages.StaffAssignmentMessage;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -224,10 +226,18 @@ public class HMOClient extends AbstractClient {
   }
 
   /** locks the requested appointment **/
-  public void lockAppointment(Appointment appointment) {}
+  public void lockAppointment(Appointment appointment) throws IOException {
+    client.sendToServer(new SetAppointmentMessage(Action.LOCK, connected_patient, appointment));
+  }
 
   /** takes the requested appointment **/
-  public void takeAppointment(Appointment appointment) {}
+  public void takeAppointment(Appointment appointment) {
+
+  }
+
+  public void cancelAppointment(Appointment appointment){
+
+  }
 
   /** Requests from server all of today's appointments of current connected staff member client */
   public void getStaffDailyAppointments() throws IOException {

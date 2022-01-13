@@ -19,6 +19,8 @@ import il.cshaifa.hmo_system.messages.LoginMessage;
 import il.cshaifa.hmo_system.messages.Message.MessageType;
 import il.cshaifa.hmo_system.messages.ReportMessage;
 import il.cshaifa.hmo_system.messages.ReportMessage.ReportType;
+import il.cshaifa.hmo_system.messages.SetAppointmentMessage;
+import il.cshaifa.hmo_system.messages.SetAppointmentMessage.Action;
 import il.cshaifa.hmo_system.messages.StaffAssignmentMessage;
 import il.cshaifa.hmo_system.messages.StaffAssignmentMessage.Type;
 import il.cshaifa.hmo_system.reports.DailyAppointmentTypesReport;
@@ -476,6 +478,70 @@ public class HMOServer extends AbstractServer {
     client.sendToClient(msg);
   }
 
+
+  private boolean takeAppointment(Appointment appt, Patient patient){
+    // Reserve was requested after lock time has already expired
+    if (appt.getPatient() == patient) {
+      return false;
+    } else {
+      appt.setTaken(true);
+      appt.setLock_time(null);
+      session.update(appt);
+      return true;
+    }
+  }
+
+  private boolean lockAppointment(Appointment appt, Patient patient) {
+    LocalDateTime lock_time = appt.getLock_time();
+
+    // release all appointments User has previously locked
+    CriteriaBuilder cb = session.getCriteriaBuilder();
+    CriteriaQuery<Appointment> cr = cb.createQuery(Appointment.class);
+    Root<Appointment> root = cr.from(Appointment.class);
+    cr.select(root)
+        .where(
+            cb.between(
+                root.get("lock_time"), LocalDateTime.now(), LocalDateTime.now().plusSeconds(330)),
+            cb.equal(root.get("patient"), patient));
+
+    List<Appointment> users_locked_appointments = session.createQuery(cr).getResultList();
+    for (Appointment user_appt : users_locked_appointments) {
+      releaseAppointment(user_appt);
+    }
+    session.flush();
+
+    // check if appointment was not taken already
+    if (!appt.isTaken() && (lock_time == null || LocalDateTime.now().isAfter(lock_time))) {
+      appt.setLock_time(LocalDateTime.now().plusMinutes(5));
+      appt.setPatient(patient);
+      session.update(appt);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  private boolean releaseAppointment(Appointment appt){
+    appt.setLock_time(null);
+    appt.setTaken(false);
+    appt.setPatient(null);
+    session.update(appt);
+    return true;
+  }
+
+  private void handleSetAppointmentMessage(SetAppointmentMessage msg, ConnectionToClient client)
+      throws IOException {
+    if (msg.action == Action.TAKE) {
+      msg.success = takeAppointment(msg.appointment, msg.patient);
+    } else if (msg.action == Action.LOCK) {
+      msg.success = lockAppointment(msg.appointment, msg.patient);
+    } else if (msg.action == Action.RELEASE) {
+      msg.success = releaseAppointment(msg.appointment);
+    }
+    msg.message_type = MessageType.RESPONSE;
+    client.sendToClient(msg);
+  }
+
   /**
    * See documentation for entities.Request for defined behavior.
    *
@@ -503,8 +569,9 @@ public class HMOServer extends AbstractServer {
         handleAdminAppointmentMessage((AdminAppointmentMessage) msg, client);
       } else if (msg_class == ReportMessage.class) {
         handleReportMessage((ReportMessage) msg, client);
+      } else if (msg_class == SetAppointmentMessage.class) {
+        handleSetAppointmentMessage((SetAppointmentMessage) msg, client);
       }
-
       session.close();
     } catch (Exception exception) {
       exception.printStackTrace();
