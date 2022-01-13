@@ -28,10 +28,10 @@ import il.cshaifa.hmo_system.server.ocsf.AbstractServer;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -349,7 +349,9 @@ public class HMOServer extends AbstractServer {
                     msg.staff_member,
                     msg.clinic,
                     current_datetime,
-                    null);
+                    null,
+                    null,
+                    false);
             session.save(appt);
             session.flush();
 
@@ -377,16 +379,20 @@ public class HMOServer extends AbstractServer {
     CriteriaQuery<Appointment> cr = cb.createQuery(Appointment.class);
     Root<Appointment> root = cr.from(Appointment.class);
 
-    cr.select(root)
-        .where(
-            cb.between(root.get("appt_date"), msg.start_date, msg.end_date),
-            cb.isTrue(root.get("taken")),
-            root.get("clinic").in(msg.clinics));
-
     if (msg.report_type == ReportType.MISSED_APPOINTMENTS) {
-      cr.select(root).where(cb.isNull(root.get("called_time")));
+      cr.select(root)
+          .where(
+              cb.between(root.get("appt_date"), msg.start_date, msg.end_date),
+              cb.isTrue(root.get("taken")),
+              root.get("clinic").in(msg.clinics),
+              cb.isNull(root.get("called_time")));
     } else {
-      cr.select(root).where(cb.isNotNull(root.get("called_time")));
+      cr.select(root)
+          .where(
+              cb.between(root.get("appt_date"), msg.start_date, msg.end_date),
+              cb.isTrue(root.get("taken")),
+              root.get("clinic").in(msg.clinics),
+              cb.isNotNull(root.get("called_time")));
     }
 
     List<Appointment> relevant_appointments = session.createQuery(cr).getResultList();
@@ -427,7 +433,7 @@ public class HMOServer extends AbstractServer {
       }
 
       if (msg.report_type == ReportType.AVERAGE_WAIT_TIMES) {
-        int wait_time = (int) ChronoUnit.SECONDS.between(appt_date, appt.getCalled_time());
+        int wait_time = (int) Duration.between(appt.getDate(), appt.getCalled_time()).toSeconds();
         DailyAverageWaitTimeReport report =
             (DailyAverageWaitTimeReport) daily_clinics_reports.get(appt_clinic);
         if (!report.report_data.containsKey(appt_staff_member)) {
