@@ -9,6 +9,7 @@ import il.cshaifa.hmo_system.client.events.ClinicStaffEvent;
 import il.cshaifa.hmo_system.client.events.LoginEvent;
 import il.cshaifa.hmo_system.client.events.LoginEvent.Response;
 import il.cshaifa.hmo_system.client.events.ReportEvent;
+import il.cshaifa.hmo_system.client.events.SetAppointmentEvent;
 import il.cshaifa.hmo_system.client.events.WarningEvent;
 import il.cshaifa.hmo_system.client.ocsf.AbstractClient;
 import il.cshaifa.hmo_system.entities.Appointment;
@@ -93,8 +94,22 @@ public class HMOClient extends AbstractClient {
         handleAdminAppointmentMessage((AdminAppointmentMessage) message);
       } else if (message.getClass().equals(ReportMessage.class)) {
         handleReportMessage((ReportMessage) message);
+      } else if (message.getClass().equals(SetAppointmentMessage.class)){
+        handleSetAppointmentMessage((SetAppointmentMessage) message);
       }
     }
+  }
+
+  private void handleSetAppointmentMessage(SetAppointmentMessage message){
+    SetAppointmentEvent.Action action;
+    if (message.success){
+      action = SetAppointmentEvent.Action.AUTHORIZE;
+    } else {
+      action = SetAppointmentEvent.Action.REJECT;
+    }
+    SetAppointmentEvent event =
+        new SetAppointmentEvent(this, action, getConnected_patient(), message.appointment);
+    EventBus.getDefault().post(event);
   }
 
   private void handleReportMessage(ReportMessage message) {
