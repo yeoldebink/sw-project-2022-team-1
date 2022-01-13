@@ -4,13 +4,13 @@ import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.AddAppointmentEvent;
 import il.cshaifa.hmo_system.client.events.AdminAppointmentListEvent;
 import il.cshaifa.hmo_system.entities.Appointment;
-import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.User;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
@@ -31,14 +31,13 @@ public class AdminAppointmentListViewController extends ViewController {
 
   @FXML private Label staff_member_name;
 
+  @FXML private Button addAppointmentsButton;
+
   public final User staff_member;
-  // TODO Tomer: Remove clinic from constructor/object instancing, unused
-  private final Clinic clinic;
   private ArrayList<Appointment> appt_list = null;
 
-  public AdminAppointmentListViewController(User staff_member, Clinic clinic) {
+  public AdminAppointmentListViewController(User staff_member) {
     this.staff_member = staff_member;
-    this.clinic = clinic;
   }
 
   @FXML
@@ -46,6 +45,12 @@ public class AdminAppointmentListViewController extends ViewController {
     this.staff_member_name.setText(staff_member.getFirstName() + " " + staff_member.getLastName());
     appt_table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     setCellValueFactory();
+
+    if (!(staff_member.getRole().getName().equals("Family Doctor")
+        || staff_member.getRole().getName().equals("Pediatrician")
+        || staff_member.getRole().isSpecialist())) {
+      addAppointmentsButton.setDisable(true);
+    }
   }
 
   @FXML

@@ -130,8 +130,7 @@ public class ClinicStaffListController extends Controller {
 
     loader.setControllerFactory(
         c -> {
-          return new AdminAppointmentListViewController(
-              event.staff_member, HMOClient.getClient().getConnected_employee_clinics().get(0));
+          return new AdminAppointmentListViewController(event.staff_member);
         });
 
     try {

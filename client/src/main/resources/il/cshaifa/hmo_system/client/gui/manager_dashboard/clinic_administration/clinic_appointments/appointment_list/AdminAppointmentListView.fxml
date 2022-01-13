@@ -46,7 +46,7 @@
                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
             </columnResizePolicy>
         </TableView>
-        <Button mnemonicParsing="false" onAction="#showAddAppointmentDialog" text="Add appointment(s)">
+        <Button mnemonicParsing="false" onAction="#showAddAppointmentDialog" text="Add appointment(s)" fx:id="addAppointmentsButton">
             <VBox.margin>
                 <Insets top="10.0"/>
             </VBox.margin>
