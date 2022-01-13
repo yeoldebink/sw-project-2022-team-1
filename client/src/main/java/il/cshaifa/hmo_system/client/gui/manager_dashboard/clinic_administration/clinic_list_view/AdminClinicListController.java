@@ -20,6 +20,10 @@ public class AdminClinicListController extends Controller {
     super(view_controller, null);
   }
 
+  /**
+   * Event to handle the user request to open the Edit clinic window
+   * @param event Holds GUI data on the relevant clinic to edit
+   */
   @Subscribe
   public void onShowEditClinicDialog(ClinicEvent event) {
     if (!event.getSender().equals(this.view_controller)) return;
@@ -47,6 +51,10 @@ public class AdminClinicListController extends Controller {
     }
   }
 
+  /**
+   * Update the view with the updated clinic list
+   * @param clinics list of updated clinics
+   */
   public void updateClinics(ArrayList<Clinic> clinics) {
     Platform.runLater(
         () -> ((AdminClinicListViewController) this.view_controller).populateClinicTable(clinics));

@@ -14,6 +14,10 @@ public class AdminClinicController extends Controller {
     super(view_controller, stage);
   }
 
+  /**
+   * Event to handle user request to update clinic data with changes in the view
+   * @param event Clinic object created from the GUI changes.
+   */
   @Subscribe
   public void onRequestClinicUpdate(ClinicEvent event) {
     if (!event.getSender().equals(this.view_controller)) return;
