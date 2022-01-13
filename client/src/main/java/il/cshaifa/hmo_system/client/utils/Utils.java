@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 public class Utils<C> {
-  public static void OpenNewWindow(
+  public static void openNewWindow(
       Class<?> view_controller, Class<?> controller, FXMLLoader loader, boolean resizeable)
       throws Exception {
     // Letting us run things on the UI Thread, otherwise things won't change and an exception will

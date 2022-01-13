@@ -69,7 +69,7 @@ public class AdminAppointmentListController extends Controller {
         });
 
     try {
-      Utils.OpenNewWindow(
+      Utils.openNewWindow(
           AddDoctorAppointmentsViewController.class,
           AddDoctorAppointmentsController.class,
           loader,

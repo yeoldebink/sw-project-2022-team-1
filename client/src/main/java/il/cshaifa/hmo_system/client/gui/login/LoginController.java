@@ -8,6 +8,8 @@ import il.cshaifa.hmo_system.client.events.LoginEvent.Response;
 import il.cshaifa.hmo_system.client.gui.ResourcePath;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.ManagerDashboardController;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.ManagerDashboardViewController;
+import il.cshaifa.hmo_system.client.gui.patient_dashboard.PatientDashboardController;
+import il.cshaifa.hmo_system.client.gui.patient_dashboard.PatientDashboardViewController;
 import il.cshaifa.hmo_system.client.utils.Utils;
 import il.cshaifa.hmo_system.entities.User;
 import java.io.IOException;
@@ -84,12 +86,22 @@ public class LoginController extends Controller {
             c -> {
               return new ManagerDashboardViewController(user);
             });
-        Utils.OpenNewWindow(
+        Utils.openNewWindow(
             ManagerDashboardViewController.class, ManagerDashboardController.class, loader, true);
 
         break;
+
+      case ("Patient"):
+        loader = new FXMLLoader(
+            getClass().getResource(ResourcePath.get_fxml(PatientDashboardViewController.class)));
+
+        Utils.openNewWindow(
+            PatientDashboardViewController.class, PatientDashboardController.class, loader, false);
+
+        break;
+
       default:
-        throw new NotImplementedException("Only manager implemented");
+        throw new NotImplementedException("Invalid role");
     }
   }
 }

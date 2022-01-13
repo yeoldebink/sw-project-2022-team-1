@@ -1,4 +1,4 @@
-package il.cshaifa.hmo_system.client.gui;
+package il.cshaifa.hmo_system.client.gui.patient_dashboard.patient_history;
 
 import il.cshaifa.hmo_system.client.HMOClient;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;

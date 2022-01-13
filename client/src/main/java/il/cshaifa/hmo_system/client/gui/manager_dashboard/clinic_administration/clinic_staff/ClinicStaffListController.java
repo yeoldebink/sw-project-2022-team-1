@@ -138,7 +138,7 @@ public class ClinicStaffListController extends Controller {
         });
 
     try {
-      Utils.OpenNewWindow(
+      Utils.openNewWindow(
           AdminAppointmentListViewController.class,
           AdminAppointmentListController.class,
           loader,
