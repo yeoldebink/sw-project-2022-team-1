@@ -30,6 +30,12 @@ public class AdminAppointmentListController extends Controller {
     }
   }
 
+  /**
+   * Event to listen to a response from the server when appointments are added to a member
+   * Updates the appointment view with new appointments that were added
+   * @param event Holds info that appointments were added and request to get the update from the
+   *              server
+   */
   @Subscribe
   public void onAppointmentsAdded(AddAppointmentEvent event) {
     if (!event.getSender().equals(HMOClient.getClient())
@@ -43,6 +49,10 @@ public class AdminAppointmentListController extends Controller {
     }
   }
 
+  /**
+   * Event to handle the user request to open the add appointment window for a staff member
+   * @param event Holds the GUI info
+   */
   @Subscribe
   public void onShowAddAppointmentDialog(AddAppointmentEvent event) {
     if (!event.getSender().equals(this.view_controller)) return;
@@ -67,6 +77,11 @@ public class AdminAppointmentListController extends Controller {
     }
   }
 
+  /**
+   * Event to handle the response from the client of appointment list received to populate
+   * the view with the new appointments
+   * @param event Data from the client about the appointments.
+   */
   @Subscribe
   public void onAppointmentListReceived(AdminAppointmentListEvent event) {
     if (!event.getSender().equals(HMOClient.getClient())) return;
@@ -75,6 +90,10 @@ public class AdminAppointmentListController extends Controller {
     Platform.runLater(() -> vc.populateAppointmentsTable(event.appointments));
   }
 
+  /**
+   * Event that handle the user request to delete an appointment from a staff member
+   * @param event Hold the GUI data
+   */
   @Subscribe
   public void onDeleteAppointmentsRequest(AdminAppointmentListEvent event) {
     if (!event.getSender().equals(this.view_controller)) return;

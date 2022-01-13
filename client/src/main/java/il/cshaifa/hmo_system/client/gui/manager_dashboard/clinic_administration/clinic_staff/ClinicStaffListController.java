@@ -34,9 +34,8 @@ public class ClinicStaffListController extends Controller {
   }
 
   /**
-   * Handles incoming clinicstaff events from the servers
-   *
-   * @param event
+   * Event to handle the client response with clinic staff member list
+   * @param event Event data from the client with clinic staff
    */
   @Subscribe
   public void clinicStaffListReceived(ClinicStaffEvent event) {
@@ -62,6 +61,10 @@ public class ClinicStaffListController extends Controller {
     ((ClinicStaffListViewController) this.view_controller).populateStaffTable(assignment_map);
   }
 
+  /**
+   * Event that handles user request to assign or unassign staff to their clinic
+   * @param event list of the users that we want to change their status
+   */
   @Subscribe
   public void onClinicStaffAssignmentRequest(AssignStaffEvent event) {
     if (!event.getSender().equals(this.view_controller)) return;
@@ -74,6 +77,13 @@ public class ClinicStaffListController extends Controller {
     }
   }
 
+  /**
+   * Create a list of pairs to know what status each staff member need to be after a
+   * user request
+   * @param assignedUsers list of the users we want to change status
+   * @param status The status we want to set the users to
+   * @return Pair of user list that need to change their status and the status to change to
+   */
   private Pair<ArrayList<User>, Type> getClinicStaffAssignmentChange(
       ArrayList<AssignedUser> assignedUsers, Action status) {
     StaffAssignmentMessage.Type type = status == Action.ASSIGN ? Type.ASSIGN : Type.UNASSIGN;
@@ -91,6 +101,10 @@ public class ClinicStaffListController extends Controller {
     return new Pair<>(staff_users, type);
   }
 
+  /**
+   * Event to handle response from client with a new clinic staff assigment change
+   * @param event Respond from the client that data has been updated
+   */
   @Subscribe
   public void onClinicStaffAssignmentRespond(AssignStaffEvent event) {
     if (event.getSender().equals(HMOClient.getClient())) {
@@ -102,6 +116,10 @@ public class ClinicStaffListController extends Controller {
     }
   }
 
+  /**
+   * Event that handle the user request for showing a specific staff member future appointments
+   * @param event Data from GUI about request staff member
+   */
   @Subscribe
   public void onShowAppointmentListView(AdminAppointmentListEvent event) {
     if (!event.getSender().equals(this.view_controller)) return;

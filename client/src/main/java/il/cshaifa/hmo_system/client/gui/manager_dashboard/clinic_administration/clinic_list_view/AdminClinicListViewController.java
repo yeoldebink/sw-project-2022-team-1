@@ -13,7 +13,6 @@ import org.greenrobot.eventbus.EventBus;
 
 public class AdminClinicListViewController extends ViewController {
 
-  @FXML public TableColumn<Clinic, Integer> id;
   @FXML public TableColumn<Clinic, String> name;
   @FXML public TableColumn<Clinic, String> address;
   @FXML public TableColumn<Clinic, String> sun_hours;
@@ -28,7 +27,6 @@ public class AdminClinicListViewController extends ViewController {
 
   @FXML
   public void initialize() {
-    id.setCellValueFactory(new PropertyValueFactory<>("Id"));
     name.setCellValueFactory(new PropertyValueFactory<>("Name"));
     address.setCellValueFactory(new PropertyValueFactory<>("Address"));
     sun_hours.setCellValueFactory(new PropertyValueFactory<>("Sun_hours"));

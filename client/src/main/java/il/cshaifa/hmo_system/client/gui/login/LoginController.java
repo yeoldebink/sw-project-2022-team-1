@@ -23,6 +23,10 @@ public class LoginController extends Controller {
     super(view_controller, stage);
   }
 
+  /**
+   * Event to handle the user request to login to the system
+   * @param event Holds the user input to the login screen
+   */
   @Subscribe
   public void OnLoginRequestEvent(LoginEvent event) {
     if (event.getSender().equals(this.view_controller)) {
@@ -35,6 +39,11 @@ public class LoginController extends Controller {
     }
   }
 
+  /**
+   * Event to handle the response from the client about hte login request.
+   * @param event Hold the server response for the login
+   * @throws Exception Thrown when there is an error opening the main window for the user
+   */
   @Subscribe
   public void OnLoginRequestResponse(LoginEvent event) throws Exception {
     if (event.getSender().equals(HMOClient.getClient())) {
@@ -47,11 +56,19 @@ public class LoginController extends Controller {
     }
   }
 
+  /**
+   * Show an error message to the user when an incorrect info is entered
+   */
   private void incorrectUser() {
     // Letting the controller to call this function on the UI thread, and apply the changes
     Platform.runLater(() -> ((LoginViewController) view_controller).setFailedText());
   }
 
+  /**
+   * Handle which main screen we want to show by user role
+   * @param user The user that logged in to the system
+   * @throws Exception Thrown when opening the screen failed
+   */
   private void openMainScreenByRole(User user) throws Exception {
     var role_name = user.getRole().getName();
 
