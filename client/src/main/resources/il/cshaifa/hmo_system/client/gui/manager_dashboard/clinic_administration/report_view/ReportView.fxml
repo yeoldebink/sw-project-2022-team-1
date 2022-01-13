@@ -18,7 +18,7 @@
                         <Font size="26.0"/>
                     </font>
                 </Label>
-                <TableView fx:id="report_table" prefHeight="350.0" prefWidth="280.0">
+                <TableView fx:id="report_table" prefHeight="350.0" prefWidth="280.0" VBox.vgrow="ALWAYS">
                     <columns>
                         <TableColumn fx:id="keyColumn" prefWidth="75.0" text="Key"/>
                         <TableColumn fx:id="valueColumn" prefWidth="75.0" text="Value"/>
