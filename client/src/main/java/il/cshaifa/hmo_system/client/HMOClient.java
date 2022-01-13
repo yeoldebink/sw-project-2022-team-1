@@ -108,7 +108,10 @@ public class HMOClient extends AbstractClient {
       action = SetAppointmentEvent.Action.REJECT;
     }
     SetAppointmentEvent event =
-        new SetAppointmentEvent(this, action, getConnected_patient(), message.appointment);
+        new SetAppointmentEvent(this,
+            action,
+            getConnected_patient(),
+            message.appointment);
     EventBus.getDefault().post(event);
   }
 
@@ -246,12 +249,12 @@ public class HMOClient extends AbstractClient {
   }
 
   /** takes the requested appointment **/
-  public void takeAppointment(Appointment appointment) {
-
+  public void takeAppointment(Appointment appointment) throws IOException {
+    client.sendToServer(new SetAppointmentMessage(Action.TAKE, connected_patient, appointment));
   }
 
-  public void cancelAppointment(Appointment appointment){
-
+  public void cancelAppointment(Appointment appointment) throws IOException {
+    client.sendToServer(new SetAppointmentMessage(Action.RELEASE, connected_patient, appointment));
   }
 
   /** Requests from server all of today's appointments of current connected staff member client */
