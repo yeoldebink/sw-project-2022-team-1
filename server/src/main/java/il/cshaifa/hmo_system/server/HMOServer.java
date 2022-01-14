@@ -19,6 +19,8 @@ import il.cshaifa.hmo_system.messages.LoginMessage;
 import il.cshaifa.hmo_system.messages.Message.MessageType;
 import il.cshaifa.hmo_system.messages.ReportMessage;
 import il.cshaifa.hmo_system.messages.ReportMessage.ReportType;
+import il.cshaifa.hmo_system.messages.SetAppointmentMessage;
+import il.cshaifa.hmo_system.messages.SetAppointmentMessage.Action;
 import il.cshaifa.hmo_system.messages.StaffAssignmentMessage;
 import il.cshaifa.hmo_system.messages.StaffAssignmentMessage.Type;
 import il.cshaifa.hmo_system.reports.DailyAppointmentTypesReport;
@@ -45,6 +47,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.query.Query;
 import org.hibernate.service.ServiceRegistry;
 
@@ -118,7 +122,7 @@ public class HMOServer extends AbstractServer {
    */
   private void handleAppointmentMessage(AppointmentMessage message, ConnectionToClient client)
       throws IOException {
-    var cb = session.getCriteriaBuilder();
+    CriteriaBuilder cb = session.getCriteriaBuilder();
     CriteriaQuery<Appointment> cr = cb.createQuery(Appointment.class);
     Root<Appointment> root = cr.from(Appointment.class);
     LocalDateTime start, end;
@@ -132,7 +136,7 @@ public class HMOServer extends AbstractServer {
               cb.equal(root.get("clinic"), message.clinic),
               cb.between(root.get("appt_date"), start, end),
               cb.equal(root.get("taken"), false),
-              cb.greaterThanOrEqualTo(root.get("lock_time"), start.plusMinutes(5)));
+              cb.or(cb.isNull(root.get("lock_time")), cb.lessThan(root.get("lock_time"), start)));
 
     } else if (message.requestType == AppointmentRequestType.STAFF_MEMBER_DAILY_APPOINTMENTS) {
       start = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
@@ -482,6 +486,74 @@ public class HMOServer extends AbstractServer {
     client.sendToClient(msg);
   }
 
+  private boolean takeAppointment(Appointment appt, Patient patient) {
+    // Reserve was requested after lock time has already expired
+    if (appt.getPatient().getId() != patient.getId()) {
+      return false;
+    }
+    appt.setTaken(true);
+    appt.setLock_time(null);
+    session.update(appt);
+    return true;
+  }
+
+  private boolean lockAppointment(Appointment appt, Patient patient) {
+    LocalDateTime lock_time = appt.getLock_time();
+
+    // is it possible to lock this appointment? if not return false
+    if (appt.isTaken()
+        || (lock_time != null && LocalDateTime.now().isBefore(lock_time) && appt.getPatient().getId() != patient.getId())) {
+      return false;
+    }
+
+    // get from db all patients locked appointments
+    CriteriaBuilder cb = session.getCriteriaBuilder();
+    CriteriaQuery<Appointment> cr = cb.createQuery(Appointment.class);
+    Root<Appointment> root = cr.from(Appointment.class);
+    cr.select(root).where(
+            cb.between(
+                root.get("lock_time"), LocalDateTime.now(), LocalDateTime.now().plusMinutes(5)),
+            cb.equal(root.get("patient"), patient));
+    List<Appointment> users_locked_appointments = session.createQuery(cr).getResultList();
+
+    // lock the relevant appointment
+    appt.setLock_time(LocalDateTime.now().plusSeconds(330));
+    appt.setPatient(patient);
+    session.update(appt);
+
+    // release the other appointments by the patient
+    for (Appointment user_appt : users_locked_appointments) {
+      releaseAppointment(user_appt);
+    }
+    return true;
+  }
+
+  private void releaseAppointment(Appointment appt) {
+    appt.setLock_time(null);
+    appt.setTaken(false);
+    appt.setPatient(null);
+    session.update(appt);
+  }
+
+  private void handleSetAppointmentMessage(SetAppointmentMessage msg, ConnectionToClient client)
+      throws IOException {
+    // before changing the state of the appointment, get the updated version of it
+    session.flush();
+    session.refresh(msg.appointment);
+
+    if (msg.action == Action.TAKE) {
+      msg.success = takeAppointment(msg.appointment, msg.patient);
+    } else if (msg.action == Action.LOCK) {
+      msg.success = lockAppointment(msg.appointment, msg.patient);
+    } else if (msg.action == Action.RELEASE) {
+      releaseAppointment(msg.appointment);
+      msg.success = true;
+    }
+    session.flush();
+    msg.message_type = MessageType.RESPONSE;
+    client.sendToClient(msg);
+  }
+
   /**
    * See documentation for entities.Request for defined behavior.
    *
@@ -509,8 +581,9 @@ public class HMOServer extends AbstractServer {
         handleAdminAppointmentMessage((AdminAppointmentMessage) msg, client);
       } else if (msg_class == ReportMessage.class) {
         handleReportMessage((ReportMessage) msg, client);
+      } else if (msg_class == SetAppointmentMessage.class) {
+        handleSetAppointmentMessage((SetAppointmentMessage) msg, client);
       }
-
       session.close();
     } catch (Exception exception) {
       exception.printStackTrace();
