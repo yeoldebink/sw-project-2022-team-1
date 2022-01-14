@@ -3,23 +3,21 @@ package il.cshaifa.hmo_system.client.events;
 import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.entities.User;
 
-public class LoginEvent {
-  public int id;
-  public String password;
-  public Phase phase;
-
-  public User userData;
-  public Patient patientData;
-
-  public enum Phase {
-    SEND,
+public class LoginEvent extends Event {
+  public enum Response {
     AUTHORIZE,
     REJECT
   }
 
-  public LoginEvent(int id, String password) {
+  public int id;
+  public String password;
+  public User userData;
+  public Patient patientData;
+  public Response response;
+
+  public LoginEvent(int id, String password, Object sender) {
+    super(sender);
     this.id = id;
     this.password = password;
-    this.phase = Phase.SEND;
   }
 }

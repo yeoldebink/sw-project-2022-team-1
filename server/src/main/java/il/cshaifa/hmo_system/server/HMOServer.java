@@ -10,24 +10,36 @@ import il.cshaifa.hmo_system.entities.Role;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.AdminAppointmentMessage;
 import il.cshaifa.hmo_system.messages.AdminAppointmentMessage.AdminAppointmentMessageType;
+import il.cshaifa.hmo_system.messages.AdminAppointmentMessage.RejectionType;
 import il.cshaifa.hmo_system.messages.AppointmentMessage;
 import il.cshaifa.hmo_system.messages.AppointmentMessage.AppointmentRequestType;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
 import il.cshaifa.hmo_system.messages.ClinicStaffMessage;
 import il.cshaifa.hmo_system.messages.LoginMessage;
 import il.cshaifa.hmo_system.messages.Message.MessageType;
+import il.cshaifa.hmo_system.messages.ReportMessage;
+import il.cshaifa.hmo_system.messages.ReportMessage.ReportType;
+import il.cshaifa.hmo_system.messages.SetAppointmentMessage;
+import il.cshaifa.hmo_system.messages.SetAppointmentMessage.Action;
 import il.cshaifa.hmo_system.messages.StaffAssignmentMessage;
 import il.cshaifa.hmo_system.messages.StaffAssignmentMessage.Type;
+import il.cshaifa.hmo_system.reports.DailyAppointmentTypesReport;
+import il.cshaifa.hmo_system.reports.DailyAverageWaitTimeReport;
+import il.cshaifa.hmo_system.reports.DailyReport;
 import il.cshaifa.hmo_system.server.ocsf.AbstractServer;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.function.Function;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.HibernateException;
@@ -101,9 +113,14 @@ public class HMOServer extends AbstractServer {
     client.sendToClient(message);
   }
 
+  /**
+   * @param message
+   * @param client
+   * @throws IOException
+   */
   private void handleAppointmentMessage(AppointmentMessage message, ConnectionToClient client)
       throws IOException {
-    var cb = session.getCriteriaBuilder();
+    CriteriaBuilder cb = session.getCriteriaBuilder();
     CriteriaQuery<Appointment> cr = cb.createQuery(Appointment.class);
     Root<Appointment> root = cr.from(Appointment.class);
     LocalDateTime start, end;
@@ -117,7 +134,7 @@ public class HMOServer extends AbstractServer {
               cb.equal(root.get("clinic"), message.clinic),
               cb.between(root.get("appt_date"), start, end),
               cb.equal(root.get("taken"), false),
-              cb.greaterThanOrEqualTo(root.get("lock_time"), start.plusMinutes(5)));
+              cb.or(cb.isNull(root.get("lock_time")), cb.lessThan(root.get("lock_time"), start)));
 
     } else if (message.requestType == AppointmentRequestType.STAFF_MEMBER_DAILY_APPOINTMENTS) {
       start = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
@@ -310,38 +327,230 @@ public class HMOServer extends AbstractServer {
       var cb = session.getCriteriaBuilder();
       var cr = cb.createQuery(Appointment.class);
       var root = cr.from(Appointment.class);
+
+      if (msg.start_datetime.isAfter(LocalDateTime.now())) {
+        cr.select(root)
+            .where(
+                cb.equal(root.get("staff_member"), msg.staff_member),
+                cb.between(
+                    root.get("appt_date"), msg.start_datetime, end_datetime.plusSeconds(-1)));
+
+        // if this staff member already has appointments at these times, reject
+        if (session.createQuery(cr).getResultList().size() > 0) {
+          msg.type = AdminAppointmentMessageType.REJECT;
+          msg.rejectionType = RejectionType.OVERLAPPING;
+        } else {
+          var current_datetime = LocalDateTime.from(msg.start_datetime);
+          // TODO: validate by clinic hours as well
+          while (current_datetime.isBefore(end_datetime)) {
+            var appt =
+                new Appointment(
+                    null,
+                    msg.appt_type,
+                    specialist_role,
+                    msg.staff_member,
+                    msg.clinic,
+                    current_datetime,
+                    null,
+                    null,
+                    false);
+            session.save(appt);
+            session.flush();
+
+            current_datetime = current_datetime.plusMinutes(len);
+          }
+
+          msg.type = AdminAppointmentMessageType.ACCEPT;
+        }
+      } else {
+        msg.type = AdminAppointmentMessageType.REJECT;
+        msg.rejectionType = RejectionType.IN_THE_PAST;
+      }
+    }
+    msg.message_type = MessageType.RESPONSE;
+    client.sendToClient(msg);
+  }
+
+  private void handleReportMessage(ReportMessage msg, ConnectionToClient client)
+      throws IOException {
+
+    // we ALWAYS want to return a list, even if it's empty
+    msg.reports = new ArrayList<DailyReport>();
+
+    CriteriaBuilder cb = session.getCriteriaBuilder();
+    CriteriaQuery<Appointment> cr = cb.createQuery(Appointment.class);
+    Root<Appointment> root = cr.from(Appointment.class);
+
+    if (msg.report_type == ReportType.MISSED_APPOINTMENTS) {
       cr.select(root)
           .where(
-              cb.equal(root.get("staff_member"), msg.staff_member),
-              cb.between(root.get("appt_date"), msg.start_datetime, end_datetime));
+              cb.between(root.get("appt_date"), msg.start_date, msg.end_date),
+              cb.isTrue(root.get("taken")),
+              root.get("clinic").in(msg.clinics),
+              cb.isNull(root.get("called_time")));
+    } else {
+      cr.select(root)
+          .where(
+              cb.between(root.get("appt_date"), msg.start_date, msg.end_date),
+              cb.isTrue(root.get("taken")),
+              root.get("clinic").in(msg.clinics),
+              cb.isNotNull(root.get("called_time")));
+    }
 
-      // if this staff member already has appointments at these times, reject
-      if (session.createQuery(cr).getResultList().size() > 0) {
-        msg.type = AdminAppointmentMessageType.REJECT;
+    List<Appointment> relevant_appointments = session.createQuery(cr).getResultList();
 
-      } else {
-        var current_datetime = LocalDateTime.from(msg.start_datetime);
-        // TODO: validate by clinic hours as well
-        while (current_datetime.isBefore(end_datetime)) {
-          var appt =
-              new Appointment(
-                  null,
-                  msg.appt_type,
-                  specialist_role,
-                  msg.staff_member,
-                  msg.clinic,
-                  current_datetime,
-                  null);
-          session.save(appt);
-          session.flush();
+    HashMap<LocalDate, HashMap<Clinic, DailyReport>> daily_reports_map =
+        new HashMap<LocalDate, HashMap<Clinic, DailyReport>>();
 
-          current_datetime = current_datetime.plusMinutes(len);
+    HashMap<LocalDate, HashMap<Clinic, HashMap<User, Integer>>> total_appointments =
+        new HashMap<LocalDate, HashMap<Clinic, HashMap<User, Integer>>>();
+
+    for (Appointment appt : relevant_appointments) {
+      LocalDate appt_date = appt.getDate().toLocalDate();
+      AppointmentType appt_type = appt.getType();
+      Clinic appt_clinic = appt.getClinic();
+      User appt_staff_member = appt.getStaff_member();
+
+      if (!daily_reports_map.containsKey(appt_date)) {
+        HashMap<Clinic, DailyReport> clinic_reports = new HashMap<Clinic, DailyReport>();
+        daily_reports_map.put(appt_date, clinic_reports);
+        if (msg.report_type == ReportType.AVERAGE_WAIT_TIMES) {
+          HashMap<Clinic, HashMap<User, Integer>> clinic_total_appointments =
+              new HashMap<Clinic, HashMap<User, Integer>>();
+          total_appointments.put(appt_date, clinic_total_appointments);
+        }
+      }
+
+      HashMap<Clinic, DailyReport> daily_clinics_reports = daily_reports_map.get(appt_date);
+
+      if (!daily_clinics_reports.containsKey(appt_clinic)) {
+        if (msg.report_type == ReportType.AVERAGE_WAIT_TIMES) {
+          daily_clinics_reports.put(
+              appt_clinic, new DailyAverageWaitTimeReport(appt_date.atStartOfDay(), appt_clinic));
+          total_appointments.get(appt_date).put(appt_clinic, new HashMap<User, Integer>());
+        } else {
+          daily_clinics_reports.put(
+              appt_clinic, new DailyAppointmentTypesReport(appt_date.atStartOfDay(), appt_clinic));
+        }
+      }
+
+      if (msg.report_type == ReportType.AVERAGE_WAIT_TIMES) {
+        int wait_time = (int) Duration.between(appt.getDate(), appt.getCalled_time()).toSeconds();
+        DailyAverageWaitTimeReport report =
+            (DailyAverageWaitTimeReport) daily_clinics_reports.get(appt_clinic);
+        if (!report.report_data.containsKey(appt_staff_member)) {
+          report.report_data.put(appt_staff_member, 0);
+          total_appointments.get(appt_date).get(appt_clinic).put(appt_staff_member, 0);
         }
 
-        msg.type = AdminAppointmentMessageType.ACCEPT;
+        report.report_data.put(
+            appt_staff_member, report.report_data.get(appt_staff_member) + wait_time);
+
+        total_appointments
+            .get(appt_date)
+            .get(appt_clinic)
+            .put(
+                appt_staff_member,
+                total_appointments.get(appt_date).get(appt_clinic).get(appt_staff_member) + 1);
+
+      } else {
+        DailyAppointmentTypesReport report =
+            (DailyAppointmentTypesReport) daily_clinics_reports.get(appt_clinic);
+        if (!report.report_data.containsKey(appt_type)) {
+          report.report_data.put(appt_type, 0);
+        }
+        report.report_data.put(appt_type, report.report_data.get(appt_type) + 1);
       }
     }
 
+    if (msg.report_type == ReportType.AVERAGE_WAIT_TIMES) {
+      for (LocalDate date : daily_reports_map.keySet()) {
+        for (Clinic clinic : daily_reports_map.get(date).keySet()) {
+          DailyAverageWaitTimeReport dailies =
+              (DailyAverageWaitTimeReport) daily_reports_map.get(date).get(clinic);
+          for (User staff_member : dailies.report_data.keySet()) {
+            int total_appt = total_appointments.get(date).get(clinic).get(staff_member);
+            int total_wait_time = dailies.report_data.get(staff_member);
+            dailies.report_data.put(staff_member, total_wait_time / total_appt);
+          }
+        }
+      }
+    }
+    for (LocalDate date : daily_reports_map.keySet()) {
+      msg.reports.addAll(daily_reports_map.get(date).values());
+    }
+
+    msg.message_type = MessageType.RESPONSE;
+    client.sendToClient(msg);
+  }
+
+  private boolean takeAppointment(Appointment appt, Patient patient) {
+    // Reserve was requested after lock time has already expired
+    if (appt.getPatient().getId() != patient.getId()) {
+      return false;
+    }
+    appt.setTaken(true);
+    appt.setLock_time(null);
+    session.update(appt);
+    return true;
+  }
+
+  private boolean lockAppointment(Appointment appt, Patient patient) {
+    LocalDateTime lock_time = appt.getLock_time();
+
+    // is it possible to lock this appointment? if not return false
+    if (appt.isTaken()
+        || (lock_time != null
+            && LocalDateTime.now().isBefore(lock_time)
+            && appt.getPatient().getId() != patient.getId())) {
+      return false;
+    }
+
+    // get from db all patients locked appointments
+    CriteriaBuilder cb = session.getCriteriaBuilder();
+    CriteriaQuery<Appointment> cr = cb.createQuery(Appointment.class);
+    Root<Appointment> root = cr.from(Appointment.class);
+    cr.select(root)
+        .where(
+            cb.between(
+                root.get("lock_time"), LocalDateTime.now(), LocalDateTime.now().plusMinutes(5)),
+            cb.equal(root.get("patient"), patient));
+    List<Appointment> users_locked_appointments = session.createQuery(cr).getResultList();
+
+    // lock the relevant appointment
+    appt.setLock_time(LocalDateTime.now().plusSeconds(330));
+    appt.setPatient(patient);
+    session.update(appt);
+
+    // release the other appointments by the patient
+    for (Appointment user_appt : users_locked_appointments) {
+      releaseAppointment(user_appt);
+    }
+    return true;
+  }
+
+  private void releaseAppointment(Appointment appt) {
+    appt.setLock_time(null);
+    appt.setTaken(false);
+    appt.setPatient(null);
+    session.update(appt);
+  }
+
+  private void handleSetAppointmentMessage(SetAppointmentMessage msg, ConnectionToClient client)
+      throws IOException {
+    // before changing the state of the appointment, get the updated version of it
+    session.flush();
+    session.refresh(msg.appointment);
+
+    if (msg.action == Action.TAKE) {
+      msg.success = takeAppointment(msg.appointment, msg.patient);
+    } else if (msg.action == Action.LOCK) {
+      msg.success = lockAppointment(msg.appointment, msg.patient);
+    } else if (msg.action == Action.RELEASE) {
+      releaseAppointment(msg.appointment);
+      msg.success = true;
+    }
+    session.flush();
     msg.message_type = MessageType.RESPONSE;
     client.sendToClient(msg);
   }
@@ -371,8 +580,11 @@ public class HMOServer extends AbstractServer {
         handleStaffAssignmentMessage((StaffAssignmentMessage) msg, client);
       } else if (msg_class == AdminAppointmentMessage.class) {
         handleAdminAppointmentMessage((AdminAppointmentMessage) msg, client);
+      } else if (msg_class == ReportMessage.class) {
+        handleReportMessage((ReportMessage) msg, client);
+      } else if (msg_class == SetAppointmentMessage.class) {
+        handleSetAppointmentMessage((SetAppointmentMessage) msg, client);
       }
-
       session.close();
     } catch (Exception exception) {
       exception.printStackTrace();

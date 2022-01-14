@@ -3,7 +3,7 @@ package il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.AdminAppointmentListEvent;
 import il.cshaifa.hmo_system.client.events.AssignStaffEvent;
-import il.cshaifa.hmo_system.client.events.AssignStaffEvent.Phase;
+import il.cshaifa.hmo_system.client.events.AssignStaffEvent.Action;
 import il.cshaifa.hmo_system.entities.User;
 import java.util.ArrayList;
 import java.util.Map;
@@ -52,28 +52,25 @@ public class ClinicStaffListViewController extends ViewController {
 
   @FXML
   void assignSelectedStaffMembers(ActionEvent event) {
-    assignOrUnassignSelectedStaffMembers(Phase.ASSIGN);
+    assignOrUnassignSelectedStaffMembers(Action.ASSIGN);
   }
 
   @FXML
   void unassignSelectedStaffMembers(ActionEvent event) {
-    assignOrUnassignSelectedStaffMembers(Phase.UNASSIGN);
+    assignOrUnassignSelectedStaffMembers(Action.UNASSIGN);
   }
 
-  void assignOrUnassignSelectedStaffMembers(Phase phase) {
+  void assignOrUnassignSelectedStaffMembers(Action status) {
     var users = new ArrayList<AssignedUser>(staff_table.getSelectionModel().getSelectedItems());
 
-    EventBus.getDefault().post(new AssignStaffEvent(users, phase));
+    EventBus.getDefault().post(new AssignStaffEvent(users, this, status));
   }
 
   @FXML
   void showAppointmentListView() {
     User selected_staff_member = staff_table.getSelectionModel().getSelectedItem();
 
-    EventBus.getDefault()
-        .post(
-            new AdminAppointmentListEvent(
-                selected_staff_member, null, AdminAppointmentListEvent.Phase.OPEN_WINDOW));
+    EventBus.getDefault().post(new AdminAppointmentListEvent(selected_staff_member, null, this));
   }
 
   void setCellValueFactory() {

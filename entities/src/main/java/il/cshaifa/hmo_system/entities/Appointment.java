@@ -41,7 +41,9 @@ public class Appointment implements Serializable {
       User staff_member_id,
       Clinic clinic_id,
       LocalDateTime appt_date,
-      LocalDateTime called_time) {
+      LocalDateTime called_time,
+      LocalDateTime lock_time,
+      boolean taken) {
     this.patient = patient_id;
     this.type = type_id;
     this.specialist_role = specialist_role_id;
@@ -49,7 +51,8 @@ public class Appointment implements Serializable {
     this.clinic = clinic_id;
     this.appt_date = appt_date;
     this.called_time = called_time;
-    this.taken = false;
+    this.lock_time = lock_time;
+    this.taken = taken;
     this.comments = null;
     this.lock_time = null;
   }

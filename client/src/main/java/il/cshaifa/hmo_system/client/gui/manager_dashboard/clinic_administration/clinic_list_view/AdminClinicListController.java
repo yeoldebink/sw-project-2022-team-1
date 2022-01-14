@@ -1,46 +1,43 @@
 package il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_list_view;
 
 import il.cshaifa.hmo_system.client.HMOClient;
-import il.cshaifa.hmo_system.client.Utils;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.ClinicEvent;
-import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
 import il.cshaifa.hmo_system.client.gui.ResourcePath;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_view.AdminClinicController;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_view.AdminClinicViewController;
-import java.io.IOException;
+import il.cshaifa.hmo_system.client.utils.Utils;
+import il.cshaifa.hmo_system.entities.Clinic;
+import java.util.ArrayList;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 public class AdminClinicListController extends Controller {
 
   public AdminClinicListController(ViewController view_controller) {
     super(view_controller, null);
-    EventBus.getDefault().register(this);
-    try {
-      HMOClient.getClient().getClinics();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
   }
 
+  /**
+   * Event to handle the user request to open the Edit clinic window
+   *
+   * @param event Holds GUI data on the relevant clinic to edit
+   */
   @Subscribe
-  @Override
-  public void onWindowCloseEvent(CloseWindowEvent event) {
-    if (!event.getViewControllerInstance().equals(view_controller)) return;
-    EventBus.getDefault().unregister(this);
-  }
-
-  @Subscribe
-  public void editClinicRequestReceived(ClinicEvent event) {
-    if (event.phase != ClinicEvent.Phase.EDIT) return;
+  public void onShowEditClinicDialog(ClinicEvent event) {
+    if (!event.getSender().equals(this.view_controller)) return;
 
     // Navigate to AdminClinicView
     FXMLLoader loader =
         new FXMLLoader(
             getClass().getResource(ResourcePath.get_fxml(AdminClinicViewController.class)));
+
+    // this is for the HMO manager
+    if (event.clinic == null) {
+      event.clinic = HMOClient.getClient().getConnected_employee_clinics().get(0);
+    }
 
     loader.setControllerFactory(
         c -> {
@@ -55,10 +52,13 @@ public class AdminClinicListController extends Controller {
     }
   }
 
-  @Subscribe
-  public void clinicsReceived(ClinicEvent event) {
-    if (event.phase != ClinicEvent.Phase.LIST) return;
-    ((AdminClinicListViewController) this.view_controller)
-        .populateClinicTable(event.receivedClinics);
+  /**
+   * Update the view with the updated clinic list
+   *
+   * @param clinics list of updated clinics
+   */
+  public void updateClinics(ArrayList<Clinic> clinics) {
+    Platform.runLater(
+        () -> ((AdminClinicListViewController) this.view_controller).populateClinicTable(clinics));
   }
 }

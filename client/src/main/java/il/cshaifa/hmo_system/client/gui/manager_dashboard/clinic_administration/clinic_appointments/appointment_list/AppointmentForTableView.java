@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 public class AppointmentForTableView {
 
+  Integer id;
   String type_name;
   LocalDateTime appt_date;
   LocalDateTime called_time;
@@ -14,12 +15,14 @@ public class AppointmentForTableView {
   String patient_name;
 
   public AppointmentForTableView(
+      Integer id,
       AppointmentType type,
       LocalDateTime appt_date,
       LocalDateTime called_time,
       String comments,
       Boolean taken,
       Patient patient) {
+    this.id = id;
     this.type_name = type.getName();
     this.appt_date = appt_date;
     this.called_time = called_time;
@@ -30,6 +33,10 @@ public class AppointmentForTableView {
     } else {
       this.patient_name = "";
     }
+  }
+
+  public Integer getId() {
+    return id;
   }
 
   public LocalDateTime getAppt_date() {

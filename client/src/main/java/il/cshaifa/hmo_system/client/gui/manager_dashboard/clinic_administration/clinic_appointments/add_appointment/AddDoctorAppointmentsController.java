@@ -4,27 +4,29 @@ import il.cshaifa.hmo_system.client.HMOClient;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.AddAppointmentEvent;
-import il.cshaifa.hmo_system.client.events.AddAppointmentEvent.Phase;
-import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
 import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.AdminAppointmentMessage.AdminAppointmentMessageType;
+import il.cshaifa.hmo_system.messages.AdminAppointmentMessage.RejectionType;
 import java.io.IOException;
 import javafx.application.Platform;
 import javafx.stage.Stage;
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 public class AddDoctorAppointmentsController extends Controller {
 
   public AddDoctorAppointmentsController(ViewController view_controller, Stage stage) {
     super(view_controller, stage);
-    EventBus.getDefault().register(this);
   }
 
+  /**
+   * Event that is called when manager level user request to add appointments to a staff member
+   *
+   * @param event holding the params that are set in the GUI
+   */
   @Subscribe
   public void addAppointments(AddAppointmentEvent event) {
-    if (event.phase != Phase.SEND) return;
+    if (!event.getSender().equals(this.view_controller)) return;
 
     AppointmentType appt_type;
     if (event.staff_member.getRole().isSpecialist()) appt_type = new AppointmentType("Specialist");
@@ -38,17 +40,31 @@ public class AddDoctorAppointmentsController extends Controller {
     }
   }
 
+  /**
+   * Event that handle the response from the client about the status of events that were created
+   * Show info when there is a rejection with info why the creation was rejected
+   *
+   * @param event Holds all the params of the respond from the client
+   */
   @Subscribe
   public void onAppointmentCreationResponse(AddAppointmentEvent event) {
-    if (event.phase != Phase.RECEIVE) return;
+    if (!event.getSender().equals(HMOClient.getClient())) return;
     else if (event.response_type == AdminAppointmentMessageType.REJECT) {
-      // TODO: DO SOMETHING
+      String rejectionMessage = "";
+      if (event.rejectionType == RejectionType.OVERLAPPING) {
+        rejectionMessage = "Staff member is busy at this time";
+      } else if (event.rejectionType == RejectionType.IN_THE_PAST) {
+        rejectionMessage = "Cannot open appointments in the past";
+      }
+
+      String finalRejectionMessage =
+          rejectionMessage; // Java requested this... didn't like that I changed the value...
+      Platform.runLater(
+          () ->
+              ((AddDoctorAppointmentsViewController) this.view_controller)
+                  .setErrorMessage(finalRejectionMessage));
     } else {
-      // TODO: DO SOMETHING ELSE
       Platform.runLater(() -> stage.close());
     }
   }
-
-  @Override
-  public void onWindowCloseEvent(CloseWindowEvent event) {}
 }

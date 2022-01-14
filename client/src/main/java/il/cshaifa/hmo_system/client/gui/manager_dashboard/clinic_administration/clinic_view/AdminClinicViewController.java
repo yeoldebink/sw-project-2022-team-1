@@ -35,7 +35,7 @@ public class AdminClinicViewController extends RoleDefinedViewController {
     name.setText(clinic.getName());
     address.setText(clinic.getAddress());
     manager.setText(
-        clinic.getManager_user().getFirstName() + clinic.getManager_user().getLastName());
+        clinic.getManager_user().getFirstName() + " " + clinic.getManager_user().getLastName());
     sunHoursTextField.setText(clinic.getSun_hours());
     monHoursTextField.setText(clinic.getMon_hours());
     tueHoursTextField.setText(clinic.getTue_hours());
@@ -71,8 +71,10 @@ public class AdminClinicViewController extends RoleDefinedViewController {
     clinic.setThu_hours(thuHoursTextField.getText());
     clinic.setFri_hours(friHoursTextField.getText());
     clinic.setSat_hours(satHoursTextField.getText());
+    clinic.setName(name.getText());
+    clinic.setAddress(address.getText());
 
-    EventBus.getDefault().post(new ClinicEvent(this.clinic, ClinicEvent.Phase.REQUEST));
+    EventBus.getDefault().post(new ClinicEvent(this.clinic, this));
 
     closeWindow(actionEvent);
   }
