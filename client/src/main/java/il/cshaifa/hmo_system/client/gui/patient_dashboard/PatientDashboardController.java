@@ -6,8 +6,8 @@ import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
 import il.cshaifa.hmo_system.client.events.SetAppointmentEvent;
 import il.cshaifa.hmo_system.client.gui.ResourcePath;
-import il.cshaifa.hmo_system.client.gui.patient_dashboard.appointments.ChooseAppointmentTypeController;
-import il.cshaifa.hmo_system.client.gui.patient_dashboard.appointments.ChooseAppointmentTypeViewController;
+import il.cshaifa.hmo_system.client.gui.patient_dashboard.appointments.SetAppointmentController;
+import il.cshaifa.hmo_system.client.gui.patient_dashboard.appointments.SetAppointmentViewController;
 import il.cshaifa.hmo_system.client.utils.Utils;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
@@ -28,25 +28,13 @@ public class PatientDashboardController extends Controller {
   }
 
   @Subscribe
-  public void onSetAppointmentEvent(SetAppointmentEvent event) throws Exception {
+  public void onSetAppointmentEvent(SetAppointmentEvent event) {
     if (event.getSender() == this.view_controller) { // open the set appointments window
-      var loader =
-          new FXMLLoader(
-              getClass()
-                  .getResource(ResourcePath.get_fxml(ChooseAppointmentTypeViewController.class)));
-
-      loader.setControllerFactory(
-          c ->
-              new ChooseAppointmentTypeViewController(
-                  HMOClient.getClient().getConnected_patient()));
-
-      Utils.openNewWindow(
-          ChooseAppointmentTypeViewController.class,
-          ChooseAppointmentTypeController.class,
-          loader,
-          false);
-    } else {
-
+      Utils.openNewSingletonWindow(
+          SetAppointmentViewController.class,
+          SetAppointmentController.class,
+          false,
+          c -> new SetAppointmentViewController(HMOClient.getClient().getConnected_patient()));
     }
   }
 }

@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import org.greenrobot.eventbus.EventBus;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 public class PatientDashboardViewController extends ViewController {
 
