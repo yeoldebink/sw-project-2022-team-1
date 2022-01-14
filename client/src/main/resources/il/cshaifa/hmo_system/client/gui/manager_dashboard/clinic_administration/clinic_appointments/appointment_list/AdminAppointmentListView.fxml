@@ -20,7 +20,7 @@
                 <Font name="DejaVu Sans Bold" size="22.0"/>
             </font>
         </Label>
-        <Label fx:id="staff_member_name" text="">
+        <Label fx:id="staff_member_name">
             <font>
                 <Font name="DejaVu Sans Bold" size="16.0"/>
             </font>
