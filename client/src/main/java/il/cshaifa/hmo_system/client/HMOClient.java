@@ -17,6 +17,7 @@ import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.ClinicStaff;
 import il.cshaifa.hmo_system.entities.Patient;
+import il.cshaifa.hmo_system.entities.Role;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.entities.Warning;
 import il.cshaifa.hmo_system.messages.AdminAppointmentMessage;
@@ -266,6 +267,10 @@ public class HMOClient extends AbstractClient {
     client.sendToServer(
         new AppointmentMessage(staff_member, AppointmentRequestType.STAFF_FUTURE_APPOINTMENTS));
   }
+
+  public void getSpecialistRoles() {}
+
+  public void getSpecialistAppointments(Role role) {}
 
   /**
    * Sends to server a request to get report
