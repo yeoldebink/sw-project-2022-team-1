@@ -478,65 +478,70 @@ public class HMOServer extends AbstractServer {
     client.sendToClient(msg);
   }
 
-
-  private boolean takeAppointment(Appointment appt, Patient patient){
+  private boolean takeAppointment(Appointment appt, Patient patient) {
     // Reserve was requested after lock time has already expired
-    if (appt.getPatient() == patient) {
+    if (appt.getPatient() != patient) {
       return false;
-    } else {
-      appt.setTaken(true);
-      appt.setLock_time(null);
-      session.update(appt);
-      return true;
     }
+    appt.setTaken(true);
+    appt.setLock_time(null);
+    session.update(appt);
+    return true;
   }
 
   private boolean lockAppointment(Appointment appt, Patient patient) {
     LocalDateTime lock_time = appt.getLock_time();
 
-    // release all appointments User has previously locked
+    // is it possible to lock this appointment? if not return false
+    if (appt.isTaken()
+        || (LocalDateTime.now().isBefore(lock_time) && appt.getPatient() != patient)) {
+      return false;
+    }
+
+    // get from db all patients locked appointments
     CriteriaBuilder cb = session.getCriteriaBuilder();
     CriteriaQuery<Appointment> cr = cb.createQuery(Appointment.class);
     Root<Appointment> root = cr.from(Appointment.class);
-    cr.select(root)
-        .where(
+    cr.select(root).where(
             cb.between(
-                root.get("lock_time"), LocalDateTime.now(), LocalDateTime.now().plusSeconds(330)),
+                root.get("lock_time"), LocalDateTime.now(), LocalDateTime.now().plusMinutes(5)),
             cb.equal(root.get("patient"), patient));
-
     List<Appointment> users_locked_appointments = session.createQuery(cr).getResultList();
+
+    // lock the relevant appointment
+    appt.setLock_time(LocalDateTime.now().plusSeconds(330));
+    appt.setPatient(patient);
+    session.update(appt);
+
+    // release the other appointments by the patient
     for (Appointment user_appt : users_locked_appointments) {
       releaseAppointment(user_appt);
     }
     session.flush();
 
-    // check if appointment was not taken already
-    if (!appt.isTaken() && (lock_time == null || LocalDateTime.now().isAfter(lock_time))) {
-      appt.setLock_time(LocalDateTime.now().plusMinutes(5));
-      appt.setPatient(patient);
-      session.update(appt);
-      return true;
-    } else {
-      return false;
-    }
+    return true;
   }
 
-  private boolean releaseAppointment(Appointment appt){
+  private void releaseAppointment(Appointment appt) {
     appt.setLock_time(null);
     appt.setTaken(false);
     appt.setPatient(null);
     session.update(appt);
-    return true;
   }
 
   private void handleSetAppointmentMessage(SetAppointmentMessage msg, ConnectionToClient client)
       throws IOException {
+    // before changing the state of the appointment, get the updated version of it
+    session.flush();
+    session.refresh(msg.appointment);
+
     if (msg.action == Action.TAKE) {
       msg.success = takeAppointment(msg.appointment, msg.patient);
     } else if (msg.action == Action.LOCK) {
       msg.success = lockAppointment(msg.appointment, msg.patient);
     } else if (msg.action == Action.RELEASE) {
-      msg.success = releaseAppointment(msg.appointment);
+      releaseAppointment(msg.appointment);
+      msg.success = true;
     }
     msg.message_type = MessageType.RESPONSE;
     client.sendToClient(msg);
