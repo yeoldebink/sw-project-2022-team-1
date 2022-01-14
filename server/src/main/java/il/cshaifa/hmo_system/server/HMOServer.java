@@ -47,6 +47,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.query.Query;
 import org.hibernate.service.ServiceRegistry;
 
@@ -120,7 +122,7 @@ public class HMOServer extends AbstractServer {
    */
   private void handleAppointmentMessage(AppointmentMessage message, ConnectionToClient client)
       throws IOException {
-    var cb = session.getCriteriaBuilder();
+    CriteriaBuilder cb = session.getCriteriaBuilder();
     CriteriaQuery<Appointment> cr = cb.createQuery(Appointment.class);
     Root<Appointment> root = cr.from(Appointment.class);
     LocalDateTime start, end;
@@ -134,7 +136,7 @@ public class HMOServer extends AbstractServer {
               cb.equal(root.get("clinic"), message.clinic),
               cb.between(root.get("appt_date"), start, end),
               cb.equal(root.get("taken"), false),
-              cb.greaterThanOrEqualTo(root.get("lock_time"), start.plusMinutes(5)));
+              cb.or(cb.isNull(root.get("lock_time")), cb.lessThan(root.get("lock_time"), start)));
 
     } else if (message.requestType == AppointmentRequestType.STAFF_MEMBER_DAILY_APPOINTMENTS) {
       start = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
@@ -480,7 +482,7 @@ public class HMOServer extends AbstractServer {
 
   private boolean takeAppointment(Appointment appt, Patient patient) {
     // Reserve was requested after lock time has already expired
-    if (appt.getPatient() != patient) {
+    if (appt.getPatient().getId() != patient.getId()) {
       return false;
     }
     appt.setTaken(true);
@@ -494,7 +496,7 @@ public class HMOServer extends AbstractServer {
 
     // is it possible to lock this appointment? if not return false
     if (appt.isTaken()
-        || (LocalDateTime.now().isBefore(lock_time) && appt.getPatient() != patient)) {
+        || (lock_time != null && LocalDateTime.now().isBefore(lock_time) && appt.getPatient().getId() != patient.getId())) {
       return false;
     }
 
@@ -517,8 +519,6 @@ public class HMOServer extends AbstractServer {
     for (Appointment user_appt : users_locked_appointments) {
       releaseAppointment(user_appt);
     }
-    session.flush();
-
     return true;
   }
 
@@ -543,6 +543,7 @@ public class HMOServer extends AbstractServer {
       releaseAppointment(msg.appointment);
       msg.success = true;
     }
+    session.flush();
     msg.message_type = MessageType.RESPONSE;
     client.sendToClient(msg);
   }

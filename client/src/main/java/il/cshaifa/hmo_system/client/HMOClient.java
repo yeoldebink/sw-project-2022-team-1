@@ -141,7 +141,8 @@ public class HMOClient extends AbstractClient {
       event =
           new AdminAppointmentListEvent(
               message.user, (ArrayList<Appointment>) message.appointments, this);
-    } else if (message.requestType == AppointmentRequestType.PATIENT_HISTORY) {
+    } else if (message.requestType == AppointmentRequestType.PATIENT_HISTORY ||
+        message.requestType == AppointmentRequestType.CLINIC_APPOINTMENTS) {
       event = new AppointmentListEvent((ArrayList<Appointment>) message.appointments, this);
     }
 

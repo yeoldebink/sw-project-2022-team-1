@@ -238,6 +238,13 @@ public class Main {
       Map<String, User> users, Map<String, Clinic> clinics) {
     var patients = new HashMap<String, Patient>();
     patients.put(
+        "Avi Ron",
+        new Patient(
+            users.get("Avi Ron"),
+            clinics.get("Carmel Center"),
+            LocalDateTime.of(1991, 1, 6, 14, 7)));
+
+    patients.put(
         "Tyler Durden",
         new Patient(
             users.get("Tyler Durden"),
