@@ -60,12 +60,17 @@
         </panes>
       </Accordion>
 
+      <AnchorPane fx:id="chooseApptDatePane">
+        <DatePicker fx:id="apptDatePicker" />
+      </AnchorPane>
+
       <AnchorPane fx:id="appointmentsTablePane">
         <VBox spacing="10" AnchorPane.rightAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.bottomAnchor="10" AnchorPane.topAnchor="10">
           <TableView fx:id="appointmentsTable" VBox.vgrow="ALWAYS">
             <columns>
               <TableColumn fx:id="clinicNameColumn" text="Clinic" />
               <TableColumn fx:id="clinicAddressColumn" text="Address" />
+              <TableColumn fx:id="apptDoctorColumn" text="Doctor" />
               <TableColumn fx:id="apptDateColumn" text="Date + Time" />
             </columns>
             <columnResizePolicy>

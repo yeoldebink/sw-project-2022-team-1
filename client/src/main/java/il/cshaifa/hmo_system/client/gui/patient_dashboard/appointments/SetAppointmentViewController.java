@@ -2,16 +2,23 @@ package il.cshaifa.hmo_system.client.gui.patient_dashboard.appointments;
 
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.SetAppointmentEvent;
+import il.cshaifa.hmo_system.client.utils.Utils;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.entities.Role;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Accordion;
+import javafx.scene.control.DateCell;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -22,6 +29,7 @@ import org.greenrobot.eventbus.EventBus;
 
 public class SetAppointmentViewController extends ViewController {
   private final Patient patient;
+  private HashMap<LocalDate, ArrayList<Appointment>> appointmentsByDate;
 
   @FXML private Label clinicNameLabel;
 
@@ -29,10 +37,14 @@ public class SetAppointmentViewController extends ViewController {
 
   @FXML private Accordion chooseApptTypeAccordion;
 
+  @FXML private AnchorPane chooseApptDatePane;
+  @FXML private DatePicker apptDatePicker;
+
   @FXML private AnchorPane appointmentsTablePane;
   @FXML private TableView<AppointmentRow> appointmentsTable;
   @FXML private TableColumn<AppointmentRow, String> clinicNameColumn;
   @FXML private TableColumn<AppointmentRow, String> clinicAddressColumn;
+  @FXML private TableColumn<AppointmentRow, String> apptDoctorColumn;
   @FXML private TableColumn<AppointmentRow, String> apptDateColumn;
 
   public SetAppointmentViewController(Patient patient) {
@@ -50,12 +62,40 @@ public class SetAppointmentViewController extends ViewController {
     // set cell value factories
     clinicNameColumn.setCellValueFactory(new PropertyValueFactory<>("ClinicName"));
     clinicAddressColumn.setCellValueFactory(new PropertyValueFactory<>("ClinicAddress"));
+    apptDoctorColumn.setCellValueFactory(new PropertyValueFactory<>("AppointmentDoctor"));
     apptDateColumn.setCellValueFactory(new PropertyValueFactory<>("AppointmentDateTime"));
+
+    apptDatePicker.valueProperty().addListener((ov, oldValue, newValue) -> {
+      populateAppointmentsTable();
+    });
   }
 
-  public void populateAppointmentsTable(List<Appointment> appointments) {
+  public void populateAppointmentDates(List<Appointment> appointments) {
+    appointmentsByDate = new HashMap<>();
+
+    for (var appt : appointments) {
+      var date = appt.getDate().toLocalDate();
+      appointmentsByDate.putIfAbsent(date, new ArrayList<>());
+      appointmentsByDate.get(date).add(appt);
+    }
+
+    apptDatePicker.setDayCellFactory(datePicker -> new DateCell() {
+      public void updateItem(LocalDate date, boolean empty) {
+        super.updateItem(date, empty);
+        setDisable(!appointmentsByDate.containsKey(date));
+      }
+    });
+
+    switchToPane(chooseApptDatePane);
+  }
+
+  private void populateAppointmentsTable() {
     appointmentsTable.getItems().clear();
-    for (var appt : appointments) appointmentsTable.getItems().add(new AppointmentRow(appt));
+    for (var appt : appointmentsByDate.get(apptDatePicker.getValue())) {
+      appointmentsTable.getItems().add(new AppointmentRow(appt));
+    }
+
+    switchToPane(appointmentsTablePane);
   }
 
   public void switchToPane(Object pane) {
@@ -66,7 +106,6 @@ public class SetAppointmentViewController extends ViewController {
 
   @FXML
   public void setAppointmentWithGP(ActionEvent event) {
-    switchToPane(appointmentsTablePane);
     SetAppointmentEvent apptEvent = new SetAppointmentEvent(this, null, null, null);
     apptEvent.appointmentType = new AppointmentType("Family Doctor");
     EventBus.getDefault().post(apptEvent);
@@ -77,12 +116,14 @@ public class SetAppointmentViewController extends ViewController {
     switchToPane(chooseApptTypeAccordion);
   }
 
-  static class AppointmentRow {
+  public static class AppointmentRow {
     private final Appointment appointment;
 
     public AppointmentRow(Appointment appointment) {
       this.appointment = appointment;
     }
+
+    public Appointment getAppointment() {return appointment;}
 
     public String getClinicName() {
       return appointment.getClinic().getName();
@@ -92,16 +133,12 @@ public class SetAppointmentViewController extends ViewController {
       return appointment.getClinic().getAddress();
     }
 
-    public String getAppointmentDateTime() {
-      var date = appointment.getDate();
+    public String getAppointmentDoctor() {
+      return "Dr. " + appointment.getStaff_member().getFirstName() + " " + appointment.getStaff_member().getLastName();
+    }
 
-      return String.format("%s, %s %s %s:%s",
-          // day of week in 3-letter format
-          date.getDayOfWeek().toString().substring(0, 2),
-          date.getMonth(),
-          date.getDayOfMonth(),
-          date.getHour(),
-          date.getMinute());
+    public String getAppointmentDateTime() {
+      return Utils.prettifyDateTime(appointment.getDate());
     }
   }
 }

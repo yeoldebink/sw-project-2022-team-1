@@ -27,7 +27,7 @@ public class SetAppointmentController extends Controller {
   }
 
   public static void create(ViewController view_controller, Stage stage) {
-    if (instance != null) return;
+    if (instance != null && instance.view_controller != null) return;
     instance = new SetAppointmentController(view_controller, stage);
   }
 
@@ -50,7 +50,7 @@ public class SetAppointmentController extends Controller {
   @Subscribe
   public void onAppointmentListEvent(AppointmentListEvent event) {
     Platform.runLater(
-        () -> ((SetAppointmentViewController) view_controller).populateAppointmentsTable(event.appointments)
+        () -> ((SetAppointmentViewController) view_controller).populateAppointmentDates(event.appointments)
     );
   }
 }

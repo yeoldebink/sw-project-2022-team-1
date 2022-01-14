@@ -5,6 +5,8 @@ import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.gui.ResourcePath;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.time.LocalDateTime;
+import java.util.function.Function;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -59,11 +61,12 @@ public class Utils<C> {
             Stage stage = new Stage();
             stage.setResizable(resizeable);
 
+            var scene = new Scene(loader.load());
+
             // create instance
             var create = controller.getMethod("create", ViewController.class, Stage.class);
             create.invoke(null, loader.getController(), stage);
 
-            var scene = new Scene(loader.load());
             stage.setScene(scene);
             stage.show();
 
@@ -90,5 +93,18 @@ public class Utils<C> {
 
   public static LoadedPane loadFXML(Class<?> requestor, Class<?> target) throws IOException {
     return loadFXML(requestor, target, null);
+  }
+
+  public static String prettifyDateTime(LocalDateTime date) {
+    Function<Integer, String> prettyInt = i -> i < 10 ? "0" + i.toString() : i.toString();
+
+    return String.format("%s, %02d %s %s %02d:%02d",
+        // day of week and month in 3-letter format
+        date.getDayOfWeek().toString().substring(0, 3),
+        date.getDayOfMonth(),
+        date.getMonth().toString().substring(0, 3),
+        date.getYear(),
+        date.getHour(),
+        date.getMinute());
   }
 }
