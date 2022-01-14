@@ -25,6 +25,7 @@ public class LoginController extends Controller {
 
   /**
    * Event to handle the user request to login to the system
+   *
    * @param event Holds the user input to the login screen
    */
   @Subscribe
@@ -41,6 +42,7 @@ public class LoginController extends Controller {
 
   /**
    * Event to handle the response from the client about hte login request.
+   *
    * @param event Hold the server response for the login
    * @throws Exception Thrown when there is an error opening the main window for the user
    */
@@ -56,9 +58,7 @@ public class LoginController extends Controller {
     }
   }
 
-  /**
-   * Show an error message to the user when an incorrect info is entered
-   */
+  /** Show an error message to the user when an incorrect info is entered */
   private void incorrectUser() {
     // Letting the controller to call this function on the UI thread, and apply the changes
     Platform.runLater(() -> ((LoginViewController) view_controller).setFailedText());
@@ -66,6 +66,7 @@ public class LoginController extends Controller {
 
   /**
    * Handle which main screen we want to show by user role
+   *
    * @param user The user that logged in to the system
    * @throws Exception Thrown when opening the screen failed
    */

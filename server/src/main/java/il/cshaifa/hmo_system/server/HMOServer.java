@@ -47,8 +47,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.criterion.Disjunction;
-import org.hibernate.criterion.Restrictions;
 import org.hibernate.query.Query;
 import org.hibernate.service.ServiceRegistry;
 
@@ -502,7 +500,9 @@ public class HMOServer extends AbstractServer {
 
     // is it possible to lock this appointment? if not return false
     if (appt.isTaken()
-        || (lock_time != null && LocalDateTime.now().isBefore(lock_time) && appt.getPatient().getId() != patient.getId())) {
+        || (lock_time != null
+            && LocalDateTime.now().isBefore(lock_time)
+            && appt.getPatient().getId() != patient.getId())) {
       return false;
     }
 
@@ -510,7 +510,8 @@ public class HMOServer extends AbstractServer {
     CriteriaBuilder cb = session.getCriteriaBuilder();
     CriteriaQuery<Appointment> cr = cb.createQuery(Appointment.class);
     Root<Appointment> root = cr.from(Appointment.class);
-    cr.select(root).where(
+    cr.select(root)
+        .where(
             cb.between(
                 root.get("lock_time"), LocalDateTime.now(), LocalDateTime.now().plusMinutes(5)),
             cb.equal(root.get("patient"), patient));

@@ -21,6 +21,7 @@ public class AddDoctorAppointmentsController extends Controller {
 
   /**
    * Event that is called when manager level user request to add appointments to a staff member
+   *
    * @param event holding the params that are set in the GUI
    */
   @Subscribe
@@ -42,6 +43,7 @@ public class AddDoctorAppointmentsController extends Controller {
   /**
    * Event that handle the response from the client about the status of events that were created
    * Show info when there is a rejection with info why the creation was rejected
+   *
    * @param event Holds all the params of the respond from the client
    */
   @Subscribe

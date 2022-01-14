@@ -22,6 +22,7 @@ public class AdminClinicListController extends Controller {
 
   /**
    * Event to handle the user request to open the Edit clinic window
+   *
    * @param event Holds GUI data on the relevant clinic to edit
    */
   @Subscribe
@@ -53,6 +54,7 @@ public class AdminClinicListController extends Controller {
 
   /**
    * Update the view with the updated clinic list
+   *
    * @param clinics list of updated clinics
    */
   public void updateClinics(ArrayList<Clinic> clinics) {

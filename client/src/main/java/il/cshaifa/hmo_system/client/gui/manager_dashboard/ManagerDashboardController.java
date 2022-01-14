@@ -44,6 +44,7 @@ public class ManagerDashboardController extends Controller {
 
   /**
    * Event to handle the client respond with a list of clinics
+   *
    * @param event Data that holds the list of clinics in the server
    */
   @Subscribe
@@ -56,8 +57,9 @@ public class ManagerDashboardController extends Controller {
 
   /**
    * Event that handle the user request to edit its own clinic.
+   *
    * @param event Data about the clinic we want to open the Edit Clinic view about clinic may be
-   *              null only if user is a clinic manager
+   *     null only if user is a clinic manager
    */
   @Subscribe
   public void onEditMyClinicHours(ClinicEvent event) {

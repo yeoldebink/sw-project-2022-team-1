@@ -31,10 +31,11 @@ public class AdminAppointmentListController extends Controller {
   }
 
   /**
-   * Event to listen to a response from the server when appointments are added to a member
-   * Updates the appointment view with new appointments that were added
+   * Event to listen to a response from the server when appointments are added to a member Updates
+   * the appointment view with new appointments that were added
+   *
    * @param event Holds info that appointments were added and request to get the update from the
-   *              server
+   *     server
    */
   @Subscribe
   public void onAppointmentsAdded(AddAppointmentEvent event) {
@@ -51,6 +52,7 @@ public class AdminAppointmentListController extends Controller {
 
   /**
    * Event to handle the user request to open the add appointment window for a staff member
+   *
    * @param event Holds the GUI info
    */
   @Subscribe
@@ -78,8 +80,9 @@ public class AdminAppointmentListController extends Controller {
   }
 
   /**
-   * Event to handle the response from the client of appointment list received to populate
-   * the view with the new appointments
+   * Event to handle the response from the client of appointment list received to populate the view
+   * with the new appointments
+   *
    * @param event Data from the client about the appointments.
    */
   @Subscribe
@@ -92,6 +95,7 @@ public class AdminAppointmentListController extends Controller {
 
   /**
    * Event that handle the user request to delete an appointment from a staff member
+   *
    * @param event Hold the GUI data
    */
   @Subscribe

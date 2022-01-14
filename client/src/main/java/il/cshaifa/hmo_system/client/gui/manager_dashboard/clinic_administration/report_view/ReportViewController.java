@@ -33,12 +33,17 @@ public class ReportViewController extends ViewController {
 
   private void processReportType() {
     switch (this.report_type) {
-      case MISSED_APPOINTMENTS -> this.setViewText("Missed Appointments", "Type", "Amount missed");
-      case AVERAGE_WAIT_TIMES -> this.setViewText(
-          "Average Doctor Wait Times", "Doctor name", "Wait time");
-      case APPOINTMENT_ATTENDANCE -> this.setViewText(
-          "Appointment Attendance", "Type", "Num. attended");
-      default -> throw new IllegalStateException("Unexpected report type: " + this.report_type);
+      case MISSED_APPOINTMENTS:
+        this.setViewText("Missed Appointments", "Type", "Amount missed");
+        break;
+      case AVERAGE_WAIT_TIMES:
+        this.setViewText("Average Doctor Wait Times", "Doctor name", "Wait time");
+        break;
+      case APPOINTMENT_ATTENDANCE:
+        this.setViewText("Appointment Attendance", "Type", "Num. attended");
+        break;
+      default:
+        throw new IllegalStateException("Unexpected report type: " + this.report_type);
     }
   }
 

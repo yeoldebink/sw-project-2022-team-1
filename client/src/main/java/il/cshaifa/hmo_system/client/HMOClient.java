@@ -94,24 +94,21 @@ public class HMOClient extends AbstractClient {
         handleAdminAppointmentMessage((AdminAppointmentMessage) message);
       } else if (message.getClass().equals(ReportMessage.class)) {
         handleReportMessage((ReportMessage) message);
-      } else if (message.getClass().equals(SetAppointmentMessage.class)){
+      } else if (message.getClass().equals(SetAppointmentMessage.class)) {
         handleSetAppointmentMessage((SetAppointmentMessage) message);
       }
     }
   }
 
-  private void handleSetAppointmentMessage(SetAppointmentMessage message){
+  private void handleSetAppointmentMessage(SetAppointmentMessage message) {
     SetAppointmentEvent.Action action;
-    if (message.success){
+    if (message.success) {
       action = SetAppointmentEvent.Action.AUTHORIZE;
     } else {
       action = SetAppointmentEvent.Action.REJECT;
     }
     SetAppointmentEvent event =
-        new SetAppointmentEvent(this,
-            action,
-            getConnected_patient(),
-            message.appointment);
+        new SetAppointmentEvent(this, action, getConnected_patient(), message.appointment);
     EventBus.getDefault().post(event);
   }
 
@@ -141,8 +138,8 @@ public class HMOClient extends AbstractClient {
       event =
           new AdminAppointmentListEvent(
               message.user, (ArrayList<Appointment>) message.appointments, this);
-    } else if (message.requestType == AppointmentRequestType.PATIENT_HISTORY ||
-        message.requestType == AppointmentRequestType.CLINIC_APPOINTMENTS) {
+    } else if (message.requestType == AppointmentRequestType.PATIENT_HISTORY
+        || message.requestType == AppointmentRequestType.CLINIC_APPOINTMENTS) {
       event = new AppointmentListEvent((ArrayList<Appointment>) message.appointments, this);
     }
 
@@ -244,12 +241,12 @@ public class HMOClient extends AbstractClient {
     client.sendToServer(appt_msg);
   }
 
-  /** locks the requested appointment **/
+  /** locks the requested appointment * */
   public void lockAppointment(Appointment appointment) throws IOException {
     client.sendToServer(new SetAppointmentMessage(Action.LOCK, connected_patient, appointment));
   }
 
-  /** takes the requested appointment **/
+  /** takes the requested appointment * */
   public void takeAppointment(Appointment appointment) throws IOException {
     client.sendToServer(new SetAppointmentMessage(Action.TAKE, connected_patient, appointment));
   }

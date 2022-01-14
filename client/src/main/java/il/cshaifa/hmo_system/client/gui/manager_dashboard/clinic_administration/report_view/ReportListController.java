@@ -25,6 +25,7 @@ public class ReportListController extends Controller {
 
   /**
    * Event the handle user request to see reports
+   *
    * @param event GUI data on which reports the user requested
    */
   @Subscribe
@@ -40,6 +41,7 @@ public class ReportListController extends Controller {
 
   /**
    * Event that handle the client respond with reports and populate the reports view
+   *
    * @param event Hold the reports that the user requested
    */
   @Subscribe
@@ -53,6 +55,7 @@ public class ReportListController extends Controller {
 
   /**
    * Update the clinic list in the view
+   *
    * @param clinics List of clinics that returned from the server
    */
   public void updateClinics(ArrayList<Clinic> clinics) {

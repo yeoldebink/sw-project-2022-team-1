@@ -16,6 +16,7 @@ public class AdminClinicController extends Controller {
 
   /**
    * Event to handle user request to update clinic data with changes in the view
+   *
    * @param event Clinic object created from the GUI changes.
    */
   @Subscribe
