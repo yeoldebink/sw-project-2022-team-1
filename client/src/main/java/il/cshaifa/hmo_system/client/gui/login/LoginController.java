@@ -92,8 +92,13 @@ public class LoginController extends Controller {
         break;
 
       case ("Patient"):
-        loader = new FXMLLoader(
-            getClass().getResource(ResourcePath.get_fxml(PatientDashboardViewController.class)));
+        loader =
+            new FXMLLoader(
+                getClass()
+                    .getResource(ResourcePath.get_fxml(PatientDashboardViewController.class)));
+
+        loader.setControllerFactory(
+            c -> new PatientDashboardViewController(HMOClient.getClient().getConnected_patient()));
 
         Utils.openNewWindow(
             PatientDashboardViewController.class, PatientDashboardController.class, loader, false);

@@ -1,5 +1,6 @@
 package il.cshaifa.hmo_system.client.utils;
 
+import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.gui.ResourcePath;
 import java.io.IOException;
@@ -32,6 +33,44 @@ public class Utils<C> {
               | NoSuchMethodException
               | InstantiationException
               | IllegalAccessException e) {
+            e.printStackTrace();
+          }
+        });
+  }
+
+  public static void openNewSingletonWindow(
+      Class<?> view_controller,
+      Class<?> controller,
+      boolean resizeable,
+      Callback<Class<?>, Object> ctrl_factory) {
+    Platform.runLater(
+        () -> {
+          try {
+            // check if an instance already exists
+            var getInstance = controller.getMethod("getInstance");
+            var instance = getInstance.invoke(null);
+            if (instance != null && ((Controller) instance).hasViewController()) return;
+
+            // load
+            var loader =
+                new FXMLLoader(controller.getResource(ResourcePath.get_fxml(view_controller)));
+            if (ctrl_factory != null) loader.setControllerFactory(ctrl_factory);
+
+            Stage stage = new Stage();
+            stage.setResizable(resizeable);
+
+            // create instance
+            var create = controller.getMethod("create", ViewController.class, Stage.class);
+            create.invoke(null, loader.getController(), stage);
+
+            var scene = new Scene(loader.load());
+            stage.setScene(scene);
+            stage.show();
+
+          } catch (NoSuchMethodException
+              | InvocationTargetException
+              | IllegalAccessException
+              | IOException e) {
             e.printStackTrace();
           }
         });

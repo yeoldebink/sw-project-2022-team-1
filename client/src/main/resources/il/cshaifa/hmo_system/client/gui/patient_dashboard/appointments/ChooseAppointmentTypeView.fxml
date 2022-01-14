@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+  xmlns:fx="http://javafx.com/fxml"
+  fx:controller="il.cshaifa.hmo_system.client.gui.patient_dashboard.appointments.ChooseAppointmentTypeViewController"
+  prefHeight="400.0" prefWidth="600.0">
+
+  <background>
+    <Background>
+      <fills>
+        <BackgroundFill fill="white" />
+      </fills>
+    </Background>
+  </background>
+
+  <VBox AnchorPane.rightAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.bottomAnchor="10" AnchorPane.topAnchor="10">
+    <ImageView>
+      <Image url="@set-an-appointment-banner.jpg"/>
+    </ImageView>
+
+    <Accordion fx:id="accordion">
+      <panes>
+        <TitledPane text="General Physician">
+          <AnchorPane>
+            <VBox AnchorPane.topAnchor="10" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" spacing="10">
+              <HBox>
+                <Label text="Your clinic: " />
+                <Label fx:id="clinicNameLabel"/>
+              </HBox>
+              <Button text="Set an appointment" onAction="#setAppointmentWithGP"/>
+            </VBox>
+          </AnchorPane>
+        </TitledPane>
+
+        <TitledPane text="Specialist">
+          <AnchorPane>
+
+          </AnchorPane>
+        </TitledPane>
+
+        <TitledPane text="COVID-19 Vaccination">
+          <AnchorPane>
+
+          </AnchorPane>
+        </TitledPane>
+      </panes>
+    </Accordion>
+  </VBox>
+
+</AnchorPane>
