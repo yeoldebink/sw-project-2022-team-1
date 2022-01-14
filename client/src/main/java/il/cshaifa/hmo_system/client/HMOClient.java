@@ -32,6 +32,7 @@ import il.cshaifa.hmo_system.messages.ReportMessage;
 import il.cshaifa.hmo_system.messages.ReportMessage.ReportType;
 import il.cshaifa.hmo_system.messages.SetAppointmentMessage;
 import il.cshaifa.hmo_system.messages.SetAppointmentMessage.Action;
+import il.cshaifa.hmo_system.messages.SetSpecialistAppointmentMessage;
 import il.cshaifa.hmo_system.messages.StaffAssignmentMessage;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -268,9 +269,13 @@ public class HMOClient extends AbstractClient {
         new AppointmentMessage(staff_member, AppointmentRequestType.STAFF_FUTURE_APPOINTMENTS));
   }
 
-  public void getSpecialistRoles() {}
+  public void getSpecialistRoles() throws IOException {
+    client.sendToServer(new SetSpecialistAppointmentMessage());
+  }
 
-  public void getSpecialistAppointments(Role role) {}
+  public void getSpecialistAppointments(Role role) throws IOException {
+    client.sendToServer(new SetSpecialistAppointmentMessage(role, connected_patient));
+  }
 
   /**
    * Sends to server a request to get report
