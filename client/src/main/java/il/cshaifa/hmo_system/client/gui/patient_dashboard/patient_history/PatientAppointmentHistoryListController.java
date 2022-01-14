@@ -12,7 +12,6 @@ import javafx.stage.Stage;
 import org.greenrobot.eventbus.Subscribe;
 
 public class PatientAppointmentHistoryListController extends Controller {
-
   public PatientAppointmentHistoryListController(ViewController view_controller, Stage stage) {
     super(view_controller, stage);
 
@@ -28,16 +27,29 @@ public class PatientAppointmentHistoryListController extends Controller {
     if (!event.getSender().equals(HMOClient.getClient())) return;
 
     Platform.runLater(
-        ()-> System.out.println("Populate me!!")
+        ()-> {
+          ((PatientAppointmentHistoryListViewController) this.view_controller)
+              .populateAppointmentsTable(event.appointments);
+        }
     );
   }
 
 
   @Subscribe
-  public void onCancelAppointmentRespond(PatientAppointmentListEvent event){
-    if(!event.getSender().equals(HMOClient.getClient())) return;
+  public void onCancelAppointmentRequest(PatientAppointmentListEvent event) {
+    if (!event.getSender().equals(this.view_controller)) return;
+    var appointment_update = event.appointments.get(0);
 
-    if (event.status == Status.ACCEPTED){
+    appointment_update.setPatient(null);
+    appointment_update.setTaken(false);
+    // TODO: Request client to cancel appointment
+  }
+
+  @Subscribe
+  public void onCancelAppointmentRespond(PatientAppointmentListEvent event) {
+    if (!event.getSender().equals(HMOClient.getClient())) return;
+
+    if (event.status == Status.ACCEPTED) {
       System.out.println("NOTIFY USER ALL GOOD");
       try {
         HMOClient.getClient().getPatientHistory();
@@ -50,7 +62,9 @@ public class PatientAppointmentHistoryListController extends Controller {
   }
 
   @Subscribe
-  public void onShowAppointmentDetailsRequest(PatientAppointmentListEvent event){
-    if (!event.getSender().equals(this.view_controller) || event.status != Status.SHOW_APPOINTMENT_DATA) return;
+  public void onShowAppointmentDetailsRequest(PatientAppointmentListEvent event) {
+    if (!event.getSender().equals(this.view_controller)
+        || event.status != Status.SHOW_APPOINTMENT_DATA) return;
+
   }
 }

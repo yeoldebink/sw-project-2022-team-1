@@ -4,7 +4,6 @@ import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.PatientAppointmentListEvent;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.Patient;
-import il.cshaifa.hmo_system.entities.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -108,6 +107,7 @@ public class PatientAppointmentHistoryListViewController extends ViewController 
         appt_date.setCellValueFactory((new PropertyValueFactory<>("Appt_date")));
         appt_type_name.setCellValueFactory((new PropertyValueFactory<>("Appt_type_name")));
         specialist_role_name.setCellValueFactory((new PropertyValueFactory<>("Role_name")));
+
         staff_member_name.setCellValueFactory((new PropertyValueFactory<>("Staff_member_name")));
         clinic_name.setCellValueFactory((new PropertyValueFactory<>("Clinic_name")));
         appt_passed.setCellValueFactory((new PropertyValueFactory<>("Appt_passed")));
@@ -118,6 +118,7 @@ public class PatientAppointmentHistoryListViewController extends ViewController 
         private final Integer id;
         private final LocalDateTime appt_date;
         private final String appt_type_name;
+
         private final String role_name;
         private final String staff_member_name;
         private final String clinic_name;
@@ -163,6 +164,5 @@ public class PatientAppointmentHistoryListViewController extends ViewController 
             return appt_passed;
         }
     }
-
 }
 
