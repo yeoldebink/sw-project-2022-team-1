@@ -119,76 +119,6 @@ public class HMOServer extends AbstractServer {
   }
 
   /**
-   * @param message
-   * @param client
-   * @throws IOException
-   */
-  private void handleAppointmentMessage(AppointmentMessage message, ConnectionToClient client)
-      throws IOException {
-    CriteriaBuilder cb = session.getCriteriaBuilder();
-    CriteriaQuery<Appointment> cr = cb.createQuery(Appointment.class);
-    Root<Appointment> root = cr.from(Appointment.class);
-    LocalDateTime start, end;
-
-    if (message.requestType == AppointmentRequestType.CLINIC_APPOINTMENTS) {
-
-      start = LocalDateTime.now();
-      end = LocalDateTime.now().plusWeeks(4);
-      cr.select(root)
-          .where(
-              cb.between(root.get("appt_date"), start, end),
-              cb.equal(root.get("type"), message.type),
-              cb.equal(root.get("clinic"), message.clinic),
-              cb.isFalse(root.get("taken")),
-              cb.or(cb.isNull(root.get("lock_time")),
-                  cb.lessThan(root.get("lock_time"), start),
-                  cb.and(cb.isNotNull(root.get("lock_time")),
-                      cb.equal(root.get("patient"), message.patient)))
-          );
-      List<Appointment> all_appts = session.createQuery(cr).getResultList();
-      List<Appointment> appts_in_work_hours = new ArrayList<>();
-      for (Appointment appt : all_appts) {
-        DayOfWeek day = appt.getDate().toLocalDate().getDayOfWeek();
-        List<LocalTime> clinic_hours = message.clinic.timeStringToLocalTime(day.getValue());
-        for (int i = 0; i < clinic_hours.toArray().length; i += 2) {
-          LocalTime open_time = clinic_hours.get(i), close_time = clinic_hours.get(i+1);
-          LocalTime appt_time = appt.getDate().toLocalTime();
-          if (appt_time.isAfter(open_time) && appt_time.isBefore(close_time)){
-            appts_in_work_hours.add(appt);
-          }
-        }
-        message.appointments = appts_in_work_hours;
-      }
-
-    } else if (message.requestType == AppointmentRequestType.STAFF_MEMBER_DAILY_APPOINTMENTS) {
-      start = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
-      end = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
-      cr.select(root)
-          .where(
-              cb.equal(root.get("staff_member"), message.user),
-              cb.between(root.get("appt_date"), start, end),
-              cb.isTrue(root.get("taken")));
-      message.appointments = session.createQuery(cr).getResultList();
-
-    } else if (message.requestType == AppointmentRequestType.STAFF_FUTURE_APPOINTMENTS) {
-      cr.select(root)
-          .where(
-              cb.equal(root.get("staff_member"), message.user),
-              cb.greaterThanOrEqualTo(root.get("appt_date"), LocalDateTime.now()));
-      message.appointments = session.createQuery(cr).getResultList();
-    } else if (message.requestType == AppointmentRequestType.PATIENT_HISTORY) {
-      cr.select(root)
-          .where(
-              cb.equal(root.get("patient"), message.patient),
-              cb.isTrue(root.get("taken")));
-      message.appointments = session.createQuery(cr).getResultList();
-    }
-
-    message.message_type = MessageType.RESPONSE;
-    client.sendToClient(message);
-  }
-
-  /**
    * Get clinics list and send this list to client
    *
    * @param client The client that made the request
@@ -595,9 +525,9 @@ public class HMOServer extends AbstractServer {
       Class<?> msg_class = msg.getClass();
       if (msg_class == AdminAppointmentMessage.class) {
         handler = new handleAdminAppointmentMessage((AdminAppointmentMessage) msg, session);
-//      } else if (msg_class == AppointmentMessage.class) {
-//        handler = new handleAppointmentMessage((AppointmentMessage) msg, session);
-//      } else if (msg_class == ClinicMessage.class) {
+      } else if (msg_class == AppointmentMessage.class) {
+        handler = new handleAppointmentMessage((AppointmentMessage) msg, session);
+      } //else if (msg_class == ClinicMessage.class) {
 //        handler = new handlerhandleClinicMessage((ClinicMessage) msg, session);
 //      } else if (msg_class == LoginMessage.class) {
 //        handler = new handleLoginMessage((LoginMessage) msg, session);
