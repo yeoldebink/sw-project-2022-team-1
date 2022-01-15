@@ -31,6 +31,7 @@ import il.cshaifa.hmo_system.server.ocsf.AbstractServer;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -129,15 +130,34 @@ public class HMOServer extends AbstractServer {
     LocalDateTime start, end;
 
     if (message.requestType == AppointmentRequestType.CLINIC_APPOINTMENTS) {
+
       start = LocalDateTime.now();
-      end = LocalDateTime.now().plusWeeks(3);
+      end = LocalDateTime.now().plusWeeks(4);
       cr.select(root)
           .where(
+              cb.between(root.get("appt_date"), start, end),
               cb.equal(root.get("type"), message.type),
               cb.equal(root.get("clinic"), message.clinic),
-              cb.between(root.get("appt_date"), start, end),
-              cb.equal(root.get("taken"), false),
-              cb.or(cb.isNull(root.get("lock_time")), cb.lessThan(root.get("lock_time"), start)));
+              cb.isFalse(root.get("taken")),
+              cb.or(cb.isNull(root.get("lock_time")),
+                  cb.lessThan(root.get("lock_time"), start),
+                  cb.and(cb.isNotNull(root.get("lock_time")),
+                      cb.equal(root.get("patient"), message.patient)))
+          );
+      List<Appointment> all_appts = session.createQuery(cr).getResultList();
+      List<Appointment> appts_in_work_hours = new ArrayList<>();
+      for (Appointment appt : all_appts) {
+        DayOfWeek day = appt.getDate().toLocalDate().getDayOfWeek();
+        List<LocalTime> clinic_hours = message.clinic.timeStringToLocalTime(day.getValue());
+        for (int i = 0; i < clinic_hours.toArray().length; i += 2) {
+          LocalTime open_time = clinic_hours.get(i), close_time = clinic_hours.get(i+1);
+          LocalTime appt_time = appt.getDate().toLocalTime();
+          if (appt_time.isAfter(open_time) && appt_time.isBefore(close_time)){
+            appts_in_work_hours.add(appt);
+          }
+        }
+        message.appointments = appts_in_work_hours;
+      }
 
     } else if (message.requestType == AppointmentRequestType.STAFF_MEMBER_DAILY_APPOINTMENTS) {
       start = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
@@ -146,22 +166,22 @@ public class HMOServer extends AbstractServer {
           .where(
               cb.equal(root.get("staff_member"), message.user),
               cb.between(root.get("appt_date"), start, end),
-              cb.equal(root.get("taken"), true));
+              cb.isTrue(root.get("taken")));
+      message.appointments = session.createQuery(cr).getResultList();
 
     } else if (message.requestType == AppointmentRequestType.STAFF_FUTURE_APPOINTMENTS) {
       cr.select(root)
           .where(
               cb.equal(root.get("staff_member"), message.user),
               cb.greaterThanOrEqualTo(root.get("appt_date"), LocalDateTime.now()));
-
+      message.appointments = session.createQuery(cr).getResultList();
     } else if (message.requestType == AppointmentRequestType.PATIENT_HISTORY) {
       cr.select(root)
           .where(
-              cb.equal(root.get("patient"), getUserPatient(message.user)),
-              cb.equal(root.get("taken"), true));
+              cb.equal(root.get("patient"), message.patient),
+              cb.isTrue(root.get("taken")));
+      message.appointments = session.createQuery(cr).getResultList();
     }
-
-    message.appointments = session.createQuery(cr).getResultList();
 
     message.message_type = MessageType.RESPONSE;
     client.sendToClient(message);
@@ -189,7 +209,9 @@ public class HMOServer extends AbstractServer {
     client.sendToClient(clinics_msg);
   }
 
-  /** @param entity_list Entities to be updated to DB */
+  /**
+   * @param entity_list Entities to be updated to DB
+   */
   protected void updateEntities(List<?> entity_list) {
     for (var entity : entity_list) {
       session.update(entity);
@@ -209,7 +231,7 @@ public class HMOServer extends AbstractServer {
    * made changes to this clinics and apply changes to DB
    *
    * @param message ClinicMessage
-   * @param client The client that made the request
+   * @param client  The client that made the request
    * @throws IOException SQL exception
    */
   protected void handleClinicMessage(ClinicMessage message, ConnectionToClient client)
@@ -233,8 +255,8 @@ public class HMOServer extends AbstractServer {
    * If login successful will send to client LoginMessage with user and his details
    *
    * @param message LoginMassage should be with user_id and password
-   * @param client The client that request the login
-   * @throws IOException SQL exception
+   * @param client  The client that request the login
+   * @throws IOException              SQL exception
    * @throws NoSuchAlgorithmException Encoding password exception
    */
   protected void handleLogin(LoginMessage message, ConnectionToClient client)
@@ -281,16 +303,18 @@ public class HMOServer extends AbstractServer {
     Function<ClinicStaff, Void> session_method =
         msg.type == Type.ASSIGN
             ? cstaff -> {
-              session.merge(cstaff);
-              return null;
-            }
+          session.merge(cstaff);
+          return null;
+        }
             : cstaff -> {
               cr.select(root)
                   .where(
                       cb.equal(root.get("user"), cstaff.getUser()),
                       cb.equal(root.get("clinic"), cstaff.getClinic()));
               var l = session.createQuery(cr).getResultList();
-              if (l.size() > 0) session.delete(l.get(0));
+              if (l.size() > 0) {
+                session.delete(l.get(0));
+              }
               return null;
             };
 
@@ -504,8 +528,8 @@ public class HMOServer extends AbstractServer {
     // is it possible to lock this appointment? if not return false
     if (appt.isTaken()
         || (lock_time != null
-            && LocalDateTime.now().isBefore(lock_time)
-            && appt.getPatient().getId() != patient.getId())) {
+        && LocalDateTime.now().isBefore(lock_time)
+        && appt.getPatient().getId() != patient.getId())) {
       return false;
     }
 
@@ -558,7 +582,7 @@ public class HMOServer extends AbstractServer {
     client.sendToClient(msg);
   }
 
-  private List<Role> getSpecialistRoleList(){
+  private List<Role> getSpecialistRoleList() {
     CriteriaBuilder cb = session.getCriteriaBuilder();
     CriteriaQuery<Role> cr = cb.createQuery(Role.class);
     Root<Role> root = cr.from(Role.class);
@@ -583,14 +607,16 @@ public class HMOServer extends AbstractServer {
     List<Appointment> available_appts = new ArrayList<Appointment>();
 
     Set<User> doctors = new HashSet<>();
-    for (Appointment appt: patient_past_appts){
-      if (!doctors.contains(appt.getStaff_member())){
+    for (Appointment appt : patient_past_appts) {
+      if (!doctors.contains(appt.getStaff_member())) {
         cr.select(root).where(
             cb.equal(root.get("staff_member"), appt.getStaff_member()),
             cb.equal(root.get("specialist_role_id"), role),
-            cb.between(root.get("appt_date"), LocalDateTime.now(), LocalDateTime.now().plusMonths(3)),
+            cb.between(root.get("appt_date"), LocalDateTime.now(),
+                LocalDateTime.now().plusMonths(3)),
             cb.isFalse(root.get("taken")),
-            cb.or(cb.isNull(root.get("lock_time")), cb.lessThan(root.get("lock_time"), LocalDateTime.now()))
+            cb.or(cb.isNull(root.get("lock_time")),
+                cb.lessThan(root.get("lock_time"), LocalDateTime.now()))
         );
         doctors.add(appt.getStaff_member());
         available_appts.addAll(session.createQuery(cr).getResultList());
@@ -602,18 +628,20 @@ public class HMOServer extends AbstractServer {
         root.get("staff_member").in(doctors).not(),
         cb.between(root.get("appt_date"), LocalDateTime.now(), LocalDateTime.now().plusMonths(3)),
         cb.isFalse(root.get("taken")),
-        cb.or(cb.isNull(root.get("lock_time")), cb.lessThan(root.get("lock_time"), LocalDateTime.now()))
+        cb.or(cb.isNull(root.get("lock_time")),
+            cb.lessThan(root.get("lock_time"), LocalDateTime.now()))
     );
 
     available_appts.addAll(session.createQuery(cr).getResultList());
     return available_appts;
   }
 
-  private void handleSetSpecialistAppointmentMessage(SetSpecialistAppointmentMessage msg, ConnectionToClient client)
+  private void handleSetSpecialistAppointmentMessage(SetSpecialistAppointmentMessage msg,
+      ConnectionToClient client)
       throws IOException {
-    if (msg.action == SetSpecialistAppointmentMessage.Action.GET_ROLES){
+    if (msg.action == SetSpecialistAppointmentMessage.Action.GET_ROLES) {
       msg.role_list = getSpecialistRoleList();
-    } else if (msg.action == SetSpecialistAppointmentMessage.Action.GET_APPOINTMENTS){
+    } else if (msg.action == SetSpecialistAppointmentMessage.Action.GET_APPOINTMENTS) {
       msg.appointments = getSpecialistAppointments(msg.chosen_role, msg.patient);
     }
     msg.message_type = MessageType.RESPONSE;
@@ -623,7 +651,7 @@ public class HMOServer extends AbstractServer {
   /**
    * See documentation for entities.Request for defined behavior.
    *
-   * @param msg the message sent.
+   * @param msg    the message sent.
    * @param client the connection connected to the client that sent the message.
    */
   @Override
@@ -649,7 +677,7 @@ public class HMOServer extends AbstractServer {
         handleReportMessage((ReportMessage) msg, client);
       } else if (msg_class == SetAppointmentMessage.class) {
         handleSetAppointmentMessage((SetAppointmentMessage) msg, client);
-      } else if (msg_class == SetSpecialistAppointmentMessage.class){
+      } else if (msg_class == SetSpecialistAppointmentMessage.class) {
         handleSetSpecialistAppointmentMessage((SetSpecialistAppointmentMessage) msg, client);
       }
       session.close();

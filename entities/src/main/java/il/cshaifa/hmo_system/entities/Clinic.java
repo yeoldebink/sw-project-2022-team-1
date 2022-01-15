@@ -170,9 +170,30 @@ public class Clinic implements Serializable {
     }
   }
 
-  private List<LocalTime> timeStringToLocalTime(String time_string){
+  public List<LocalTime> timeStringToLocalTime(int day_num){
+    String day_hours;
+    // 1 is monday
+    switch (day_num){
+      case 1: day_hours = mon_hours;
+        break;
+      case 2: day_hours = tue_hours;
+        break;
+      case 3: day_hours = wed_hours;
+        break;
+      case 4: day_hours = thu_hours;
+        break;
+      case 5: day_hours = fri_hours;
+        break;
+      case 6: day_hours = sat_hours;
+        break;
+      case 7: day_hours = sun_hours;
+        break;
+      default:
+        throw new IllegalStateException("Unexpected value: " + day_num);
+    }
+
     List<LocalTime> result = new ArrayList<>();
-    String[] hours = time_string.strip().split(", ");
+    String[] hours = day_hours.strip().split(", ");
     for (String time_window : hours){
       String open, close;
       String[] open_close = time_window.split("-");
@@ -183,18 +204,6 @@ public class Clinic implements Serializable {
       result.add(LocalTime.parse(close, formatter));
     }
     return result;
-  }
-
-  public List<List<LocalTime>> get_work_hours(){
-    List<List<LocalTime>> work_hours= new ArrayList<>();
-    work_hours.add(timeStringToLocalTime(sun_hours));
-    work_hours.add(timeStringToLocalTime(mon_hours));
-    work_hours.add(timeStringToLocalTime(tue_hours));
-    work_hours.add(timeStringToLocalTime(wed_hours));
-    work_hours.add(timeStringToLocalTime(thu_hours));
-    work_hours.add(timeStringToLocalTime(fri_hours));
-    work_hours.add(timeStringToLocalTime(sat_hours));
-    return work_hours;
   }
 
   @Override

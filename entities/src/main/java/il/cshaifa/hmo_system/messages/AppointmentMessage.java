@@ -3,12 +3,14 @@ package il.cshaifa.hmo_system.messages;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.Clinic;
+import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.entities.User;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AppointmentMessage extends Message {
   public User user;
+  public Patient patient;
   public Clinic clinic;
   public AppointmentType type;
   public AppointmentRequestType requestType;
@@ -23,16 +25,18 @@ public class AppointmentMessage extends Message {
     DELETE_APPOINTMENTS
   }
 
-  public AppointmentMessage(
-      ArrayList<Appointment> appointments, AppointmentRequestType requestType) {
-    super(MessageType.REQUEST);
-    this.appointments = appointments;
-    this.requestType = requestType;
-  }
-
+  /** constructor for use of staff member/manager */
   public AppointmentMessage(User user, AppointmentRequestType request) {
     super(MessageType.REQUEST);
     this.user = user;
     this.requestType = request;
   }
+
+  /** constructor for use of patient to request free appointments/appointment history */
+  public AppointmentMessage(Patient patient, AppointmentRequestType request) {
+    super(MessageType.REQUEST);
+    this.patient = patient;
+    this.requestType = request;
+  }
+
 }
