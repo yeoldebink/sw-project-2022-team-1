@@ -1,7 +1,6 @@
 package il.cshaifa.hmo_system.server.server_handlers;
 
 import il.cshaifa.hmo_system.entities.Appointment;
-import il.cshaifa.hmo_system.entities.Role;
 import il.cshaifa.hmo_system.messages.AdminAppointmentMessage;
 import il.cshaifa.hmo_system.messages.AdminAppointmentMessage.AdminAppointmentMessageType;
 import il.cshaifa.hmo_system.messages.AdminAppointmentMessage.RejectionType;
@@ -20,6 +19,9 @@ import org.hibernate.Session;
 public class handleAdminAppointmentMessage extends MessageHandler {
   private final AdminAppointmentMessage class_message;
   private final Map<String, Long> appointment_duration;
+  private final CriteriaBuilder cb;
+  private final CriteriaQuery<Appointment> cr;
+  private final Root<Appointment> root;
 
   public handleAdminAppointmentMessage(AdminAppointmentMessage message, Session session) {
     super(message, session);
@@ -31,6 +33,9 @@ public class handleAdminAppointmentMessage extends MessageHandler {
     this.appointment_duration.put("COVID Test", 10L);
     this.appointment_duration.put("COVID Vaccine", 10L);
     this.appointment_duration.put("Flu Vaccine", 10L);
+    cb = session.getCriteriaBuilder();
+    cr = cb.createQuery(Appointment.class);
+    root = cr.from(Appointment.class);
   }
 
   @Override
@@ -61,9 +66,6 @@ public class handleAdminAppointmentMessage extends MessageHandler {
     long total_minutes = class_message.count * duration;
     LocalDateTime end_datetime = class_message.start_datetime.plusMinutes(total_minutes);
 
-    CriteriaBuilder cb = session.getCriteriaBuilder();
-    CriteriaQuery<Appointment> cr = cb.createQuery(Appointment.class);
-    Root<Appointment> root = cr.from(Appointment.class);
     cr.select(root)
         .where(
             cb.equal(root.get("clinic"), class_message.clinic),
@@ -115,9 +117,6 @@ public class handleAdminAppointmentMessage extends MessageHandler {
     long total_minutes = class_message.count * duration;
     LocalDateTime end_datetime = class_message.start_datetime.plusMinutes(total_minutes);
 
-    CriteriaBuilder cb = session.getCriteriaBuilder();
-    CriteriaQuery<Appointment> cr = cb.createQuery(Appointment.class);
-    Root<Appointment> root = cr.from(Appointment.class);
     cr.select(root)
         .where(
             cb.equal(root.get("clinic"), class_message.clinic),

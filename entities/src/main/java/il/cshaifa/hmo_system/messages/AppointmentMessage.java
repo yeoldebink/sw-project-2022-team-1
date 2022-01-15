@@ -18,11 +18,9 @@ public class AppointmentMessage extends Message {
 
   public enum AppointmentRequestType {
     CLINIC_APPOINTMENTS,
-    STAFF_MEMBER_DAILY_APPOINTMENTS,
-    STAFF_FUTURE_APPOINTMENTS,
     PATIENT_HISTORY,
-    CREATE_APPOINTMENTS,
-    DELETE_APPOINTMENTS
+    STAFF_MEMBER_DAILY_APPOINTMENTS,
+    STAFF_FUTURE_APPOINTMENTS
   }
 
   /** constructor for use of staff member/manager */
