@@ -33,6 +33,7 @@ import il.cshaifa.hmo_system.server.server_handlers.MessageHandler;
 import il.cshaifa.hmo_system.server.server_handlers.handleAdminAppointmentMessage;
 import il.cshaifa.hmo_system.server.server_handlers.handleAppointmentMessage;
 import il.cshaifa.hmo_system.server.server_handlers.handleClinicMessage;
+import il.cshaifa.hmo_system.server.server_handlers.handleLoginMessage;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.time.DayOfWeek;
@@ -112,55 +113,6 @@ public class HMOServer extends AbstractServer {
     for (var staff_member : all_staff) {
       if (!assigned_staff.contains(staff_member)) {
         message.staff_list.add(new ClinicStaff(new Clinic(), staff_member));
-      }
-    }
-
-    message.message_type = MessageType.RESPONSE;
-    client.sendToClient(message);
-  }
-
-  protected Patient getUserPatient(User user) {
-    var cb = session.getCriteriaBuilder();
-    CriteriaQuery<Patient> cr = cb.createQuery(Patient.class);
-    Root<Patient> root = cr.from(Patient.class);
-    cr.select(root).where(cb.equal(root.get("user"), user));
-    return session.createQuery(cr).getResultList().get(0);
-  }
-
-  /**
-   * If login successful will send to client LoginMessage with user and his details
-   *
-   * @param message LoginMassage should be with user_id and password
-   * @param client  The client that request the login
-   * @throws IOException              SQL exception
-   * @throws NoSuchAlgorithmException Encoding password exception
-   */
-  protected void handleLogin(LoginMessage message, ConnectionToClient client)
-      throws IOException, NoSuchAlgorithmException {
-    User user = (User) session.get(User.class, message.id);
-
-    // prepare for the case of clinic queries
-    var cb = session.getCriteriaBuilder();
-    CriteriaQuery<Clinic> cr = cb.createQuery(Clinic.class);
-
-    if (user != null) {
-      String user_encoded_password = user.getPassword();
-      String entered_password = HMOUtilities.encodePassword(message.password, user.getSalt());
-      if (user_encoded_password.equals(entered_password)) {
-        message.user = user;
-        if (user.getRole().getName().equals("Patient")) {
-          message.patient_data = getUserPatient(user);
-
-        } else if (user.getRole().getName().equals("Clinic Manager")) {
-          Root<Clinic> root = cr.from(Clinic.class);
-          cr.select(root).where(cb.equal(root.get("manager_user"), user));
-          message.employee_clinics = session.createQuery(cr).getResultList();
-
-        } else if (!user.getRole().getName().equals("HMO Manager")) {
-          Root<ClinicStaff> root = cr.from(ClinicStaff.class);
-          cr.select(root.get("clinic")).where(cb.equal(root.get("user"), user));
-          message.employee_clinics = session.createQuery(cr).getResultList();
-        }
       }
     }
 
@@ -474,9 +426,9 @@ public class HMOServer extends AbstractServer {
         handler = new handleAppointmentMessage((AppointmentMessage) msg, session);
       } else if (msg_class == ClinicMessage.class) {
         handler = new handleClinicMessage((ClinicMessage) msg, session);
-      } //else if (msg_class == LoginMessage.class) {
-//        handler = new handleLoginMessage((LoginMessage) msg, session);
-//      } else if (msg_class == ReportMessage.class) {
+      } else if (msg_class == LoginMessage.class) {
+        handler = new handleLoginMessage((LoginMessage) msg, session);
+      } //else if (msg_class == ReportMessage.class) {
 //        handler = new handleReportMessage((ReportMessage) msg, session);
 //      } else if (msg_class == SetAppointmentMessage.class) {
 //        handler = new handleSetAppointmentMessage((SetAppointmentMessage) msg, session);
