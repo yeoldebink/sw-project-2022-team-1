@@ -37,7 +37,7 @@
           <FontIcon iconLiteral="mdi-calendar-clock"/>
         </graphic>
       </Button>
-      <Button text="Appointment history" onAction="#viewPatientHistory">
+      <Button text="My Appointments" onAction="#viewPatientAppointments">
         <graphic>
           <FontIcon iconLiteral="mdi-history" iconSize="20"/>
         </graphic>

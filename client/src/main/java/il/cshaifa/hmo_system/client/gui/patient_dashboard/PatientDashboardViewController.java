@@ -36,7 +36,7 @@ public class PatientDashboardViewController extends ViewController {
   }
 
   @FXML
-  public void viewPatientHistory(ActionEvent event) {
+  public void viewPatientAppointments(ActionEvent event) {
     EventBus.getDefault().post(new AppointmentListEvent(null, this));
   }
 

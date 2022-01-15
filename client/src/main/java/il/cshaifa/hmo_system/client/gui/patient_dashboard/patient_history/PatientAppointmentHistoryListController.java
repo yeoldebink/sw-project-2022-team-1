@@ -51,14 +51,14 @@ public class PatientAppointmentHistoryListController extends Controller {
     if (!event.getSender().equals(HMOClient.getClient())) return;
 
     if (event.status == Status.ACCEPTED) {
-      System.out.println("NOTIFY USER ALL GOOD");
+      System.out.println("Successfully canceled the appointment"); //TODO let user see this
       try {
         HMOClient.getClient().getPatientHistory();
       } catch (IOException e) {
         e.printStackTrace();
       }
     } else if (event.status == Status.REJECT) {
-      System.out.println("NOTIFY USER OF DEATH");
+      System.out.println("NOTIFY USER OF DEATH"); //TODO let user see this
     }
   }
 
@@ -66,6 +66,6 @@ public class PatientAppointmentHistoryListController extends Controller {
   public void onShowAppointmentDetailsRequest(PatientAppointmentListEvent event) {
     if (!event.getSender().equals(this.view_controller)
         || event.status != Status.SHOW_APPOINTMENT_DATA) return;
-
+    //TODO need to create the view to see the appointment details
   }
 }
