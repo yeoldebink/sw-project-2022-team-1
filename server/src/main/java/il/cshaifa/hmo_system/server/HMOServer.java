@@ -64,8 +64,6 @@ import org.hibernate.service.ServiceRegistry;
 
 public class HMOServer extends AbstractServer {
 
-
-
   private static Session session;
 
   public HMOServer(int port) {
@@ -180,7 +178,7 @@ public class HMOServer extends AbstractServer {
       } else if (msg_class == ClinicMessage.class) {
         handler = new handleClinicMessage((ClinicMessage) msg, session);
       } else if (msg_class == LoginMessage.class) {
-        handler = new handleLoginMessage((LoginMessage) msg, session);
+        handler = new handleLoginMessage((LoginMessage) msg, session, client);
       } else if (msg_class == ReportMessage.class) {
         handler = new handleReportMessage((ReportMessage) msg, session);
       } else if (msg_class == SetAppointmentMessage.class) {
@@ -210,6 +208,9 @@ public class HMOServer extends AbstractServer {
   protected synchronized void clientDisconnected(ConnectionToClient client) {
     System.out.println("Client Disconnected.");
     super.clientDisconnected(client);
+    var user = handleLoginMessage.connected_clients.get(client);
+    handleLoginMessage.connected_clients.remove(client);
+    handleLoginMessage.connected_users.remove(user);
   }
 
   @Override
