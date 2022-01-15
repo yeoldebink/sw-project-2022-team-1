@@ -44,5 +44,4 @@ public class MessageHandler {
     }
     session.flush();
   }
-
 }
