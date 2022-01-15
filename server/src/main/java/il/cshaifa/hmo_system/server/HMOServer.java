@@ -37,6 +37,7 @@ import il.cshaifa.hmo_system.server.server_handlers.handleLoginMessage;
 import il.cshaifa.hmo_system.server.server_handlers.handleReportMessage;
 import il.cshaifa.hmo_system.server.server_handlers.handleSetAppointmentMessage;
 import il.cshaifa.hmo_system.server.server_handlers.handleSetSpecialistAppointmentMessage;
+import il.cshaifa.hmo_system.server.server_handlers.handleStaffAssignmentMessage;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.time.DayOfWeek;
@@ -121,42 +122,6 @@ public class HMOServer extends AbstractServer {
     client.sendToClient(message);
   }
 
-  private void handleStaffAssignmentMessage(StaffAssignmentMessage msg, ConnectionToClient client)
-      throws IOException {
-
-    var cb = session.getCriteriaBuilder();
-    var cr = cb.createQuery(ClinicStaff.class);
-    Root<ClinicStaff> root = cr.from(ClinicStaff.class);
-
-    // create an appropriate lambda to either merge or delete rows from the ClinicStaff table
-    Function<ClinicStaff, Void> session_method =
-        msg.type == Type.ASSIGN
-            ? cstaff -> {
-          session.merge(cstaff);
-          return null;
-        }
-            : cstaff -> {
-              cr.select(root)
-                  .where(
-                      cb.equal(root.get("user"), cstaff.getUser()),
-                      cb.equal(root.get("clinic"), cstaff.getClinic()));
-              var l = session.createQuery(cr).getResultList();
-              if (l.size() > 0) {
-                session.delete(l.get(0));
-              }
-              return null;
-            };
-
-    for (var staff_member : msg.staff) {
-      var assignment = new ClinicStaff(msg.clinic, staff_member);
-      session_method.apply(assignment);
-      session.flush();
-    }
-
-    msg.message_type = MessageType.RESPONSE;
-    client.sendToClient(msg);
-  }
-
   /**
    * See documentation for entities.Request for defined behavior.
    *
@@ -185,9 +150,9 @@ public class HMOServer extends AbstractServer {
         handler = new handleSetAppointmentMessage((SetAppointmentMessage) msg, session);
       } else if (msg_class == SetSpecialistAppointmentMessage.class) {
         handler = new handleSetSpecialistAppointmentMessage((SetSpecialistAppointmentMessage) msg, session);
-      } //else if (msg_class == StaffAssignmentMessage.class) {
-//        handler = new handleStaffAssignmentMessage((StaffAssignmentMessage) msg, session);
-//      } else if (msg_class == ClinicStaffMessage.class) {
+      } else if (msg_class == StaffAssignmentMessage.class) {
+        handler = new handleStaffAssignmentMessage((StaffAssignmentMessage) msg, session);
+      } //else if (msg_class == ClinicStaffMessage.class) {
 //        handler = new handleStaffMessage((ClinicStaffMessage) msg, session);
 //      }
 
@@ -208,7 +173,7 @@ public class HMOServer extends AbstractServer {
   protected synchronized void clientDisconnected(ConnectionToClient client) {
     System.out.println("Client Disconnected.");
     super.clientDisconnected(client);
-    var user = handleLoginMessage.connected_clients.get(client);
+    User user = handleLoginMessage.connected_clients.get(client);
     handleLoginMessage.connected_clients.remove(client);
     handleLoginMessage.connected_users.remove(user);
   }

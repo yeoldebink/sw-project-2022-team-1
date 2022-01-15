@@ -42,6 +42,7 @@ public class handleReportMessage extends MessageHandler {
     root = cr.from(Appointment.class);
   }
 
+  // TODO: role to string
   @Override
   public void handleMessage() {
     if (class_message.report_type == ReportType.APPOINTMENT_ATTENDANCE) {
