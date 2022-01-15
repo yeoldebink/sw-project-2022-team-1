@@ -29,7 +29,7 @@
             <columns>
                 <TableColumn fx:id="appt_date" prefWidth="75.0" text="Date &amp; Time"/>
                 <TableColumn fx:id="appt_type_name" prefWidth="75.0" text="Appointment Type"/>
-                <TableColumn fx:id="specialist_role_name" prefWidth="75.0" text="Staff Role"/>
+                <TableColumn fx:id="role_name" prefWidth="75.0" text="Staff Role"/>
                 <TableColumn fx:id="staff_member_name" prefWidth="75.0" text="Staff Name"/>
                 <TableColumn fx:id="clinic_name" prefWidth="75.0" text="Clinic"/>
                 <TableColumn fx:id="appt_passed" minWidth="40.0" prefWidth="75.0" text="Passed"/>

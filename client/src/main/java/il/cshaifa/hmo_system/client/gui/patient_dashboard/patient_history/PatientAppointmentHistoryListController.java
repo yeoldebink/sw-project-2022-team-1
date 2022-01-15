@@ -70,7 +70,7 @@ public class PatientAppointmentHistoryListController extends Controller {
         e.printStackTrace();
       }
     } else {
-      System.out.println("Let user know the cancellation failed");
+      // TODO Notify user about failed cancellation
     }
   }
 

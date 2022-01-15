@@ -27,7 +27,7 @@ public class PatientAppointmentHistoryListViewController extends ViewController 
     @FXML
     private TableColumn<AppointmentForPatientHistoryView, String> appt_type_name;
     @FXML
-    private TableColumn<AppointmentForPatientHistoryView, String> specialist_role_name;
+    private TableColumn<AppointmentForPatientHistoryView, String> role_name;
     @FXML
     private TableColumn<AppointmentForPatientHistoryView, String> staff_member_name;
     @FXML
@@ -41,6 +41,10 @@ public class PatientAppointmentHistoryListViewController extends ViewController 
     private MenuItem cancel_menu_item;
 
 
+
+
+
+
     private final Patient patient;
     private ArrayList<Appointment> appt_list = null;
 
@@ -51,7 +55,8 @@ public class PatientAppointmentHistoryListViewController extends ViewController 
     @FXML
     public void initialize() {
         this.patient_name.setText(patient.getUser().getFirstName() + " " + patient.getUser().getLastName());
-        appt_table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        appt_table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+
         setCellValueFactory();
     }
 
@@ -61,7 +66,7 @@ public class PatientAppointmentHistoryListViewController extends ViewController 
         ArrayList<AppointmentForPatientHistoryView> appts_to_populate = new ArrayList<AppointmentForPatientHistoryView>();
 
         for (var appt : appt_list) {
-            appts_to_populate.add(new AppointmentForPatientHistoryView(appt));
+           appts_to_populate.add(new AppointmentForPatientHistoryView(appt));
         }
 
         appt_table.getItems().setAll(appts_to_populate);
@@ -69,20 +74,12 @@ public class PatientAppointmentHistoryListViewController extends ViewController 
 
     @FXML
     void requestCancelAppointments(ActionEvent actionEvent) {
-        var appts_selected =
-                new ArrayList<AppointmentForPatientHistoryView>(appt_table.getSelectionModel().getSelectedItems());
-        var appts_to_cancel = new ArrayList<Appointment>();
-
-        for (var appt_selected : appts_selected) {
-            for (var appt : appt_list) {
-                if (appt.getId() == appt_selected.getId()) {
-                    appts_to_cancel.add(appt);
-                }
-            }
-        }
+        var appt = appt_table.getSelectionModel().getSelectedItems().get(0).appt;
+        var appt_cancel_list = new ArrayList<Appointment>();
+        appt_cancel_list.add(appt);
 
         EventBus.getDefault()
-                .post(new PatientAppointmentListEvent(appts_to_cancel, this));
+                .post(new PatientAppointmentListEvent(appt_cancel_list, this));
     }
 
     @FXML
@@ -106,7 +103,7 @@ public class PatientAppointmentHistoryListViewController extends ViewController 
     void setCellValueFactory() {
         appt_date.setCellValueFactory((new PropertyValueFactory<>("Appt_date")));
         appt_type_name.setCellValueFactory((new PropertyValueFactory<>("Appt_type_name")));
-        specialist_role_name.setCellValueFactory((new PropertyValueFactory<>("Role_name")));
+        role_name.setCellValueFactory((new PropertyValueFactory<>("Role_name")));
         staff_member_name.setCellValueFactory((new PropertyValueFactory<>("Staff_member_name")));
         clinic_name.setCellValueFactory((new PropertyValueFactory<>("Clinic_name")));
         appt_passed.setCellValueFactory((new PropertyValueFactory<>("Appt_passed")));
@@ -121,6 +118,7 @@ public class PatientAppointmentHistoryListViewController extends ViewController 
         private final String staff_member_name;
         private final String clinic_name;
         private final String appt_passed;
+        public final Appointment appt;
 
         public AppointmentForPatientHistoryView(Appointment appointment) {
             var staff_member = appointment.getStaff_member();
@@ -132,6 +130,7 @@ public class PatientAppointmentHistoryListViewController extends ViewController 
             this.staff_member_name = staff_member.getFirstName() + " " + staff_member.getLastName();
             this.clinic_name = appointment.getClinic().getName();
             this.appt_passed = LocalDateTime.now().isAfter(appointment.getDate()) ? "Yes" : "No";
+            this.appt = appointment;
         }
 
         public Integer getId() {
