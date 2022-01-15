@@ -34,6 +34,7 @@ import il.cshaifa.hmo_system.server.server_handlers.handleAdminAppointmentMessag
 import il.cshaifa.hmo_system.server.server_handlers.handleAppointmentMessage;
 import il.cshaifa.hmo_system.server.server_handlers.handleClinicMessage;
 import il.cshaifa.hmo_system.server.server_handlers.handleLoginMessage;
+import il.cshaifa.hmo_system.server.server_handlers.handleReportMessage;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.time.DayOfWeek;
@@ -150,119 +151,6 @@ public class HMOServer extends AbstractServer {
       var assignment = new ClinicStaff(msg.clinic, staff_member);
       session_method.apply(assignment);
       session.flush();
-    }
-
-    msg.message_type = MessageType.RESPONSE;
-    client.sendToClient(msg);
-  }
-
-  private void handleReportMessage(ReportMessage msg, ConnectionToClient client)
-      throws IOException {
-
-    // we ALWAYS want to return a list, even if it's empty
-    msg.reports = new ArrayList<DailyReport>();
-
-    CriteriaBuilder cb = session.getCriteriaBuilder();
-    CriteriaQuery<Appointment> cr = cb.createQuery(Appointment.class);
-    Root<Appointment> root = cr.from(Appointment.class);
-
-    if (msg.report_type == ReportType.MISSED_APPOINTMENTS) {
-      cr.select(root)
-          .where(
-              cb.between(root.get("appt_date"), msg.start_date, msg.end_date),
-              cb.isTrue(root.get("taken")),
-              root.get("clinic").in(msg.clinics),
-              cb.isNull(root.get("called_time")));
-    } else {
-      cr.select(root)
-          .where(
-              cb.between(root.get("appt_date"), msg.start_date, msg.end_date),
-              cb.isTrue(root.get("taken")),
-              root.get("clinic").in(msg.clinics),
-              cb.isNotNull(root.get("called_time")));
-    }
-
-    List<Appointment> relevant_appointments = session.createQuery(cr).getResultList();
-
-    HashMap<LocalDate, HashMap<Clinic, DailyReport>> daily_reports_map =
-        new HashMap<LocalDate, HashMap<Clinic, DailyReport>>();
-
-    HashMap<LocalDate, HashMap<Clinic, HashMap<User, Integer>>> total_appointments =
-        new HashMap<LocalDate, HashMap<Clinic, HashMap<User, Integer>>>();
-
-    for (Appointment appt : relevant_appointments) {
-      LocalDate appt_date = appt.getDate().toLocalDate();
-      AppointmentType appt_type = appt.getType();
-      Clinic appt_clinic = appt.getClinic();
-      User appt_staff_member = appt.getStaff_member();
-
-      if (!daily_reports_map.containsKey(appt_date)) {
-        HashMap<Clinic, DailyReport> clinic_reports = new HashMap<Clinic, DailyReport>();
-        daily_reports_map.put(appt_date, clinic_reports);
-        if (msg.report_type == ReportType.AVERAGE_WAIT_TIMES) {
-          HashMap<Clinic, HashMap<User, Integer>> clinic_total_appointments =
-              new HashMap<Clinic, HashMap<User, Integer>>();
-          total_appointments.put(appt_date, clinic_total_appointments);
-        }
-      }
-
-      HashMap<Clinic, DailyReport> daily_clinics_reports = daily_reports_map.get(appt_date);
-
-      if (!daily_clinics_reports.containsKey(appt_clinic)) {
-        if (msg.report_type == ReportType.AVERAGE_WAIT_TIMES) {
-          daily_clinics_reports.put(
-              appt_clinic, new DailyAverageWaitTimeReport(appt_date.atStartOfDay(), appt_clinic));
-          total_appointments.get(appt_date).put(appt_clinic, new HashMap<User, Integer>());
-        } else {
-          daily_clinics_reports.put(
-              appt_clinic, new DailyAppointmentTypesReport(appt_date.atStartOfDay(), appt_clinic));
-        }
-      }
-
-      if (msg.report_type == ReportType.AVERAGE_WAIT_TIMES) {
-        int wait_time = (int) Duration.between(appt.getDate(), appt.getCalled_time()).toSeconds();
-        DailyAverageWaitTimeReport report =
-            (DailyAverageWaitTimeReport) daily_clinics_reports.get(appt_clinic);
-        if (!report.report_data.containsKey(appt_staff_member)) {
-          report.report_data.put(appt_staff_member, 0);
-          total_appointments.get(appt_date).get(appt_clinic).put(appt_staff_member, 0);
-        }
-
-        report.report_data.put(
-            appt_staff_member, report.report_data.get(appt_staff_member) + wait_time);
-
-        total_appointments
-            .get(appt_date)
-            .get(appt_clinic)
-            .put(
-                appt_staff_member,
-                total_appointments.get(appt_date).get(appt_clinic).get(appt_staff_member) + 1);
-
-      } else {
-        DailyAppointmentTypesReport report =
-            (DailyAppointmentTypesReport) daily_clinics_reports.get(appt_clinic);
-        if (!report.report_data.containsKey(appt_type)) {
-          report.report_data.put(appt_type, 0);
-        }
-        report.report_data.put(appt_type, report.report_data.get(appt_type) + 1);
-      }
-    }
-
-    if (msg.report_type == ReportType.AVERAGE_WAIT_TIMES) {
-      for (LocalDate date : daily_reports_map.keySet()) {
-        for (Clinic clinic : daily_reports_map.get(date).keySet()) {
-          DailyAverageWaitTimeReport dailies =
-              (DailyAverageWaitTimeReport) daily_reports_map.get(date).get(clinic);
-          for (User staff_member : dailies.report_data.keySet()) {
-            int total_appt = total_appointments.get(date).get(clinic).get(staff_member);
-            int total_wait_time = dailies.report_data.get(staff_member);
-            dailies.report_data.put(staff_member, total_wait_time / total_appt);
-          }
-        }
-      }
-    }
-    for (LocalDate date : daily_reports_map.keySet()) {
-      msg.reports.addAll(daily_reports_map.get(date).values());
     }
 
     msg.message_type = MessageType.RESPONSE;
@@ -429,9 +317,9 @@ public class HMOServer extends AbstractServer {
         handler = new handleClinicMessage((ClinicMessage) msg, session);
       } else if (msg_class == LoginMessage.class) {
         handler = new handleLoginMessage((LoginMessage) msg, session);
-      } //else if (msg_class == ReportMessage.class) {
-//        handler = new handleReportMessage((ReportMessage) msg, session);
-//      } else if (msg_class == SetAppointmentMessage.class) {
+      } else if (msg_class == ReportMessage.class) {
+        handler = new handleReportMessage((ReportMessage) msg, session);
+      } // else if (msg_class == SetAppointmentMessage.class) {
 //        handler = new handleSetAppointmentMessage((SetAppointmentMessage) msg, session);
 //      } else if (msg_class == SetSpecialistAppointmentMessage.class) {
 //        handler = new handleSetSpecialistAppointmentMessage((SetSpecialistAppointmentMessage) msg, session);
