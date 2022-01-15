@@ -6,6 +6,8 @@ import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.AppointmentListEvent;
 import il.cshaifa.hmo_system.client.events.PatientAppointmentListEvent;
 import il.cshaifa.hmo_system.client.events.PatientAppointmentListEvent.Status;
+import il.cshaifa.hmo_system.client.events.SetAppointmentEvent;
+import il.cshaifa.hmo_system.client.events.SetAppointmentEvent.Action;
 import java.io.IOException;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -47,18 +49,17 @@ public class PatientAppointmentHistoryListController extends Controller {
   }
 
   @Subscribe
-  public void onCancelAppointmentRespond(PatientAppointmentListEvent event) {
+  public void onCancelAppointmentRespond(SetAppointmentEvent event) {
     if (!event.getSender().equals(HMOClient.getClient())) return;
 
-    if (event.status == Status.ACCEPTED) {
-      System.out.println("Successfully canceled the appointment"); //TODO let user see this
+    if (event.action == Action.AUTHORIZE) {
       try {
         HMOClient.getClient().getPatientHistory();
       } catch (IOException e) {
         e.printStackTrace();
       }
-    } else if (event.status == Status.REJECT) {
-      System.out.println("NOTIFY USER OF DEATH"); //TODO let user see this
+    } else {
+      System.out.println("Let user know the cancellation failed");
     }
   }
 

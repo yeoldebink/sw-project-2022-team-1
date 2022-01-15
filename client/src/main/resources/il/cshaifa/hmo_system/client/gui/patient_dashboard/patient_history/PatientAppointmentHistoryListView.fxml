@@ -38,7 +38,7 @@
                 <ContextMenu fx:id="context_menu">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#requestCancelAppointments"
-                                  text="Cancel Appointment" fx:id="cancel_appt_menu_item"/>
+                                  text="Cancel Appointment" fx:id="cancel_menu_item"/>
                     </items>
                 </ContextMenu>
             </contextMenu>
