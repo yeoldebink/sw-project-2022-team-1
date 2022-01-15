@@ -32,6 +32,7 @@ import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import il.cshaifa.hmo_system.server.server_handlers.MessageHandler;
 import il.cshaifa.hmo_system.server.server_handlers.handleAdminAppointmentMessage;
 import il.cshaifa.hmo_system.server.server_handlers.handleAppointmentMessage;
+import il.cshaifa.hmo_system.server.server_handlers.handleClinicMessage;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.time.DayOfWeek;
@@ -116,62 +117,6 @@ public class HMOServer extends AbstractServer {
 
     message.message_type = MessageType.RESPONSE;
     client.sendToClient(message);
-  }
-
-  /**
-   * Get clinics list and send this list to client
-   *
-   * @param client The client that made the request
-   * @throws IOException
-   */
-  protected void sendClinicList(ConnectionToClient client) throws IOException {
-    var cb = session.getCriteriaBuilder();
-    CriteriaQuery<Clinic> cr = cb.createQuery(Clinic.class);
-    Root<Clinic> root = cr.from(Clinic.class);
-    cr.select(root);
-
-    Query<Clinic> query = session.createQuery(cr);
-    List<Clinic> results = query.getResultList();
-
-    ClinicMessage clinics_msg = new ClinicMessage();
-    clinics_msg.clinics = results;
-    clinics_msg.message_type = MessageType.RESPONSE;
-
-    client.sendToClient(clinics_msg);
-  }
-
-  /**
-   * @param entity_list Entities to be updated to DB
-   */
-  protected void updateEntities(List<?> entity_list) {
-    for (var entity : entity_list) {
-      session.update(entity);
-      session.flush();
-    }
-  }
-
-  protected void addEntities(List<?> entity_list) {
-    for (var entity : entity_list) {
-      session.persist(entity);
-      session.flush();
-    }
-  }
-
-  /**
-   * If message.clinics is null, this means client requested all of the clinics else, client has
-   * made changes to this clinics and apply changes to DB
-   *
-   * @param message ClinicMessage
-   * @param client  The client that made the request
-   * @throws IOException SQL exception
-   */
-  protected void handleClinicMessage(ClinicMessage message, ConnectionToClient client)
-      throws IOException {
-    if (message.clinics == null) {
-      sendClinicList(client);
-    } else {
-      updateEntities(message.clinics);
-    }
   }
 
   protected Patient getUserPatient(User user) {
@@ -528,9 +473,9 @@ public class HMOServer extends AbstractServer {
         handler = new handleAdminAppointmentMessage((AdminAppointmentMessage) msg, session);
       } else if (msg_class == AppointmentMessage.class) {
         handler = new handleAppointmentMessage((AppointmentMessage) msg, session);
-      } //else if (msg_class == ClinicMessage.class) {
-//        handler = new handlerhandleClinicMessage((ClinicMessage) msg, session);
-//      } else if (msg_class == LoginMessage.class) {
+      } else if (msg_class == ClinicMessage.class) {
+        handler = new handleClinicMessage((ClinicMessage) msg, session);
+      } //else if (msg_class == LoginMessage.class) {
 //        handler = new handleLoginMessage((LoginMessage) msg, session);
 //      } else if (msg_class == ReportMessage.class) {
 //        handler = new handleReportMessage((ReportMessage) msg, session);

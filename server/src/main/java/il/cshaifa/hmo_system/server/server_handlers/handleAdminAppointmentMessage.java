@@ -49,7 +49,7 @@ public class handleAdminAppointmentMessage extends MessageHandler {
       }
 
       // If staff_member is null, open clinic services (Vaccine, COVID test)
-      // else, open doctors appointments
+      // else, open doctor's appointments
       if (class_message.staff_member == null) {
         openClinicServices();
       } else {
@@ -103,11 +103,7 @@ public class handleAdminAppointmentMessage extends MessageHandler {
       current_datetime = current_datetime.plusMinutes(duration);
     }
 
-    for (Appointment appt : new_appointments) {
-      session.save(appt);
-    }
-
-    session.flush();
+    saveEntities(new_appointments);
     class_message.type = AdminAppointmentMessageType.ACCEPT;
   }
 
@@ -154,20 +150,12 @@ public class handleAdminAppointmentMessage extends MessageHandler {
       current_datetime = current_datetime.plusMinutes(duration);
     }
 
-    for (Appointment appt : new_appointments) {
-      session.save(appt);
-    }
-
-    session.flush();
+    saveEntities(new_appointments);
     class_message.type = AdminAppointmentMessageType.ACCEPT;
   }
 
   private void deleteAppointments(){
-    for (Appointment appt : class_message.appointments) {
-      session.delete(appt);
-      session.flush();
-    }
-
+    removeEntities(class_message.appointments);
     class_message.type = AdminAppointmentMessageType.ACCEPT;
   }
 
