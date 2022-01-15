@@ -16,8 +16,9 @@ public class AdminAppointmentMessage extends Message {
   }
 
   public enum RejectionType {
-    OVERLAPPING,
-    IN_THE_PAST
+    CLINIC_CLOSED,
+    IN_THE_PAST,
+    OVERLAPPING
   }
 
   public AdminAppointmentMessageType type;

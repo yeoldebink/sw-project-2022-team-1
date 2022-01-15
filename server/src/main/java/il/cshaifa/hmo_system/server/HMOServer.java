@@ -29,6 +29,9 @@ import il.cshaifa.hmo_system.reports.DailyAverageWaitTimeReport;
 import il.cshaifa.hmo_system.reports.DailyReport;
 import il.cshaifa.hmo_system.server.ocsf.AbstractServer;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
+import il.cshaifa.hmo_system.server.server_handlers.MessageHandler;
+import il.cshaifa.hmo_system.server.server_handlers.handleAdminAppointmentMessage;
+import il.cshaifa.hmo_system.server.server_handlers.handleAppointmentMessage;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.time.DayOfWeek;
@@ -56,9 +59,7 @@ import org.hibernate.service.ServiceRegistry;
 
 public class HMOServer extends AbstractServer {
 
-  private static final int VACCINE_APPT_MINUTES = 10;
-  private static final int FAMILY_DOCTOR_APPT_MINUTES = 15;
-  private static final int SPECIALIST_APPT_MINUTES = 20;
+
 
   private static Session session;
 
@@ -328,76 +329,6 @@ public class HMOServer extends AbstractServer {
     client.sendToClient(msg);
   }
 
-  private void handleAdminAppointmentMessage(AdminAppointmentMessage msg, ConnectionToClient client)
-      throws IOException {
-    if (msg.type == AdminAppointmentMessageType.DELETE) {
-      for (var appt : msg.appointments) {
-        session.delete(appt);
-        session.flush();
-      }
-
-      msg.type = AdminAppointmentMessageType.ACCEPT;
-    } else if (msg.staff_member != null) { // will be null for vaccines
-      // verify that this staff member has no appointments in any clinic during these times
-      int len;
-      Role specialist_role;
-      if (msg.staff_member.getRole().isSpecialist()) {
-        len = SPECIALIST_APPT_MINUTES;
-        specialist_role = msg.staff_member.getRole();
-      } else {
-        len = FAMILY_DOCTOR_APPT_MINUTES;
-        specialist_role = null;
-      }
-
-      LocalDateTime end_datetime = msg.start_datetime.plusMinutes((long) msg.count * len);
-
-      var cb = session.getCriteriaBuilder();
-      var cr = cb.createQuery(Appointment.class);
-      var root = cr.from(Appointment.class);
-
-      if (msg.start_datetime.isAfter(LocalDateTime.now())) {
-        cr.select(root)
-            .where(
-                cb.equal(root.get("staff_member"), msg.staff_member),
-                cb.between(
-                    root.get("appt_date"), msg.start_datetime, end_datetime.plusSeconds(-1)));
-
-        // if this staff member already has appointments at these times, reject
-        if (session.createQuery(cr).getResultList().size() > 0) {
-          msg.type = AdminAppointmentMessageType.REJECT;
-          msg.rejectionType = RejectionType.OVERLAPPING;
-        } else {
-          var current_datetime = LocalDateTime.from(msg.start_datetime);
-          // TODO: validate by clinic hours as well
-          while (current_datetime.isBefore(end_datetime)) {
-            var appt =
-                new Appointment(
-                    null,
-                    msg.appt_type,
-                    specialist_role,
-                    msg.staff_member,
-                    msg.clinic,
-                    current_datetime,
-                    null,
-                    null,
-                    false);
-            session.save(appt);
-            session.flush();
-
-            current_datetime = current_datetime.plusMinutes(len);
-          }
-
-          msg.type = AdminAppointmentMessageType.ACCEPT;
-        }
-      } else {
-        msg.type = AdminAppointmentMessageType.REJECT;
-        msg.rejectionType = RejectionType.IN_THE_PAST;
-      }
-    }
-    msg.message_type = MessageType.RESPONSE;
-    client.sendToClient(msg);
-  }
-
   private void handleReportMessage(ReportMessage msg, ConnectionToClient client)
       throws IOException {
 
@@ -659,27 +590,33 @@ public class HMOServer extends AbstractServer {
     try {
       session = getSessionFactory().openSession();
       session.beginTransaction();
+      MessageHandler handler = null;
 
       Class<?> msg_class = msg.getClass();
-      if (msg_class == ClinicMessage.class) {
-        handleClinicMessage((ClinicMessage) msg, client);
-      } else if (msg_class == LoginMessage.class) {
-        handleLogin((LoginMessage) msg, client);
-      } else if (msg_class == AppointmentMessage.class) {
-        handleAppointmentMessage((AppointmentMessage) msg, client);
-      } else if (msg_class == ClinicStaffMessage.class) {
-        handleStaffMessage((ClinicStaffMessage) msg, client);
-      } else if (msg_class == StaffAssignmentMessage.class) {
-        handleStaffAssignmentMessage((StaffAssignmentMessage) msg, client);
-      } else if (msg_class == AdminAppointmentMessage.class) {
-        handleAdminAppointmentMessage((AdminAppointmentMessage) msg, client);
-      } else if (msg_class == ReportMessage.class) {
-        handleReportMessage((ReportMessage) msg, client);
-      } else if (msg_class == SetAppointmentMessage.class) {
-        handleSetAppointmentMessage((SetAppointmentMessage) msg, client);
-      } else if (msg_class == SetSpecialistAppointmentMessage.class) {
-        handleSetSpecialistAppointmentMessage((SetSpecialistAppointmentMessage) msg, client);
-      }
+      if (msg_class == AdminAppointmentMessage.class) {
+        handler = new handleAdminAppointmentMessage((AdminAppointmentMessage) msg, session);
+//      } else if (msg_class == AppointmentMessage.class) {
+//        handler = new handleAppointmentMessage((AppointmentMessage) msg, session);
+//      } else if (msg_class == ClinicMessage.class) {
+//        handler = new handlerhandleClinicMessage((ClinicMessage) msg, session);
+//      } else if (msg_class == LoginMessage.class) {
+//        handler = new handleLoginMessage((LoginMessage) msg, session);
+//      } else if (msg_class == ReportMessage.class) {
+//        handler = new handleReportMessage((ReportMessage) msg, session);
+//      } else if (msg_class == SetAppointmentMessage.class) {
+//        handler = new handleSetAppointmentMessage((SetAppointmentMessage) msg, session);
+//      } else if (msg_class == SetSpecialistAppointmentMessage.class) {
+//        handler = new handleSetSpecialistAppointmentMessage((SetSpecialistAppointmentMessage) msg, session);
+//      } else if (msg_class == StaffAssignmentMessage.class) {
+//        handler = new handleStaffAssignmentMessage((StaffAssignmentMessage) msg, session);
+//      } else if (msg_class == ClinicStaffMessage.class) {
+//        handler = new handleStaffMessage((ClinicStaffMessage) msg, session);
+//      }
+
+      handler.handleMessage();
+      handler.message.message_type = MessageType.RESPONSE; // move to class
+      client.sendToClient(handler.message);
+
       session.close();
     } catch (Exception exception) {
       exception.printStackTrace();
