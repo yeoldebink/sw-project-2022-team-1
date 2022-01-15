@@ -59,16 +59,8 @@ public class PatientDashboardController extends Controller {
     FXMLLoader loader = new FXMLLoader(getClass().getResource(ResourcePath.get_fxml(
         PatientAppointmentHistoryListViewController.class)));
 
-    loader.setControllerFactory(
-        c-> {
-          return new PatientAppointmentHistoryListViewController(HMOClient.getClient().getConnected_patient());
-        }
-    );
-    try {
-      Utils.openNewWindow(PatientAppointmentHistoryListViewController.class,
-          PatientAppointmentHistoryListController.class, loader, false);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+    Utils.openNewSingletonWindow(PatientAppointmentHistoryListViewController.class, PatientAppointmentHistoryListController.class, false,
+        c->  new PatientAppointmentHistoryListViewController(HMOClient.getClient().getConnected_patient())
+     );
   }
 }

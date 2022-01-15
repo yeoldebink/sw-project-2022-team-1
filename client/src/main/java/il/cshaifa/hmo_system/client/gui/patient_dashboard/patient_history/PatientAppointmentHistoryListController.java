@@ -8,13 +8,17 @@ import il.cshaifa.hmo_system.client.events.PatientAppointmentListEvent;
 import il.cshaifa.hmo_system.client.events.PatientAppointmentListEvent.Status;
 import il.cshaifa.hmo_system.client.events.SetAppointmentEvent;
 import il.cshaifa.hmo_system.client.events.SetAppointmentEvent.Action;
+import il.cshaifa.hmo_system.client.gui.patient_dashboard.appointments.SetAppointmentController;
 import java.io.IOException;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import org.greenrobot.eventbus.Subscribe;
 
 public class PatientAppointmentHistoryListController extends Controller {
-  public PatientAppointmentHistoryListController(ViewController view_controller, Stage stage) {
+
+  private static PatientAppointmentHistoryListController instance;
+
+  private PatientAppointmentHistoryListController(ViewController view_controller, Stage stage) {
     super(view_controller, stage);
 
     try {
@@ -22,6 +26,13 @@ public class PatientAppointmentHistoryListController extends Controller {
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  public static PatientAppointmentHistoryListController getInstance() {return instance;}
+
+  public static void create(ViewController view_controller, Stage stage) {
+    if (instance != null && instance.view_controller != null) return;
+    instance = new PatientAppointmentHistoryListController(view_controller, stage);
   }
 
   @Subscribe
