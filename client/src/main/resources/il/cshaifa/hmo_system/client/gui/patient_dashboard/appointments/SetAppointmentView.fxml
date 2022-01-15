@@ -23,7 +23,7 @@
     </Background>
   </background>
 
-  <VBox AnchorPane.rightAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.bottomAnchor="10" AnchorPane.topAnchor="10">
+  <VBox spacing="10" AnchorPane.rightAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.bottomAnchor="10" AnchorPane.topAnchor="10">
     <ImageView>
       <Image url="@set-an-appointment-banner.jpg"/>
     </ImageView>
@@ -94,7 +94,11 @@
         </VBox>
       </AnchorPane>
     </StackPane>
-    <Label fx:id="errorLabel" visible="false" />
+    <Label fx:id="errorLabel" visible="false" text="There are no appointments available for the service you selected.">
+      <graphic>
+        <FontIcon iconLiteral="mdi-alert-outline" iconSize="20" />
+      </graphic>
+    </Label>
   </VBox>
 
 </AnchorPane>

@@ -5,6 +5,7 @@ import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.AppointmentListEvent;
 import il.cshaifa.hmo_system.client.events.SetAppointmentEvent;
+import il.cshaifa.hmo_system.client.events.SetAppointmentEvent.Action;
 import il.cshaifa.hmo_system.entities.AppointmentType;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -90,16 +91,11 @@ public class SetAppointmentController extends Controller {
   public void onResponseFromClient(SetAppointmentEvent event) {
     if (!event.getSender().equals(HMOClient.getClient())) return;
     else {
-      switch (event.action) {
-        case AUTHORIZE:
-          // TODO: todo, todo todo todo todo todooooooooo todododooodooooooo
-          break;
-        case REJECT:
-          Platform.runLater(() -> ((SetAppointmentViewController) view_controller).takeAppointmentFailed());
-          break;
-        default:
-          break;
-      }
+      Platform.runLater(() -> ((SetAppointmentViewController) view_controller).takeAppointmentFailed(
+          event.action == Action.AUTHORIZE,
+          (int) stage.getX() + 100,
+          (int) stage.getY() + 100
+      ));
     }
   }
 }

@@ -13,6 +13,9 @@ import java.util.HashMap;
 import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.DateCell;
@@ -21,13 +24,21 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import jdk.jshell.spi.ExecutionControl.NotImplementedException;
 import org.greenrobot.eventbus.EventBus;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 public class SetAppointmentViewController extends ViewController {
   private final Patient patient;
@@ -69,7 +80,10 @@ public class SetAppointmentViewController extends ViewController {
 
     chooseApptTypeAccordion.setExpandedPane(chooseApptTypeAccordion.getPanes().get(0));
     gpAppointmentsButton.setOnAction(
-        (event) -> requestAppointments(new AppointmentType("Family Doctor")));
+        (event) -> {
+          errorLabel.setVisible(false);
+          requestAppointments(new AppointmentType("Family Doctor"));
+        });
 
     clinicNameLabel.setText(patient.getHome_clinic().getName());
 
@@ -133,7 +147,6 @@ public class SetAppointmentViewController extends ViewController {
 
   public void populateAppointmentDates(List<Appointment> appointments) {
     if (appointments.size() == 0) {
-      errorLabel.setText("There are no appointments available for the service you selected.");
       errorLabel.setVisible(true);
       return;
     } else {
@@ -196,24 +209,53 @@ public class SetAppointmentViewController extends ViewController {
 
   @FXML
   public void backToChooseType(ActionEvent event) {
-    if (appointmentsTablePane.isVisible()
-        && !appointmentsTable.getSelectionModel().getSelectedItem().getAppointment().isTaken()) {
-      EventBus.getDefault()
-          .post(
-              new SetAppointmentEvent(
-                  this,
-                  Action.RELEASE,
-                  patient,
-                  appointmentsTable.getSelectionModel().getSelectedItem().getAppointment()));
-    }
-
-    switchToPane(chooseApptTypeAccordion);
     requestAppointments(lastUpdatedAppointmentType);
+    switchToPane(chooseApptTypeAccordion);
   }
 
-  public void takeAppointmentFailed() {
-    errorLabel.setText("There was an error processing your request.\nPlease select a different appointment time.");
-    errorLabel.setVisible(true);
+  public void takeAppointmentFailed(boolean success, int dialogX, int dialogY) {
+    Stage stage = new Stage();
+    VBox vbox = new VBox();
+    vbox.setPadding(new Insets(10, 10, 10, 10));
+    vbox.setSpacing(10);
+    vbox.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
+
+    if (!success) {
+      Label error = new Label("There was an error processing your request.\nPlease select a different appointment time.");
+      FontIcon alert = new FontIcon();
+      alert.setIconLiteral("mdi-alert-outline");
+      alert.setIconSize(40);
+      alert.setIconColor(Color.DARKRED);
+      error.setGraphic(alert);
+      vbox.getChildren().add(error);
+    } else {
+      Image image = new Image(getClass().getResourceAsStream("see_you_soon.jpg"));
+      ImageView imageView = new ImageView(image);
+      vbox.getChildren().add(imageView);
+    }
+
+    HBox hbox = new HBox();
+    hbox.setAlignment(Pos.CENTER_RIGHT);
+
+    Button okButton = new Button("Back");
+    FontIcon back = new FontIcon();
+    back.setIconLiteral("mdi-undo-variant");
+    back.setIconSize(20);
+    okButton.setGraphic(back);
+
+    okButton.setOnAction((event) -> stage.close());
+
+    hbox.getChildren().add(okButton);
+    vbox.getChildren().add(hbox);
+
+    stage.setScene(new Scene(vbox));
+    stage.initModality(Modality.APPLICATION_MODAL);
+
+    stage.setX(dialogX);
+    stage.setY(dialogY);
+
+    stage.showAndWait();
+
     backToChooseType(null);
   }
 
