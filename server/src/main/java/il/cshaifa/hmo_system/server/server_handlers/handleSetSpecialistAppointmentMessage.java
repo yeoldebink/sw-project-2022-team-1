@@ -1,7 +1,6 @@
 package il.cshaifa.hmo_system.server.server_handlers;
 
 import il.cshaifa.hmo_system.entities.Appointment;
-import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.entities.Role;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.SetSpecialistAppointmentMessage;
