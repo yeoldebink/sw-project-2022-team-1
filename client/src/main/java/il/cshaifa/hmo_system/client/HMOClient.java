@@ -6,6 +6,7 @@ import il.cshaifa.hmo_system.client.events.AppointmentListEvent;
 import il.cshaifa.hmo_system.client.events.AssignStaffEvent;
 import il.cshaifa.hmo_system.client.events.ClinicEvent;
 import il.cshaifa.hmo_system.client.events.ClinicStaffEvent;
+import il.cshaifa.hmo_system.client.events.Event;
 import il.cshaifa.hmo_system.client.events.LoginEvent;
 import il.cshaifa.hmo_system.client.events.LoginEvent.Response;
 import il.cshaifa.hmo_system.client.events.ReportEvent;
@@ -98,8 +99,20 @@ public class HMOClient extends AbstractClient {
         handleReportMessage((ReportMessage) message);
       } else if (message.getClass().equals(SetAppointmentMessage.class)) {
         handleSetAppointmentMessage((SetAppointmentMessage) message);
+      } else if (message.getClass().equals(SetSpecialistAppointmentMessage.class)){
+        handleSpecialistAppointmentMessage((SetSpecialistAppointmentMessage) message);
       }
     }
+  }
+
+  private void handleSpecialistAppointmentMessage(SetSpecialistAppointmentMessage message) {
+    Event event = null;
+    if (message.action == SetSpecialistAppointmentMessage.Action.GET_APPOINTMENTS){
+      event = new AppointmentListEvent((ArrayList<Appointment>) message.appointments, this);
+    } else if (message.action == SetSpecialistAppointmentMessage.Action.GET_ROLES){
+      event = new SetAppointmentEvent(this, message.role_list);
+    }
+    EventBus.getDefault().post(event);
   }
 
   private void handleSetAppointmentMessage(SetAppointmentMessage message) {

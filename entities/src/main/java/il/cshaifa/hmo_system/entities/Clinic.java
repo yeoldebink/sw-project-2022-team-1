@@ -1,6 +1,12 @@
 package il.cshaifa.hmo_system.entities;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -162,6 +168,33 @@ public class Clinic implements Serializable {
         return;
       default:
     }
+  }
+
+  private List<LocalTime> timeStringToLocalTime(String time_string){
+    List<LocalTime> result = new ArrayList<>();
+    String[] hours = time_string.strip().split(", ");
+    for (String time_window : hours){
+      String open, close;
+      String[] open_close = time_window.split("-");
+      open = open_close[0];
+      close = open_close[1];
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+      result.add(LocalTime.parse(open, formatter));
+      result.add(LocalTime.parse(close, formatter));
+    }
+    return result;
+  }
+
+  public List<List<LocalTime>> get_work_hours(){
+    List<List<LocalTime>> work_hours= new ArrayList<>();
+    work_hours.add(timeStringToLocalTime(sun_hours));
+    work_hours.add(timeStringToLocalTime(mon_hours));
+    work_hours.add(timeStringToLocalTime(tue_hours));
+    work_hours.add(timeStringToLocalTime(wed_hours));
+    work_hours.add(timeStringToLocalTime(thu_hours));
+    work_hours.add(timeStringToLocalTime(fri_hours));
+    work_hours.add(timeStringToLocalTime(sat_hours));
+    return work_hours;
   }
 
   @Override

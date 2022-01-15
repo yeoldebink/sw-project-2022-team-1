@@ -4,11 +4,17 @@ import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.entities.Role;
-import il.cshaifa.hmo_system.messages.SetAppointmentMessage.Action;
+import java.util.List;
 
 public class SetAppointmentEvent extends Event {
+  public enum Action {
+    LOCK,
+    TAKE,
+    RELEASE,
+  }
 
   public enum Response {
+    ROLES_RESPONSE,
     AUTHORIZE,
     REJECT
   }
@@ -19,6 +25,7 @@ public class SetAppointmentEvent extends Event {
   public Appointment appointment;
   public AppointmentType appointmentType;
   public Role role;
+  public List<Role> specialistRoles;
 
   public SetAppointmentEvent(
       Object sender, Action action, Patient patient, Appointment appointment) {
@@ -26,5 +33,11 @@ public class SetAppointmentEvent extends Event {
     this.action = action;
     this.patient = patient;
     this.appointment = appointment;
+  }
+
+  public SetAppointmentEvent(Object sender, List<Role> role_list){
+    super(sender);
+    response = Response.ROLES_RESPONSE;
+    specialistRoles = role_list;
   }
 }
