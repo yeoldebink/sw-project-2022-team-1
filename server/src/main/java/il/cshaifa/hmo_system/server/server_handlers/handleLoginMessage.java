@@ -21,6 +21,7 @@ public class handleLoginMessage extends MessageHandler {
   }
 
   /** If login successful will update the LoginMessage with user and his details */
+  @Override
   public void handleMessage(){
     User user = session.get(User.class, class_message.id);
     CriteriaBuilder cb = session.getCriteriaBuilder();
