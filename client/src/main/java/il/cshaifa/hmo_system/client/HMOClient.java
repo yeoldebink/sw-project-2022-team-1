@@ -242,7 +242,7 @@ public class HMOClient extends AbstractClient {
   /** Requests from server all of the connected patients appointments, past & future */
   public void getPatientHistory() throws IOException {
     client.sendToServer(
-        new AppointmentMessage(this.connected_user, AppointmentRequestType.PATIENT_HISTORY));
+        new AppointmentMessage(this.connected_patient, AppointmentRequestType.PATIENT_HISTORY));
   }
 
   /**
@@ -251,8 +251,9 @@ public class HMOClient extends AbstractClient {
    * @param type The type of appointment the user requested family doctor/covid test...
    */
   public void getFamilyDoctorAppointments(AppointmentType type) throws IOException {
+    // TODO: Change name to getClinicAppointment(type)
     AppointmentMessage appt_msg =
-        new AppointmentMessage(this.connected_user, AppointmentRequestType.CLINIC_APPOINTMENTS);
+        new AppointmentMessage(this.connected_patient, AppointmentRequestType.CLINIC_APPOINTMENTS);
     appt_msg.type = type;
     appt_msg.clinic = connected_patient.getHome_clinic();
     client.sendToServer(appt_msg);
