@@ -1,9 +1,9 @@
 package il.cshaifa.hmo_system.client.gui.patient_dashboard.patient_history;
 
-import il.cshaifa.hmo_system.client.events.AdminAppointmentListEvent;
+import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.PatientAppointmentListEvent;
-import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.appointment_list.AppointmentForAdminTableView;
 import il.cshaifa.hmo_system.entities.Appointment;
+import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.entities.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,7 +15,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class PatientAppointmentHistoryListViewController {
+public class PatientAppointmentHistoryListViewController extends ViewController {
 
     @FXML
     private TableView<AppointmentForPatientHistoryView> appt_table;
@@ -41,16 +41,16 @@ public class PatientAppointmentHistoryListViewController {
     @FXML
     private MenuItem cancel_menu_item;
 
-    private final User patient;
+    private final Patient patient;
     private ArrayList<Appointment> appt_list = null;
 
-    public PatientAppointmentHistoryListViewController(User connected_patient) {
+    public PatientAppointmentHistoryListViewController(Patient connected_patient) {
         this.patient = connected_patient;
     }
 
     @FXML
     public void initialize() {
-        this.patient_name.setText(patient.getFirstName() + " " + patient.getLastName());
+        this.patient_name.setText(patient.getUser().getFirstName() + " " + patient.getUser().getLastName());
         appt_table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         setCellValueFactory();
     }
@@ -106,7 +106,7 @@ public class PatientAppointmentHistoryListViewController {
     void setCellValueFactory() {
         appt_date.setCellValueFactory((new PropertyValueFactory<>("Appt_date")));
         appt_type_name.setCellValueFactory((new PropertyValueFactory<>("Appt_type_name")));
-        specialist_role_name.setCellValueFactory((new PropertyValueFactory<>("Specialist_role_name")));
+        specialist_role_name.setCellValueFactory((new PropertyValueFactory<>("Role_name")));
         staff_member_name.setCellValueFactory((new PropertyValueFactory<>("Staff_member_name")));
         clinic_name.setCellValueFactory((new PropertyValueFactory<>("Clinic_name")));
         appt_passed.setCellValueFactory((new PropertyValueFactory<>("Appt_passed")));
@@ -117,7 +117,7 @@ public class PatientAppointmentHistoryListViewController {
         private final Integer id;
         private final LocalDateTime appt_date;
         private final String appt_type_name;
-        private final String specialist_role_name;
+        private final String role_name;
         private final String staff_member_name;
         private final String clinic_name;
         private final String appt_passed;
@@ -128,7 +128,7 @@ public class PatientAppointmentHistoryListViewController {
             this.id = appointment.getId();
             this.appt_date = appointment.getDate();
             this.appt_type_name = appointment.getType().getName();
-            this.specialist_role_name = appointment.getSpecialist_role().getName();
+            this.role_name = appointment.getStaff_member().getRole().getName();
             this.staff_member_name = staff_member.getFirstName() + " " + staff_member.getLastName();
             this.clinic_name = appointment.getClinic().getName();
             this.appt_passed = LocalDateTime.now().isAfter(appointment.getDate()) ? "Yes" : "No";
@@ -146,8 +146,8 @@ public class PatientAppointmentHistoryListViewController {
             return appt_type_name;
         }
 
-        public String getSpecialist_role_name() {
-            return specialist_role_name;
+        public String getRole_name() {
+            return role_name;
         }
 
         public String getStaff_member_name() {
@@ -164,4 +164,3 @@ public class PatientAppointmentHistoryListViewController {
     }
 
 }
-
