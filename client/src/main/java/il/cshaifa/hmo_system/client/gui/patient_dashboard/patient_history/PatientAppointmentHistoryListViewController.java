@@ -1,7 +1,6 @@
 package il.cshaifa.hmo_system.client.gui.patient_dashboard.patient_history;
 
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
-
 import il.cshaifa.hmo_system.client.events.PatientAppointmentListEvent;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.Patient;

@@ -38,11 +38,12 @@ public class PatientAppointmentHistoryListController extends Controller {
   @Subscribe
   public void onCancelAppointmentRequest(PatientAppointmentListEvent event) {
     if (!event.getSender().equals(this.view_controller)) return;
-    var appointment_update = event.appointments.get(0);
 
-    appointment_update.setPatient(null);
-    appointment_update.setTaken(false);
-    // TODO: Request client to cancel appointment
+    try {
+      HMOClient.getClient().cancelAppointment(event.appointments.get(0));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   @Subscribe
