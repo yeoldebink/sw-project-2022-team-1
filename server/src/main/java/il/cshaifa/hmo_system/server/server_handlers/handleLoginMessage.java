@@ -6,7 +6,9 @@ import il.cshaifa.hmo_system.entities.HMOUtilities;
 import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.LoginMessage;
+import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -14,16 +16,28 @@ import org.hibernate.Session;
 
 public class handleLoginMessage extends MessageHandler {
   public LoginMessage class_message;
+  public ConnectionToClient client;
 
-  public handleLoginMessage(LoginMessage message, Session session) {
+  public static HashMap<User, ConnectionToClient> connected_users;
+  public static HashMap<ConnectionToClient, User> connected_clients;
+
+  public handleLoginMessage(LoginMessage message, Session session, ConnectionToClient client) {
     super(message, session);
+    if (connected_users == null) connected_users = new HashMap<>();
     this.class_message = (LoginMessage) this.message;
+    this.client = client;
   }
 
   /** If login successful will update the LoginMessage with user and his details */
   @Override
   public void handleMessage(){
     User user = session.get(User.class, class_message.id);
+
+    if (connected_users.containsKey(user)) {
+      class_message.already_logged_in = true;
+      return;
+    }
+
     CriteriaBuilder cb = session.getCriteriaBuilder();
     CriteriaQuery<Clinic> cr = cb.createQuery(Clinic.class);
 
@@ -50,6 +64,9 @@ public class handleLoginMessage extends MessageHandler {
           cr.select(root.get("clinic")).where(cb.equal(root.get("user"), user));
           class_message.employee_clinics = session.createQuery(cr).getResultList();
         }
+
+        connected_users.put(user, client);
+        connected_clients.put(client, user);
       }
     }
   }
