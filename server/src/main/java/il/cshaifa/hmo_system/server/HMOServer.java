@@ -4,29 +4,19 @@ import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.ClinicStaff;
-import il.cshaifa.hmo_system.entities.HMOUtilities;
 import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.entities.Role;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.AdminAppointmentMessage;
-import il.cshaifa.hmo_system.messages.AdminAppointmentMessage.AdminAppointmentMessageType;
-import il.cshaifa.hmo_system.messages.AdminAppointmentMessage.RejectionType;
 import il.cshaifa.hmo_system.messages.AppointmentMessage;
-import il.cshaifa.hmo_system.messages.AppointmentMessage.AppointmentRequestType;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
 import il.cshaifa.hmo_system.messages.ClinicStaffMessage;
 import il.cshaifa.hmo_system.messages.LoginMessage;
 import il.cshaifa.hmo_system.messages.Message.MessageType;
 import il.cshaifa.hmo_system.messages.ReportMessage;
-import il.cshaifa.hmo_system.messages.ReportMessage.ReportType;
 import il.cshaifa.hmo_system.messages.SetAppointmentMessage;
-import il.cshaifa.hmo_system.messages.SetAppointmentMessage.Action;
 import il.cshaifa.hmo_system.messages.SetSpecialistAppointmentMessage;
 import il.cshaifa.hmo_system.messages.StaffAssignmentMessage;
-import il.cshaifa.hmo_system.messages.StaffAssignmentMessage.Type;
-import il.cshaifa.hmo_system.reports.DailyAppointmentTypesReport;
-import il.cshaifa.hmo_system.reports.DailyAverageWaitTimeReport;
-import il.cshaifa.hmo_system.reports.DailyReport;
 import il.cshaifa.hmo_system.server.ocsf.AbstractServer;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import il.cshaifa.hmo_system.server.server_handlers.MessageHandler;
@@ -38,29 +28,13 @@ import il.cshaifa.hmo_system.server.server_handlers.handleReportMessage;
 import il.cshaifa.hmo_system.server.server_handlers.handleSetAppointmentMessage;
 import il.cshaifa.hmo_system.server.server_handlers.handleSetSpecialistAppointmentMessage;
 import il.cshaifa.hmo_system.server.server_handlers.handleStaffAssignmentMessage;
+import il.cshaifa.hmo_system.server.server_handlers.handleStaffMessage;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.time.DayOfWeek;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Function;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Order;
-import javax.persistence.criteria.Root;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.query.Query;
 import org.hibernate.service.ServiceRegistry;
 
 public class HMOServer extends AbstractServer {
@@ -89,37 +63,6 @@ public class HMOServer extends AbstractServer {
     ServiceRegistry serviceRegistry =
         new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
     return configuration.buildSessionFactory(serviceRegistry);
-  }
-
-  private void handleStaffMessage(ClinicStaffMessage message, ConnectionToClient client)
-      throws IOException {
-    var cb = session.getCriteriaBuilder();
-    CriteriaQuery<ClinicStaff> cr = cb.createQuery(ClinicStaff.class);
-    Root<ClinicStaff> root = cr.from(ClinicStaff.class);
-    cr.select(root);
-    message.staff_list = session.createQuery(cr).getResultList();
-
-    HashSet<User> assigned_staff = new HashSet<>();
-    for (var cstaff : message.staff_list) {
-      assigned_staff.add(cstaff.getUser());
-    }
-
-    var cru = cb.createQuery(User.class);
-    var uroot = cru.from(User.class);
-    cru.select(uroot)
-        .where(
-            cb.notLike(uroot.get("role").get("name"), "%Manager%"),
-            cb.notEqual(uroot.get("role").get("name"), "Patient"));
-    var all_staff = session.createQuery(cru).getResultList();
-
-    for (var staff_member : all_staff) {
-      if (!assigned_staff.contains(staff_member)) {
-        message.staff_list.add(new ClinicStaff(new Clinic(), staff_member));
-      }
-    }
-
-    message.message_type = MessageType.RESPONSE;
-    client.sendToClient(message);
   }
 
   /**
@@ -152,9 +95,9 @@ public class HMOServer extends AbstractServer {
         handler = new handleSetSpecialistAppointmentMessage((SetSpecialistAppointmentMessage) msg, session);
       } else if (msg_class == StaffAssignmentMessage.class) {
         handler = new handleStaffAssignmentMessage((StaffAssignmentMessage) msg, session);
-      } //else if (msg_class == ClinicStaffMessage.class) {
-//        handler = new handleStaffMessage((ClinicStaffMessage) msg, session);
-//      }
+      } else if (msg_class == ClinicStaffMessage.class) {
+        handler = new handleStaffMessage((ClinicStaffMessage) msg, session);
+      }
 
       handler.handleMessage();
       handler.message.message_type = MessageType.RESPONSE; // move to class
