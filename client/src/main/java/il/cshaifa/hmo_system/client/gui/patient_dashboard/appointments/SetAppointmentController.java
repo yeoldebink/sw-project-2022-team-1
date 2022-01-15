@@ -16,9 +16,7 @@ public class SetAppointmentController extends Controller {
 
   private static SetAppointmentController instance;
 
-  private SetAppointmentController(
-      ViewController view_controller,
-      Stage stage) {
+  private SetAppointmentController(ViewController view_controller, Stage stage) {
     super(view_controller, stage);
   }
 
@@ -32,16 +30,25 @@ public class SetAppointmentController extends Controller {
   }
 
   private boolean patientIsMinor() {
-    return HMOClient.getClient().getConnected_patient().getBirthday().isAfter(LocalDateTime.now().minusYears(18));
+    return HMOClient.getClient()
+        .getConnected_patient()
+        .getBirthday()
+        .isAfter(LocalDateTime.now().minusYears(18));
   }
 
   @Subscribe
-  public void onGeneralPhysicianAppointmentsRequested(SetAppointmentEvent event) {
-    if (!event.getSender().equals(this.view_controller)) return;
+  public void onAppointmentsRequested(SetAppointmentEvent event) {
+    if (!event.getSender().equals(this.view_controller) || event.action != null) return;
     try {
-      HMOClient.getClient().getFamilyDoctorAppointments(new AppointmentType(
-          patientIsMinor() ? "Pediatrician" : "Family Doctor"
-      ));
+      switch (event.appointmentType.getName()) {
+        case "Family Doctor":
+          HMOClient.getClient()
+              .getFamilyDoctorAppointments(
+                  new AppointmentType(patientIsMinor() ? "Pediatrician" : "Family Doctor"));
+          break;
+        default:
+          break;
+      }
     } catch (IOException ioException) {
       ioException.printStackTrace();
     }
@@ -50,7 +57,49 @@ public class SetAppointmentController extends Controller {
   @Subscribe
   public void onAppointmentListEvent(AppointmentListEvent event) {
     Platform.runLater(
-        () -> ((SetAppointmentViewController) view_controller).populateAppointmentDates(event.appointments)
-    );
+        () ->
+            ((SetAppointmentViewController) view_controller)
+                .populateAppointmentDates(event.appointments));
+  }
+
+  @Subscribe
+  public void onAppointmentSelectionChanged(SetAppointmentEvent event) {
+    if (!event.getSender().equals(this.view_controller) || event.action == null) return;
+    else {
+      try {
+        switch (event.action) {
+          case RELEASE:
+            HMOClient.getClient().cancelAppointment(event.appointment);
+            break;
+          case LOCK:
+            HMOClient.getClient().lockAppointment(event.appointment);
+            break;
+          case TAKE:
+            HMOClient.getClient().takeAppointment(event.appointment);
+            break;
+          default:
+            break;
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  @Subscribe
+  public void onResponseFromClient(SetAppointmentEvent event) {
+    if (!event.getSender().equals(HMOClient.getClient())) return;
+    else {
+      switch (event.action) {
+        case AUTHORIZE:
+          // TODO: todo, todo todo todo todo todooooooooo todododooodooooooo
+          break;
+        case REJECT:
+          Platform.runLater(() -> ((SetAppointmentViewController) view_controller).takeAppointmentFailed());
+          break;
+        default:
+          break;
+      }
+    }
   }
 }

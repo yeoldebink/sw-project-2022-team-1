@@ -13,9 +13,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 public class PatientHistoryListController extends Controller {
 
-  public PatientHistoryListController(
-      ViewController view_controller,
-      Stage stage) {
+  public PatientHistoryListController(ViewController view_controller, Stage stage) {
     super(view_controller, stage);
 
     try {
@@ -26,44 +24,42 @@ public class PatientHistoryListController extends Controller {
   }
 
   @Subscribe
-  public void onPatientHistoryRespond(AppointmentListEvent event){
+  public void onPatientHistoryRespond(AppointmentListEvent event) {
     if (!event.getSender().equals(HMOClient.getClient())) return;
 
-    Platform.runLater(
-        ()-> System.out.println("Populate me!!")
-    );
+    Platform.runLater(() -> System.out.println("Populate me!!"));
   }
 
   @Subscribe
-  public void onCancelAppointmentRequest(PatientAppointmentListEvent event){
+  public void onCancelAppointmentRequest(PatientAppointmentListEvent event) {
     if (!event.getSender().equals(this.view_controller)) return;
     var appointment_update = event.appointments.get(0);
 
     appointment_update.setPatient(null);
     appointment_update.setTaken(false);
-    //TODO: Request client to cancel appointment
+    // TODO: Request client to cancel appointment
   }
 
   @Subscribe
-  public void onCancelAppointmentRespond(PatientAppointmentListEvent event){
-    if(!event.getSender().equals(HMOClient.getClient())) return;
+  public void onCancelAppointmentRespond(PatientAppointmentListEvent event) {
+    if (!event.getSender().equals(HMOClient.getClient())) return;
 
-    if (event.status == Status.ACCEPTED){
+    if (event.status == Status.ACCEPTED) {
       System.out.println("NOTIFY USER ALL GOOD");
       try {
         HMOClient.getClient().getPatientHistory();
       } catch (IOException e) {
         e.printStackTrace();
       }
-    } else if (event.status == Status.REJECT){
+    } else if (event.status == Status.REJECT) {
       System.out.println("NOTIFY USER OF DEATH");
     }
   }
 
   @Subscribe
-  public void onShowAppointmentDetailsRequest(PatientAppointmentListEvent event){
-    if (!event.getSender().equals(this.view_controller) || event.status != Status.SHOW_APPOINTMENT_DATA)
-      return;
+  public void onShowAppointmentDetailsRequest(PatientAppointmentListEvent event) {
+    if (!event.getSender().equals(this.view_controller)
+        || event.status != Status.SHOW_APPOINTMENT_DATA) return;
 
     // TODO: Load Appointment View
   }

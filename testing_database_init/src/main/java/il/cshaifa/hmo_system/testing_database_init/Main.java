@@ -265,13 +265,6 @@ public class Main {
             clinics.get("Mile End"),
             LocalDateTime.of(1977, 12, 5, 2, 34)));
 
-    patients.put(
-        "Avi Ron",
-        new Patient(
-            users.get("Avi Ron"),
-            clinics.get("Sacred Heart"),
-            LocalDateTime.of(2010, 5, 17, 16, 52)));
-
     for (var patient : patients.values()) {
       session.save(patient);
       session.flush();

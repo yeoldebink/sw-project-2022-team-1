@@ -98,7 +98,8 @@ public class Utils<C> {
   public static String prettifyDateTime(LocalDateTime date) {
     Function<Integer, String> prettyInt = i -> i < 10 ? "0" + i.toString() : i.toString();
 
-    return String.format("%s, %02d %s %s %02d:%02d",
+    return String.format(
+        "%s, %02d %s %s %02d:%02d",
         // day of week and month in 3-letter format
         date.getDayOfWeek().toString().substring(0, 3),
         date.getDayOfMonth(),

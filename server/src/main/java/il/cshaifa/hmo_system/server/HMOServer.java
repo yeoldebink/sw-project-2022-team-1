@@ -506,15 +506,16 @@ public class HMOServer extends AbstractServer {
       return false;
     }
 
-    // get from db all patients locked appointments
+    // get from db all patients locked appointments (besides maybe this one)
+    // "locked" here meaning "locked by me BUT not taken by me"
     CriteriaBuilder cb = session.getCriteriaBuilder();
     CriteriaQuery<Appointment> cr = cb.createQuery(Appointment.class);
     Root<Appointment> root = cr.from(Appointment.class);
     cr.select(root)
         .where(
-            cb.between(
-                root.get("lock_time"), LocalDateTime.now(), LocalDateTime.now().plusMinutes(5)),
-            cb.equal(root.get("patient"), patient));
+            cb.equal(root.get("patient"), patient),
+            cb.equal(root.get("taken"), false),
+            cb.notEqual(root, appt));
     List<Appointment> users_locked_appointments = session.createQuery(cr).getResultList();
 
     // lock the relevant appointment

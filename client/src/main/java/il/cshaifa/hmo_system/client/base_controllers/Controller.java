@@ -1,10 +1,7 @@
 package il.cshaifa.hmo_system.client.base_controllers;
 
-import javafx.event.EventHandler;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 public abstract class Controller {
   protected ViewController view_controller;

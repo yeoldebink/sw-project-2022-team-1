@@ -2,21 +2,19 @@ package il.cshaifa.hmo_system.client.gui.patient_dashboard.appointments;
 
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.SetAppointmentEvent;
+import il.cshaifa.hmo_system.client.events.SetAppointmentEvent.Action;
 import il.cshaifa.hmo_system.client.utils.Utils;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.Patient;
-import il.cshaifa.hmo_system.entities.Role;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Accordion;
+import javafx.scene.control.Button;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -24,21 +22,28 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import jdk.jshell.spi.ExecutionControl.NotImplementedException;
 import org.greenrobot.eventbus.EventBus;
 
 public class SetAppointmentViewController extends ViewController {
   private final Patient patient;
   private HashMap<LocalDate, ArrayList<Appointment>> appointmentsByDate;
+  private AppointmentType lastUpdatedAppointmentType;
 
   @FXML private Label clinicNameLabel;
 
   @FXML private StackPane stackPane;
 
   @FXML private Accordion chooseApptTypeAccordion;
+  @FXML private VBox gpAppointmentVBox;
+  @FXML private Button gpAppointmentsButton;
 
-  @FXML private AnchorPane chooseApptDatePane;
-  @FXML private DatePicker apptDatePicker;
+  private final DatePicker apptDatePicker;
+  private Pane apptDatePickerParent;
 
   @FXML private AnchorPane appointmentsTablePane;
   @FXML private TableView<AppointmentRow> appointmentsTable;
@@ -47,13 +52,24 @@ public class SetAppointmentViewController extends ViewController {
   @FXML private TableColumn<AppointmentRow, String> apptDoctorColumn;
   @FXML private TableColumn<AppointmentRow, String> apptDateColumn;
 
+  @FXML private Button setAppointmentButton;
+
+  @FXML private Label errorLabel;
+
   public SetAppointmentViewController(Patient patient) {
     this.patient = patient;
+    apptDatePicker = new DatePicker();
+    apptDatePicker.setPromptText("Select a date");
   }
 
   @FXML
   public void initialize() {
+    errorLabel.setTextFill(Color.DARKRED);
+    setAppointmentButton.setDisable(true);
+
     chooseApptTypeAccordion.setExpandedPane(chooseApptTypeAccordion.getPanes().get(0));
+    gpAppointmentsButton.setOnAction(
+        (event) -> requestAppointments(new AppointmentType("Family Doctor")));
 
     clinicNameLabel.setText(patient.getHome_clinic().getName());
 
@@ -65,12 +81,66 @@ public class SetAppointmentViewController extends ViewController {
     apptDoctorColumn.setCellValueFactory(new PropertyValueFactory<>("AppointmentDoctor"));
     apptDateColumn.setCellValueFactory(new PropertyValueFactory<>("AppointmentDateTime"));
 
-    apptDatePicker.valueProperty().addListener((ov, oldValue, newValue) -> {
-      populateAppointmentsTable();
-    });
+    apptDatePicker
+        .valueProperty()
+        .addListener(
+            (ov, oldValue, newValue) -> {
+              if (newValue != null) {
+                populateAppointmentsTable(newValue);
+                apptDatePicker.setValue(null);
+              }
+            });
+
+    appointmentsTable
+        .getSelectionModel()
+        .selectedItemProperty()
+        .addListener(
+            (obs, oldSelection, newSelection) -> {
+              setAppointmentButton.setDisable(newSelection == null);
+              if (newSelection == null) {
+                EventBus.getDefault()
+                    .post(
+                        new SetAppointmentEvent(
+                            this, Action.RELEASE, patient, oldSelection.getAppointment()));
+              } else {
+                EventBus.getDefault()
+                    .post(
+                        new SetAppointmentEvent(
+                            this, Action.LOCK, patient, newSelection.getAppointment()));
+              }
+            });
+  }
+
+  private void moveApptDatePicker(AppointmentType apptType) {
+    // now we need to put the datepicker where it belongs
+    if (apptDatePickerParent != null) apptDatePickerParent.getChildren().remove(apptDatePicker);
+
+    Pane newParent;
+
+    switch (apptType.getName()) {
+      case "Family Doctor":
+      case "Pediatrician":
+        newParent = gpAppointmentVBox;
+        break;
+      default:
+        newParent = gpAppointmentVBox;
+        new NotImplementedException("Haven't put this shit in yet, fam").printStackTrace();
+    }
+
+    newParent.getChildren().add(apptDatePicker);
+    apptDatePickerParent = newParent;
   }
 
   public void populateAppointmentDates(List<Appointment> appointments) {
+    if (appointments.size() == 0) {
+      errorLabel.setText("There are no appointments available for the service you selected.");
+      errorLabel.setVisible(true);
+      return;
+    } else {
+      errorLabel.setVisible(false);
+    }
+
+    // hash appts by date for the picker
     appointmentsByDate = new HashMap<>();
 
     for (var appt : appointments) {
@@ -79,23 +149,36 @@ public class SetAppointmentViewController extends ViewController {
       appointmentsByDate.get(date).add(appt);
     }
 
-    apptDatePicker.setDayCellFactory(datePicker -> new DateCell() {
-      public void updateItem(LocalDate date, boolean empty) {
-        super.updateItem(date, empty);
-        setDisable(!appointmentsByDate.containsKey(date));
-      }
-    });
+    apptDatePicker.setDayCellFactory(
+        datePicker ->
+            new DateCell() {
+              public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                setDisable(!appointmentsByDate.containsKey(date));
+              }
+            });
 
-    switchToPane(chooseApptDatePane);
+    moveApptDatePicker(appointments.get(0).getType());
   }
 
-  private void populateAppointmentsTable() {
+  private void populateAppointmentsTable(LocalDate date) {
     appointmentsTable.getItems().clear();
-    for (var appt : appointmentsByDate.get(apptDatePicker.getValue())) {
+    for (var appt : appointmentsByDate.get(date)) {
       appointmentsTable.getItems().add(new AppointmentRow(appt));
     }
 
     switchToPane(appointmentsTablePane);
+  }
+
+  @FXML
+  public void takeAppointment(ActionEvent event) {
+    EventBus.getDefault()
+        .post(
+            new SetAppointmentEvent(
+                this,
+                Action.TAKE,
+                patient,
+                appointmentsTable.getSelectionModel().getSelectedItem().getAppointment()));
   }
 
   public void switchToPane(Object pane) {
@@ -104,16 +187,34 @@ public class SetAppointmentViewController extends ViewController {
     }
   }
 
-  @FXML
-  public void setAppointmentWithGP(ActionEvent event) {
+  public void requestAppointments(AppointmentType apptType) {
+    lastUpdatedAppointmentType = apptType;
     SetAppointmentEvent apptEvent = new SetAppointmentEvent(this, null, null, null);
-    apptEvent.appointmentType = new AppointmentType("Family Doctor");
+    apptEvent.appointmentType = apptType;
     EventBus.getDefault().post(apptEvent);
   }
 
   @FXML
   public void backToChooseType(ActionEvent event) {
+    if (appointmentsTablePane.isVisible()
+        && !appointmentsTable.getSelectionModel().getSelectedItem().getAppointment().isTaken()) {
+      EventBus.getDefault()
+          .post(
+              new SetAppointmentEvent(
+                  this,
+                  Action.RELEASE,
+                  patient,
+                  appointmentsTable.getSelectionModel().getSelectedItem().getAppointment()));
+    }
+
     switchToPane(chooseApptTypeAccordion);
+    requestAppointments(lastUpdatedAppointmentType);
+  }
+
+  public void takeAppointmentFailed() {
+    errorLabel.setText("There was an error processing your request.\nPlease select a different appointment time.");
+    errorLabel.setVisible(true);
+    backToChooseType(null);
   }
 
   public static class AppointmentRow {
@@ -123,7 +224,9 @@ public class SetAppointmentViewController extends ViewController {
       this.appointment = appointment;
     }
 
-    public Appointment getAppointment() {return appointment;}
+    public Appointment getAppointment() {
+      return appointment;
+    }
 
     public String getClinicName() {
       return appointment.getClinic().getName();
@@ -134,7 +237,10 @@ public class SetAppointmentViewController extends ViewController {
     }
 
     public String getAppointmentDoctor() {
-      return "Dr. " + appointment.getStaff_member().getFirstName() + " " + appointment.getStaff_member().getLastName();
+      return "Dr. "
+          + appointment.getStaff_member().getFirstName()
+          + " "
+          + appointment.getStaff_member().getLastName();
     }
 
     public String getAppointmentDateTime() {
