@@ -13,7 +13,7 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
   xmlns:fx="http://javafx.com/fxml"
   fx:controller="il.cshaifa.hmo_system.client.gui.patient_dashboard.appointments.SetAppointmentViewController"
-  prefHeight="500.0" prefWidth="900.0">
+  prefHeight="500.0" prefWidth="1000.0" stylesheets="@../hmo_lite.css">
 
   <background>
     <Background>

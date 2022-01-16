@@ -2,6 +2,7 @@ package il.cshaifa.hmo_system.client.gui.patient_dashboard;
 
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.SetAppointmentEvent;
+import il.cshaifa.hmo_system.client.events.MyClinicEvent;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.Patient;
 import javafx.event.ActionEvent;
@@ -67,5 +68,9 @@ public class PatientDashboardViewController extends ViewController {
               date.getHour(),
               date.getMinute()));
     }
+  }
+
+  @FXML public void viewMyClinic(ActionEvent event) {
+    EventBus.getDefault().post(new MyClinicEvent(this));
   }
 }
