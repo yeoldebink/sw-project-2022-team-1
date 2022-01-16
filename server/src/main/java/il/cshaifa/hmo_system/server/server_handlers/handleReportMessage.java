@@ -70,8 +70,9 @@ public class handleReportMessage extends MessageHandler {
 
     daily_reports_map = new HashMap<>();
     CriteriaQuery<ClinicStaff> cr_ClinicStaff = cb.createQuery(ClinicStaff.class);
-    Root<ClinicStaff> root_ClinicStaff = cr.from(ClinicStaff.class);
-    cr_ClinicStaff.select(root_ClinicStaff).where(root_ClinicStaff.get("clinic").in(class_message.clinics));
+    Root<ClinicStaff> root_ClinicStaff = cr_ClinicStaff.from(ClinicStaff.class);
+    cr_ClinicStaff.select(root_ClinicStaff).where(
+        root_ClinicStaff.get("clinic").in(class_message.clinics));
     List<ClinicStaff> clinics_staff = session.createQuery(cr_ClinicStaff).getResultList();
 
     while (!current_date.isAfter(report_end_date)) {
@@ -104,7 +105,7 @@ public class handleReportMessage extends MessageHandler {
     LocalDate report_end_date = class_message.end_date.toLocalDate();
 
     CriteriaQuery<ClinicStaff> cr_ClinicStaff = cb.createQuery(ClinicStaff.class);
-    Root<ClinicStaff> root_ClinicStaff = cr.from(ClinicStaff.class);
+    Root<ClinicStaff> root_ClinicStaff = cr_ClinicStaff.from(ClinicStaff.class);
     cr_ClinicStaff.select(root_ClinicStaff).where(root_ClinicStaff.get("clinic").in(class_message.clinics));
     List<ClinicStaff> clinics_staff = session.createQuery(cr_ClinicStaff).getResultList();
 

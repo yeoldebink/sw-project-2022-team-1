@@ -1,13 +1,8 @@
 package il.cshaifa.hmo_system.server.server_handlers;
 
 import il.cshaifa.hmo_system.entities.Appointment;
-import il.cshaifa.hmo_system.messages.AdminAppointmentMessage;
 import il.cshaifa.hmo_system.messages.AppointmentMessage;
 import il.cshaifa.hmo_system.messages.AppointmentMessage.AppointmentRequestType;
-import il.cshaifa.hmo_system.messages.Message;
-import il.cshaifa.hmo_system.messages.Message.MessageType;
-import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
-import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -70,14 +65,13 @@ public class handleAppointmentMessage extends MessageHandler {
             cb.isFalse(root.get("taken")),
             cb.or(cb.isNull(root.get("lock_time")),
                 cb.lessThan(root.get("lock_time"), start),
-                cb.and(cb.isNotNull(root.get("lock_time")),
-                    cb.equal(root.get("patient"), class_message.patient)))
+                cb.equal(root.get("patient"), class_message.patient))
         );
     List<Appointment> all_appointments = session.createQuery(cr).getResultList();
     List<Appointment> appointments_in_work_hours = new ArrayList<>();
     for (Appointment appt : all_appointments) {
       DayOfWeek day = appt.getDate().toLocalDate().getDayOfWeek();
-      List<LocalTime> clinic_hours = class_message.clinic.timeStringToLocalTime(day.getValue());
+      List<LocalTime> clinic_hours = class_message.clinic.timeStringToLocalTimeList(day.getValue());
       for (int i = 0; i < clinic_hours.toArray().length; i += 2) {
         LocalTime open_time = clinic_hours.get(i), close_time = clinic_hours.get(i+1);
         LocalTime appt_time = appt.getDate().toLocalTime();
