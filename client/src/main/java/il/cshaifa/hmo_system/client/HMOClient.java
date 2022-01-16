@@ -106,13 +106,11 @@ public class HMOClient extends AbstractClient {
   }
 
   private void handleSpecialistAppointmentMessage(SetSpecialistAppointmentMessage message) {
-    Event event = null;
     if (message.action == SetSpecialistAppointmentMessage.Action.GET_APPOINTMENTS){
-      event = new AppointmentListEvent((ArrayList<Appointment>) message.appointments, this);
+      EventBus.getDefault().post(new AppointmentListEvent((ArrayList<Appointment>) message.appointments, this));
     } else if (message.action == SetSpecialistAppointmentMessage.Action.GET_ROLES){
-      event = new SetAppointmentEvent(this, message.role_list);
+      EventBus.getDefault().post(new SetAppointmentEvent(this, message.role_list));
     }
-    EventBus.getDefault().post(event);
   }
 
   private void handleSetAppointmentMessage(SetAppointmentMessage message) {

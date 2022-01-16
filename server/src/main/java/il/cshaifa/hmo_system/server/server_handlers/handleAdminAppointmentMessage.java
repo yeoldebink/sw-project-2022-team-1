@@ -18,7 +18,7 @@ import org.hibernate.Session;
 
 public class handleAdminAppointmentMessage extends MessageHandler {
   private final AdminAppointmentMessage class_message;
-  private final Map<String, Long> appointment_duration;
+  private static Map<String, Long> appointment_duration;
   private final CriteriaBuilder cb;
   private final CriteriaQuery<Appointment> cr;
   private final Root<Appointment> root;
@@ -26,13 +26,15 @@ public class handleAdminAppointmentMessage extends MessageHandler {
   public handleAdminAppointmentMessage(AdminAppointmentMessage message, Session session) {
     super(message, session);
     this.class_message = (AdminAppointmentMessage) this.message;
-    this.appointment_duration = new HashMap<>();
-    this.appointment_duration.put("Family Doctor", 15L);
-    this.appointment_duration.put("Pediatrician", 15L);
-    this.appointment_duration.put("Specialist", 20L);
-    this.appointment_duration.put("COVID Test", 10L);
-    this.appointment_duration.put("COVID Vaccine", 10L);
-    this.appointment_duration.put("Flu Vaccine", 10L);
+    if (appointment_duration == null) {
+      appointment_duration = new HashMap<>();
+      appointment_duration.put("Family Doctor", 15L);
+      appointment_duration.put("Pediatrician", 15L);
+      appointment_duration.put("Specialist", 20L);
+      appointment_duration.put("COVID Test", 10L);
+      appointment_duration.put("COVID Vaccine", 10L);
+      appointment_duration.put("Flu Vaccine", 10L);
+      }
     cb = session.getCriteriaBuilder();
     cr = cb.createQuery(Appointment.class);
     root = cr.from(Appointment.class);
@@ -80,7 +82,7 @@ public class handleAdminAppointmentMessage extends MessageHandler {
     LocalDateTime current_datetime = LocalDateTime.from(class_message.start_datetime);
     List<Appointment> new_appointments = new ArrayList<>();
     DayOfWeek day = class_message.start_datetime.toLocalDate().getDayOfWeek();
-    List<LocalTime> opening_hours = class_message.clinic.timeStringToLocalTime(day.getValue());
+    List<LocalTime> opening_hours = class_message.clinic.timeStringToLocalTimeList(day.getValue());
 
     while (current_datetime.isBefore(end_datetime)) {
       Appointment appt = null;
@@ -127,7 +129,7 @@ public class handleAdminAppointmentMessage extends MessageHandler {
     LocalDateTime current_datetime = LocalDateTime.from(class_message.start_datetime);
     List<Appointment> new_appointments = new ArrayList<>();
     DayOfWeek day = class_message.start_datetime.toLocalDate().getDayOfWeek();
-    List<LocalTime> opening_hours = class_message.clinic.timeStringToLocalTime(day.getValue());
+    List<LocalTime> opening_hours = class_message.clinic.timeStringToLocalTimeList(day.getValue());
 
     while (current_datetime.isBefore(end_datetime)) {
       Appointment appt = null;

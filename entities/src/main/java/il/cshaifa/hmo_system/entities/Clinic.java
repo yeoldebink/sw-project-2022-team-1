@@ -170,7 +170,7 @@ public class Clinic implements Serializable {
     }
   }
 
-  public List<LocalTime> timeStringToLocalTime(int day_num){
+  public List<LocalTime> timeStringToLocalTimeList(int day_num){
     String day_hours;
     // 1 is monday
     switch (day_num){

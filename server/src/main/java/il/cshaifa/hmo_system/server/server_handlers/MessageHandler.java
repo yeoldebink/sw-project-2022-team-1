@@ -4,7 +4,7 @@ import il.cshaifa.hmo_system.messages.Message;
 import java.util.List;
 import org.hibernate.Session;
 
-public class MessageHandler {
+public abstract class MessageHandler {
   public Message message;
   public Session session;
 
@@ -13,7 +13,7 @@ public class MessageHandler {
     this.session = session;
   }
 
-  public void handleMessage(){}
+  public abstract void handleMessage();
 
   /**
    * @param entity_list Entities to be added to DB
