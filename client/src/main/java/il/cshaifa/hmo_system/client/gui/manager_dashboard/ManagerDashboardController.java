@@ -3,8 +3,11 @@ package il.cshaifa.hmo_system.client.gui.manager_dashboard;
 import il.cshaifa.hmo_system.client.HMOClient;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
+import il.cshaifa.hmo_system.client.events.AddAppointmentEvent;
 import il.cshaifa.hmo_system.client.events.ClinicEvent;
 import il.cshaifa.hmo_system.client.gui.ResourcePath;
+import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.add_appointment.AddDoctorAppointmentsController;
+import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.add_appointment.AddDoctorAppointmentsViewController;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_list_view.AdminClinicListController;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_staff.ClinicStaffListController;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_view.AdminClinicController;
@@ -82,6 +85,28 @@ public class ManagerDashboardController extends Controller {
     try {
       Utils.openNewWindow(
           AdminClinicViewController.class, AdminClinicController.class, loader, true);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Subscribe
+  public void onTestOrVaccineAddingRequest(AddAppointmentEvent event){
+    if(!event.getSender().equals(this.view_controller)) return;
+
+    FXMLLoader loader = new FXMLLoader(getClass().getResource(ResourcePath.get_fxml(
+        AddDoctorAppointmentsViewController.class)));
+
+    loader.setControllerFactory(
+        c-> {
+          return new AddDoctorAppointmentsViewController(event.type);
+        });
+
+    try {
+      Utils.OpenNewWindow(
+          AddDoctorAppointmentsViewController.class, AddDoctorAppointmentsController.class,
+          loader, false
+      );
     } catch (Exception e) {
       e.printStackTrace();
     }

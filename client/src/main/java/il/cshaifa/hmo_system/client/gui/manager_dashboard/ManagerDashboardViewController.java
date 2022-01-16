@@ -1,11 +1,13 @@
 package il.cshaifa.hmo_system.client.gui.manager_dashboard;
 
 import il.cshaifa.hmo_system.client.base_controllers.RoleDefinedViewController;
+import il.cshaifa.hmo_system.client.events.AddAppointmentEvent;
 import il.cshaifa.hmo_system.client.events.ClinicEvent;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_list_view.AdminClinicListViewController;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_staff.ClinicStaffListViewController;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.report_view.ReportListViewController;
 import il.cshaifa.hmo_system.client.utils.Utils;
+import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.User;
 import java.io.IOException;
@@ -84,5 +86,24 @@ public class ManagerDashboardViewController extends RoleDefinedViewController {
 
   public ReportListViewController getReportListViewController() {
     return reportListViewController;
+  }
+
+  public void addFluVaccinceAppt(ActionEvent actionEvent) {
+    addTestOrVaccineAppointments(new AppointmentType("Flu Vaccine"));
+  }
+
+
+  public void addCovidVaccinceAppt(ActionEvent actionEvent) {
+    addTestOrVaccineAppointments(new AppointmentType("COVID Vaccine"));
+  }
+
+  public void addCovidTests(ActionEvent actionEvent) {
+    addTestOrVaccineAppointments(new AppointmentType("COVID Test"));
+  }
+
+  private void addTestOrVaccineAppointments(AppointmentType appointmentType){
+    var event = new AddAppointmentEvent(null, null, null, this);
+    event.type = appointmentType;
+    EventBus.getDefault().post(event);
   }
 }

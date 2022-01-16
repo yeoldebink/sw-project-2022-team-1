@@ -1,6 +1,7 @@
 package il.cshaifa.hmo_system.client.events;
 
 import il.cshaifa.hmo_system.CommonEnums.AddAppointmentRejectionReason;
+import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.User;
 import java.time.LocalDateTime;
 
@@ -15,6 +16,7 @@ public class AddAppointmentEvent extends Event {
   public AddAppointmentEvent(Object sender) {
     super(sender);
   }
+  public AppointmentType type;
 
   public AddAppointmentEvent(
       User staff_member, LocalDateTime start_datetime, Integer count_appointments, Object sender) {
