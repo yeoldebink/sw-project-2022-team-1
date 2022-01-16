@@ -324,6 +324,8 @@ public class HMOClient extends AbstractClient {
    */
   public void updateClinic(Clinic clinic) throws IOException {
     client.sendToServer(new ClinicMessage(clinic));
+    // ensure new clinic data is saved locally as well for HMO manager
+    if (connected_user.getRole().getName().equals("Clinic Manager")) connected_employee_clinics.set(0, clinic);
   }
 
   /** Receives a list of staff members to assign to the current Clinic Manager's clinic */
