@@ -103,7 +103,7 @@ public class HMOClient extends AbstractClient {
 
   private void handleSetAppointmentMessage(SetAppointmentMessage message) {
     SetAppointmentEvent.Action action;
-    if (message.action != Action.TAKE) return;
+    if (message.action == Action.LOCK) return;
     else if (message.success) {
       action = SetAppointmentEvent.Action.AUTHORIZE;
     } else {
