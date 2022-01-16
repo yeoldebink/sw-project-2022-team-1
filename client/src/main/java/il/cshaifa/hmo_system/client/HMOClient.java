@@ -102,15 +102,16 @@ public class HMOClient extends AbstractClient {
   }
 
   private void handleSetAppointmentMessage(SetAppointmentMessage message) {
-    SetAppointmentEvent.Action action;
+    SetAppointmentEvent.Response response;
     if (message.action == Action.LOCK) return;
     else if (message.success) {
-      action = SetAppointmentEvent.Action.AUTHORIZE;
+      response = SetAppointmentEvent.Response.AUTHORIZE;
     } else {
-      action = SetAppointmentEvent.Action.REJECT;
+      response = SetAppointmentEvent.Response.REJECT;
     }
     SetAppointmentEvent event =
-        new SetAppointmentEvent(this, action, getConnected_patient(), message.appointment);
+        new SetAppointmentEvent(this, message.action, getConnected_patient(), message.appointment);
+    event.response = response;
     EventBus.getDefault().post(event);
   }
 

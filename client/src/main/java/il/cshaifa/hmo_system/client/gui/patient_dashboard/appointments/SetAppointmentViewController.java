@@ -2,11 +2,11 @@ package il.cshaifa.hmo_system.client.gui.patient_dashboard.appointments;
 
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.SetAppointmentEvent;
-import il.cshaifa.hmo_system.client.events.SetAppointmentEvent.Action;
 import il.cshaifa.hmo_system.client.utils.Utils;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.Patient;
+import il.cshaifa.hmo_system.messages.SetAppointmentMessage.Action;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -213,7 +213,7 @@ public class SetAppointmentViewController extends ViewController {
     switchToPane(chooseApptTypeAccordion);
   }
 
-  public void takeAppointmentFailed(boolean success, int dialogX, int dialogY) {
+  public void takeAppointment(boolean success, int dialogX, int dialogY) {
     Stage stage = new Stage();
     VBox vbox = new VBox();
     vbox.setPadding(new Insets(10, 10, 10, 10));
