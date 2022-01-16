@@ -23,7 +23,7 @@
     <AnchorPane>
       <VBox spacing="10" AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="9" AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="0">
         <Label fx:id="clinicName" styleClass="h1-label" GridPane.rowIndex="0" GridPane.columnIndex="0" />
-        <GridPane vgap="10">
+        <GridPane vgap="10" hgap="10">
           <Label text="Manager: " GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="h2-label" />
           <Label fx:id="managerName" GridPane.rowIndex="1" GridPane.columnIndex="1" styleClass="h2-label" />
 
