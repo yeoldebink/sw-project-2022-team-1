@@ -52,6 +52,7 @@ public class PatientDashboardController extends Controller {
         c -> new MyClinicViewController(HMOClient.getClient().getConnected_patient().getHome_clinic())
     );
 }
+
   @Subscribe
   public void onPatientHistoryRequest(AppointmentListEvent event){
     if(!event.getSender().equals(this.view_controller)) return;
