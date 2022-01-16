@@ -33,6 +33,7 @@ public class handleReportMessage extends MessageHandler {
   private final CriteriaQuery<Appointment> cr;
   private final Root<Appointment> root;
   private List<Appointment> relevant_appointments;
+  private String[] clinics_general_services;
 
   public handleReportMessage(ReportMessage message, Session session) {
     super(message, session);
@@ -40,9 +41,15 @@ public class handleReportMessage extends MessageHandler {
     cb = session.getCriteriaBuilder();
     cr = cb.createQuery(Appointment.class);
     root = cr.from(Appointment.class);
+    clinics_general_services = new String[]{
+        "COVID Test",
+        "COVID Vaccine",
+        "Flu Vaccine",
+        "Nurse",
+        "Lab Tests"
+    };
   }
 
-  // TODO: role to string
   @Override
   public void handleMessage() {
     if (class_message.report_type == ReportType.APPOINTMENT_ATTENDANCE) {
@@ -64,24 +71,25 @@ public class handleReportMessage extends MessageHandler {
     daily_reports_map = new HashMap<>();
     CriteriaQuery<ClinicStaff> cr_ClinicStaff = cb.createQuery(ClinicStaff.class);
     Root<ClinicStaff> root_ClinicStaff = cr.from(ClinicStaff.class);
-    cr_ClinicStaff.select(root_ClinicStaff).where(root.get("clinic").in(class_message.clinics));
+    cr_ClinicStaff.select(root_ClinicStaff).where(root_ClinicStaff.get("clinic").in(class_message.clinics));
     List<ClinicStaff> clinics_staff = session.createQuery(cr_ClinicStaff).getResultList();
 
     while (!current_date.isAfter(report_end_date)) {
       daily_reports_map.put(current_date, new HashMap<>());
-      for (ClinicStaff staff_member : clinics_staff) {
-        if (!daily_reports_map.get(current_date).containsKey(staff_member.getClinic())) {
-          DailyAppointmentTypesReport clinic_daily_report =
-              new DailyAppointmentTypesReport(
-                  current_date.atStartOfDay(), staff_member.getClinic());
-          daily_reports_map.get(current_date).put(staff_member.getClinic(), clinic_daily_report);
+      for (Clinic clinic : class_message.clinics){
+        daily_reports_map.get(current_date).
+            put(clinic, new DailyAppointmentTypesReport(current_date.atStartOfDay(), clinic));
+        for (String service : clinics_general_services){
+          ((DailyAppointmentTypesReport)daily_reports_map.get(current_date).get(clinic)).
+              report_data.put(service, 0);
         }
-        if (!((DailyAppointmentTypesReport)
-                daily_reports_map.get(current_date).get(staff_member.getClinic()))
-            .report_data.containsKey(staff_member.getUser().getRole())) {
+      }
+      for (ClinicStaff staff_member : clinics_staff) {
+        if (!((DailyAppointmentTypesReport) daily_reports_map.get(current_date).get(staff_member.getClinic()))
+            .report_data.containsKey(staff_member.getUser().getRole().getName())) {
           ((DailyAppointmentTypesReport)
                   daily_reports_map.get(current_date).get(staff_member.getClinic()))
-              .report_data.put(staff_member.getUser().getRole(), 0);
+              .report_data.put(staff_member.getUser().getRole().getName(), 0);
         }
       }
       current_date = current_date.plusDays(1);
@@ -97,7 +105,7 @@ public class handleReportMessage extends MessageHandler {
 
     CriteriaQuery<ClinicStaff> cr_ClinicStaff = cb.createQuery(ClinicStaff.class);
     Root<ClinicStaff> root_ClinicStaff = cr.from(ClinicStaff.class);
-    cr_ClinicStaff.select(root_ClinicStaff).where(root.get("clinic").in(class_message.clinics));
+    cr_ClinicStaff.select(root_ClinicStaff).where(root_ClinicStaff.get("clinic").in(class_message.clinics));
     List<ClinicStaff> clinics_staff = session.createQuery(cr_ClinicStaff).getResultList();
 
     while (!current_date.isAfter(report_end_date)) {
@@ -137,13 +145,17 @@ public class handleReportMessage extends MessageHandler {
     relevant_appointments = session.createQuery(cr).getResultList();
     for (Appointment appt : relevant_appointments) {
       LocalDate appt_date = appt.getDate().toLocalDate();
-      // TODO: add vaccine / test / nurse / lab role
-      Role appt_role_type = appt.getSpecialist_role();
+      String service_type;
+      if (appt.getStaff_member() == null) {
+        service_type = appt.getType().getName();
+      } else {
+        service_type = appt.getSpecialist_role().getName();
+      }
       Clinic appt_clinic = appt.getClinic();
 
       DailyAppointmentTypesReport report =
           (DailyAppointmentTypesReport) daily_reports_map.get(appt_date).get(appt_clinic);
-      report.report_data.put(appt_role_type, report.report_data.get(appt_role_type) + 1);
+      report.report_data.put(service_type, report.report_data.get(service_type) + 1);
     }
   }
 
@@ -200,13 +212,17 @@ public class handleReportMessage extends MessageHandler {
     relevant_appointments = session.createQuery(cr).getResultList();
     for (Appointment appt : relevant_appointments) {
       LocalDate appt_date = appt.getDate().toLocalDate();
-      // TODO: add vaccine / test / nurse / lab role
-      Role appt_role_type = appt.getSpecialist_role();
+      String service_type;
+      if (appt.getStaff_member() == null) {
+        service_type = appt.getType().getName();
+      } else {
+        service_type = appt.getSpecialist_role().getName();
+      }
       Clinic appt_clinic = appt.getClinic();
 
       DailyAppointmentTypesReport report =
           (DailyAppointmentTypesReport) daily_reports_map.get(appt_date).get(appt_clinic);
-      report.report_data.put(appt_role_type, report.report_data.get(appt_role_type) + 1);
+      report.report_data.put(service_type, report.report_data.get(service_type) + 1);
     }
   }
 }
