@@ -30,6 +30,7 @@ import il.cshaifa.hmo_system.server.server_handlers.handleSetSpecialistAppointme
 import il.cshaifa.hmo_system.server.server_handlers.handleStaffAssignmentMessage;
 import il.cshaifa.hmo_system.server.server_handlers.handleStaffMessage;
 import java.io.IOException;
+import java.util.HashMap;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -40,6 +41,8 @@ import org.hibernate.service.ServiceRegistry;
 public class HMOServer extends AbstractServer {
 
   private static Session session;
+  public static HashMap<User, ConnectionToClient> connected_users;
+  public static HashMap<ConnectionToClient, User> connected_clients;
 
   public HMOServer(int port) {
     super(port);
@@ -86,7 +89,16 @@ public class HMOServer extends AbstractServer {
       } else if (msg_class == ClinicMessage.class) {
         handler = new handleClinicMessage((ClinicMessage) msg, session);
       } else if (msg_class == LoginMessage.class) {
-        handler = new handleLoginMessage((LoginMessage) msg, session, client);
+        handler = new handleLoginMessage((LoginMessage) msg, session);
+        if (((LoginMessage) msg).user != null) {
+          if (connected_users.containsKey(((LoginMessage) msg).user)) {
+            ((LoginMessage) msg).already_logged_in = true;
+            System.out.println("True");
+          } else {
+            connected_users.put(((LoginMessage) msg).user, client);
+            connected_clients.put(client, ((LoginMessage) msg).user);
+          }
+        }
       } else if (msg_class == ReportMessage.class) {
         handler = new handleReportMessage((ReportMessage) msg, session);
       } else if (msg_class == SetAppointmentMessage.class) {
@@ -114,11 +126,12 @@ public class HMOServer extends AbstractServer {
 
   @Override
   protected synchronized void clientDisconnected(ConnectionToClient client) {
-    System.out.println("Client Disconnected.");
+    System.out.println("Client Disconnected." + connected_clients.get(client).getFirstName());
     super.clientDisconnected(client);
-    User user = handleLoginMessage.connected_clients.get(client);
-    handleLoginMessage.connected_clients.remove(client);
-    handleLoginMessage.connected_users.remove(user);
+    User user = connected_clients.get(client);
+    connected_clients.remove(client);
+    connected_users.remove(user);
+
   }
 
   @Override
@@ -142,6 +155,10 @@ public class HMOServer extends AbstractServer {
     } else {
       HMOServer server = new HMOServer(Integer.parseInt(args[0]));
       server.listen();
+      if (connected_users == null)
+        connected_users = new HashMap<>();
+      if (connected_clients == null)
+        connected_clients = new HashMap<>();
     }
   }
 }

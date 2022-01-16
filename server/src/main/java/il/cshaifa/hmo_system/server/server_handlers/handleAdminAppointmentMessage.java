@@ -134,8 +134,8 @@ public class handleAdminAppointmentMessage extends MessageHandler {
       for (int i=0; i<opening_hours.size();i+=2) {
         LocalTime open_time = opening_hours.get(i);
         LocalTime close_time = opening_hours.get(i+1);
-        if (current_datetime.toLocalTime().isAfter(open_time)
-            && current_datetime.toLocalTime().isBefore(close_time)) {
+        if (current_datetime.toLocalTime().isAfter(open_time.minusSeconds(1))
+            && current_datetime.toLocalTime().isBefore(close_time.minusMinutes(duration).plusSeconds(1))) {
           appt = new Appointment(null, class_message.appt_type,
               class_message.staff_member.getRole(), class_message.staff_member,
               class_message.clinic, current_datetime, null, null, false);

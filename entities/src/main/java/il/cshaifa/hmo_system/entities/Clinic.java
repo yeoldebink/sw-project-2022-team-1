@@ -199,7 +199,7 @@ public class Clinic implements Serializable {
       String[] open_close = time_window.split("-");
       open = open_close[0];
       close = open_close[1];
-      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:m");
       result.add(LocalTime.parse(open, formatter));
       result.add(LocalTime.parse(close, formatter));
     }
