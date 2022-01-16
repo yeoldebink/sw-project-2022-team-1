@@ -4,7 +4,7 @@ import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.Patient;
 import java.time.LocalDateTime;
 
-public class AppointmentForTableView {
+public class AppointmentForAdminTableView {
 
   Integer id;
   String type_name;
@@ -14,7 +14,7 @@ public class AppointmentForTableView {
   Boolean taken;
   String patient_name;
 
-  public AppointmentForTableView(
+  public AppointmentForAdminTableView(
       Integer id,
       AppointmentType type,
       LocalDateTime appt_date,

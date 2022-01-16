@@ -20,14 +20,14 @@ import org.greenrobot.eventbus.EventBus;
 
 public class AdminAppointmentListViewController extends ViewController {
 
-  @FXML private TableView<AppointmentForTableView> appt_table;
+  @FXML private TableView<AppointmentForAdminTableView> appt_table;
 
-  @FXML private TableColumn<AppointmentForTableView, String> appt_type;
-  @FXML private TableColumn<AppointmentForTableView, LocalDateTime> appt_date;
-  @FXML private TableColumn<AppointmentForTableView, LocalDateTime> called_time;
-  @FXML private TableColumn<AppointmentForTableView, String> comments;
-  @FXML private TableColumn<AppointmentForTableView, Boolean> taken;
-  @FXML private TableColumn<AppointmentForTableView, String> patient_assigned;
+  @FXML private TableColumn<AppointmentForAdminTableView, String> appt_type;
+  @FXML private TableColumn<AppointmentForAdminTableView, LocalDateTime> appt_date;
+  @FXML private TableColumn<AppointmentForAdminTableView, LocalDateTime> called_time;
+  @FXML private TableColumn<AppointmentForAdminTableView, String> comments;
+  @FXML private TableColumn<AppointmentForAdminTableView, Boolean> taken;
+  @FXML private TableColumn<AppointmentForAdminTableView, String> patient_assigned;
 
   @FXML private Label staff_member_name;
 
@@ -56,7 +56,7 @@ public class AdminAppointmentListViewController extends ViewController {
   @FXML
   void deleteSelectedAppointments(ActionEvent event) {
     var appts_selected =
-        new ArrayList<AppointmentForTableView>(appt_table.getSelectionModel().getSelectedItems());
+        new ArrayList<AppointmentForAdminTableView>(appt_table.getSelectionModel().getSelectedItems());
     var appts_to_delete = new ArrayList<Appointment>();
 
     // Iterate over selected AppointmentForTableView, and for each find
@@ -93,11 +93,11 @@ public class AdminAppointmentListViewController extends ViewController {
   void populateAppointmentsTable(ArrayList<Appointment> appt_list) {
     this.appt_list = appt_list;
     this.appt_list.sort(Comparator.comparing(Appointment::getDate));
-    ArrayList<AppointmentForTableView> appt_list_table = new ArrayList<AppointmentForTableView>();
+    ArrayList<AppointmentForAdminTableView> appt_list_table = new ArrayList<AppointmentForAdminTableView>();
 
     for (var appt : appt_list) {
       appt_list_table.add(
-          new AppointmentForTableView(
+          new AppointmentForAdminTableView(
               appt.getId(),
               appt.getType(),
               appt.getDate(),

@@ -11,9 +11,8 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 import org.greenrobot.eventbus.Subscribe;
 
-public class PatientHistoryListController extends Controller {
-
-  public PatientHistoryListController(ViewController view_controller, Stage stage) {
+public class PatientAppointmentHistoryListController extends Controller {
+  public PatientAppointmentHistoryListController(ViewController view_controller, Stage stage) {
     super(view_controller, stage);
 
     try {

@@ -1,6 +1,7 @@
 package il.cshaifa.hmo_system.client.gui.patient_dashboard;
 
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
+import il.cshaifa.hmo_system.client.events.AppointmentListEvent;
 import il.cshaifa.hmo_system.client.events.SetAppointmentEvent;
 import il.cshaifa.hmo_system.client.events.MyClinicEvent;
 import il.cshaifa.hmo_system.entities.Appointment;
@@ -35,7 +36,9 @@ public class PatientDashboardViewController extends ViewController {
   }
 
   @FXML
-  public void viewPatientHistory(ActionEvent event) {}
+  public void viewPatientAppointments(ActionEvent event) {
+    EventBus.getDefault().post(new AppointmentListEvent(null, this));
+  }
 
   @FXML
   public void setAppointment(ActionEvent event) {
