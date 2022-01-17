@@ -63,7 +63,7 @@ public class ReportViewController extends ViewController {
       for (var entry : report_data.entrySet()) {
         report_table
             .getItems()
-            .add(new ReportDataRow((AppointmentType) entry.getKey(), entry.getValue()));
+            .add(new ReportDataRow(entry.getKey().toString(), entry.getValue()));
       }
     }
   }
@@ -79,8 +79,8 @@ public class ReportViewController extends ViewController {
     private final String value;
 
     // appt types report
-    public ReportDataRow(AppointmentType appt_type, Integer value) {
-      this.key = appt_type.getName();
+    public ReportDataRow(String appt_type, Integer value) {
+      this.key = appt_type;
       this.value = value.toString();
     }
 
