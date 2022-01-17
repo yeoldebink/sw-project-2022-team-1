@@ -13,7 +13,8 @@
 <?import javafx.scene.text.Font?>
 
 <?import com.sun.javafx.scene.control.IntegerField?>
-<AnchorPane prefHeight="232.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.add_appointment.AddDoctorAppointmentsViewController">
+<AnchorPane prefHeight="232.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.add_appointment.AddDoctorAppointmentsViewController"
+  stylesheets="@../../../../hmo_lite.css">
     <children>
         <VBox AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
             <children>

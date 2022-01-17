@@ -20,9 +20,6 @@ public class PatientAppointmentHistoryListViewController extends ViewController 
     private TableView<AppointmentForPatientHistoryView> appt_table;
 
     @FXML
-    private Label patient_name;
-
-    @FXML
     private TableColumn<AppointmentForPatientHistoryView, LocalDateTime> appt_date;
     @FXML
     private TableColumn<AppointmentForPatientHistoryView, String> appt_type_name;
@@ -34,16 +31,8 @@ public class PatientAppointmentHistoryListViewController extends ViewController 
     private TableColumn<AppointmentForPatientHistoryView, String> clinic_name;
     @FXML
     private TableColumn<AppointmentForPatientHistoryView, String> appt_passed;
-
-    @FXML
-    private ContextMenu context_menu;
     @FXML
     private MenuItem cancel_menu_item;
-
-
-
-
-
 
     private final Patient patient;
     private ArrayList<Appointment> appt_list = null;
@@ -54,7 +43,6 @@ public class PatientAppointmentHistoryListViewController extends ViewController 
 
     @FXML
     public void initialize() {
-        this.patient_name.setText(patient.getUser().getFirstName() + " " + patient.getUser().getLastName());
         appt_table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
         setCellValueFactory();

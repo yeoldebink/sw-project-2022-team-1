@@ -10,7 +10,7 @@
 <AnchorPane
   minHeight="600" minWidth="900" xmlns="http://javafx.com/javafx/17"
   xmlns:fx="http://javafx.com/fxml/1"
-  fx:controller="il.cshaifa.hmo_system.client.gui.manager_dashboard.ManagerDashboardViewController">
+  fx:controller="il.cshaifa.hmo_system.client.gui.manager_dashboard.ManagerDashboardViewController" stylesheets="@../hmo_lite.css">
   <MenuBar AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
     <Menu text="My Clinic" fx:id="myClinicMenu">
       <MenuItem text="Edit Hours" onAction="#editMyClinicHours" />

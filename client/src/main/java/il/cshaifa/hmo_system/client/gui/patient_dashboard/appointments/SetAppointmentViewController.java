@@ -111,12 +111,7 @@ public class SetAppointmentViewController extends ViewController {
         .addListener(
             (obs, oldSelection, newSelection) -> {
               setAppointmentButton.setDisable(newSelection == null);
-              if (newSelection == null) {
-                EventBus.getDefault()
-                    .post(
-                        new SetAppointmentEvent(
-                            this, SetAppointmentAction.RELEASE, patient, oldSelection.getAppointment()));
-              } else {
+              if (newSelection != null) {
                 EventBus.getDefault()
                     .post(
                         new SetAppointmentEvent(

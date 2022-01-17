@@ -11,24 +11,16 @@
 <?import javafx.scene.control.MenuItem?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0"
             prefWidth="900.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="il.cshaifa.hmo_system.client.gui.patient_dashboard.patient_history.PatientAppointmentHistoryListViewController">
+            fx:controller="il.cshaifa.hmo_system.client.gui.patient_dashboard.patient_history.PatientAppointmentHistoryListViewController"
+stylesheets="@../../hmo_lite.css">
     <VBox AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0"
           AnchorPane.topAnchor="10.0" prefWidth="900.0" prefHeight="450.0">
-        <Label text="Appointments History">
-            <font>
-                <Font name="DejaVu Sans Bold" size="22.0"/>
-            </font>
-        </Label>
-        <Label fx:id="patient_name">
-            <font>
-                <Font name="DejaVu Sans Bold" size="16.0"/>
-            </font>
-        </Label>
+        <Label text="Appointments History" styleClass="h1-label" />
         <TableView fx:id="appt_table" onContextMenuRequested="#contextMenuRequested" tableMenuButtonVisible="true"
                    VBox.vgrow="ALWAYS">
             <columns>
                 <TableColumn fx:id="appt_date" prefWidth="75.0" text="Date &amp; Time"/>
-                <TableColumn fx:id="appt_type_name" prefWidth="75.0" text="Appointment Type"/>
+                <TableColumn fx:id="appt_type_name" prefWidth="75.0" text="Treatment Type"/>
                 <TableColumn fx:id="role_name" prefWidth="75.0" text="Staff Role"/>
                 <TableColumn fx:id="staff_member_name" prefWidth="75.0" text="Staff Name"/>
                 <TableColumn fx:id="clinic_name" prefWidth="75.0" text="Clinic"/>
