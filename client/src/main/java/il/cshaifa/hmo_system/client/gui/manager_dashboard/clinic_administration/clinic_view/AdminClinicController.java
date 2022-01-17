@@ -43,9 +43,9 @@ public class AdminClinicController extends Controller {
 
     DateTimeFormatter hoursFormat = DateTimeFormatter.ofPattern("H:m");
 
-    for (var hourString : hours) {
-      if (hourString == null || hourString.equals("")) continue;
-      var splitComma = hourString.split(", ");
+    for (var hoursRangeString : hours) {
+      if (hoursRangeString == null || hoursRangeString.equals("")) continue;
+      var splitComma = hoursRangeString.split(", ");
       for (var h : splitComma) {
         var splitHyphen = h.split("-");
         try {
