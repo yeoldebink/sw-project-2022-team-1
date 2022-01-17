@@ -103,7 +103,7 @@ public class ManagerDashboardController extends Controller {
         });
 
     try {
-      Utils.OpenNewWindow(
+      Utils.openNewWindow(
           AddDoctorAppointmentsViewController.class, AddDoctorAppointmentsController.class,
           loader, false
       );
