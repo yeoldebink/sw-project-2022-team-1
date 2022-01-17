@@ -155,5 +155,4 @@ public class handleAdminAppointmentMessage extends MessageHandler {
     removeEntities(class_message.appointments);
     class_message.response = ResponseType.DELETED;
   }
-
 }

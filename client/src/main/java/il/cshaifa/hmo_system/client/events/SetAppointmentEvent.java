@@ -10,7 +10,7 @@ public class SetAppointmentEvent extends Event {
   public enum Action {
     LOCK,
     TAKE,
-    RELEASE,
+    RELEASE
   }
 
   public enum Response {
