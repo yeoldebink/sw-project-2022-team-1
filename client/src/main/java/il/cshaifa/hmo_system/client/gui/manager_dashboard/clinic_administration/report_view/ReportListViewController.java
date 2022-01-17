@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -88,6 +89,21 @@ public class ReportListViewController extends RoleDefinedViewController {
         .add(new ReportTypeComboBoxItem(ReportType.AVERAGE_WAIT_TIMES, "Average wait times"));
 
     reportTypeComboBox.getSelectionModel().select(0);
+
+    reportsTable.getSelectionModel().selectedItemProperty().addListener(
+        (obs, oldValue, newValue) ->
+        {
+          splitPane.getItems().set(2, new Pane());
+          if (newValue != null){
+            EventBus.getDefault()
+                .post(
+                    new ViewReportEvent(
+                        this,
+                        reportsTable.getSelectionModel().getSelectedItems(),
+                        reportTypeComboBox.getValue().reportType));
+          }
+        }
+    );
   }
 
   public void populateReportsTable(List<DailyReport> reports) {
@@ -124,22 +140,6 @@ public class ReportListViewController extends RoleDefinedViewController {
         new ReportEvent(selected_clinics, report_type, startDate, endDate, null, this);
 
     EventBus.getDefault().post(report_event);
-  }
-
-  @FXML
-  public void onMouseClickedInReportsTable(MouseEvent event) {
-    // clear the pane
-    splitPane.getItems().set(2, new Pane());
-
-    var selected_reports = reportsTable.getSelectionModel().getSelectedItems();
-    if (selected_reports.size() > 0) {
-      EventBus.getDefault()
-          .post(
-              new ViewReportEvent(
-                  this,
-                  reportsTable.getSelectionModel().getSelectedItems(),
-                  reportTypeComboBox.getValue().reportType));
-    }
   }
 
   public void setViewedReport(Pane reportPane) {
