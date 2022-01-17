@@ -2,7 +2,6 @@ package il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration
 
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
-import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
 import il.cshaifa.hmo_system.reports.DailyAppointmentTypesReport;
 import il.cshaifa.hmo_system.reports.DailyAverageWaitTimeReport;
 
@@ -23,5 +22,5 @@ public class ReportController extends Controller {
   }
 
   @Override
-  public void onWindowCloseEvent(CloseWindowEvent event) {}
+  public void onWindowClose() {}
 }

@@ -24,7 +24,7 @@ public class App extends Application {
 
     FXMLLoader loader =
         new FXMLLoader(App.class.getResource(ResourcePath.get_fxml(LoginViewController.class)));
-    Utils.OpenNewWindow(LoginViewController.class, LoginController.class, loader, false);
+    Utils.openNewWindow(LoginViewController.class, LoginController.class, loader, false);
   }
 
   @Override

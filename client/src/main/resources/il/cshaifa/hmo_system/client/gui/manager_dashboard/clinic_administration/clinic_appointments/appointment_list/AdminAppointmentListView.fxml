@@ -13,14 +13,15 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0"
             prefWidth="900.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.appointment_list.AdminAppointmentListViewController">
+            fx:controller="il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.appointment_list.AdminAppointmentListViewController"
+            stylesheets="@../../../../hmo_lite.css">
     <VBox AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
         <Label text="Appointments List">
             <font>
                 <Font name="DejaVu Sans Bold" size="22.0"/>
             </font>
         </Label>
-        <Label fx:id="staff_member_name" text="">
+        <Label fx:id="staff_member_name">
             <font>
                 <Font name="DejaVu Sans Bold" size="16.0"/>
             </font>

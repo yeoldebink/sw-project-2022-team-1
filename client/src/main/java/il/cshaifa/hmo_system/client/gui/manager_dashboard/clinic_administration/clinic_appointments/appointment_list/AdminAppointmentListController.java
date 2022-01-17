@@ -10,7 +10,6 @@ import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.add_appointment.AddDoctorAppointmentsViewController;
 import il.cshaifa.hmo_system.client.utils.Utils;
 import il.cshaifa.hmo_system.entities.User;
-import il.cshaifa.hmo_system.messages.AdminAppointmentMessage.AdminAppointmentMessageType;
 import java.io.IOException;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -39,8 +38,7 @@ public class AdminAppointmentListController extends Controller {
    */
   @Subscribe
   public void onAppointmentsAdded(AddAppointmentEvent event) {
-    if (!event.getSender().equals(HMOClient.getClient())
-        || event.response_type != AdminAppointmentMessageType.ACCEPT) return;
+    if (!event.getSender().equals(HMOClient.getClient()) || !event.success) return;
     User staff_member =
         new User(((AdminAppointmentListViewController) this.view_controller).staff_member);
     try {
@@ -69,7 +67,7 @@ public class AdminAppointmentListController extends Controller {
         });
 
     try {
-      Utils.OpenNewWindow(
+      Utils.openNewWindow(
           AddDoctorAppointmentsViewController.class,
           AddDoctorAppointmentsController.class,
           loader,

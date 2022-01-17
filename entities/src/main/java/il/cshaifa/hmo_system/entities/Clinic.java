@@ -1,6 +1,10 @@
 package il.cshaifa.hmo_system.entities;
 
 import java.io.Serializable;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -162,6 +166,49 @@ public class Clinic implements Serializable {
         return;
       default:
     }
+  }
+
+  public List<LocalTime> timeStringToLocalTimeList(int day_num) {
+    String day_hours;
+    // 1 is monday
+    switch (day_num) {
+      case 1:
+        day_hours = mon_hours;
+        break;
+      case 2:
+        day_hours = tue_hours;
+        break;
+      case 3:
+        day_hours = wed_hours;
+        break;
+      case 4:
+        day_hours = thu_hours;
+        break;
+      case 5:
+        day_hours = fri_hours;
+        break;
+      case 6:
+        day_hours = sat_hours;
+        break;
+      case 7:
+        day_hours = sun_hours;
+        break;
+      default:
+        throw new IllegalStateException("Unexpected value: " + day_num);
+    }
+
+    List<LocalTime> result = new ArrayList<>();
+    String[] hours = day_hours.strip().split(", ");
+    for (String time_window : hours) {
+      String open, close;
+      String[] open_close = time_window.split("-");
+      open = open_close[0];
+      close = open_close[1];
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:m");
+      result.add(LocalTime.parse(open, formatter));
+      result.add(LocalTime.parse(close, formatter));
+    }
+    return result;
   }
 
   @Override

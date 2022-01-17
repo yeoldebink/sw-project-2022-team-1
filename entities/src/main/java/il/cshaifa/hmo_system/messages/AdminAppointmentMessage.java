@@ -1,5 +1,6 @@
 package il.cshaifa.hmo_system.messages;
 
+import il.cshaifa.hmo_system.CommonEnums.AddAppointmentRejectionReason;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.Clinic;
@@ -8,29 +9,23 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class AdminAppointmentMessage extends Message {
-  public enum AdminAppointmentMessageType {
+  public enum RequestType {
     CREATE,
-    DELETE,
-    ACCEPT,
-    REJECT
+    DELETE
   }
 
-  public enum RejectionType {
-    OVERLAPPING,
-    IN_THE_PAST
-  }
-
-  public AdminAppointmentMessageType type;
   public User staff_member;
   public Clinic clinic;
   public LocalDateTime start_datetime;
   public int count;
   public AppointmentType appt_type;
   public List<Appointment> appointments;
-  public RejectionType rejectionType;
+  public RequestType request;
+  public boolean success;
+  public AddAppointmentRejectionReason reject;
 
   public AdminAppointmentMessage(
-      AdminAppointmentMessageType type,
+      RequestType request,
       User staff_member,
       Clinic clinic,
       LocalDateTime start_datetime,
@@ -38,7 +33,7 @@ public class AdminAppointmentMessage extends Message {
       List<Appointment> appointments,
       AppointmentType appt_type) {
     super(MessageType.REQUEST);
-    this.type = type;
+    this.request = request;
     this.staff_member = staff_member;
     this.clinic = clinic;
     this.start_datetime = start_datetime;

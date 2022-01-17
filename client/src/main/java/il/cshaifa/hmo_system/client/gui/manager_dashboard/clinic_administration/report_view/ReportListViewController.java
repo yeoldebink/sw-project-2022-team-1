@@ -91,6 +91,9 @@ public class ReportListViewController extends RoleDefinedViewController {
   }
 
   public void populateReportsTable(List<DailyReport> reports) {
+
+    reports.sort(Comparator.comparing(DailyReport::getDate));
+
     reportsTable.getItems().setAll(reports);
   }
 
