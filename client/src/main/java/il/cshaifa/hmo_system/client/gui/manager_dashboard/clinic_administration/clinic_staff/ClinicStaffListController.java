@@ -1,25 +1,22 @@
 package il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_staff;
 
+import il.cshaifa.hmo_system.CommonEnums.StaffAssignmentAction;
 import il.cshaifa.hmo_system.client.HMOClient;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.AdminAppointmentListEvent;
 import il.cshaifa.hmo_system.client.events.AssignStaffEvent;
-import il.cshaifa.hmo_system.client.events.AssignStaffEvent.Action;
 import il.cshaifa.hmo_system.client.events.ClinicStaffEvent;
 import il.cshaifa.hmo_system.client.gui.ResourcePath;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.appointment_list.AdminAppointmentListController;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.appointment_list.AdminAppointmentListViewController;
 import il.cshaifa.hmo_system.client.utils.Utils;
 import il.cshaifa.hmo_system.entities.User;
-import il.cshaifa.hmo_system.messages.StaffAssignmentMessage;
-import il.cshaifa.hmo_system.messages.StaffAssignmentMessage.Type;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.TreeMap;
 import javafx.fxml.FXMLLoader;
-import javafx.util.Pair;
 import org.greenrobot.eventbus.Subscribe;
 
 public class ClinicStaffListController extends Controller {
@@ -72,35 +69,24 @@ public class ClinicStaffListController extends Controller {
     if (!event.getSender().equals(this.view_controller)) return;
 
     try {
-      var data = getClinicStaffAssignmentChange(event.staff, event.status);
-      HMOClient.getClient().assignOrUnassignStaff(data.getKey(), data.getValue());
+      ArrayList<AssignedUser> assignedUsers = event.staff;
+      ArrayList<User> staff_users = new ArrayList<>();
+
+      for (AssignedUser a_user : assignedUsers) {
+        // this condition is true iff the user is assigned and the phase is unassign
+        // or the other way around - that the user is unassigned and the phase is assign
+        if (a_user.getAssigned() != (event.action == StaffAssignmentAction.ASSIGN)) {
+          staff_users.add(new User(a_user));
+        }
+      }
+
+      if (event.action == StaffAssignmentAction.ASSIGN)
+        HMOClient.getClient().assignStaff(staff_users);
+      else if (event.action == StaffAssignmentAction.UNASSIGN)
+        HMOClient.getClient().unassignStaff(staff_users);
     } catch (IOException ioException) {
       ioException.printStackTrace();
     }
-  }
-
-  /**
-   * Create a list of pairs to know what status each staff member need to be after a user request
-   *
-   * @param assignedUsers list of the users we want to change status
-   * @param status The status we want to set the users to
-   * @return Pair of user list that need to change their status and the status to change to
-   */
-  private Pair<ArrayList<User>, Type> getClinicStaffAssignmentChange(
-      ArrayList<AssignedUser> assignedUsers, Action status) {
-    StaffAssignmentMessage.Type type = status == Action.ASSIGN ? Type.ASSIGN : Type.UNASSIGN;
-    // need to copy construct the users so the server doesn't throw a hissy fit over
-    // AssignedUser
-    ArrayList<User> staff_users = new ArrayList<>();
-    for (var a_user : assignedUsers) {
-      // this condition is true iff the user is assigned and the phase is unassign
-      // or the other way around - that the user is unassigned and the phase is assign
-      if (a_user.getAssigned() != (status == Action.ASSIGN)) {
-        staff_users.add(new User(a_user));
-      }
-    }
-
-    return new Pair<>(staff_users, type);
   }
 
   /**

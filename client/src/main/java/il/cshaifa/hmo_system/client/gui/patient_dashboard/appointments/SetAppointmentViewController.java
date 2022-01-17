@@ -1,12 +1,12 @@
 package il.cshaifa.hmo_system.client.gui.patient_dashboard.appointments;
 
+import il.cshaifa.hmo_system.CommonEnums.SetAppointmentAction;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.SetAppointmentEvent;
 import il.cshaifa.hmo_system.client.utils.Utils;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.Patient;
-import il.cshaifa.hmo_system.messages.SetAppointmentMessage.Action;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -115,12 +115,12 @@ public class SetAppointmentViewController extends ViewController {
                 EventBus.getDefault()
                     .post(
                         new SetAppointmentEvent(
-                            this, Action.RELEASE, patient, oldSelection.getAppointment()));
+                            this, SetAppointmentAction.RELEASE, patient, oldSelection.getAppointment()));
               } else {
                 EventBus.getDefault()
                     .post(
                         new SetAppointmentEvent(
-                            this, Action.LOCK, patient, newSelection.getAppointment()));
+                            this, SetAppointmentAction.LOCK, patient, newSelection.getAppointment()));
               }
             });
   }
@@ -189,7 +189,7 @@ public class SetAppointmentViewController extends ViewController {
         .post(
             new SetAppointmentEvent(
                 this,
-                Action.TAKE,
+                SetAppointmentAction.TAKE,
                 patient,
                 appointmentsTable.getSelectionModel().getSelectedItem().getAppointment()));
   }

@@ -53,6 +53,8 @@ public class LoginController extends Controller {
     if (event.getSender().equals(HMOClient.getClient())) {
       if (event.response == Response.REJECT) {
         incorrectUser();
+      } else if (event.response == Response.LOGGED_IN){
+        alreadyLoggedInUser();
       } else if (event.response == Response.AUTHORIZE) {
         openMainScreenByRole(event.userData);
         Platform.runLater(() -> this.stage.close());
@@ -60,10 +62,16 @@ public class LoginController extends Controller {
     }
   }
 
+  private void alreadyLoggedInUser(){
+    Platform.runLater(
+        () -> ((LoginViewController) this.view_controller)
+            .setFailedText("This user is already logged in"));
+  }
+
   /** Show an error message to the user when an incorrect info is entered */
   private void incorrectUser() {
     // Letting the controller to call this function on the UI thread, and apply the changes
-    Platform.runLater(() -> ((LoginViewController) view_controller).setFailedText());
+    Platform.runLater(() -> ((LoginViewController) view_controller).setFailedText("Incorrect ID or password"));
   }
 
   /**

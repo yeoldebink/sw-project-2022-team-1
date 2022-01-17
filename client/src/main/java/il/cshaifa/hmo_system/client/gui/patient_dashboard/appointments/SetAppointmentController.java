@@ -1,13 +1,13 @@
 package il.cshaifa.hmo_system.client.gui.patient_dashboard.appointments;
 
+import il.cshaifa.hmo_system.CommonEnums.SetAppointmentAction;
 import il.cshaifa.hmo_system.client.HMOClient;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.AppointmentListEvent;
 import il.cshaifa.hmo_system.client.events.SetAppointmentEvent;
-import il.cshaifa.hmo_system.client.events.SetAppointmentEvent.Response;
+import il.cshaifa.hmo_system.client.events.SetAppointmentEvent.ResponseType;
 import il.cshaifa.hmo_system.entities.AppointmentType;
-import il.cshaifa.hmo_system.messages.SetAppointmentMessage.Action;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import javafx.application.Platform;
@@ -67,33 +67,31 @@ public class SetAppointmentController extends Controller {
   @Subscribe
   public void onAppointmentSelectionChanged(SetAppointmentEvent event) {
     if (!event.getSender().equals(this.view_controller) || event.action == null) return;
-    else {
-      try {
-        switch (event.action) {
-          case RELEASE:
-            HMOClient.getClient().cancelAppointment(event.appointment);
-            break;
-          case LOCK:
-            HMOClient.getClient().lockAppointment(event.appointment);
-            break;
-          case TAKE:
-            HMOClient.getClient().takeAppointment(event.appointment);
-            break;
-          default:
-            break;
-        }
-      } catch (IOException e) {
-        e.printStackTrace();
+    try {
+      switch (event.action) {
+        case RELEASE:
+          HMOClient.getClient().cancelAppointment(event.appointment);
+          break;
+        case LOCK:
+          HMOClient.getClient().lockAppointment(event.appointment);
+          break;
+        case TAKE:
+          HMOClient.getClient().takeAppointment(event.appointment);
+          break;
+        default:
+          break;
       }
+    } catch (IOException e) {
+      e.printStackTrace();
     }
   }
 
   @Subscribe
   public void onResponseFromClient(SetAppointmentEvent event) {
     if (!event.getSender().equals(HMOClient.getClient())) return;
-    else if (event.action == Action.TAKE) {
+    if (event.action == SetAppointmentAction.TAKE) {
       Platform.runLater(() -> ((SetAppointmentViewController) view_controller).takeAppointment(
-          event.response == Response.AUTHORIZE,
+          event.response == ResponseType.AUTHORIZE,
           (int) stage.getX() + 100,
           (int) stage.getY() + 100
       ));
