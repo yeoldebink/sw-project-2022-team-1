@@ -3,6 +3,7 @@ package il.cshaifa.hmo_system.server.server_handlers;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.messages.AppointmentMessage;
 import il.cshaifa.hmo_system.messages.AppointmentMessage.*;
+import il.cshaifa.hmo_system.server.App;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -102,7 +103,7 @@ public class HandleAppointmentMessage extends MessageHandler {
             cb.greaterThanOrEqualTo(root.get("appt_date"), LocalDateTime.now()));
     cr.orderBy(cb.asc(root.get("appt_date")));
     class_message.appointments = new ArrayList<>();
-    class_message.appointments.add(session.createQuery(cr).getSingleResult());
+    class_message.appointments.add(session.createQuery(cr).getResultList().get(0));
   }
 
   /** Gets a staff members all appointments for today */

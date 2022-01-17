@@ -116,9 +116,8 @@ public class HMOServer extends AbstractServer {
 
   @Override
   protected synchronized void clientDisconnected(ConnectionToClient client) {
-    var user = HandleLoginMessage.connectedUser(client);
-    System.out.printf(
-        "Client disconnected: %s, %s %s%n", client, user.getFirstName(), user.getLastName());
+    User user = HandleLoginMessage.connectedUser(client);
+    System.out.println("Client disconnected: " + user.getFirstName() + " " + user.getLastName());
     HandleLoginMessage.disconnectClient(client);
 
     super.clientDisconnected(client);
