@@ -12,9 +12,9 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 import org.greenrobot.eventbus.Subscribe;
 
-public class AddDoctorAppointmentsController extends Controller {
+public class AddAppointmentsController extends Controller {
 
-  public AddDoctorAppointmentsController(ViewController view_controller, Stage stage) {
+  public AddAppointmentsController(ViewController view_controller, Stage stage) {
     super(view_controller, stage);
   }
 
@@ -65,7 +65,7 @@ public class AddDoctorAppointmentsController extends Controller {
           rejectionMessage; // Java requested this... didn't like that I changed the value...
       Platform.runLater(
           () ->
-              ((AddDoctorAppointmentsViewController) this.view_controller)
+              ((AddAppointmentsViewController) this.view_controller)
                   .setErrorMessage(finalRejectionMessage));
     } else {
       Platform.runLater(() -> stage.close());

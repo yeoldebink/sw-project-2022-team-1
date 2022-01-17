@@ -16,7 +16,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import org.greenrobot.eventbus.EventBus;
 
-public class AddDoctorAppointmentsViewController extends ViewController {
+public class AddAppointmentsViewController extends ViewController {
   private final User staff_member;
   private final AppointmentType type;
 
@@ -27,12 +27,12 @@ public class AddDoctorAppointmentsViewController extends ViewController {
   @FXML private Button create_appts;
   @FXML private Label staff_member_name;
 
-  public AddDoctorAppointmentsViewController(User staff_member) {
+  public AddAppointmentsViewController(User staff_member) {
     this.staff_member = staff_member;
     this.type = null;
   }
 
-  public AddDoctorAppointmentsViewController(AppointmentType type){
+  public AddAppointmentsViewController(AppointmentType type){
     this.staff_member = null;
     this.type = type;
   }

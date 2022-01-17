@@ -6,8 +6,8 @@ import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.AddAppointmentEvent;
 import il.cshaifa.hmo_system.client.events.AdminAppointmentListEvent;
 import il.cshaifa.hmo_system.client.gui.ResourcePath;
-import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.add_appointment.AddDoctorAppointmentsController;
-import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.add_appointment.AddDoctorAppointmentsViewController;
+import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.add_appointment.AddAppointmentsController;
+import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.add_appointment.AddAppointmentsViewController;
 import il.cshaifa.hmo_system.client.utils.Utils;
 import il.cshaifa.hmo_system.entities.User;
 import java.io.IOException;
@@ -59,17 +59,17 @@ public class AdminAppointmentListController extends Controller {
     var loader =
         new FXMLLoader(
             getClass()
-                .getResource(ResourcePath.get_fxml(AddDoctorAppointmentsViewController.class)));
+                .getResource(ResourcePath.get_fxml(AddAppointmentsViewController.class)));
 
     loader.setControllerFactory(
         c -> {
-          return new AddDoctorAppointmentsViewController(event.staff_member);
+          return new AddAppointmentsViewController(event.staff_member);
         });
 
     try {
       Utils.openNewWindow(
-          AddDoctorAppointmentsViewController.class,
-          AddDoctorAppointmentsController.class,
+          AddAppointmentsViewController.class,
+          AddAppointmentsController.class,
           loader,
           false);
     } catch (Exception e) {
