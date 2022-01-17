@@ -5,7 +5,6 @@ import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.ClinicEvent;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -39,9 +38,15 @@ public class AdminClinicController extends Controller {
     if (!event.getSender().equals(this.view_controller)) return;
 
     // validate hours
-    String[] hours = {event.clinic.getSun_hours(), event.clinic.getMon_hours(), event.clinic.getTue_hours(),
-    event.clinic.getWed_hours(), event.clinic.getThu_hours(), event.clinic.getFri_hours(),
-    event.clinic.getSat_hours()};
+    String[] hours = {
+      event.clinic.getSun_hours(),
+      event.clinic.getMon_hours(),
+      event.clinic.getTue_hours(),
+      event.clinic.getWed_hours(),
+      event.clinic.getThu_hours(),
+      event.clinic.getFri_hours(),
+      event.clinic.getSat_hours()
+    };
 
     DateTimeFormatter hoursFormat = DateTimeFormatter.ofPattern("H:m");
 

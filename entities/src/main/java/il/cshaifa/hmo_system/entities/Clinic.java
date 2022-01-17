@@ -57,9 +57,18 @@ public class Clinic implements Serializable {
     this.sat_hours = sat_hours;
   }
 
-  public Clinic (Clinic clinic) {
-    this(clinic.manager_user, clinic.name, clinic.address, clinic.sun_hours, clinic.mon_hours, clinic.tue_hours,
-        clinic.wed_hours, clinic.thu_hours, clinic.fri_hours, clinic.sat_hours);
+  public Clinic(Clinic clinic) {
+    this(
+        clinic.manager_user,
+        clinic.name,
+        clinic.address,
+        clinic.sun_hours,
+        clinic.mon_hours,
+        clinic.tue_hours,
+        clinic.wed_hours,
+        clinic.thu_hours,
+        clinic.fri_hours,
+        clinic.sat_hours);
     this.id = clinic.id;
   }
 
