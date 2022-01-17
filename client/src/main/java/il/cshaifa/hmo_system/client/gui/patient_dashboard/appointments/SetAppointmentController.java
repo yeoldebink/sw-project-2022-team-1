@@ -5,9 +5,9 @@ import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.AppointmentListEvent;
 import il.cshaifa.hmo_system.client.events.SetAppointmentEvent;
-import il.cshaifa.hmo_system.client.events.SetAppointmentEvent.Response;
+import il.cshaifa.hmo_system.client.events.SetAppointmentEvent.RequestType;
+import il.cshaifa.hmo_system.client.events.SetAppointmentEvent.ResponseType;
 import il.cshaifa.hmo_system.entities.AppointmentType;
-import il.cshaifa.hmo_system.messages.SetAppointmentMessage.Action;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import javafx.application.Platform;
@@ -40,7 +40,7 @@ public class SetAppointmentController extends Controller {
 
   @Subscribe
   public void onAppointmentsRequested(SetAppointmentEvent event) {
-    if (!event.getSender().equals(this.view_controller) || event.action != null) return;
+    if (!event.getSender().equals(this.view_controller) || event.request != null) return;
     try {
       switch (event.appointmentType.getName()) {
         case "Family Doctor":
@@ -66,34 +66,32 @@ public class SetAppointmentController extends Controller {
 
   @Subscribe
   public void onAppointmentSelectionChanged(SetAppointmentEvent event) {
-    if (!event.getSender().equals(this.view_controller) || event.action == null) return;
-    else {
-      try {
-        switch (event.action) {
-          case RELEASE:
-            HMOClient.getClient().cancelAppointment(event.appointment);
-            break;
-          case LOCK:
-            HMOClient.getClient().lockAppointment(event.appointment);
-            break;
-          case TAKE:
-            HMOClient.getClient().takeAppointment(event.appointment);
-            break;
-          default:
-            break;
-        }
-      } catch (IOException e) {
-        e.printStackTrace();
+    if (!event.getSender().equals(this.view_controller) || event.request == null) return;
+    try {
+      switch (event.request) {
+        case RELEASE:
+          HMOClient.getClient().cancelAppointment(event.appointment);
+          break;
+        case LOCK:
+          HMOClient.getClient().lockAppointment(event.appointment);
+          break;
+        case TAKE:
+          HMOClient.getClient().takeAppointment(event.appointment);
+          break;
+        default:
+          break;
       }
+    } catch (IOException e) {
+      e.printStackTrace();
     }
   }
 
   @Subscribe
   public void onResponseFromClient(SetAppointmentEvent event) {
     if (!event.getSender().equals(HMOClient.getClient())) return;
-    else if (event.action == Action.TAKE) {
+    if (event.request == RequestType.TAKE) {
       Platform.runLater(() -> ((SetAppointmentViewController) view_controller).takeAppointment(
-          event.response == Response.AUTHORIZE,
+          event.response == ResponseType.AUTHORIZE,
           (int) stage.getX() + 100,
           (int) stage.getY() + 100
       ));

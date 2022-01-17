@@ -1,6 +1,7 @@
 package il.cshaifa.hmo_system.client;
 
 import il.cshaifa.hmo_system.client.events.AddAppointmentEvent;
+import il.cshaifa.hmo_system.client.events.AddAppointmentEvent.RejectionType;
 import il.cshaifa.hmo_system.client.events.AdminAppointmentListEvent;
 import il.cshaifa.hmo_system.client.events.AppointmentListEvent;
 import il.cshaifa.hmo_system.client.events.AssignStaffEvent;
@@ -23,6 +24,7 @@ import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.entities.Warning;
 import il.cshaifa.hmo_system.messages.AdminAppointmentMessage;
 import il.cshaifa.hmo_system.messages.AdminAppointmentMessage.RequestType;
+import il.cshaifa.hmo_system.messages.AdminAppointmentMessage.ResponseType;
 import il.cshaifa.hmo_system.messages.AppointmentMessage;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
 import il.cshaifa.hmo_system.messages.ClinicStaffMessage;
@@ -117,9 +119,9 @@ public class HMOClient extends AbstractClient {
     SetAppointmentEvent event =
         new SetAppointmentEvent(this, getConnected_patient(), message.appointment);
     if (message.success) {
-      event.response = SetAppointmentEvent.Response.AUTHORIZE;
+      event.response = SetAppointmentEvent.ResponseType.AUTHORIZE;
     } else {
-      event.response = SetAppointmentEvent.Response.REJECT;
+      event.response = SetAppointmentEvent.ResponseType.REJECT;
     }
     EventBus.getDefault().post(event);
   }
@@ -137,9 +139,19 @@ public class HMOClient extends AbstractClient {
   }
 
   private void handleAdminAppointmentMessage(AdminAppointmentMessage message) {
-    var event = new AddAppointmentEvent(null, null, null, this);
-    event.response_type = message.type;
-    event.rejectionType = message.rejectionType;
+    AddAppointmentEvent event = new AddAppointmentEvent(this);
+
+    if (message.response == ResponseType.CREATED || message.response == ResponseType.DELETED){
+      event.success = true;
+    } else {
+      event.success = false;
+      if (message.response == ResponseType.CLINIC_CLOSED)
+        event.reject = RejectionType.CLINIC_CLOSED;
+      else if (message.response == ResponseType.IN_THE_PAST)
+        event.reject = RejectionType.IN_THE_PAST;
+      else if (message.response == ResponseType.OVERLAPPING)
+        event.reject = RejectionType.OVERLAPPING;
+    }
     EventBus.getDefault().post(event);
   }
 

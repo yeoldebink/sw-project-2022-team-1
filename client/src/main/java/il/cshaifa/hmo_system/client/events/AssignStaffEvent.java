@@ -5,16 +5,16 @@ import java.util.ArrayList;
 
 public class AssignStaffEvent extends Event {
   public ArrayList<AssignedUser> staff;
-  public Action status;
+  public RequestType request;
 
-  public enum Action {
+  public enum RequestType {
     ASSIGN,
     UNASSIGN
   }
 
-  public AssignStaffEvent(ArrayList<AssignedUser> staff, Object sender, Action status) {
+  public AssignStaffEvent(ArrayList<AssignedUser> staff, Object sender, RequestType request) {
     super(sender);
     this.staff = staff;
-    this.status = status;
+    this.request = request;
   }
 }

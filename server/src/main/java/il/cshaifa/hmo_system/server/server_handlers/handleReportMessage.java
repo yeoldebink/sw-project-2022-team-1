@@ -1,23 +1,16 @@
 package il.cshaifa.hmo_system.server.server_handlers;
 
 import il.cshaifa.hmo_system.entities.Appointment;
-import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.ClinicStaff;
-import il.cshaifa.hmo_system.entities.Role;
 import il.cshaifa.hmo_system.entities.User;
-import il.cshaifa.hmo_system.messages.Message;
-import il.cshaifa.hmo_system.messages.Message.MessageType;
 import il.cshaifa.hmo_system.messages.ReportMessage;
 import il.cshaifa.hmo_system.messages.ReportMessage.ReportType;
 import il.cshaifa.hmo_system.reports.DailyAppointmentTypesReport;
 import il.cshaifa.hmo_system.reports.DailyAverageWaitTimeReport;
 import il.cshaifa.hmo_system.reports.DailyReport;
-import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
-import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -27,13 +20,13 @@ import org.hibernate.Session;
 
 public class handleReportMessage extends MessageHandler {
   ReportMessage class_message;
-  private HashMap<LocalDate, HashMap<Clinic, DailyReport>> daily_reports_map;
-  HashMap<LocalDate, HashMap<Clinic, HashMap<User, Integer>>> total_appointments_map;
+  private HashMap<LocalDate, HashMap<Integer, DailyReport>> daily_reports_map;
+  HashMap<LocalDate, HashMap<Integer, HashMap<User, Integer>>> total_appointments_map;
   private final CriteriaBuilder cb;
   private final CriteriaQuery<Appointment> cr;
   private final Root<Appointment> root;
   private List<Appointment> relevant_appointments;
-  private String[] clinics_general_services;
+  private static String[] clinics_general_services;
 
   public handleReportMessage(ReportMessage message, Session session) {
     super(message, session);
@@ -41,13 +34,10 @@ public class handleReportMessage extends MessageHandler {
     cb = session.getCriteriaBuilder();
     cr = cb.createQuery(Appointment.class);
     root = cr.from(Appointment.class);
-    clinics_general_services = new String[]{
-        "COVID Test",
-        "COVID Vaccine",
-        "Flu Vaccine",
-        "Nurse",
-        "Lab Tests"
-    };
+    if (clinics_general_services == null) {
+      clinics_general_services =
+          new String[] {"COVID Test", "COVID Vaccine", "Flu Vaccine", "Nurse", "Lab Tests"};
+    }
   }
 
   @Override
@@ -61,6 +51,11 @@ public class handleReportMessage extends MessageHandler {
     } else if (class_message.report_type == ReportType.MISSED_APPOINTMENTS) {
       initServicesReport();
       getMissedAppointmentsReport();
+    }
+    for (LocalDate date : daily_reports_map.keySet()) {
+      for (int clinic_id : daily_reports_map.get(date).keySet()) {
+        class_message.reports.add(daily_reports_map.get(date).get(clinic_id));
+      }
     }
   }
 
@@ -79,17 +74,17 @@ public class handleReportMessage extends MessageHandler {
       daily_reports_map.put(current_date, new HashMap<>());
       for (Clinic clinic : class_message.clinics){
         daily_reports_map.get(current_date).
-            put(clinic, new DailyAppointmentTypesReport(current_date.atStartOfDay(), clinic));
+            put(clinic.getId(), new DailyAppointmentTypesReport(current_date.atStartOfDay(), clinic));
         for (String service : clinics_general_services){
-          ((DailyAppointmentTypesReport)daily_reports_map.get(current_date).get(clinic)).
+          ((DailyAppointmentTypesReport)daily_reports_map.get(current_date).get(clinic.getId())).
               report_data.put(service, 0);
         }
       }
       for (ClinicStaff staff_member : clinics_staff) {
-        if (!((DailyAppointmentTypesReport) daily_reports_map.get(current_date).get(staff_member.getClinic()))
-            .report_data.containsKey(staff_member.getUser().getRole().getName())) {
+        if (!(((DailyAppointmentTypesReport) daily_reports_map.get(current_date).get(staff_member.getClinic().getId()))
+            .report_data.containsKey(staff_member.getUser().getRole().getName()))) {
           ((DailyAppointmentTypesReport)
-                  daily_reports_map.get(current_date).get(staff_member.getClinic()))
+                  daily_reports_map.get(current_date).get(staff_member.getClinic().getId()))
               .report_data.put(staff_member.getUser().getRole().getName(), 0);
         }
       }
@@ -113,21 +108,21 @@ public class handleReportMessage extends MessageHandler {
       daily_reports_map.put(current_date, new HashMap<>());
       total_appointments_map.put(current_date, new HashMap<>());
       for (ClinicStaff staff_member : clinics_staff) {
-        if (!daily_reports_map.get(current_date).containsKey(staff_member.getClinic())) {
+        if (!daily_reports_map.get(current_date).containsKey(staff_member.getClinic().getId())) {
           DailyAverageWaitTimeReport clinic_daily_report =
               new DailyAverageWaitTimeReport(current_date.atStartOfDay(), staff_member.getClinic());
-          daily_reports_map.get(current_date).put(staff_member.getClinic(), clinic_daily_report);
-          total_appointments_map.get(current_date).put(staff_member.getClinic(), new HashMap<>());
+          daily_reports_map.get(current_date).put(staff_member.getClinic().getId(), clinic_daily_report);
+          total_appointments_map.get(current_date).put(staff_member.getClinic().getId(), new HashMap<>());
         }
         if (!((DailyAverageWaitTimeReport)
-                daily_reports_map.get(current_date).get(staff_member.getClinic()))
+                daily_reports_map.get(current_date).get(staff_member.getClinic().getId()))
             .report_data.containsKey(staff_member.getUser())) {
           ((DailyAverageWaitTimeReport)
-                  daily_reports_map.get(current_date).get(staff_member.getClinic()))
+                  daily_reports_map.get(current_date).get(staff_member.getClinic().getId()))
               .report_data.put(staff_member.getUser(), 0);
           total_appointments_map
               .get(current_date)
-              .get(staff_member.getClinic())
+              .get(staff_member.getClinic().getId())
               .put(staff_member.getUser(), 0);
         }
       }
@@ -155,7 +150,7 @@ public class handleReportMessage extends MessageHandler {
       Clinic appt_clinic = appt.getClinic();
 
       DailyAppointmentTypesReport report =
-          (DailyAppointmentTypesReport) daily_reports_map.get(appt_date).get(appt_clinic);
+          (DailyAppointmentTypesReport) daily_reports_map.get(appt_date).get(appt_clinic.getId());
       report.report_data.put(service_type, report.report_data.get(service_type) + 1);
     }
   }
@@ -176,25 +171,25 @@ public class handleReportMessage extends MessageHandler {
       int wait_time = (int) Duration.between(appt.getDate(), appt.getCalled_time()).toSeconds();
 
       DailyAverageWaitTimeReport report =
-          (DailyAverageWaitTimeReport) daily_reports_map.get(appt_date).get(appt_clinic);
+          (DailyAverageWaitTimeReport) daily_reports_map.get(appt_date).get(appt_clinic.getId());
 
       report.report_data.put(
           appt_staff_member, report.report_data.get(appt_staff_member) + wait_time);
 
       total_appointments_map
           .get(appt_date)
-          .get(appt_clinic)
+          .get(appt_clinic.getId())
           .put(
               appt_staff_member,
-              total_appointments_map.get(appt_date).get(appt_clinic).get(appt_staff_member) + 1);
+              total_appointments_map.get(appt_date).get(appt_clinic.getId()).get(appt_staff_member) + 1);
     }
 
     for (LocalDate date : daily_reports_map.keySet()) {
-      for (Clinic clinic : daily_reports_map.get(date).keySet()) {
+      for (int clinic_id : daily_reports_map.get(date).keySet()) {
         DailyAverageWaitTimeReport dailies =
-            (DailyAverageWaitTimeReport) daily_reports_map.get(date).get(clinic);
+            (DailyAverageWaitTimeReport) daily_reports_map.get(date).get(clinic_id);
         for (User staff_member : dailies.report_data.keySet()) {
-          int total_appt = total_appointments_map.get(date).get(clinic).get(staff_member);
+          int total_appt = total_appointments_map.get(date).get(clinic_id).get(staff_member);
           int total_wait_time = dailies.report_data.get(staff_member);
           dailies.report_data.put(staff_member, total_wait_time / total_appt);
         }
@@ -222,7 +217,7 @@ public class handleReportMessage extends MessageHandler {
       Clinic appt_clinic = appt.getClinic();
 
       DailyAppointmentTypesReport report =
-          (DailyAppointmentTypesReport) daily_reports_map.get(appt_date).get(appt_clinic);
+          (DailyAppointmentTypesReport) daily_reports_map.get(appt_date).get(appt_clinic.getId());
       report.report_data.put(service_type, report.report_data.get(service_type) + 1);
     }
   }

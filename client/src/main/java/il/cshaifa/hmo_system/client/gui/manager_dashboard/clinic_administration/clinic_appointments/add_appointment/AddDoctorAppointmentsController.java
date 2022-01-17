@@ -4,10 +4,9 @@ import il.cshaifa.hmo_system.client.HMOClient;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.AddAppointmentEvent;
+import il.cshaifa.hmo_system.client.events.AddAppointmentEvent.RejectionType;
 import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.User;
-import il.cshaifa.hmo_system.messages.AdminAppointmentMessage.AdminAppointmentMessageType;
-import il.cshaifa.hmo_system.messages.AdminAppointmentMessage.RejectionType;
 import java.io.IOException;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -49,11 +48,11 @@ public class AddDoctorAppointmentsController extends Controller {
   @Subscribe
   public void onAppointmentCreationResponse(AddAppointmentEvent event) {
     if (!event.getSender().equals(HMOClient.getClient())) return;
-    else if (event.response_type == AdminAppointmentMessageType.REJECT) {
+    if (!event.success) {
       String rejectionMessage = "";
-      if (event.rejectionType == RejectionType.OVERLAPPING) {
+      if (event.reject == RejectionType.OVERLAPPING) {
         rejectionMessage = "Staff member is busy at this time";
-      } else if (event.rejectionType == RejectionType.IN_THE_PAST) {
+      } else if (event.reject == RejectionType.IN_THE_PAST) {
         rejectionMessage = "Cannot open appointments in the past";
       }
 

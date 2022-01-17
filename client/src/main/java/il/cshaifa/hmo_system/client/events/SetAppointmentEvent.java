@@ -7,20 +7,20 @@ import il.cshaifa.hmo_system.entities.Role;
 import java.util.List;
 
 public class SetAppointmentEvent extends Event {
-  public enum Action {
+  public enum RequestType {
     LOCK,
     TAKE,
     RELEASE
   }
 
-  public enum Response {
+  public enum ResponseType {
     ROLES_RESPONSE,
     AUTHORIZE,
     REJECT
   }
 
-  public Action action;
-  public Response response;
+  public RequestType request;
+  public ResponseType response;
   public Patient patient;
   public Appointment appointment;
   public AppointmentType appointmentType;
@@ -28,16 +28,16 @@ public class SetAppointmentEvent extends Event {
   public List<Role> specialistRoles;
 
   public SetAppointmentEvent(
-      Object sender, Action action, Patient patient, Appointment appointment) {
+      Object sender, RequestType request, Patient patient, Appointment appointment) {
     super(sender);
-    this.action = action;
+    this.request = request;
     this.patient = patient;
     this.appointment = appointment;
   }
 
   public SetAppointmentEvent(Object sender, List<Role> role_list) {
     super(sender);
-    response = Response.ROLES_RESPONSE;
+    response = ResponseType.ROLES_RESPONSE;
     specialistRoles = role_list;
   }
 

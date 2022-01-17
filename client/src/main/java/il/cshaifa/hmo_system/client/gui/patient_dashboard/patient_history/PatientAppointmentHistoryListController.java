@@ -7,8 +7,7 @@ import il.cshaifa.hmo_system.client.events.AppointmentListEvent;
 import il.cshaifa.hmo_system.client.events.PatientAppointmentListEvent;
 import il.cshaifa.hmo_system.client.events.PatientAppointmentListEvent.Status;
 import il.cshaifa.hmo_system.client.events.SetAppointmentEvent;
-import il.cshaifa.hmo_system.client.events.SetAppointmentEvent.Action;
-import il.cshaifa.hmo_system.client.gui.patient_dashboard.appointments.SetAppointmentController;
+import il.cshaifa.hmo_system.client.events.SetAppointmentEvent.ResponseType;
 import java.io.IOException;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -63,7 +62,7 @@ public class PatientAppointmentHistoryListController extends Controller {
   public void onCancelAppointmentRespond(SetAppointmentEvent event) {
     if (!event.getSender().equals(HMOClient.getClient())) return;
 
-    if (event.action == Action.AUTHORIZE) {
+    if (event.response == ResponseType.AUTHORIZE) {
       try {
         HMOClient.getClient().getPatientHistory();
       } catch (IOException e) {
