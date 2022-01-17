@@ -62,7 +62,6 @@ public class LoginController extends Controller {
     }
   }
 
-
   private void alreadyLoggedInUser(){
     Platform.runLater(
         () -> ((LoginViewController) this.view_controller)
