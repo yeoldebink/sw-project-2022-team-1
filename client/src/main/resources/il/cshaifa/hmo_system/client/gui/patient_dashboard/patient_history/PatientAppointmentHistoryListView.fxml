@@ -9,12 +9,12 @@
 
 <?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.MenuItem?>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0"
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
             prefWidth="900.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="il.cshaifa.hmo_system.client.gui.patient_dashboard.patient_history.PatientAppointmentHistoryListViewController"
 stylesheets="@../../hmo_lite.css">
     <VBox AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0"
-          AnchorPane.topAnchor="10.0" prefWidth="900.0" prefHeight="450.0">
+          AnchorPane.topAnchor="10.0" prefWidth="900.0">
         <Label text="Appointments History" styleClass="h1-label" />
         <TableView fx:id="appt_table" onContextMenuRequested="#contextMenuRequested" tableMenuButtonVisible="true"
                    VBox.vgrow="ALWAYS">

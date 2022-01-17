@@ -12,7 +12,7 @@ import org.greenrobot.eventbus.EventBus;
 
 public class AdminClinicViewController extends RoleDefinedViewController {
 
-  private final Clinic clinic;
+  private final Clinic clinicCopy;
   @FXML private TextField name;
   @FXML private TextField address;
   @FXML private Label manager;
@@ -27,22 +27,24 @@ public class AdminClinicViewController extends RoleDefinedViewController {
 
   public AdminClinicViewController(Clinic clinic, Role role) {
     super(role);
-    this.clinic = clinic;
+    this.clinicCopy = new Clinic(clinic); // prevents saves for invalid objects
   }
 
   @FXML
   public void initialize() {
-    name.setText(clinic.getName());
-    address.setText(clinic.getAddress());
+    name.setText(clinicCopy.getName());
+    address.setText(clinicCopy.getAddress());
     manager.setText(
-        clinic.getManager_user().getFirstName() + " " + clinic.getManager_user().getLastName());
-    sunHoursTextField.setText(clinic.getSun_hours());
-    monHoursTextField.setText(clinic.getMon_hours());
-    tueHoursTextField.setText(clinic.getTue_hours());
-    wedHoursTextField.setText(clinic.getWed_hours());
-    thuHoursTextField.setText(clinic.getThu_hours());
-    friHoursTextField.setText(clinic.getFri_hours());
-    satHoursTextField.setText(clinic.getSat_hours());
+        clinicCopy.getManager_user().getFirstName()
+            + " "
+            + clinicCopy.getManager_user().getLastName());
+    sunHoursTextField.setText(clinicCopy.getSun_hours());
+    monHoursTextField.setText(clinicCopy.getMon_hours());
+    tueHoursTextField.setText(clinicCopy.getTue_hours());
+    wedHoursTextField.setText(clinicCopy.getWed_hours());
+    thuHoursTextField.setText(clinicCopy.getThu_hours());
+    friHoursTextField.setText(clinicCopy.getFri_hours());
+    satHoursTextField.setText(clinicCopy.getSat_hours());
 
     applyRoleBehavior();
   }
@@ -64,18 +66,16 @@ public class AdminClinicViewController extends RoleDefinedViewController {
 
   @FXML
   public void requestClinicUpdate(ActionEvent actionEvent) {
-    clinic.setSun_hours(sunHoursTextField.getText());
-    clinic.setMon_hours(monHoursTextField.getText());
-    clinic.setTue_hours(tueHoursTextField.getText());
-    clinic.setWed_hours(wedHoursTextField.getText());
-    clinic.setThu_hours(thuHoursTextField.getText());
-    clinic.setFri_hours(friHoursTextField.getText());
-    clinic.setSat_hours(satHoursTextField.getText());
-    clinic.setName(name.getText());
-    clinic.setAddress(address.getText());
+    clinicCopy.setSun_hours(sunHoursTextField.getText());
+    clinicCopy.setMon_hours(monHoursTextField.getText());
+    clinicCopy.setTue_hours(tueHoursTextField.getText());
+    clinicCopy.setWed_hours(wedHoursTextField.getText());
+    clinicCopy.setThu_hours(thuHoursTextField.getText());
+    clinicCopy.setFri_hours(friHoursTextField.getText());
+    clinicCopy.setSat_hours(satHoursTextField.getText());
+    clinicCopy.setName(name.getText());
+    clinicCopy.setAddress(address.getText());
 
-    EventBus.getDefault().post(new ClinicEvent(this.clinic, this));
-
-    closeWindow(actionEvent);
+    EventBus.getDefault().post(new ClinicEvent(this.clinicCopy, this));
   }
 }

@@ -16,11 +16,7 @@
     <VBox AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0"
       AnchorPane.topAnchor="10.0">
       <children>
-        <Label prefHeight="41.0" prefWidth="294.0" text="Clinic Administration">
-          <font>
-            <Font name="DejaVu Sans Bold" size="22.0"/>
-          </font>
-        </Label>
+        <Label text="Clinic Administration" styleClass="h1-label" />
         <TableView fx:id="clinicTable" VBox.vgrow="ALWAYS">
           <columns>
             <TableColumn prefWidth="160.0" text="Clinic Name" fx:id="name"/>

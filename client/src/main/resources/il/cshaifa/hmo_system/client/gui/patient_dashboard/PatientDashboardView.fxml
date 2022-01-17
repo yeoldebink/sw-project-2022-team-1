@@ -17,7 +17,7 @@
 <AnchorPane
   xmlns="http://javafx.com/javafx/17"
   xmlns:fx="http://javafx.com/fxml/1"
-  fx:controller="il.cshaifa.hmo_system.client.gui.patient_dashboard.PatientDashboardViewController" stylesheets="@hmo_lite.css">
+  fx:controller="il.cshaifa.hmo_system.client.gui.patient_dashboard.PatientDashboardViewController" stylesheets="@../hmo_lite.css">
 
   <background>
     <Background>
@@ -29,7 +29,7 @@
 
   <VBox AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10">
     <ImageView>
-      <Image url="@splash.jpeg"/>
+      <Image url="@../splash.jpeg"/>
     </ImageView>
     <HBox VBox.vgrow="ALWAYS" spacing="15">
       <Button text="Set an appointment" onAction="#setAppointment">
@@ -58,7 +58,7 @@
     </Label>
     <HBox spacing="5">
       <ImageView>
-        <Image url="@info-icon.png"/>
+        <Image url="@../info-icon.png"/>
       </ImageView>
       <VBox>
         <Label fx:id="nextAppointmentStatusLabel">

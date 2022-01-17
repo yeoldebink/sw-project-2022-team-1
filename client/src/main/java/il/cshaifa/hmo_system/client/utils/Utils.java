@@ -13,7 +13,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-public class Utils<C> {
+public class Utils {
   public static void openNewWindow(
       Class<?> view_controller, Class<?> controller, FXMLLoader loader, boolean resizeable)
       throws Exception {

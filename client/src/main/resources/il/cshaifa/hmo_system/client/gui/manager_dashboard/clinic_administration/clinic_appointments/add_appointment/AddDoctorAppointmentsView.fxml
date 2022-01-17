@@ -13,56 +13,38 @@
 <?import javafx.scene.text.Font?>
 
 <?import com.sun.javafx.scene.control.IntegerField?>
-<AnchorPane prefHeight="232.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.add_appointment.AddDoctorAppointmentsViewController"
-  stylesheets="@../../../../hmo_lite.css">
-    <children>
-        <VBox AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
-            <children>
-                <Label text="Add Appointments">
-                    <font>
-                        <Font name="DejaVu Sans Bold" size="22.0" />
-                    </font>
-                </Label>
-                <Label fx:id="staff_member_name" text="">
-                    <font>
-                        <Font name="DejaVu Sans Bold" size="16.0" />
-                    </font>
-                </Label>
-                <GridPane>
-                    <children>
-                        <Label text="Date" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-                        <DatePicker fx:id="start_date" prefHeight="26.0" promptText="START DATETIME" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+<AnchorPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+  fx:controller="il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.add_appointment.AddDoctorAppointmentsViewController"
+  stylesheets="@../../../../hmo_lite.css" prefWidth="400">
+    <VBox AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0"
+      AnchorPane.topAnchor="10.0">
+        <Label text="Add Appointments" styleClass="h1-label"/>
+        <Label fx:id="staff_member_name" styleClass="h2-label"/>
+        <GridPane vgap="10" hgap="10">
+            <Label text="Date" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+            <DatePicker fx:id="start_date" promptText="START DATETIME" GridPane.rowIndex="1"
+              GridPane.columnIndex="2"/>
 
-                        <Label text="Start Time" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-                        <TextField fx:id="start_time" promptText="HH:MM" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
+            <Label text="Start Time" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+            <TextField fx:id="start_time" promptText="HH:MM" GridPane.rowIndex="2"
+              GridPane.columnIndex="2" maxWidth="100"/>
 
-                        <Label text="# Appointments" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
-                        <TextField fx:id="num_appts" GridPane.rowIndex="3" GridPane.columnIndex="2" />
-                    </children>
-                    <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="132.0" minWidth="10.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="207.0" minWidth="10.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                </GridPane>
-                <VBox />
-                <VBox alignment="BASELINE_CENTER" prefHeight="42.0">
-                    <Button fx:id="create_appts" onAction="#requestCreateAppointments" text="Create Appointment(s)">
-                        <VBox.margin>
-                            <Insets top="15.0" />
-                        </VBox.margin>
-                    </Button>
-                    <Label fx:id="error_text">
-                        <VBox.margin>
-                            <Insets top="10.0" />
-                        </VBox.margin>
-                    </Label>
-                </VBox>
-            </children>
+            <Label text="Amount" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+            <TextField fx:id="num_appts" GridPane.rowIndex="3" GridPane.columnIndex="2"  maxWidth="50" promptText="#"/>
+        </GridPane>
+        <VBox/>
+        <VBox alignment="BASELINE_CENTER">
+            <Button fx:id="create_appts" onAction="#requestCreateAppointments"
+              text="Create Appointment(s)">
+                <VBox.margin>
+                    <Insets top="15.0"/>
+                </VBox.margin>
+            </Button>
+            <Label fx:id="error_text">
+                <VBox.margin>
+                    <Insets top="10.0"/>
+                </VBox.margin>
+            </Label>
         </VBox>
-    </children>
+    </VBox>
 </AnchorPane>
