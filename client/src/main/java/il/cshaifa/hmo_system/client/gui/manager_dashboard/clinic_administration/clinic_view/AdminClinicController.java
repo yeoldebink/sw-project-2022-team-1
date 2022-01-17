@@ -16,9 +16,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.greenrobot.eventbus.Subscribe;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 public class AdminClinicController extends Controller {
 
@@ -79,7 +81,13 @@ public class AdminClinicController extends Controller {
     VBox vbox = new VBox();
     vbox.setSpacing(10);
     vbox.setPadding(new Insets(10, 10, 10, 10));
-    vbox.getChildren().add(new Label("Clinic hours format invalid.\nMust be HH:MM-HH:MM, HH:MM-HH:MM,..."));
+    Label label = new Label("Clinic hours format invalid.\nMust be HH:MM-HH:MM, HH:MM-HH:MM,...");
+    FontIcon icon = new FontIcon();
+    icon.setIconLiteral("mdi-alert-outline");
+    icon.setIconSize(30);
+    icon.setIconColor(Color.DARKRED);
+    label.setGraphic(icon);
+    vbox.getChildren().add(label);
 
     HBox hbox = new HBox();
     hbox.setAlignment(Pos.CENTER);

@@ -13,11 +13,7 @@
             fx:controller="il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_staff.ClinicStaffListViewController"
   stylesheets="@../../../hmo_lite.css">
     <VBox AnchorPane.topAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.bottomAnchor="10.0">
-        <Label text="Clinic Staff List">
-            <font>
-                <Font name="DejaVu Sans Bold" size="22.0"/>
-            </font>
-        </Label>
+        <Label text="Clinic Staff List" styleClass="h1-label" />
         <TableView fx:id="staff_table" tableMenuButtonVisible="true" onContextMenuRequested="#contextMenuRequested" VBox.vgrow="ALWAYS">
             <columns>
                 <TableColumn fx:id="last_name" prefWidth="75.0" text="Last Name"/>

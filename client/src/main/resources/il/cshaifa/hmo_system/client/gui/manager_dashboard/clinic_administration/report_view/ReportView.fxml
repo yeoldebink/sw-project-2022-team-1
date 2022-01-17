@@ -7,11 +7,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="420.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+<AnchorPane prefWidth="300.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.report_view.ReportViewController"
   stylesheets="@../../../hmo_lite.css">
     <children>
-        <VBox prefHeight="400.0" prefWidth="270.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0"
+        <VBox prefWidth="270.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0"
               AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
             <children>
                 <Label fx:id="report_type_label" text="Placeholder Text">
@@ -19,7 +19,7 @@
                         <Font size="26.0"/>
                     </font>
                 </Label>
-                <TableView fx:id="report_table" prefHeight="350.0" prefWidth="280.0" VBox.vgrow="ALWAYS">
+                <TableView fx:id="report_table" prefWidth="280.0" VBox.vgrow="ALWAYS">
                     <columns>
                         <TableColumn fx:id="keyColumn" prefWidth="75.0" text="Key"/>
                         <TableColumn fx:id="valueColumn" prefWidth="75.0" text="Value"/>

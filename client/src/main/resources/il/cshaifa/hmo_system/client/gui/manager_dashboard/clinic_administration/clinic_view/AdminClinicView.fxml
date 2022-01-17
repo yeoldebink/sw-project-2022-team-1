@@ -12,19 +12,12 @@
 <?import javafx.scene.text.Font?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1"
   xmlns="http://javafx.com/javafx/17"
-  fx:controller="il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_view.AdminClinicViewController">
+  fx:controller="il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_view.AdminClinicViewController"
+  stylesheets="@../../../hmo_lite.css">
   <VBox AnchorPane.topAnchor="10" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10"
     AnchorPane.rightAnchor="10" spacing="10">
-    <Label text="Edit Clinic">
-      <font>
-        <Font name="DejaVu Sans Bold" size="22.0"/>
-      </font>
-    </Label>
-    <Label text="Clinic Info" underline="true">
-      <font>
-        <Font name="DejaVu Sans Bold" size="14.0"/>
-      </font>
-    </Label>
+    <Label text="Edit Clinic" styleClass="h1-label" />
+    <Label text="Clinic Info" styleClass="h2-label" />
     <GridPane vgap="5">
       <Label GridPane.rowIndex="0" text="Name: "/>
       <TextField GridPane.columnIndex="1" text="NAME" fx:id="name"/>
