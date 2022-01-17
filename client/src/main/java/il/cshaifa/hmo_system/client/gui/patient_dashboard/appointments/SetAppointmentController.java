@@ -20,6 +20,11 @@ public class SetAppointmentController extends Controller {
 
   private SetAppointmentController(ViewController view_controller, Stage stage) {
     super(view_controller, stage);
+    try {
+      HMOClient.getClient().getSpecialistRoles();
+    } catch (IOException ioException) {
+      ioException.printStackTrace();
+    }
   }
 
   public static SetAppointmentController getInstance() {
@@ -47,6 +52,10 @@ public class SetAppointmentController extends Controller {
           HMOClient.getClient()
               .getFamilyDoctorAppointments(
                   new AppointmentType(patientIsMinor() ? "Pediatrician" : "Family Doctor"));
+          break;
+
+        case "Specialist":
+          HMOClient.getClient().getSpecialistAppointments(event.role);
           break;
         default:
           break;
@@ -97,6 +106,9 @@ public class SetAppointmentController extends Controller {
                       event.response == ResponseType.AUTHORIZE,
                       (int) stage.getX() + 100,
                       (int) stage.getY() + 100));
+    } else if (event.specialistRoles != null) {
+      ((SetAppointmentViewController) view_controller)
+          .populateSpecialistRoles(event.specialistRoles);
     }
   }
 }

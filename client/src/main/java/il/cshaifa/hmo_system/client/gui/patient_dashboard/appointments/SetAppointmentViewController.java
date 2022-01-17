@@ -7,6 +7,7 @@ import il.cshaifa.hmo_system.client.utils.Utils;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.Patient;
+import il.cshaifa.hmo_system.entities.Role;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,11 +19,15 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.ComboBoxListCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -36,6 +41,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import jdk.jshell.spi.ExecutionControl.NotImplementedException;
 import org.greenrobot.eventbus.EventBus;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -44,14 +50,20 @@ public class SetAppointmentViewController extends ViewController {
   private final Patient patient;
   private HashMap<LocalDate, ArrayList<Appointment>> appointmentsByDate;
   private AppointmentType lastUpdatedAppointmentType;
+  private Role lastUpdatedSpecialistRole;
 
   @FXML private Label clinicNameLabel;
 
   @FXML private StackPane stackPane;
 
   @FXML private Accordion chooseApptTypeAccordion;
+
   @FXML private VBox gpAppointmentVBox;
   @FXML private Button gpAppointmentsButton;
+
+  @FXML private VBox spAppointmentsVBox;
+  @FXML private Button spAppointmentsButton;
+  @FXML private ComboBox<Role> spComboBox;
 
   private final DatePicker apptDatePicker;
   private Pane apptDatePickerParent;
@@ -79,11 +91,6 @@ public class SetAppointmentViewController extends ViewController {
     setAppointmentButton.setDisable(true);
 
     chooseApptTypeAccordion.setExpandedPane(chooseApptTypeAccordion.getPanes().get(0));
-    gpAppointmentsButton.setOnAction(
-        (event) -> {
-          errorLabel.setVisible(false);
-          requestAppointments(new AppointmentType("Family Doctor"));
-        });
 
     clinicNameLabel.setText(patient.getHome_clinic().getName());
 
@@ -121,6 +128,67 @@ public class SetAppointmentViewController extends ViewController {
                             newSelection.getAppointment()));
               }
             });
+
+    Callback<ListView<Role>, ListCell<Role>> spComboCellFactory =
+        new Callback<>() {
+          @Override
+          public ListCell<Role> call(ListView<Role> roleList) {
+            return new ComboBoxListCell<>() {
+              @Override
+              public void updateItem(Role role, boolean empty) {
+                super.updateItem(role, empty);
+                if (!empty) {
+                  setText(role.getName());
+                  String iconLiteral = null;
+                  switch (role.getName()) {
+                    case "Cardiologist":
+                      iconLiteral = "mdi-heart-pulse";
+                      break;
+                    case "Neurologist":
+                      iconLiteral = "mdi-lightbulb-outline";
+                      break;
+                    case "Endocrinologist":
+                      iconLiteral = "mdi-invert-colors";
+                      break;
+                    case "Dermatologist":
+                      iconLiteral = "mdi-fingerprint";
+                      break;
+                    case "Orthopedist":
+                      iconLiteral = "mdi-wrench";
+                      break;
+                    default:
+                      new NotImplementedException("Specialist role not implemented")
+                          .printStackTrace();
+                  }
+
+                  var icon = new FontIcon();
+                  icon.setIconLiteral(iconLiteral);
+                  setGraphic(icon);
+                }
+              }
+            };
+          }
+        };
+
+    spComboBox.setButtonCell(spComboCellFactory.call(null));
+    spComboBox.setCellFactory(spComboCellFactory);
+
+    spComboBox.valueProperty().addListener((newRole) -> {
+      if (newRole != null) spAppointmentsButton.setVisible(true);
+    });
+
+    // onAction for buttons
+    gpAppointmentsButton.setOnAction(
+        (event) -> {
+          errorLabel.setVisible(false);
+          requestAppointments(new AppointmentType("Family Doctor"), null);
+        });
+
+    spAppointmentsButton.setOnAction(
+        (event) -> {
+          errorLabel.setVisible(false);
+          requestAppointments(new AppointmentType("Specialist"), spComboBox.getValue());
+        });
   }
 
   private void moveApptDatePicker(AppointmentType apptType) {
@@ -134,21 +202,32 @@ public class SetAppointmentViewController extends ViewController {
       case "Pediatrician":
         newParent = gpAppointmentVBox;
         break;
+      case "Specialist":
+        return;
       default:
-        newParent = gpAppointmentVBox;
-        new NotImplementedException("Haven't put this shit in yet, fam").printStackTrace();
+        return;
     }
 
     newParent.getChildren().add(apptDatePicker);
     apptDatePickerParent = newParent;
   }
 
+  public void populateSpecialistRoles(List<Role> specialistRoles) {
+    spComboBox.getItems().setAll(specialistRoles);
+  }
+
   public void populateAppointmentDates(List<Appointment> appointments) {
-    if (appointments.size() == 0) {
+    if (appointments == null || appointments.size() == 0) {
       errorLabel.setVisible(true);
       return;
     } else {
       errorLabel.setVisible(false);
+    }
+
+    // if specialist, immediately populate and return
+    if (appointments.get(0).getType().getName().equals("Specialist")) {
+      populateAppointmentsTable(appointments);
+      return;
     }
 
     // hash appts by date for the picker
@@ -173,11 +252,15 @@ public class SetAppointmentViewController extends ViewController {
   }
 
   private void populateAppointmentsTable(LocalDate date) {
+    populateAppointmentsTable(appointmentsByDate.get(date));
+  }
+
+  // overloaded for direct population in the case of specialists
+  private void populateAppointmentsTable(List<Appointment> appointments) {
     appointmentsTable.getItems().clear();
-    for (var appt : appointmentsByDate.get(date)) {
+    for (var appt : appointments) {
       appointmentsTable.getItems().add(new AppointmentRow(appt));
     }
-
     switchToPane(appointmentsTablePane);
   }
 
@@ -198,16 +281,20 @@ public class SetAppointmentViewController extends ViewController {
     }
   }
 
-  public void requestAppointments(AppointmentType apptType) {
+  public void requestAppointments(AppointmentType apptType, Role role) {
     lastUpdatedAppointmentType = apptType;
+    lastUpdatedSpecialistRole = role;
     SetAppointmentEvent apptEvent = new SetAppointmentEvent(this, null, null, null);
     apptEvent.appointmentType = apptType;
+    apptEvent.role = role;
     EventBus.getDefault().post(apptEvent);
   }
 
   @FXML
   public void backToChooseType(ActionEvent event) {
-    requestAppointments(lastUpdatedAppointmentType);
+    if (!lastUpdatedAppointmentType.getName().equals("Specialist"))
+      requestAppointments(lastUpdatedAppointmentType, lastUpdatedSpecialistRole);
+
     switchToPane(chooseApptTypeAccordion);
   }
 
