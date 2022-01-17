@@ -1,11 +1,11 @@
 package il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_staff;
 
+import il.cshaifa.hmo_system.CommonEnums.StaffAssignmentAction;
 import il.cshaifa.hmo_system.client.HMOClient;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.AdminAppointmentListEvent;
 import il.cshaifa.hmo_system.client.events.AssignStaffEvent;
-import il.cshaifa.hmo_system.client.events.AssignStaffEvent.RequestType;
 import il.cshaifa.hmo_system.client.events.ClinicStaffEvent;
 import il.cshaifa.hmo_system.client.gui.ResourcePath;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.appointment_list.AdminAppointmentListController;
@@ -75,14 +75,14 @@ public class ClinicStaffListController extends Controller {
       for (AssignedUser a_user : assignedUsers) {
         // this condition is true iff the user is assigned and the phase is unassign
         // or the other way around - that the user is unassigned and the phase is assign
-        if (a_user.getAssigned() != (event.request == RequestType.ASSIGN)) {
+        if (a_user.getAssigned() != (event.action == StaffAssignmentAction.ASSIGN)) {
           staff_users.add(new User(a_user));
         }
       }
 
-      if (event.request == RequestType.ASSIGN)
+      if (event.action == StaffAssignmentAction.ASSIGN)
         HMOClient.getClient().assignStaff(staff_users);
-      else if (event.request == RequestType.UNASSIGN)
+      else if (event.action == StaffAssignmentAction.UNASSIGN)
         HMOClient.getClient().unassignStaff(staff_users);
     } catch (IOException ioException) {
       ioException.printStackTrace();

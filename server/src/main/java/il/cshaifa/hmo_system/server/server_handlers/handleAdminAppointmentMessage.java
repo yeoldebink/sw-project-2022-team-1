@@ -1,9 +1,9 @@
 package il.cshaifa.hmo_system.server.server_handlers;
 
+import il.cshaifa.hmo_system.CommonEnums.AddAppointmentRejectionReason;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.messages.AdminAppointmentMessage;
 import il.cshaifa.hmo_system.messages.AdminAppointmentMessage.RequestType;
-import il.cshaifa.hmo_system.messages.AdminAppointmentMessage.ResponseType;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -45,7 +45,8 @@ public class handleAdminAppointmentMessage extends MessageHandler {
     if (class_message.request == RequestType.CREATE){
       // check if the requested appointments aren't in the past
       if (!class_message.start_datetime.isAfter(LocalDateTime.now())) {
-        class_message.response = ResponseType.IN_THE_PAST;
+        class_message.success = false;
+        class_message.reject = AddAppointmentRejectionReason.IN_THE_PAST;
         return;
       }
 
@@ -73,7 +74,8 @@ public class handleAdminAppointmentMessage extends MessageHandler {
             cb.equal(root.get("appt_type"), class_message.appt_type),
             cb.between(root.get("appt_date"), class_message.start_datetime, end_datetime.minusSeconds(1)));
     if (session.createQuery(cr).getResultList().size() > 0) {
-      class_message.response = ResponseType.OVERLAPPING;
+      class_message.success = false;
+      class_message.reject = AddAppointmentRejectionReason.OVERLAPPING;
       return;
     }
 
@@ -95,7 +97,8 @@ public class handleAdminAppointmentMessage extends MessageHandler {
         }
       }
       if (appt == null) {
-        class_message.response = ResponseType.CLINIC_CLOSED;
+        class_message.success = false;
+        class_message.reject = AddAppointmentRejectionReason.CLINIC_CLOSED;
         return;
       }
       new_appointments.add(appt);
@@ -103,7 +106,7 @@ public class handleAdminAppointmentMessage extends MessageHandler {
     }
 
     saveEntities(new_appointments);
-    class_message.response = ResponseType.CREATED;
+    class_message.success = true;
   }
 
   private void openDoctorsAppointments() {
@@ -118,7 +121,8 @@ public class handleAdminAppointmentMessage extends MessageHandler {
             cb.equal(root.get("staff_member"), class_message.staff_member),
             cb.between(root.get("appt_date"), class_message.start_datetime, end_datetime.minusSeconds(1)));
     if (session.createQuery(cr).getResultList().size() > 0) {
-      class_message.response = ResponseType.OVERLAPPING;
+      class_message.success = false;
+      class_message.reject = AddAppointmentRejectionReason.OVERLAPPING;
       return;
     }
 
@@ -140,7 +144,8 @@ public class handleAdminAppointmentMessage extends MessageHandler {
         }
       }
       if (appt == null) {
-        class_message.response = ResponseType.CLINIC_CLOSED;
+        class_message.success = false;
+        class_message.reject = AddAppointmentRejectionReason.CLINIC_CLOSED;
         return;
       }
       new_appointments.add(appt);
@@ -148,11 +153,11 @@ public class handleAdminAppointmentMessage extends MessageHandler {
     }
 
     saveEntities(new_appointments);
-    class_message.response = ResponseType.CREATED;
+    class_message.success = true;
   }
 
   private void deleteAppointments(){
     removeEntities(class_message.appointments);
-    class_message.response = ResponseType.DELETED;
+    class_message.success = true;
   }
 }

@@ -1,9 +1,9 @@
 package il.cshaifa.hmo_system.server.server_handlers;
 
+import il.cshaifa.hmo_system.CommonEnums.StaffAssignmentAction;
 import il.cshaifa.hmo_system.entities.ClinicStaff;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.StaffAssignmentMessage;
-import il.cshaifa.hmo_system.messages.StaffAssignmentMessage.RequestType;
 import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -20,9 +20,9 @@ public class handleStaffAssignmentMessage extends MessageHandler {
 
   @Override
   public void handleMessage() {
-    if (class_message.request == RequestType.ASSIGN){
+    if (class_message.action == StaffAssignmentAction.ASSIGN){
       assignStaff();
-    } else if (class_message.request == RequestType.UNASSIGN) {
+    } else if (class_message.action == StaffAssignmentAction.UNASSIGN) {
       unassignStaff();
     }
   }

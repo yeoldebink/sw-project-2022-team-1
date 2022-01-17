@@ -11,6 +11,7 @@ import il.cshaifa.hmo_system.reports.DailyAverageWaitTimeReport;
 import il.cshaifa.hmo_system.reports.DailyReport;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -52,6 +53,7 @@ public class handleReportMessage extends MessageHandler {
       initServicesReport();
       getMissedAppointmentsReport();
     }
+    class_message.reports = new ArrayList<>();
     for (LocalDate date : daily_reports_map.keySet()) {
       for (int clinic_id : daily_reports_map.get(date).keySet()) {
         class_message.reports.add(daily_reports_map.get(date).get(clinic_id));

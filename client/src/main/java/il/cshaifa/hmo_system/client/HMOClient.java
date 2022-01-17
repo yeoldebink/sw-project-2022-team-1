@@ -1,8 +1,8 @@
 package il.cshaifa.hmo_system.client;
 
 import il.cshaifa.hmo_system.CommonEnums.SetAppointmentAction;
+import il.cshaifa.hmo_system.CommonEnums.StaffAssignmentAction;
 import il.cshaifa.hmo_system.client.events.AddAppointmentEvent;
-import il.cshaifa.hmo_system.client.events.AddAppointmentEvent.RejectionType;
 import il.cshaifa.hmo_system.client.events.AdminAppointmentListEvent;
 import il.cshaifa.hmo_system.client.events.AppointmentListEvent;
 import il.cshaifa.hmo_system.client.events.AssignStaffEvent;
@@ -24,7 +24,6 @@ import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.entities.Warning;
 import il.cshaifa.hmo_system.messages.AdminAppointmentMessage;
 import il.cshaifa.hmo_system.messages.AdminAppointmentMessage.RequestType;
-import il.cshaifa.hmo_system.messages.AdminAppointmentMessage.ResponseType;
 import il.cshaifa.hmo_system.messages.AppointmentMessage;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
 import il.cshaifa.hmo_system.messages.ClinicStaffMessage;
@@ -141,18 +140,8 @@ public class HMOClient extends AbstractClient {
 
   private void handleAdminAppointmentMessage(AdminAppointmentMessage message) {
     AddAppointmentEvent event = new AddAppointmentEvent(this);
-
-    if (message.response == ResponseType.CREATED || message.response == ResponseType.DELETED){
-      event.success = true;
-    } else {
-      event.success = false;
-      if (message.response == ResponseType.CLINIC_CLOSED)
-        event.reject = RejectionType.CLINIC_CLOSED;
-      else if (message.response == ResponseType.IN_THE_PAST)
-        event.reject = RejectionType.IN_THE_PAST;
-      else if (message.response == ResponseType.OVERLAPPING)
-        event.reject = RejectionType.OVERLAPPING;
-    }
+    event.success = message.success;
+    event.reject = message.reject;
     EventBus.getDefault().post(event);
   }
 
@@ -334,7 +323,7 @@ public class HMOClient extends AbstractClient {
       throws IOException {
     StaffAssignmentMessage message =
         new StaffAssignmentMessage(
-            staff, connected_employee_clinics.get(0), StaffAssignmentMessage.RequestType.ASSIGN);
+            staff, connected_employee_clinics.get(0), StaffAssignmentAction.ASSIGN);
     client.sendToServer(message);
   }
 
@@ -345,7 +334,7 @@ public class HMOClient extends AbstractClient {
       throws IOException {
     StaffAssignmentMessage message =
         new StaffAssignmentMessage(
-            staff, connected_employee_clinics.get(0), StaffAssignmentMessage.RequestType.UNASSIGN);
+            staff, connected_employee_clinics.get(0), StaffAssignmentAction.UNASSIGN);
     client.sendToServer(message);
   }
 

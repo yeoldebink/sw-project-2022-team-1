@@ -1,5 +1,6 @@
 package il.cshaifa.hmo_system.messages;
 
+import il.cshaifa.hmo_system.CommonEnums.AddAppointmentRejectionReason;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.Clinic;
@@ -13,14 +14,6 @@ public class AdminAppointmentMessage extends Message {
     DELETE
   }
 
-  public enum ResponseType {
-    CREATED,
-    DELETED,
-    CLINIC_CLOSED,
-    IN_THE_PAST,
-    OVERLAPPING
-  }
-
   public User staff_member;
   public Clinic clinic;
   public LocalDateTime start_datetime;
@@ -28,7 +21,8 @@ public class AdminAppointmentMessage extends Message {
   public AppointmentType appt_type;
   public List<Appointment> appointments;
   public RequestType request;
-  public ResponseType response;
+  public boolean success;
+  public AddAppointmentRejectionReason reject;
 
   public AdminAppointmentMessage(
       RequestType request,

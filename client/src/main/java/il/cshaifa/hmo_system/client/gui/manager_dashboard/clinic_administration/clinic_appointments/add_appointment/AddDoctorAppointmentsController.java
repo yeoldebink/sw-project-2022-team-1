@@ -1,10 +1,10 @@
 package il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.add_appointment;
 
+import il.cshaifa.hmo_system.CommonEnums.AddAppointmentRejectionReason;
 import il.cshaifa.hmo_system.client.HMOClient;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.AddAppointmentEvent;
-import il.cshaifa.hmo_system.client.events.AddAppointmentEvent.RejectionType;
 import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.User;
 import java.io.IOException;
@@ -50,9 +50,9 @@ public class AddDoctorAppointmentsController extends Controller {
     if (!event.getSender().equals(HMOClient.getClient())) return;
     if (!event.success) {
       String rejectionMessage = "";
-      if (event.reject == RejectionType.OVERLAPPING) {
+      if (event.reject == AddAppointmentRejectionReason.OVERLAPPING) {
         rejectionMessage = "Staff member is busy at this time";
-      } else if (event.reject == RejectionType.IN_THE_PAST) {
+      } else if (event.reject == AddAppointmentRejectionReason.IN_THE_PAST) {
         rejectionMessage = "Cannot open appointments in the past";
       }
 
