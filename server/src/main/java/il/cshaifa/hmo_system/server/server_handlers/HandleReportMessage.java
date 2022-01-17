@@ -158,7 +158,7 @@ public class HandleReportMessage extends MessageHandler {
       if (appt.getStaff_member() == null) {
         service_type = appt.getType().getName();
       } else {
-        service_type = appt.getSpecialist_role().getName();
+        service_type = appt.getStaff_member().getRole().getName();
       }
       Clinic appt_clinic = appt.getClinic();
 
@@ -205,7 +205,11 @@ public class HandleReportMessage extends MessageHandler {
         for (User staff_member : dailies.report_data.keySet()) {
           int total_appt = total_appointments_map.get(date).get(clinic_id).get(staff_member);
           int total_wait_time = dailies.report_data.get(staff_member);
-          dailies.report_data.put(staff_member, total_wait_time / total_appt);
+          if (total_appt == 0) {
+            dailies.report_data.put(staff_member, 0);
+          } else {
+            dailies.report_data.put(staff_member, total_wait_time / total_appt);
+          }
         }
       }
     }
@@ -226,7 +230,7 @@ public class HandleReportMessage extends MessageHandler {
       if (appt.getStaff_member() == null) {
         service_type = appt.getType().getName();
       } else {
-        service_type = appt.getSpecialist_role().getName();
+        service_type = appt.getStaff_member().getRole().getName();
       }
       Clinic appt_clinic = appt.getClinic();
 

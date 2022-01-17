@@ -71,7 +71,7 @@ public class HandleAdminAppointmentMessage extends MessageHandler {
     cr.select(root)
         .where(
             cb.equal(root.get("clinic"), class_message.clinic),
-            cb.equal(root.get("appt_type"), class_message.appt_type),
+            cb.equal(root.get("type").get("name"), class_message.appt_type.getName()),
             cb.between(
                 root.get("appt_date"), class_message.start_datetime, end_datetime.minusSeconds(1)));
     if (session.createQuery(cr).getResultList().size() > 0) {
