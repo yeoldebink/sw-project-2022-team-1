@@ -7,10 +7,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 
-public class handleClinicMessage extends MessageHandler {
+public class HandleClinicMessage extends MessageHandler {
   ClinicMessage class_message;
 
-  public handleClinicMessage(ClinicMessage message, Session session) {
+  public HandleClinicMessage(ClinicMessage message, Session session) {
     super(message, session);
     this.class_message = (ClinicMessage) this.message;
   }

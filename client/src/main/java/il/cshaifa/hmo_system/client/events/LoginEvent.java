@@ -6,7 +6,8 @@ import il.cshaifa.hmo_system.entities.User;
 public class LoginEvent extends Event {
   public enum Response {
     AUTHORIZE,
-    REJECT
+    REJECT,
+    LOGGED_IN
   }
 
   public int id;

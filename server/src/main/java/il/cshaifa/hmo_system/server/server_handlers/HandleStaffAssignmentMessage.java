@@ -10,10 +10,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 
-public class handleStaffAssignmentMessage extends MessageHandler {
+public class HandleStaffAssignmentMessage extends MessageHandler {
 
   private final StaffAssignmentMessage class_message;
-  public handleStaffAssignmentMessage(StaffAssignmentMessage message, Session session) {
+  public HandleStaffAssignmentMessage(StaffAssignmentMessage message, Session session) {
     super(message, session);
       this.class_message = (StaffAssignmentMessage) this.message;
   }

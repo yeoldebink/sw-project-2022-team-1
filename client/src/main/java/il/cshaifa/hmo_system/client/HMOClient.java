@@ -180,6 +180,8 @@ public class HMOClient extends AbstractClient {
     LoginEvent event = new LoginEvent(0, "", this);
     if (message.user == null) {
       event.response = Response.REJECT;
+    } else if (message.already_logged_in){
+      event.response = Response.LOGGED_IN;
     } else {
       event.id = message.id;
       event.password = message.password;

@@ -54,9 +54,9 @@ public class LoginViewController extends ViewController {
     statusLabel.setText("");
   }
 
-  void setFailedText() {
+  void setFailedText(String failedText) {
     statusLabel.setTextFill(Color.DARKRED);
-    statusLabel.setText("Incorrect ID or password");
+    statusLabel.setText(failedText);
 
     // re-enable changes
     setDisable(false);

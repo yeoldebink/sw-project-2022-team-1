@@ -16,7 +16,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 
-public class handleAppointmentMessage extends MessageHandler {
+public class HandleAppointmentMessage extends MessageHandler {
   private final AppointmentMessage class_message;
   // Represented as weeks
   private final Map<String, Long> max_future_appointments;
@@ -24,7 +24,7 @@ public class handleAppointmentMessage extends MessageHandler {
   private final CriteriaQuery<Appointment> cr;
   private final Root<Appointment> root;
 
-  public handleAppointmentMessage(AppointmentMessage message, Session session) {
+  public HandleAppointmentMessage(AppointmentMessage message, Session session) {
     super(message, session);
     this.class_message = (AppointmentMessage) this.message;
     this.max_future_appointments = new HashMap<>();

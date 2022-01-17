@@ -19,7 +19,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 
-public class handleReportMessage extends MessageHandler {
+public class HandleReportMessage extends MessageHandler {
   ReportMessage class_message;
   private HashMap<LocalDate, HashMap<Integer, DailyReport>> daily_reports_map;
   HashMap<LocalDate, HashMap<Integer, HashMap<User, Integer>>> total_appointments_map;
@@ -29,7 +29,7 @@ public class handleReportMessage extends MessageHandler {
   private List<Appointment> relevant_appointments;
   private static String[] clinics_general_services;
 
-  public handleReportMessage(ReportMessage message, Session session) {
+  public HandleReportMessage(ReportMessage message, Session session) {
     super(message, session);
     this.class_message = (ReportMessage) this.message;
     cb = session.getCriteriaBuilder();

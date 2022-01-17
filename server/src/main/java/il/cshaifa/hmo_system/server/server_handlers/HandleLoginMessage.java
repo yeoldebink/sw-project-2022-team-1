@@ -14,13 +14,22 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 
-public class handleLoginMessage extends MessageHandler {
+public class HandleLoginMessage extends MessageHandler {
   public LoginMessage class_message;
 
+  private static HashMap<Integer, ConnectionToClient> connected_users;
+  private static HashMap<ConnectionToClient, User> connected_clients;
 
-  public handleLoginMessage(LoginMessage message, Session session) {
+  private final ConnectionToClient client;
+
+
+  public HandleLoginMessage(LoginMessage message, Session session, ConnectionToClient client) {
     super(message, session);
     this.class_message = (LoginMessage) this.message;
+    this.client = client;
+
+    if (connected_clients == null) connected_clients = new HashMap<>();
+    if (connected_users == null) connected_users = new HashMap<>();
   }
 
   /** If login successful will update the LoginMessage with user and his details */
@@ -54,6 +63,14 @@ public class handleLoginMessage extends MessageHandler {
           class_message.employee_clinics = session.createQuery(cr).getResultList();
 
         }
+
+        if (connected_users.containsKey(user.getId())) {
+          class_message.already_logged_in = true;
+          System.out.println("True");
+        } else {
+          connected_users.put(user.getId(), client);
+          connected_clients.put(client, user);
+        }
       }
     }
   }
@@ -64,5 +81,14 @@ public class handleLoginMessage extends MessageHandler {
     Root<Patient> root = cr.from(Patient.class);
     cr.select(root).where(cb.equal(root.get("user"), user));
     return session.createQuery(cr).getResultList().get(0);
+  }
+
+  public static void disconnectClient(ConnectionToClient client) {
+    var user = connected_clients.remove(client);
+    connected_users.remove(user.getId());
+  }
+
+  public static User connectedUser(ConnectionToClient client) {
+    return connected_clients.get(client);
   }
 }

@@ -20,17 +20,15 @@ import il.cshaifa.hmo_system.messages.StaffAssignmentMessage;
 import il.cshaifa.hmo_system.server.ocsf.AbstractServer;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import il.cshaifa.hmo_system.server.server_handlers.MessageHandler;
-import il.cshaifa.hmo_system.server.server_handlers.handleAdminAppointmentMessage;
-import il.cshaifa.hmo_system.server.server_handlers.handleAppointmentMessage;
-import il.cshaifa.hmo_system.server.server_handlers.handleClinicMessage;
-import il.cshaifa.hmo_system.server.server_handlers.handleLoginMessage;
-import il.cshaifa.hmo_system.server.server_handlers.handleReportMessage;
-import il.cshaifa.hmo_system.server.server_handlers.handleSetAppointmentMessage;
-import il.cshaifa.hmo_system.server.server_handlers.handleSetSpecialistAppointmentMessage;
-import il.cshaifa.hmo_system.server.server_handlers.handleStaffAssignmentMessage;
-import il.cshaifa.hmo_system.server.server_handlers.handleStaffMessage;
-import java.io.IOException;
-import java.util.HashMap;
+import il.cshaifa.hmo_system.server.server_handlers.HandleAdminAppointmentMessage;
+import il.cshaifa.hmo_system.server.server_handlers.HandleAppointmentMessage;
+import il.cshaifa.hmo_system.server.server_handlers.HandleClinicMessage;
+import il.cshaifa.hmo_system.server.server_handlers.HandleLoginMessage;
+import il.cshaifa.hmo_system.server.server_handlers.HandleReportMessage;
+import il.cshaifa.hmo_system.server.server_handlers.HandleSetAppointmentMessage;
+import il.cshaifa.hmo_system.server.server_handlers.HandleSetSpecialistAppointmentMessage;
+import il.cshaifa.hmo_system.server.server_handlers.HandleStaffAssignmentMessage;
+import il.cshaifa.hmo_system.server.server_handlers.HandleStaffMessage;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -41,8 +39,6 @@ import org.hibernate.service.ServiceRegistry;
 public class HMOServer extends AbstractServer {
 
   private static Session session;
-  public static HashMap<User, ConnectionToClient> connected_users;
-  public static HashMap<ConnectionToClient, User> connected_clients;
 
   public HMOServer(int port) {
     super(port);
@@ -83,32 +79,32 @@ public class HMOServer extends AbstractServer {
 
       Class<?> msg_class = msg.getClass();
       if (msg_class == AdminAppointmentMessage.class) {
-        handler = new handleAdminAppointmentMessage((AdminAppointmentMessage) msg, session);
+        handler = new HandleAdminAppointmentMessage((AdminAppointmentMessage) msg, session);
       } else if (msg_class == AppointmentMessage.class) {
-        handler = new handleAppointmentMessage((AppointmentMessage) msg, session);
+        handler = new HandleAppointmentMessage((AppointmentMessage) msg, session);
       } else if (msg_class == ClinicMessage.class) {
-        handler = new handleClinicMessage((ClinicMessage) msg, session);
+        handler = new HandleClinicMessage((ClinicMessage) msg, session);
       } else if (msg_class == LoginMessage.class) {
-        handler = new handleLoginMessage((LoginMessage) msg, session);
-        if (((LoginMessage) msg).user != null) {
-          if (connected_users.containsKey(((LoginMessage) msg).user)) {
-            ((LoginMessage) msg).already_logged_in = true;
-            System.out.println("True");
-          } else {
-            connected_users.put(((LoginMessage) msg).user, client);
-            connected_clients.put(client, ((LoginMessage) msg).user);
-          }
-        }
+        handler = new HandleLoginMessage((LoginMessage) msg, session, client);
+//        if (((LoginMessage) msg).user != null) {
+//          if (connected_users.containsKey(((LoginMessage) msg).user)) {
+//            ((LoginMessage) msg).already_logged_in = true;
+//            System.out.println("True");
+//          } else {
+//            connected_users.put(((LoginMessage) msg).user, client);
+//            connected_clients.put(client, ((LoginMessage) msg).user);
+//          }
+//        }
       } else if (msg_class == ReportMessage.class) {
-        handler = new handleReportMessage((ReportMessage) msg, session);
+        handler = new HandleReportMessage((ReportMessage) msg, session);
       } else if (msg_class == SetAppointmentMessage.class) {
-        handler = new handleSetAppointmentMessage((SetAppointmentMessage) msg, session);
+        handler = new HandleSetAppointmentMessage((SetAppointmentMessage) msg, session);
       } else if (msg_class == SetSpecialistAppointmentMessage.class) {
-        handler = new handleSetSpecialistAppointmentMessage((SetSpecialistAppointmentMessage) msg, session);
+        handler = new HandleSetSpecialistAppointmentMessage((SetSpecialistAppointmentMessage) msg, session);
       } else if (msg_class == StaffAssignmentMessage.class) {
-        handler = new handleStaffAssignmentMessage((StaffAssignmentMessage) msg, session);
+        handler = new HandleStaffAssignmentMessage((StaffAssignmentMessage) msg, session);
       } else if (msg_class == ClinicStaffMessage.class) {
-        handler = new handleStaffMessage((ClinicStaffMessage) msg, session);
+        handler = new HandleStaffMessage((ClinicStaffMessage) msg, session);
       }
 
       handler.handleMessage();
@@ -126,12 +122,11 @@ public class HMOServer extends AbstractServer {
 
   @Override
   protected synchronized void clientDisconnected(ConnectionToClient client) {
-    System.out.println("Client Disconnected." + connected_clients.get(client).getFirstName());
-    super.clientDisconnected(client);
-    User user = connected_clients.get(client);
-    connected_clients.remove(client);
-    connected_users.remove(user);
+    var user = HandleLoginMessage.connectedUser(client);
+    System.out.printf("Client disconnected: %s, %s %s%n", client, user.getFirstName(), user.getLastName());
+    HandleLoginMessage.disconnectClient(client);
 
+    super.clientDisconnected(client);
   }
 
   @Override
@@ -143,22 +138,5 @@ public class HMOServer extends AbstractServer {
   @Override
   protected synchronized void clientException(ConnectionToClient client, Throwable exception) {
     exception.printStackTrace();
-  }
-
-  /**
-   * @param args
-   * @throws IOException Main server method, create server and listen to clients
-   */
-  public static void main(String[] args) throws IOException {
-    if (args.length != 1) {
-      System.out.println("Required argument: <port>");
-    } else {
-      HMOServer server = new HMOServer(Integer.parseInt(args[0]));
-      server.listen();
-      if (connected_users == null)
-        connected_users = new HashMap<>();
-      if (connected_clients == null)
-        connected_clients = new HashMap<>();
-    }
   }
 }

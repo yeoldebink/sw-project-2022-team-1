@@ -10,10 +10,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 
-public class handleSetAppointmentMessage extends MessageHandler {
+public class HandleSetAppointmentMessage extends MessageHandler {
   public SetAppointmentMessage class_message;
 
-  public handleSetAppointmentMessage(SetAppointmentMessage message, Session session) {
+  public HandleSetAppointmentMessage(SetAppointmentMessage message, Session session) {
     super(message, session);
     this.class_message = (SetAppointmentMessage) this.message;
   }
