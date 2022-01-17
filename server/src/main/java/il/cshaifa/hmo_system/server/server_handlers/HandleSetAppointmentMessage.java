@@ -52,8 +52,8 @@ public class HandleSetAppointmentMessage extends MessageHandler {
     // is it possible to lock this appointment? if not return false
     if (class_message.appointment.isTaken()
         || (lock_time != null
-        && LocalDateTime.now().isBefore(lock_time)
-        && class_message.appointment.getPatient().getId() != class_message.patient.getId())) {
+            && LocalDateTime.now().isBefore(lock_time)
+            && class_message.appointment.getPatient().getId() != class_message.patient.getId())) {
       return false;
     }
 

@@ -34,9 +34,11 @@ public class HandleStaffMessage extends MessageHandler {
 
     CriteriaQuery<User> user_cr = cb.createQuery(User.class);
     Root<User> user_root = user_cr.from(User.class);
-    user_cr.select(user_root).where(
-        cb.notLike(user_root.get("role").get("name"), "%Manager%"),
-        cb.notEqual(user_root.get("role").get("name"), "Patient"));
+    user_cr
+        .select(user_root)
+        .where(
+            cb.notLike(user_root.get("role").get("name"), "%Manager%"),
+            cb.notEqual(user_root.get("role").get("name"), "Patient"));
     List<User> all_staff = session.createQuery(user_cr).getResultList();
 
     for (User staff_member : all_staff) {

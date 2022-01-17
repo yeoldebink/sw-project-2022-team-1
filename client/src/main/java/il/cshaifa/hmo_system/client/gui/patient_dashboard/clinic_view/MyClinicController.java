@@ -9,9 +9,7 @@ public class MyClinicController extends Controller {
 
   private static MyClinicController instance;
 
-  private MyClinicController(
-      ViewController view_controller,
-      Stage stage) {
+  private MyClinicController(ViewController view_controller, Stage stage) {
     super(view_controller, stage);
   }
 

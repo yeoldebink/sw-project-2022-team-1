@@ -15,9 +15,7 @@ public abstract class MessageHandler {
 
   public abstract void handleMessage();
 
-  /**
-   * @param entity_list Entities to be added to DB
-   */
+  /** @param entity_list Entities to be added to DB */
   protected void saveEntities(List<?> entity_list) {
     for (var entity : entity_list) {
       session.save(entity);
@@ -25,9 +23,7 @@ public abstract class MessageHandler {
     session.flush();
   }
 
-  /**
-   * @param entity_list Entities to be removed from DB
-   */
+  /** @param entity_list Entities to be removed from DB */
   protected void removeEntities(List<?> entity_list) {
     for (var entity : entity_list) {
       session.remove(entity);
@@ -35,9 +31,7 @@ public abstract class MessageHandler {
     session.flush();
   }
 
-  /**
-   * @param entity_list Entities to be updated to DB
-   */
+  /** @param entity_list Entities to be updated to DB */
   protected void updateEntities(List<?> entity_list) {
     for (var entity : entity_list) {
       session.update(entity);

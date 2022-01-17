@@ -56,7 +56,8 @@ public class AdminAppointmentListViewController extends ViewController {
   @FXML
   void deleteSelectedAppointments(ActionEvent event) {
     var appts_selected =
-        new ArrayList<AppointmentForAdminTableView>(appt_table.getSelectionModel().getSelectedItems());
+        new ArrayList<AppointmentForAdminTableView>(
+            appt_table.getSelectionModel().getSelectedItems());
     var appts_to_delete = new ArrayList<Appointment>();
 
     // Iterate over selected AppointmentForTableView, and for each find
@@ -93,7 +94,8 @@ public class AdminAppointmentListViewController extends ViewController {
   void populateAppointmentsTable(ArrayList<Appointment> appt_list) {
     this.appt_list = appt_list;
     this.appt_list.sort(Comparator.comparing(Appointment::getDate));
-    ArrayList<AppointmentForAdminTableView> appt_list_table = new ArrayList<AppointmentForAdminTableView>();
+    ArrayList<AppointmentForAdminTableView> appt_list_table =
+        new ArrayList<AppointmentForAdminTableView>();
 
     for (var appt : appt_list) {
       appt_list_table.add(

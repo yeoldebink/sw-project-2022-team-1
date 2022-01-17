@@ -27,7 +27,9 @@ public class PatientAppointmentHistoryListController extends Controller {
     }
   }
 
-  public static PatientAppointmentHistoryListController getInstance() {return instance;}
+  public static PatientAppointmentHistoryListController getInstance() {
+    return instance;
+  }
 
   public static void create(ViewController view_controller, Stage stage) {
     if (instance != null && instance.view_controller != null) return;
@@ -35,17 +37,15 @@ public class PatientAppointmentHistoryListController extends Controller {
   }
 
   @Subscribe
-  public void onPatientHistoryRespond(AppointmentListEvent event){
+  public void onPatientHistoryRespond(AppointmentListEvent event) {
     if (!event.getSender().equals(HMOClient.getClient())) return;
 
     Platform.runLater(
-        ()-> {
+        () -> {
           ((PatientAppointmentHistoryListViewController) this.view_controller)
               .populateAppointmentsTable(event.appointments);
-        }
-    );
+        });
   }
-
 
   @Subscribe
   public void onCancelAppointmentRequest(PatientAppointmentListEvent event) {
@@ -77,6 +77,6 @@ public class PatientAppointmentHistoryListController extends Controller {
   public void onShowAppointmentDetailsRequest(PatientAppointmentListEvent event) {
     if (!event.getSender().equals(this.view_controller)
         || event.status != Status.SHOW_APPOINTMENT_DATA) return;
-    //TODO need to create the view to see the appointment details
+    // TODO need to create the view to see the appointment details
   }
 }

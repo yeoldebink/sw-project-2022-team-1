@@ -4,13 +4,13 @@ import il.cshaifa.hmo_system.client.HMOClient;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.AppointmentListEvent;
-import il.cshaifa.hmo_system.client.events.SetAppointmentEvent;
 import il.cshaifa.hmo_system.client.events.MyClinicEvent;
+import il.cshaifa.hmo_system.client.events.SetAppointmentEvent;
+import il.cshaifa.hmo_system.client.gui.ResourcePath;
 import il.cshaifa.hmo_system.client.gui.patient_dashboard.appointments.SetAppointmentController;
 import il.cshaifa.hmo_system.client.gui.patient_dashboard.appointments.SetAppointmentViewController;
 import il.cshaifa.hmo_system.client.gui.patient_dashboard.clinic_view.MyClinicController;
 import il.cshaifa.hmo_system.client.gui.patient_dashboard.clinic_view.MyClinicViewController;
-import il.cshaifa.hmo_system.client.gui.ResourcePath;
 import il.cshaifa.hmo_system.client.gui.patient_dashboard.patient_history.PatientAppointmentHistoryListController;
 import il.cshaifa.hmo_system.client.gui.patient_dashboard.patient_history.PatientAppointmentHistoryListViewController;
 import il.cshaifa.hmo_system.client.utils.Utils;
@@ -49,19 +49,27 @@ public class PatientDashboardController extends Controller {
         MyClinicViewController.class,
         MyClinicController.class,
         false,
-        c -> new MyClinicViewController(HMOClient.getClient().getConnected_patient().getHome_clinic())
-    );
-}
+        c ->
+            new MyClinicViewController(
+                HMOClient.getClient().getConnected_patient().getHome_clinic()));
+  }
 
   @Subscribe
-  public void onPatientHistoryRequest(AppointmentListEvent event){
-    if(!event.getSender().equals(this.view_controller)) return;
+  public void onPatientHistoryRequest(AppointmentListEvent event) {
+    if (!event.getSender().equals(this.view_controller)) return;
 
-    FXMLLoader loader = new FXMLLoader(getClass().getResource(ResourcePath.get_fxml(
-        PatientAppointmentHistoryListViewController.class)));
+    FXMLLoader loader =
+        new FXMLLoader(
+            getClass()
+                .getResource(
+                    ResourcePath.get_fxml(PatientAppointmentHistoryListViewController.class)));
 
-    Utils.openNewSingletonWindow(PatientAppointmentHistoryListViewController.class, PatientAppointmentHistoryListController.class, false,
-        c->  new PatientAppointmentHistoryListViewController(HMOClient.getClient().getConnected_patient())
-     );
+    Utils.openNewSingletonWindow(
+        PatientAppointmentHistoryListViewController.class,
+        PatientAppointmentHistoryListController.class,
+        false,
+        c ->
+            new PatientAppointmentHistoryListViewController(
+                HMOClient.getClient().getConnected_patient()));
   }
 }

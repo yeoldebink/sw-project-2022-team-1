@@ -1,4 +1,5 @@
 package il.cshaifa.hmo_system.client.events;
+
 import il.cshaifa.hmo_system.CommonEnums.AddAppointmentRejectionReason;
 import il.cshaifa.hmo_system.entities.User;
 import java.time.LocalDateTime;

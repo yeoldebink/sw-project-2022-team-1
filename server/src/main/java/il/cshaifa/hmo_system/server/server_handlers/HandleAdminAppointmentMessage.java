@@ -34,7 +34,7 @@ public class HandleAdminAppointmentMessage extends MessageHandler {
       appointment_duration.put("COVID Test", 10L);
       appointment_duration.put("COVID Vaccine", 10L);
       appointment_duration.put("Flu Vaccine", 10L);
-      }
+    }
     cb = session.getCriteriaBuilder();
     cr = cb.createQuery(Appointment.class);
     root = cr.from(Appointment.class);
@@ -42,7 +42,7 @@ public class HandleAdminAppointmentMessage extends MessageHandler {
 
   @Override
   public void handleMessage() {
-    if (class_message.request == RequestType.CREATE){
+    if (class_message.request == RequestType.CREATE) {
       // check if the requested appointments aren't in the past
       if (!class_message.start_datetime.isAfter(LocalDateTime.now())) {
         class_message.success = false;
@@ -72,7 +72,8 @@ public class HandleAdminAppointmentMessage extends MessageHandler {
         .where(
             cb.equal(root.get("clinic"), class_message.clinic),
             cb.equal(root.get("appt_type"), class_message.appt_type),
-            cb.between(root.get("appt_date"), class_message.start_datetime, end_datetime.minusSeconds(1)));
+            cb.between(
+                root.get("appt_date"), class_message.start_datetime, end_datetime.minusSeconds(1)));
     if (session.createQuery(cr).getResultList().size() > 0) {
       class_message.success = false;
       class_message.reject = AddAppointmentRejectionReason.OVERLAPPING;
@@ -86,14 +87,22 @@ public class HandleAdminAppointmentMessage extends MessageHandler {
 
     while (current_datetime.isBefore(end_datetime)) {
       Appointment appt = null;
-      for (int i=0; i<opening_hours.size();i+=2) {
+      for (int i = 0; i < opening_hours.size(); i += 2) {
         LocalTime open_time = opening_hours.get(i);
-        LocalTime close_time = opening_hours.get(i+1);
+        LocalTime close_time = opening_hours.get(i + 1);
         if (current_datetime.toLocalTime().isAfter(open_time)
             && current_datetime.toLocalTime().isBefore(close_time)) {
-          appt = new Appointment(null, class_message.appt_type,
-              null, null, class_message.clinic,
-              current_datetime, null, null, false);
+          appt =
+              new Appointment(
+                  null,
+                  class_message.appt_type,
+                  null,
+                  null,
+                  class_message.clinic,
+                  current_datetime,
+                  null,
+                  null,
+                  false);
         }
       }
       if (appt == null) {
@@ -119,7 +128,8 @@ public class HandleAdminAppointmentMessage extends MessageHandler {
         .where(
             cb.equal(root.get("clinic"), class_message.clinic),
             cb.equal(root.get("staff_member"), class_message.staff_member),
-            cb.between(root.get("appt_date"), class_message.start_datetime, end_datetime.minusSeconds(1)));
+            cb.between(
+                root.get("appt_date"), class_message.start_datetime, end_datetime.minusSeconds(1)));
     if (session.createQuery(cr).getResultList().size() > 0) {
       class_message.success = false;
       class_message.reject = AddAppointmentRejectionReason.OVERLAPPING;
@@ -133,14 +143,24 @@ public class HandleAdminAppointmentMessage extends MessageHandler {
 
     while (current_datetime.isBefore(end_datetime)) {
       Appointment appt = null;
-      for (int i=0; i<opening_hours.size();i+=2) {
+      for (int i = 0; i < opening_hours.size(); i += 2) {
         LocalTime open_time = opening_hours.get(i);
-        LocalTime close_time = opening_hours.get(i+1);
+        LocalTime close_time = opening_hours.get(i + 1);
         if (current_datetime.toLocalTime().isAfter(open_time.minusSeconds(1))
-            && current_datetime.toLocalTime().isBefore(close_time.minusMinutes(duration).plusSeconds(1))) {
-          appt = new Appointment(null, class_message.appt_type,
-              class_message.staff_member.getRole(), class_message.staff_member,
-              class_message.clinic, current_datetime, null, null, false);
+            && current_datetime
+                .toLocalTime()
+                .isBefore(close_time.minusMinutes(duration).plusSeconds(1))) {
+          appt =
+              new Appointment(
+                  null,
+                  class_message.appt_type,
+                  class_message.staff_member.getRole(),
+                  class_message.staff_member,
+                  class_message.clinic,
+                  current_datetime,
+                  null,
+                  null,
+                  false);
         }
       }
       if (appt == null) {
@@ -156,7 +176,7 @@ public class HandleAdminAppointmentMessage extends MessageHandler {
     class_message.success = true;
   }
 
-  private void deleteAppointments(){
+  private void deleteAppointments() {
     removeEntities(class_message.appointments);
     class_message.success = true;
   }

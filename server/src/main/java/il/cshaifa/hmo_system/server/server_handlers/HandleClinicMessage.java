@@ -16,11 +16,11 @@ public class HandleClinicMessage extends MessageHandler {
   }
 
   /**
-   * If message.clinics is null, client requested all the clinics
-   * else, client has made changes to clinics, so apply changes to DB
+   * If message.clinics is null, client requested all the clinics else, client has made changes to
+   * clinics, so apply changes to DB
    */
   @Override
-  public void handleMessage(){
+  public void handleMessage() {
     if (class_message.clinics == null) {
       getClinics();
     } else {

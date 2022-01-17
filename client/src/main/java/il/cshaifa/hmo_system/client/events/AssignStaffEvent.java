@@ -8,7 +8,8 @@ public class AssignStaffEvent extends Event {
   public ArrayList<AssignedUser> staff;
   public StaffAssignmentAction action;
 
-  public AssignStaffEvent(ArrayList<AssignedUser> staff, Object sender, StaffAssignmentAction action) {
+  public AssignStaffEvent(
+      ArrayList<AssignedUser> staff, Object sender, StaffAssignmentAction action) {
     super(sender);
     this.staff = staff;
     this.action = action;

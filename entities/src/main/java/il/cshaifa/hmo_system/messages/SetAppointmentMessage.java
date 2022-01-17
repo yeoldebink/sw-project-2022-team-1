@@ -11,7 +11,8 @@ public class SetAppointmentMessage extends Message {
   public Appointment appointment;
   public boolean success;
 
-  public SetAppointmentMessage(SetAppointmentAction request, Patient patient, Appointment appointment) {
+  public SetAppointmentMessage(
+      SetAppointmentAction request, Patient patient, Appointment appointment) {
     super(MessageType.REQUEST);
     this.action = request;
     this.patient = patient;

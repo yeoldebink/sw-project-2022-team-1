@@ -24,9 +24,13 @@ public class MyClinicViewController extends ViewController {
     this.clinic = clinic;
   }
 
-  @FXML public void initialize() {
+  @FXML
+  public void initialize() {
     clinicName.setText(clinic.getName());
-    managerName.setText(String.format("%s %s", clinic.getManager_user().getFirstName(), clinic.getManager_user().getLastName()));
+    managerName.setText(
+        String.format(
+            "%s %s",
+            clinic.getManager_user().getFirstName(), clinic.getManager_user().getLastName()));
     clinicAddress.setText(clinic.getAddress());
 
     sunHours.setText(clinic.getSun_hours());

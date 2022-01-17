@@ -5,7 +5,7 @@ import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.entities.Role;
 import java.util.List;
 
-public class SetSpecialistAppointmentMessage extends Message{
+public class SetSpecialistAppointmentMessage extends Message {
 
   public enum RequestType {
     GET_ROLES,

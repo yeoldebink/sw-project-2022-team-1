@@ -63,19 +63,19 @@ public class HandleAppointmentMessage extends MessageHandler {
             cb.equal(root.get("type"), class_message.type),
             cb.equal(root.get("clinic"), class_message.clinic),
             cb.isFalse(root.get("taken")),
-            cb.or(cb.isNull(root.get("lock_time")),
+            cb.or(
+                cb.isNull(root.get("lock_time")),
                 cb.lessThan(root.get("lock_time"), start),
-                cb.equal(root.get("patient"), class_message.patient))
-        );
+                cb.equal(root.get("patient"), class_message.patient)));
     List<Appointment> all_appointments = session.createQuery(cr).getResultList();
     List<Appointment> appointments_in_work_hours = new ArrayList<>();
     for (Appointment appt : all_appointments) {
       DayOfWeek day = appt.getDate().toLocalDate().getDayOfWeek();
       List<LocalTime> clinic_hours = class_message.clinic.timeStringToLocalTimeList(day.getValue());
       for (int i = 0; i < clinic_hours.toArray().length; i += 2) {
-        LocalTime open_time = clinic_hours.get(i), close_time = clinic_hours.get(i+1);
+        LocalTime open_time = clinic_hours.get(i), close_time = clinic_hours.get(i + 1);
         LocalTime appt_time = appt.getDate().toLocalTime();
-        if (appt_time.isAfter(open_time) && appt_time.isBefore(close_time)){
+        if (appt_time.isAfter(open_time) && appt_time.isBefore(close_time)) {
           appointments_in_work_hours.add(appt);
         }
       }
@@ -86,9 +86,7 @@ public class HandleAppointmentMessage extends MessageHandler {
   /** Get a patient appointments past and future */
   private void getPatientHistory() {
     cr.select(root)
-        .where(
-            cb.equal(root.get("patient"), class_message.patient),
-            cb.isTrue(root.get("taken")));
+        .where(cb.equal(root.get("patient"), class_message.patient), cb.isTrue(root.get("taken")));
     class_message.appointments = session.createQuery(cr).getResultList();
   }
 

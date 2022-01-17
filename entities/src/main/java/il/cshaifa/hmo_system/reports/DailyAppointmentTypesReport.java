@@ -1,7 +1,6 @@
 package il.cshaifa.hmo_system.reports;
 
 import il.cshaifa.hmo_system.entities.Clinic;
-import il.cshaifa.hmo_system.entities.Role;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;

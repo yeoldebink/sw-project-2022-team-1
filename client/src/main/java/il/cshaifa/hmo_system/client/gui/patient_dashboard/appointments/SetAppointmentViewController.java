@@ -115,7 +115,10 @@ public class SetAppointmentViewController extends ViewController {
                 EventBus.getDefault()
                     .post(
                         new SetAppointmentEvent(
-                            this, SetAppointmentAction.LOCK, patient, newSelection.getAppointment()));
+                            this,
+                            SetAppointmentAction.LOCK,
+                            patient,
+                            newSelection.getAppointment()));
               }
             });
   }
@@ -216,7 +219,10 @@ public class SetAppointmentViewController extends ViewController {
     vbox.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
 
     if (!success) {
-      Label error = new Label("There was an error processing your request.\nPlease select a different appointment time.");
+      Label error =
+          new Label(
+              "There was an error processing your request.\n"
+                  + "Please select a different appointment time.");
       FontIcon alert = new FontIcon();
       alert.setIconLiteral("mdi-alert-outline");
       alert.setIconSize(40);

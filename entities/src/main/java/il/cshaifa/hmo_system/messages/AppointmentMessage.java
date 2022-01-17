@@ -36,5 +36,4 @@ public class AppointmentMessage extends Message {
     this.patient = patient;
     this.request = request;
   }
-
 }

@@ -1,11 +1,9 @@
 package il.cshaifa.hmo_system.entities;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -170,23 +168,30 @@ public class Clinic implements Serializable {
     }
   }
 
-  public List<LocalTime> timeStringToLocalTimeList(int day_num){
+  public List<LocalTime> timeStringToLocalTimeList(int day_num) {
     String day_hours;
     // 1 is monday
-    switch (day_num){
-      case 1: day_hours = mon_hours;
+    switch (day_num) {
+      case 1:
+        day_hours = mon_hours;
         break;
-      case 2: day_hours = tue_hours;
+      case 2:
+        day_hours = tue_hours;
         break;
-      case 3: day_hours = wed_hours;
+      case 3:
+        day_hours = wed_hours;
         break;
-      case 4: day_hours = thu_hours;
+      case 4:
+        day_hours = thu_hours;
         break;
-      case 5: day_hours = fri_hours;
+      case 5:
+        day_hours = fri_hours;
         break;
-      case 6: day_hours = sat_hours;
+      case 6:
+        day_hours = sat_hours;
         break;
-      case 7: day_hours = sun_hours;
+      case 7:
+        day_hours = sun_hours;
         break;
       default:
         throw new IllegalStateException("Unexpected value: " + day_num);
@@ -194,7 +199,7 @@ public class Clinic implements Serializable {
 
     List<LocalTime> result = new ArrayList<>();
     String[] hours = day_hours.strip().split(", ");
-    for (String time_window : hours){
+    for (String time_window : hours) {
       String open, close;
       String[] open_close = time_window.split("-");
       open = open_close[0];

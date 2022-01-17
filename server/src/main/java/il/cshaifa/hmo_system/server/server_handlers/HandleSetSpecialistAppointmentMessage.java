@@ -15,7 +15,9 @@ import org.hibernate.Session;
 public class HandleSetSpecialistAppointmentMessage extends MessageHandler {
 
   private final SetSpecialistAppointmentMessage class_message;
-  public HandleSetSpecialistAppointmentMessage(SetSpecialistAppointmentMessage message, Session session) {
+
+  public HandleSetSpecialistAppointmentMessage(
+      SetSpecialistAppointmentMessage message, Session session) {
     super(message, session);
     this.class_message = (SetSpecialistAppointmentMessage) this.message;
   }
@@ -24,7 +26,8 @@ public class HandleSetSpecialistAppointmentMessage extends MessageHandler {
   public void handleMessage() {
     if (class_message.request == SetSpecialistAppointmentMessage.RequestType.GET_ROLES) {
       getSpecialistRoleList();
-    } else if (class_message.request == SetSpecialistAppointmentMessage.RequestType.GET_APPOINTMENTS) {
+    } else if (class_message.request
+        == SetSpecialistAppointmentMessage.RequestType.GET_APPOINTMENTS) {
       getSpecialistAppointments();
     }
   }
@@ -42,12 +45,12 @@ public class HandleSetSpecialistAppointmentMessage extends MessageHandler {
     CriteriaQuery<Appointment> cr = cb.createQuery(Appointment.class);
     Root<Appointment> root = cr.from(Appointment.class);
 
-    cr.select(root).where(
-        cb.equal(root.get("patient"), class_message.patient),
-        cb.equal(root.get("specialist_role_id"), class_message.chosen_role),
-        cb.lessThan(root.get("appt_date"), LocalDateTime.now()),
-        cb.isNotNull(root.get("called_time"))
-    );
+    cr.select(root)
+        .where(
+            cb.equal(root.get("patient"), class_message.patient),
+            cb.equal(root.get("specialist_role_id"), class_message.chosen_role),
+            cb.lessThan(root.get("appt_date"), LocalDateTime.now()),
+            cb.isNotNull(root.get("called_time")));
     cr.orderBy(cb.desc(root.get("appt_date")));
     List<Appointment> patient_past_appts = session.createQuery(cr).getResultList();
 
@@ -59,13 +62,17 @@ public class HandleSetSpecialistAppointmentMessage extends MessageHandler {
         doctors.put(appt.getStaff_member(), appt.getDate());
     }
 
-    cr.select(root).where(cb.equal(root.get("specialist_role_id"), class_message.chosen_role),
-        cb.greaterThan(root.get("appt_date"), LocalDateTime.now()),
-        cb.isFalse(root.get("taken")),
-        cb.or(cb.isNull(root.get("lock_time")),
-            cb.lessThan(root.get("lock_time"), LocalDateTime.now()),
-            cb.and(cb.isNotNull(root.get("lock_time")),
-                cb.equal(root.get("patient"), class_message.patient))));
+    cr.select(root)
+        .where(
+            cb.equal(root.get("specialist_role_id"), class_message.chosen_role),
+            cb.greaterThan(root.get("appt_date"), LocalDateTime.now()),
+            cb.isFalse(root.get("taken")),
+            cb.or(
+                cb.isNull(root.get("lock_time")),
+                cb.lessThan(root.get("lock_time"), LocalDateTime.now()),
+                cb.and(
+                    cb.isNotNull(root.get("lock_time")),
+                    cb.equal(root.get("patient"), class_message.patient))));
 
     List<Appointment> available_appts = session.createQuery(cr).getResultList();
 
@@ -82,10 +89,14 @@ public class HandleSetSpecialistAppointmentMessage extends MessageHandler {
             default:
               if (key == 0 || appt_a.getStaff_member().equals(appt_b.getStaff_member()))
                 return appt_a.getDate().isBefore(appt_b.getDate()) ? 0 : 1;
-              else return doctors.get(appt_a.getStaff_member()).isAfter(doctors.get(appt_b.getStaff_member())) ? 0 : 1;
+              else
+                return doctors
+                        .get(appt_a.getStaff_member())
+                        .isAfter(doctors.get(appt_b.getStaff_member()))
+                    ? 0
+                    : 1;
           }
-        }
-    );
+        });
 
     class_message.appointments = available_appts;
   }

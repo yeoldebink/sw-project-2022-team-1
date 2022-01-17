@@ -22,7 +22,6 @@ public class HandleLoginMessage extends MessageHandler {
 
   private final ConnectionToClient client;
 
-
   public HandleLoginMessage(LoginMessage message, Session session, ConnectionToClient client) {
     super(message, session);
     this.class_message = (LoginMessage) this.message;
@@ -34,7 +33,7 @@ public class HandleLoginMessage extends MessageHandler {
 
   /** If login successful will update the LoginMessage with user and his details */
   @Override
-  public void handleMessage(){
+  public void handleMessage() {
     User user = session.get(User.class, class_message.id);
     CriteriaBuilder cb = session.getCriteriaBuilder();
     CriteriaQuery<Clinic> cr = cb.createQuery(Clinic.class);
@@ -61,7 +60,6 @@ public class HandleLoginMessage extends MessageHandler {
           Root<ClinicStaff> root = cr.from(ClinicStaff.class);
           cr.select(root.get("clinic")).where(cb.equal(root.get("user"), user));
           class_message.employee_clinics = session.createQuery(cr).getResultList();
-
         }
 
         if (connected_users.containsKey(user.getId())) {

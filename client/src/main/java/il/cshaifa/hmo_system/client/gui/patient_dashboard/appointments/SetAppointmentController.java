@@ -90,11 +90,13 @@ public class SetAppointmentController extends Controller {
   public void onResponseFromClient(SetAppointmentEvent event) {
     if (!event.getSender().equals(HMOClient.getClient())) return;
     if (event.action == SetAppointmentAction.TAKE) {
-      Platform.runLater(() -> ((SetAppointmentViewController) view_controller).takeAppointment(
-          event.response == ResponseType.AUTHORIZE,
-          (int) stage.getX() + 100,
-          (int) stage.getY() + 100
-      ));
+      Platform.runLater(
+          () ->
+              ((SetAppointmentViewController) view_controller)
+                  .takeAppointment(
+                      event.response == ResponseType.AUTHORIZE,
+                      (int) stage.getX() + 100,
+                      (int) stage.getY() + 100));
     }
   }
 }

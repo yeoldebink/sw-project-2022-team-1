@@ -13,14 +13,15 @@ import org.hibernate.Session;
 public class HandleStaffAssignmentMessage extends MessageHandler {
 
   private final StaffAssignmentMessage class_message;
+
   public HandleStaffAssignmentMessage(StaffAssignmentMessage message, Session session) {
     super(message, session);
-      this.class_message = (StaffAssignmentMessage) this.message;
+    this.class_message = (StaffAssignmentMessage) this.message;
   }
 
   @Override
   public void handleMessage() {
-    if (class_message.action == StaffAssignmentAction.ASSIGN){
+    if (class_message.action == StaffAssignmentAction.ASSIGN) {
       assignStaff();
     } else if (class_message.action == StaffAssignmentAction.UNASSIGN) {
       unassignStaff();
@@ -41,7 +42,8 @@ public class HandleStaffAssignmentMessage extends MessageHandler {
 
     for (User staff_member : class_message.staff) {
       ClinicStaff assignment = new ClinicStaff(class_message.clinic, staff_member);
-      cr.select(root).where(
+      cr.select(root)
+          .where(
               cb.equal(root.get("user"), assignment.getUser()),
               cb.equal(root.get("clinic"), assignment.getClinic()));
       List<ClinicStaff> staff_to_remove = session.createQuery(cr).getResultList();
