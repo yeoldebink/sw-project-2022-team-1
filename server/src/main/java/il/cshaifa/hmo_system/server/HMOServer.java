@@ -86,15 +86,6 @@ public class HMOServer extends AbstractServer {
         handler = new HandleClinicMessage((ClinicMessage) msg, session);
       } else if (msg_class == LoginMessage.class) {
         handler = new HandleLoginMessage((LoginMessage) msg, session, client);
-        //        if (((LoginMessage) msg).user != null) {
-        //          if (connected_users.containsKey(((LoginMessage) msg).user)) {
-        //            ((LoginMessage) msg).already_logged_in = true;
-        //            System.out.println("True");
-        //          } else {
-        //            connected_users.put(((LoginMessage) msg).user, client);
-        //            connected_clients.put(client, ((LoginMessage) msg).user);
-        //          }
-        //        }
       } else if (msg_class == ReportMessage.class) {
         handler = new HandleReportMessage((ReportMessage) msg, session);
       } else if (msg_class == SetAppointmentMessage.class) {
@@ -109,8 +100,9 @@ public class HMOServer extends AbstractServer {
         handler = new HandleStaffMessage((ClinicStaffMessage) msg, session);
       }
 
+      assert handler != null;
       handler.handleMessage();
-      handler.message.message_type = MessageType.RESPONSE; // move to class
+      handler.message.message_type = MessageType.RESPONSE;
       client.sendToClient(handler.message);
 
       session.close();
@@ -124,9 +116,8 @@ public class HMOServer extends AbstractServer {
 
   @Override
   protected synchronized void clientDisconnected(ConnectionToClient client) {
-    var user = HandleLoginMessage.connectedUser(client);
-    System.out.printf(
-        "Client disconnected: %s, %s %s%n", client, user.getFirstName(), user.getLastName());
+    User user = HandleLoginMessage.connectedUser(client);
+    System.out.println("Client disconnected: " + user.getFirstName() + " " + user.getLastName());
     HandleLoginMessage.disconnectClient(client);
 
     super.clientDisconnected(client);
