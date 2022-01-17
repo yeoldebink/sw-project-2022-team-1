@@ -15,6 +15,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 
 public class HandleAppointmentMessage extends MessageHandler {
   private final AppointmentMessage class_message;
@@ -45,7 +46,9 @@ public class HandleAppointmentMessage extends MessageHandler {
       getClinicAppointments();
     } else if (class_message.request == RequestType.PATIENT_HISTORY) {
       getPatientHistory();
-    } else if (class_message.request == RequestType.STAFF_MEMBER_DAILY_APPOINTMENTS) {
+    } else if (class_message.request == RequestType.PATIENT_NEXT_APPOINTMENT) {
+      getPatientNextAppointment();
+    }else if (class_message.request == RequestType.STAFF_MEMBER_DAILY_APPOINTMENTS) {
       getStaffDailyAppointments();
     } else if (class_message.request == RequestType.STAFF_FUTURE_APPOINTMENTS) {
       getStaffFutureAppointments();
@@ -83,11 +86,23 @@ public class HandleAppointmentMessage extends MessageHandler {
     }
   }
 
-  /** Get a patient appointments past and future */
+  /** Get a patient's appointments past and future */
   private void getPatientHistory() {
     cr.select(root)
         .where(cb.equal(root.get("patient"), class_message.patient), cb.isTrue(root.get("taken")));
     class_message.appointments = session.createQuery(cr).getResultList();
+  }
+
+  /** Get a patient's next appointment */
+  private void getPatientNextAppointment() {
+    cr.select(root)
+        .where(
+            cb.equal(root.get("patient"), class_message.patient),
+            cb.isTrue(root.get("taken")),
+            cb.greaterThanOrEqualTo(root.get("appt_date"), LocalDateTime.now()));
+    cr.orderBy(cb.asc(root.get("appt_date")));
+    class_message.appointments = new ArrayList<>();
+    class_message.appointments.add(session.createQuery(cr).getSingleResult());
   }
 
   /** Gets a staff members all appointments for today */

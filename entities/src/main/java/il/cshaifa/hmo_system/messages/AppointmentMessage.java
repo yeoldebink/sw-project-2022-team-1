@@ -15,10 +15,10 @@ public class AppointmentMessage extends Message {
   public RequestType request;
   public List<Appointment> appointments;
 
-  // TODO : add GET_MY_NEXT_APPOINTMENT
   public enum RequestType {
     CLINIC_APPOINTMENTS,
     PATIENT_HISTORY,
+    PATIENT_NEXT_APPOINTMENT,
     STAFF_MEMBER_DAILY_APPOINTMENTS,
     STAFF_FUTURE_APPOINTMENTS
   }

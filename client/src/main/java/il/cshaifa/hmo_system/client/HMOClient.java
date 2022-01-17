@@ -298,6 +298,10 @@ public class HMOClient extends AbstractClient {
     client.sendToServer(new SetSpecialistAppointmentMessage(role, connected_patient));
   }
 
+  public void getPatientNextAppointment() throws IOException {
+    client.sendToServer(new AppointmentMessage(connected_patient, AppointmentMessage.RequestType.PATIENT_NEXT_APPOINTMENT));
+  }
+
   /**
    * Sends to server a request to get report
    *
