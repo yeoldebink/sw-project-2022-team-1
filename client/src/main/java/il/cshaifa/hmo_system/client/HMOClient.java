@@ -1,5 +1,6 @@
 package il.cshaifa.hmo_system.client;
 
+import il.cshaifa.hmo_system.CommonEnums.SetAppointmentAction;
 import il.cshaifa.hmo_system.client.events.AddAppointmentEvent;
 import il.cshaifa.hmo_system.client.events.AddAppointmentEvent.RejectionType;
 import il.cshaifa.hmo_system.client.events.AdminAppointmentListEvent;
@@ -7,7 +8,6 @@ import il.cshaifa.hmo_system.client.events.AppointmentListEvent;
 import il.cshaifa.hmo_system.client.events.AssignStaffEvent;
 import il.cshaifa.hmo_system.client.events.ClinicEvent;
 import il.cshaifa.hmo_system.client.events.ClinicStaffEvent;
-import il.cshaifa.hmo_system.client.events.Event;
 import il.cshaifa.hmo_system.client.events.LoginEvent;
 import il.cshaifa.hmo_system.client.events.LoginEvent.Response;
 import il.cshaifa.hmo_system.client.events.ReportEvent;
@@ -114,10 +114,11 @@ public class HMOClient extends AbstractClient {
   }
 
   private void handleSetAppointmentMessage(SetAppointmentMessage message) {
-    if (message.request == SetAppointmentMessage.RequestType.LOCK) return;
+    if (message.action == SetAppointmentAction.LOCK) return;
 
     SetAppointmentEvent event =
         new SetAppointmentEvent(this, getConnected_patient(), message.appointment);
+    event.action = message.action;
     if (message.success) {
       event.response = SetAppointmentEvent.ResponseType.AUTHORIZE;
     } else {
@@ -266,16 +267,16 @@ public class HMOClient extends AbstractClient {
 
   /** locks the requested appointment * */
   public void lockAppointment(Appointment appointment) throws IOException {
-    client.sendToServer(new SetAppointmentMessage(SetAppointmentMessage.RequestType.LOCK, connected_patient, appointment));
+    client.sendToServer(new SetAppointmentMessage(SetAppointmentAction.LOCK, connected_patient, appointment));
   }
 
   /** takes the requested appointment * */
   public void takeAppointment(Appointment appointment) throws IOException {
-    client.sendToServer(new SetAppointmentMessage(SetAppointmentMessage.RequestType.TAKE, connected_patient, appointment));
+    client.sendToServer(new SetAppointmentMessage(SetAppointmentAction.TAKE, connected_patient, appointment));
   }
 
   public void cancelAppointment(Appointment appointment) throws IOException {
-    client.sendToServer(new SetAppointmentMessage(SetAppointmentMessage.RequestType.RELEASE, connected_patient, appointment));
+    client.sendToServer(new SetAppointmentMessage(SetAppointmentAction.RELEASE, connected_patient, appointment));
   }
 
   /** Requests from server all of today's appointments of current connected staff member client */

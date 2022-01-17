@@ -1,5 +1,6 @@
 package il.cshaifa.hmo_system.client.events;
 
+import il.cshaifa.hmo_system.CommonEnums.SetAppointmentAction;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.Patient;
@@ -7,11 +8,6 @@ import il.cshaifa.hmo_system.entities.Role;
 import java.util.List;
 
 public class SetAppointmentEvent extends Event {
-  public enum RequestType {
-    LOCK,
-    TAKE,
-    RELEASE
-  }
 
   public enum ResponseType {
     ROLES_RESPONSE,
@@ -19,7 +15,7 @@ public class SetAppointmentEvent extends Event {
     REJECT
   }
 
-  public RequestType request;
+  public SetAppointmentAction action;
   public ResponseType response;
   public Patient patient;
   public Appointment appointment;
@@ -28,9 +24,9 @@ public class SetAppointmentEvent extends Event {
   public List<Role> specialistRoles;
 
   public SetAppointmentEvent(
-      Object sender, RequestType request, Patient patient, Appointment appointment) {
+      Object sender, SetAppointmentAction action, Patient patient, Appointment appointment) {
     super(sender);
-    this.request = request;
+    this.action = action;
     this.patient = patient;
     this.appointment = appointment;
   }

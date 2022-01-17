@@ -1,8 +1,8 @@
 package il.cshaifa.hmo_system.server.server_handlers;
 
+import il.cshaifa.hmo_system.CommonEnums.SetAppointmentAction;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.messages.SetAppointmentMessage;
-import il.cshaifa.hmo_system.messages.SetAppointmentMessage.RequestType;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -24,11 +24,11 @@ public class handleSetAppointmentMessage extends MessageHandler {
     session.flush();
     session.refresh(class_message.appointment);
 
-    if (class_message.request == RequestType.TAKE) {
+    if (class_message.action == SetAppointmentAction.TAKE) {
       class_message.success = takeAppointment();
-    } else if (class_message.request == RequestType.LOCK) {
+    } else if (class_message.action == SetAppointmentAction.LOCK) {
       class_message.success = lockAppointment();
-    } else if (class_message.request == RequestType.RELEASE) {
+    } else if (class_message.action == SetAppointmentAction.RELEASE) {
       releaseAppointment(class_message.appointment);
       class_message.success = true;
     }
