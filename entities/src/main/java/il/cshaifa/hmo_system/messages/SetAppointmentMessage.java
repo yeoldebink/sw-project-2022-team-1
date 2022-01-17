@@ -5,20 +5,20 @@ import il.cshaifa.hmo_system.entities.Patient;
 
 public class SetAppointmentMessage extends Message {
 
-  public enum Action {
+  public enum RequestType {
     LOCK,
     TAKE,
     RELEASE
   }
 
-  public Action action;
+  public RequestType request;
   public Patient patient;
   public Appointment appointment;
   public boolean success;
 
-  public SetAppointmentMessage(Action action, Patient patient, Appointment appointment) {
+  public SetAppointmentMessage(RequestType request, Patient patient, Appointment appointment) {
     super(MessageType.REQUEST);
-    this.action = action;
+    this.request = request;
     this.patient = patient;
     this.appointment = appointment;
   }

@@ -7,25 +7,25 @@ import java.util.List;
 
 public class SetSpecialistAppointmentMessage extends Message{
 
-  public enum Action {
+  public enum RequestType {
     GET_ROLES,
     GET_APPOINTMENTS
   }
 
   public Patient patient;
-  public Action action;
+  public RequestType request;
   public Role chosen_role;
   public List<Role> role_list;
   public List<Appointment> appointments;
 
   public SetSpecialistAppointmentMessage() {
     super(MessageType.REQUEST);
-    this.action = Action.GET_ROLES;
+    this.request = RequestType.GET_ROLES;
   }
 
   public SetSpecialistAppointmentMessage(Role role, Patient patient) {
     super(MessageType.REQUEST);
-    this.action = Action.GET_APPOINTMENTS;
+    this.request = RequestType.GET_APPOINTMENTS;
     this.chosen_role = role;
     this.patient = patient;
   }

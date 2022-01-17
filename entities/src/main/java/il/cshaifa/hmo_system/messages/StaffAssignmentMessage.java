@@ -5,19 +5,19 @@ import il.cshaifa.hmo_system.entities.User;
 import java.util.List;
 
 public class StaffAssignmentMessage extends Message {
-  public enum Type {
+  public enum RequestType {
     ASSIGN,
     UNASSIGN
   }
 
   public List<User> staff;
   public Clinic clinic;
-  public Type type;
+  public RequestType request;
 
-  public StaffAssignmentMessage(List<User> staff, Clinic clinic, Type type) {
+  public StaffAssignmentMessage(List<User> staff, Clinic clinic, RequestType request) {
     super(MessageType.REQUEST);
     this.staff = staff;
     this.clinic = clinic;
-    this.type = type;
+    this.request = request;
   }
 }

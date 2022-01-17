@@ -5,7 +5,6 @@ import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.entities.User;
-import java.util.ArrayList;
 import java.util.List;
 
 public class AppointmentMessage extends Message {
@@ -13,10 +12,11 @@ public class AppointmentMessage extends Message {
   public Patient patient;
   public Clinic clinic;
   public AppointmentType type;
-  public AppointmentRequestType requestType;
+  public RequestType request;
   public List<Appointment> appointments;
 
-  public enum AppointmentRequestType {
+  // TODO : add GET_MY_NEXT_APPOINTMENT
+  public enum RequestType {
     CLINIC_APPOINTMENTS,
     PATIENT_HISTORY,
     STAFF_MEMBER_DAILY_APPOINTMENTS,
@@ -24,17 +24,17 @@ public class AppointmentMessage extends Message {
   }
 
   /** constructor for use of staff member/manager */
-  public AppointmentMessage(User user, AppointmentRequestType request) {
+  public AppointmentMessage(User user, RequestType request) {
     super(MessageType.REQUEST);
     this.user = user;
-    this.requestType = request;
+    this.request = request;
   }
 
   /** constructor for use of patient to request free appointments/appointment history */
-  public AppointmentMessage(Patient patient, AppointmentRequestType request) {
+  public AppointmentMessage(Patient patient, RequestType request) {
     super(MessageType.REQUEST);
     this.patient = patient;
-    this.requestType = request;
+    this.request = request;
   }
 
 }

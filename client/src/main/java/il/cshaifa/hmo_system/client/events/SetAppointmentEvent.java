@@ -35,9 +35,16 @@ public class SetAppointmentEvent extends Event {
     this.appointment = appointment;
   }
 
-  public SetAppointmentEvent(Object sender, List<Role> role_list){
+  public SetAppointmentEvent(Object sender, List<Role> role_list) {
     super(sender);
     response = Response.ROLES_RESPONSE;
     specialistRoles = role_list;
+  }
+
+  public SetAppointmentEvent(
+      Object sender, Patient patient, Appointment appointment) {
+    super(sender);
+    this.patient = patient;
+    this.appointment = appointment;
   }
 }

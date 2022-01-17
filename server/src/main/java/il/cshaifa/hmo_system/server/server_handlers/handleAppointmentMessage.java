@@ -2,7 +2,7 @@ package il.cshaifa.hmo_system.server.server_handlers;
 
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.messages.AppointmentMessage;
-import il.cshaifa.hmo_system.messages.AppointmentMessage.AppointmentRequestType;
+import il.cshaifa.hmo_system.messages.AppointmentMessage.*;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -41,13 +41,13 @@ public class handleAppointmentMessage extends MessageHandler {
 
   @Override
   public void handleMessage() {
-    if (class_message.requestType == AppointmentRequestType.CLINIC_APPOINTMENTS) {
+    if (class_message.request == RequestType.CLINIC_APPOINTMENTS) {
       getClinicAppointments();
-    } else if (class_message.requestType == AppointmentRequestType.PATIENT_HISTORY) {
+    } else if (class_message.request == RequestType.PATIENT_HISTORY) {
       getPatientHistory();
-    } else if (class_message.requestType == AppointmentRequestType.STAFF_MEMBER_DAILY_APPOINTMENTS) {
+    } else if (class_message.request == RequestType.STAFF_MEMBER_DAILY_APPOINTMENTS) {
       getStaffDailyAppointments();
-    } else if (class_message.requestType == AppointmentRequestType.STAFF_FUTURE_APPOINTMENTS) {
+    } else if (class_message.request == RequestType.STAFF_FUTURE_APPOINTMENTS) {
       getStaffFutureAppointments();
     }
   }
@@ -112,5 +112,4 @@ public class handleAppointmentMessage extends MessageHandler {
             cb.greaterThanOrEqualTo(root.get("appt_date"), LocalDateTime.now()));
     class_message.appointments = session.createQuery(cr).getResultList();
   }
-
 }

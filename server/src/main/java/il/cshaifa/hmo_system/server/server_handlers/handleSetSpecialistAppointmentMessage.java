@@ -5,11 +5,8 @@ import il.cshaifa.hmo_system.entities.Role;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.SetSpecialistAppointmentMessage;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -25,9 +22,9 @@ public class handleSetSpecialistAppointmentMessage extends MessageHandler {
 
   @Override
   public void handleMessage() {
-    if (class_message.action == SetSpecialistAppointmentMessage.Action.GET_ROLES) {
+    if (class_message.request == SetSpecialistAppointmentMessage.RequestType.GET_ROLES) {
       getSpecialistRoleList();
-    } else if (class_message.action == SetSpecialistAppointmentMessage.Action.GET_APPOINTMENTS) {
+    } else if (class_message.request == SetSpecialistAppointmentMessage.RequestType.GET_APPOINTMENTS) {
       getSpecialistAppointments();
     }
   }
