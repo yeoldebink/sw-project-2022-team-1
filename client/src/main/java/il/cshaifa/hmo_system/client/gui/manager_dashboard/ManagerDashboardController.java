@@ -5,6 +5,7 @@ import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.AddAppointmentEvent;
 import il.cshaifa.hmo_system.client.events.ClinicEvent;
+import il.cshaifa.hmo_system.client.events.ClinicStaffEvent;
 import il.cshaifa.hmo_system.client.gui.ResourcePath;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.add_appointment.AddAppointmentsController;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.add_appointment.AddAppointmentsViewController;
@@ -14,7 +15,11 @@ import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_view.AdminClinicViewController;
 import il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.report_view.ReportListController;
 import il.cshaifa.hmo_system.client.utils.Utils;
+import il.cshaifa.hmo_system.entities.ClinicStaff;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Objects;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import org.greenrobot.eventbus.Subscribe;
@@ -26,6 +31,7 @@ public class ManagerDashboardController extends Controller {
 
   public ManagerDashboardController(ViewController view_controller, Stage stage) {
     super(view_controller, stage);
+
     adminClinicListController =
         new AdminClinicListController(
             ((ManagerDashboardViewController) view_controller).getAdminClinicListViewController());
@@ -40,6 +46,7 @@ public class ManagerDashboardController extends Controller {
 
     try {
       HMOClient.getClient().getClinics();
+      HMOClient.getClient().getStaff();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -58,6 +65,27 @@ public class ManagerDashboardController extends Controller {
     reportListController.updateClinics(event.receivedClinics);
   }
 
+  @Subscribe
+  public void onClinicStaffReceived(ClinicStaffEvent event){
+    if(!event.getSender().equals(HMOClient.getClient())) return;
+    ArrayList<ClinicStaff> clinicStaff = new ArrayList<>();
+
+    var role = HMOClient.getClient().getConnected_user().getRole().getName();
+    if (Objects.equals(role, "HMO Manager")){
+      clinicStaff.addAll(event.clinic_staff);
+    } else{
+      var clinic_manager_id = HMOClient.getClient().getConnected_user().getId();
+      for(var staff_member : event.clinic_staff){
+        var staff_manager = staff_member.getClinic() == null ? null : staff_member.getClinic().getManager_user();
+
+        if (staff_manager != null && staff_manager.getId() == clinic_manager_id){
+          clinicStaff.add(staff_member);
+        }
+      }
+      clinicStaff.sort(Comparator.comparing(ClinicStaff::toString));
+      reportListController.updateStaffMembers(clinicStaff);
+    }
+  }
   /**
    * Event that handle the user request to edit its own clinic.
    *

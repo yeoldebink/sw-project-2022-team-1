@@ -6,6 +6,7 @@ import il.cshaifa.hmo_system.client.events.ReportEvent;
 import il.cshaifa.hmo_system.client.events.ViewReportEvent;
 import il.cshaifa.hmo_system.client.utils.Utils;
 import il.cshaifa.hmo_system.entities.Clinic;
+import il.cshaifa.hmo_system.entities.ClinicStaff;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.ReportMessage.ReportType;
 import il.cshaifa.hmo_system.reports.DailyAppointmentTypesReport;
@@ -32,6 +33,7 @@ public class ReportListController extends Controller {
   public void onReportsRequest(ReportEvent event) {
     if (!event.getSender().equals(this.view_controller) || event.clinics.size() == 0) return;
     try {
+      //TODO update this function with getting a clinicStaff
       HMOClient.getClient()
           .requestReports(event.clinics, event.start_date, event.end_date, event.type);
     } catch (IOException e) {
@@ -63,6 +65,10 @@ public class ReportListController extends Controller {
         () -> ((ReportListViewController) this.view_controller).populateClinicList(clinics));
   }
 
+  public void updateStaffMembers(ArrayList<ClinicStaff> staff_members){
+    Platform.runLater(
+        () -> ((ReportListViewController) this.view_controller).populateStaffList(staff_members));
+  }
   @Subscribe
   public void onReportSelection(ViewReportEvent event) throws IOException {
 
