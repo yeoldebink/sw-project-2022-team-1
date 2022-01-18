@@ -32,6 +32,9 @@
       <Accordion fx:id="chooseApptTypeAccordion">
         <panes>
           <TitledPane text="General Physician">
+            <graphic>
+              <FontIcon iconLiteral="mdi-stethoscope" />
+            </graphic>
             <AnchorPane>
               <VBox AnchorPane.topAnchor="10" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" spacing="10"  fx:id="gpAppointmentVBox">
                 <HBox>
@@ -48,6 +51,9 @@
           </TitledPane>
 
           <TitledPane text="Specialist">
+            <graphic>
+              <FontIcon iconLiteral="mdi-multiplication"/>
+            </graphic>
             <AnchorPane>
               <VBox AnchorPane.topAnchor="10" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" spacing="10"  fx:id="spAppointmentsVBox">
                 <ComboBox fx:id="spComboBox" promptText="Select a service  "/>
