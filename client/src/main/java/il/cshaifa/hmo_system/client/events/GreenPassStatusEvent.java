@@ -8,16 +8,13 @@ public class GreenPassStatusEvent extends Event{
 
   public LocalDateTime last_vaccine;
   public LocalDateTime last_covid_test;
-  public boolean valid;
   public GreenPassStatus status;
 
   public GreenPassStatusEvent(Object sender, LocalDateTime last_vaccine,
-      LocalDateTime last_covid_test, boolean valid,
-      GreenPassStatus status) {
+      LocalDateTime last_covid_test, GreenPassStatus status) {
     super(sender);
     this.last_vaccine = last_vaccine;
     this.last_covid_test = last_covid_test;
-    this.valid = valid;
     this.status = status;
   }
 

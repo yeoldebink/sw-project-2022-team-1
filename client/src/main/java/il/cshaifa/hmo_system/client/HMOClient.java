@@ -109,8 +109,7 @@ public class HMOClient extends AbstractClient {
   }
 
   private void handleGreenPassStatusMessage(GreenPassStatusMessage message) {
-    EventBus.getDefault().post(new GreenPassStatusEvent(this, message.last_vaccine, message.last_covid_test,
-        message.valid, message.status));
+    EventBus.getDefault().post(new GreenPassStatusEvent(this, message.last_vaccine, message.last_covid_test, message.status));
   }
 
   private void handleSpecialistAppointmentMessage(SetSpecialistAppointmentMessage message) {
