@@ -25,6 +25,4 @@ public class AddAppointmentEvent extends Event {
     this.start_datetime = start_datetime;
     this.count = count_appointments;
   }
-
-
 }
