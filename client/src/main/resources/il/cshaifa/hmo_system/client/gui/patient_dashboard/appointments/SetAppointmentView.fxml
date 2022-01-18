@@ -65,8 +65,13 @@
           </TitledPane>
 
           <TitledPane text="COVID-19 Vaccination">
+            <graphic>
+              <FontIcon iconLiteral="mdi-needle" />
+            </graphic>
             <AnchorPane>
-
+              <VBox AnchorPane.topAnchor="10" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" spacing="10"  fx:id="vaxAppointmentsVBox">
+                  <ComboBox promptText="Select vaccine type" fx:id="vaxTypeComboBox" />
+              </VBox>
             </AnchorPane>
           </TitledPane>
         </panes>

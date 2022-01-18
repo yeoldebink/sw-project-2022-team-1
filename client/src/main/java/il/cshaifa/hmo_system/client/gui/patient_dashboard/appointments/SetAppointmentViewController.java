@@ -69,6 +69,9 @@ public class SetAppointmentViewController extends ViewController {
   @FXML private ComboBox<Role> spTypeComboBox;
   @FXML private ComboBox<SPDoctorItem> spDoctorComboBox;
 
+  @FXML private VBox vaxAppointmentsVBox;
+  @FXML private ComboBox<AppointmentType> vaxTypeComboBox;
+
   private final DatePicker apptDatePicker;
   private Pane apptDatePickerParent;
 
@@ -133,7 +136,16 @@ public class SetAppointmentViewController extends ViewController {
               }
             });
 
-    // for specialist type combobox
+    // GP GUI
+
+    gpAppointmentsButton.setOnAction(
+        (event) -> {
+          errorLabel.setVisible(false);
+          requestAppointments(new AppointmentType("Family Doctor"), null);
+        });
+
+    // SPECIALIST GUI
+
     Callback<ListView<Role>, ListCell<Role>> spComboCellFactory =
         new Callback<>() {
           @Override
@@ -212,11 +224,49 @@ public class SetAppointmentViewController extends ViewController {
           }
         });
 
-    // onAction for buttons
-    gpAppointmentsButton.setOnAction(
-        (event) -> {
-          errorLabel.setVisible(false);
-          requestAppointments(new AppointmentType("Family Doctor"), null);
+    // VAX GUI
+
+    Callback<ListView<AppointmentType>, ListCell<AppointmentType>> vaxTypeComboCellFactory =
+        new Callback<>() {
+          @Override
+          public ListCell<AppointmentType> call(ListView<AppointmentType> apptTypeList) {
+            return new ComboBoxListCell<>() {
+              @Override
+              public void updateItem(AppointmentType apptType, boolean empty) {
+                super.updateItem(apptType, empty);
+                if (!empty) {
+                  setText(apptType.getName());
+                  String iconLiteral = null;
+                  switch (apptType.getName()) {
+                    case "COVID Vaccine":
+                      iconLiteral = "mdi-basecamp";
+                      break;
+                    case "Flu Vaccine":
+                      iconLiteral = "mdi-chemical-weapon";
+                      break;
+                  }
+
+                  var icon = new FontIcon();
+                  icon.setIconLiteral(iconLiteral);
+                  setGraphic(icon);
+                }
+              }
+            };
+          }
+        };
+
+    vaxTypeComboBox.setButtonCell(vaxTypeComboCellFactory.call(null));
+    vaxTypeComboBox.setCellFactory(vaxTypeComboCellFactory);
+
+    vaxTypeComboBox.getItems().add(new AppointmentType("COVID Vaccine"));
+    vaxTypeComboBox.getItems().add(new AppointmentType("Flu Vaccine"));
+
+    vaxTypeComboBox
+        .valueProperty()
+        .addListener((observableValue, oldT, newT) -> {
+          if (newT != null && newT != oldT) {
+            requestAppointments(newT, null);
+          }
         });
   }
 
@@ -233,6 +283,10 @@ public class SetAppointmentViewController extends ViewController {
         break;
       case "Specialist":
         newParent = spAppointmentsVBox;
+        break;
+      case "COVID Vaccine":
+      case "Flu Vaccine":
+        newParent = vaxAppointmentsVBox;
         break;
       default:
         return;
@@ -271,8 +325,10 @@ public class SetAppointmentViewController extends ViewController {
     if (appointments == null || appointments.size() == 0) {
       errorLabel.setVisible(true);
       spDoctorComboBox.setVisible(false);
+      apptDatePicker.setVisible(false);
       return;
     } else {
+      apptDatePicker.setVisible(true);
       errorLabel.setVisible(false);
     }
 
@@ -419,10 +475,12 @@ public class SetAppointmentViewController extends ViewController {
     }
 
     public String getAppointmentDoctor() {
-      return "Dr. "
-          + appointment.getStaff_member().getFirstName()
-          + " "
-          + appointment.getStaff_member().getLastName();
+      if (appointment.getStaff_member() != null)
+        return "Dr. "
+            + appointment.getStaff_member().getFirstName()
+            + " "
+            + appointment.getStaff_member().getLastName();
+      else return "";
     }
 
     public String getAppointmentDateTime() {

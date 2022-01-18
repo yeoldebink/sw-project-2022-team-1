@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import javafx.application.Platform;
 import javafx.stage.Stage;
+import jdk.jshell.spi.ExecutionControl.NotImplementedException;
 import org.greenrobot.eventbus.Subscribe;
 
 public class SetAppointmentController extends Controller {
@@ -57,11 +58,16 @@ public class SetAppointmentController extends Controller {
         case "Specialist":
           HMOClient.getClient().getSpecialistAppointments(event.role);
           break;
-        default:
+
+        case "COVID Vaccine":
+        case "Flu Vaccine":
+          HMOClient.getClient().getFamilyDoctorAppointments(event.appointmentType);
           break;
+        default:
+          throw new NotImplementedException(String.format("Appointment type request not implemented: %s", event.appointmentType));
       }
-    } catch (IOException ioException) {
-      ioException.printStackTrace();
+    } catch (IOException | NotImplementedException e) {
+      e.printStackTrace();
     }
   }
 
