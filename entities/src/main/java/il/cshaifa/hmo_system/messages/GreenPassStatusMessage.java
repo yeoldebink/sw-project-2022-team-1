@@ -8,7 +8,6 @@ public class GreenPassStatusMessage extends Message{
 
   public LocalDateTime last_vaccine;
   public LocalDateTime last_covid_test;
-  public boolean valid;
   public GreenPassStatus status;
   public Patient patient;
 

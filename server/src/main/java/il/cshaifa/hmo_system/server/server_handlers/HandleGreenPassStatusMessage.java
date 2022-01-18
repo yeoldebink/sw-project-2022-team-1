@@ -11,7 +11,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 
-public class HandleGreenPassStatusMessage extends MessageHandler{
+public class HandleGreenPassStatusMessage extends MessageHandler {
 
   private GreenPassStatusMessage class_message;
   private final Patient patient;
@@ -34,28 +34,25 @@ public class HandleGreenPassStatusMessage extends MessageHandler{
   /**
    * Updates the status of patients COVID-19 green-pass
    */
-  public void getGreenPassStatus(){
+  public void getGreenPassStatus() {
     LocalDateTime last_vaccine = getLastCovidVaccineDate(),
         last_test = getLastCovidTestDate();
 
     if (last_vaccine == null || last_vaccine.plusMonths(6).isBefore(LocalDateTime.now())) {
-      if (last_test == null || last_test.plusDays(3).isBefore(LocalDateTime.now())){
-        class_message.status = GreenPassStatus.NOT_VACCINATED_OR_TESTED;
-        class_message.valid = false;
+      if (last_test == null || last_test.plusDays(3).isBefore(LocalDateTime.now())) {
+        class_message.status = GreenPassStatus.REJECT;
         return;
       }
       class_message.status = GreenPassStatus.TESTED;
-      class_message.valid = true;
       return;
     }
     class_message.status = GreenPassStatus.VACCINATED;
-    class_message.valid = true;
   }
 
   /**
    * @return The date of the patients last COVID-19 test.
    */
-  public LocalDateTime getLastCovidTestDate(){
+  public LocalDateTime getLastCovidTestDate() {
     cr.select(root).where(
         cb.equal(root.get("patient"), patient),
         cb.equal(root.get("type").get("name"), "COVID Test"),
@@ -64,7 +61,7 @@ public class HandleGreenPassStatusMessage extends MessageHandler{
     );
     cr.orderBy(cb.asc(root.get("appt_date")));
     List<Appointment> covid_test_appt = session.createQuery(cr).getResultList();
-    if (covid_test_appt.size() > 0){
+    if (covid_test_appt.size() > 0) {
       class_message.last_covid_test = covid_test_appt.get(0).getDate();
       return covid_test_appt.get(0).getDate();
     }
@@ -74,7 +71,7 @@ public class HandleGreenPassStatusMessage extends MessageHandler{
   /**
    * @return The date of the patients last COVID-19 vaccine.
    */
-  public LocalDateTime getLastCovidVaccineDate(){
+  public LocalDateTime getLastCovidVaccineDate() {
     cr.select(root).where(
         cb.equal(root.get("patient"), patient),
         cb.equal(root.get("type").get("name"), "COVID Vaccine"),
@@ -83,7 +80,7 @@ public class HandleGreenPassStatusMessage extends MessageHandler{
     );
     cr.orderBy(cb.asc(root.get("appt_date")));
     List<Appointment> covid_vaccine_appt = session.createQuery(cr).getResultList();
-    if (covid_vaccine_appt.size() > 0){
+    if (covid_vaccine_appt.size() > 0) {
       class_message.last_vaccine = covid_vaccine_appt.get(0).getDate();
       return covid_vaccine_appt.get(0).getDate();
     }

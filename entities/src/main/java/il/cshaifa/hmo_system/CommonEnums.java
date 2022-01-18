@@ -21,6 +21,6 @@ public class CommonEnums {
   public enum GreenPassStatus {
     VACCINATED,
     TESTED,
-    NOT_VACCINATED_OR_TESTED
+    REJECT
   }
 }
