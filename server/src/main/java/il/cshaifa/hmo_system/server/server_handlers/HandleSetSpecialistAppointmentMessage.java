@@ -40,6 +40,7 @@ public class HandleSetSpecialistAppointmentMessage extends MessageHandler {
     class_message.role_list = session.createQuery(cr).getResultList();
   }
 
+  @SuppressWarnings("ComparatorMethodParameterNotUsed")
   private void getSpecialistAppointments() {
     CriteriaBuilder cb = session.getCriteriaBuilder();
     CriteriaQuery<Appointment> cr = cb.createQuery(Appointment.class);
@@ -48,7 +49,7 @@ public class HandleSetSpecialistAppointmentMessage extends MessageHandler {
     cr.select(root)
         .where(
             cb.equal(root.get("patient"), class_message.patient),
-            cb.equal(root.get("specialist_role_id"), class_message.chosen_role),
+            cb.equal(root.get("specialist_role"), class_message.chosen_role),
             cb.lessThan(root.get("appt_date"), LocalDateTime.now()),
             cb.isNotNull(root.get("called_time")));
     cr.orderBy(cb.desc(root.get("appt_date")));
@@ -64,7 +65,7 @@ public class HandleSetSpecialistAppointmentMessage extends MessageHandler {
 
     cr.select(root)
         .where(
-            cb.equal(root.get("specialist_role_id"), class_message.chosen_role),
+            cb.equal(root.get("specialist_role"), class_message.chosen_role),
             cb.greaterThan(root.get("appt_date"), LocalDateTime.now()),
             cb.isFalse(root.get("taken")),
             cb.or(
@@ -83,17 +84,17 @@ public class HandleSetSpecialistAppointmentMessage extends MessageHandler {
           key += doctors.containsKey(appt_b.getStaff_member()) ? 2 : 0;
           switch (key) {
             case 1:
-              return 0;
+              return -1;
             case 2:
               return 1;
             default:
               if (key == 0 || appt_a.getStaff_member().equals(appt_b.getStaff_member()))
-                return appt_a.getDate().isBefore(appt_b.getDate()) ? 0 : 1;
+                return appt_a.getDate().isBefore(appt_b.getDate()) ? -1 : 1;
               else
                 return doctors
                         .get(appt_a.getStaff_member())
                         .isAfter(doctors.get(appt_b.getStaff_member()))
-                    ? 0
+                    ? -1
                     : 1;
           }
         });

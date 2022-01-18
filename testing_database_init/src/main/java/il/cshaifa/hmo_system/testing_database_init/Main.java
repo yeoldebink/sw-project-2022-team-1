@@ -95,7 +95,7 @@ public class Main {
 
     users.put(
         "Elliot Reed",
-        new User(7893, null, "Elliot", "Reed", null, null, roles.get("Family Doctor")));
+        new User(7893, null, "Elliot", "Reed", null, null, roles.get("Neurologist")));
 
     users.put(
         "John Dorian",
@@ -300,7 +300,8 @@ public class Main {
       Map<String, Patient> patients,
       Map<String, User> users,
       Map<String, Clinic> clinics,
-      Map<String, AppointmentType> appt_types) {
+      Map<String, AppointmentType> appt_types,
+      Map<String, Role> roles) {
     ArrayList<Appointment> appointments = new ArrayList<>();
 
     appointments.add(
@@ -339,6 +340,64 @@ public class Main {
             null,
             true));
 
+    appointments.add(
+        new Appointment(
+            patients.get("Tyler Durden"),
+            appt_types.get("Specialist"),
+            roles.get("Neurologist"),
+            users.get("Elliot Reed"),
+            clinics.get("Carmel Center"),
+            LocalDateTime.of(2021, 1, 10, 12, 20),
+            LocalDateTime.of(2021, 1, 10, 12, 22),
+            null,
+            true
+        )
+    );
+
+    appointments.add(
+        new Appointment(
+            patients.get("Tyler Durden"),
+            appt_types.get("Specialist"),
+            roles.get("Neurologist"),
+            users.get("Elliot Reed"),
+            clinics.get("Carmel Center"),
+            LocalDateTime.of(2021, 1, 10, 12, 20),
+            LocalDateTime.of(2021, 1, 10, 12, 22),
+            null,
+            true
+        )
+    );
+
+    appointments.add(
+        new Appointment(
+            patients.get("Tyler Durden"),
+            appt_types.get("Specialist"),
+            roles.get("Neurologist"),
+            users.get("Elliot Reed"),
+            clinics.get("Carmel Center"),
+            LocalDateTime.of(2021, 1, 11, 12, 20),
+            LocalDateTime.of(2021, 1, 11, 12, 22),
+            null,
+            true
+        )
+    );
+
+    appointments.add(
+        new Appointment(
+            patients.get("Tyler Durden"),
+            appt_types.get("Specialist"),
+            roles.get("Neurologist"),
+            users.get("Christopher Turk"),
+            clinics.get("Carmel Center"),
+            LocalDateTime.of(2021, 1, 9, 12, 20),
+            LocalDateTime.of(2021, 1, 9, 12, 22),
+            null,
+            true
+        )
+    );
+
+
+
     for (var appt : appointments) {
       session.save(appt);
       session.flush();
@@ -357,7 +416,7 @@ public class Main {
       var clinicStaff = assignStaff(users, clinics);
       var patients = createPatients(users, clinics);
       var appointment_types = createAppointmentTypes();
-      var appointments = createAppointments(patients, users, clinics, appointment_types);
+      var appointments = createAppointments(patients, users, clinics, appointment_types, roles);
       session.getTransaction().commit();
     } catch (Exception e) {
       e.printStackTrace();

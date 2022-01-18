@@ -49,7 +49,14 @@
 
           <TitledPane text="Specialist">
             <AnchorPane>
-
+              <VBox AnchorPane.topAnchor="10" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" spacing="10"  fx:id="spAppointmentsVBox">
+                <ComboBox fx:id="spComboBox" promptText="Select a service  "/>
+                <Button fx:id="spAppointmentsButton" visible="False" text="View appointments">
+                  <graphic>
+                    <FontIcon iconLiteral="mdi-calendar-question" iconSize="20" />
+                  </graphic>
+                </Button>
+              </VBox>
             </AnchorPane>
           </TitledPane>
 
