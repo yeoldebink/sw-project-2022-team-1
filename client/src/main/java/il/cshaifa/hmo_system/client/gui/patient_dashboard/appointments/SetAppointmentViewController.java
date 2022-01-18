@@ -162,7 +162,8 @@ public class SetAppointmentViewController extends ViewController {
                       iconLiteral = "mdi-wrench";
                       break;
                     default:
-                      new NotImplementedException(String.format("Specialist role not implemented: %s", role.getName()))
+                      new NotImplementedException(
+                              String.format("Specialist role not implemented: %s", role.getName()))
                           .printStackTrace();
                   }
 
@@ -178,30 +179,38 @@ public class SetAppointmentViewController extends ViewController {
     spTypeComboBox.setButtonCell(spComboCellFactory.call(null));
     spTypeComboBox.setCellFactory(spComboCellFactory);
 
-    spTypeComboBox.valueProperty().addListener((newRole) -> {
-      if (spTypeComboBox.getValue() != null) {
-        errorLabel.setVisible(false);
-        requestAppointments(new AppointmentType("Specialist"), spTypeComboBox.getValue());
-      }
-    });
+    spTypeComboBox
+        .valueProperty()
+        .addListener(
+            (newRole) -> {
+              if (spTypeComboBox.getValue() != null) {
+                errorLabel.setVisible(false);
+                requestAppointments(new AppointmentType("Specialist"), spTypeComboBox.getValue());
+              }
+            });
 
-    spDoctorComboBox.valueProperty().addListener((newDoctor) -> {
-      if (spDoctorComboBox.getValue() != null) {
-        populateAppointmentDates(appointmentsByDoctor.get(spDoctorComboBox.getValue().getDoctor()), true);
-      }
-    });
+    spDoctorComboBox
+        .valueProperty()
+        .addListener(
+            (newDoctor) -> {
+              if (spDoctorComboBox.getValue() != null) {
+                populateAppointmentDates(
+                    appointmentsByDoctor.get(spDoctorComboBox.getValue().getDoctor()), true);
+              }
+            });
 
-    spDoctorComboBox.setButtonCell(new ListCell<>() {
-      @Override
-      protected void updateItem(SPDoctorItem doctorItem, boolean empty) {
-        super.updateItem(doctorItem, empty);
-        if (empty || doctorItem == null) {
-          setText("Select a clinic and doctor");
-        } else {
-          setText(doctorItem.toString());
-        }
-      }
-    });
+    spDoctorComboBox.setButtonCell(
+        new ListCell<>() {
+          @Override
+          protected void updateItem(SPDoctorItem doctorItem, boolean empty) {
+            super.updateItem(doctorItem, empty);
+            if (empty || doctorItem == null) {
+              setText("Select a clinic and doctor");
+            } else {
+              setText(doctorItem.toString());
+            }
+          }
+        });
 
     // onAction for buttons
     gpAppointmentsButton.setOnAction(
@@ -336,8 +345,8 @@ public class SetAppointmentViewController extends ViewController {
 
   @FXML
   public void backToChooseType(ActionEvent event) {
-//    if (!lastUpdatedAppointmentType.getName().equals("Specialist"))
-      requestAppointments(lastUpdatedAppointmentType, lastUpdatedSpecialistRole);
+    //    if (!lastUpdatedAppointmentType.getName().equals("Specialist"))
+    requestAppointments(lastUpdatedAppointmentType, lastUpdatedSpecialistRole);
 
     switchToPane(chooseApptTypeAccordion);
   }
@@ -432,7 +441,8 @@ public class SetAppointmentViewController extends ViewController {
     }
 
     public String toString() {
-      return String.format("%s • %s %s", clinic.getName(), doctor.getFirstName(), doctor.getLastName());
+      return String.format(
+          "%s • %s %s", clinic.getName(), doctor.getFirstName(), doctor.getLastName());
     }
 
     public User getDoctor() {
