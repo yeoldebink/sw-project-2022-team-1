@@ -4,7 +4,6 @@ import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.entities.User;
 import java.util.List;
-// TODO: check git for change
 
 public class LoginMessage extends Message {
   /* Request fields */
