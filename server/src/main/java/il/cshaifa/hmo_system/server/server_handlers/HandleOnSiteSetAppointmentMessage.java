@@ -3,9 +3,12 @@ package il.cshaifa.hmo_system.server.server_handlers;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.Clinic;
+import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.OnSiteSetAppointmentMessage;
+import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -14,6 +17,8 @@ import org.hibernate.Session;
 public class HandleOnSiteSetAppointmentMessage extends MessageHandler {
 
   OnSiteSetAppointmentMessage class_message;
+  private static HashMap<Clinic, HashMap<User, >> connected_users;
+
 
   public HandleOnSiteSetAppointmentMessage(OnSiteSetAppointmentMessage message, Session session) {
     super(message, session);
