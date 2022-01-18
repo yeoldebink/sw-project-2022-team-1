@@ -27,6 +27,7 @@ import il.cshaifa.hmo_system.server.server_handlers.HandleAppointmentMessage;
 import il.cshaifa.hmo_system.server.server_handlers.HandleClinicMessage;
 import il.cshaifa.hmo_system.server.server_handlers.HandleGreenPassStatusMessage;
 import il.cshaifa.hmo_system.server.server_handlers.HandleLoginMessage;
+import il.cshaifa.hmo_system.server.server_handlers.HandleOnSiteEntryMessage;
 import il.cshaifa.hmo_system.server.server_handlers.HandleOnSiteSetAppointmentMessage;
 import il.cshaifa.hmo_system.server.server_handlers.HandleReportMessage;
 import il.cshaifa.hmo_system.server.server_handlers.HandleSetAppointmentMessage;
