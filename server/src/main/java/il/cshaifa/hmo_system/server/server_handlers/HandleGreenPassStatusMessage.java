@@ -28,25 +28,23 @@ public class HandleGreenPassStatusMessage extends MessageHandler {
 
   @Override
   public void handleMessage() {
-    getGreenPassStatus();
+    class_message.status = getGreenPassStatus();
   }
 
   /**
    * Updates the status of patients COVID-19 green-pass
    */
-  public void getGreenPassStatus() {
+  public GreenPassStatus getGreenPassStatus() {
     LocalDateTime last_vaccine = getLastCovidVaccineDate(),
         last_test = getLastCovidTestDate();
 
     if (last_vaccine == null || last_vaccine.plusMonths(6).isBefore(LocalDateTime.now())) {
       if (last_test == null || last_test.plusDays(3).isBefore(LocalDateTime.now())) {
-        class_message.status = GreenPassStatus.REJECT;
-        return;
+        return GreenPassStatus.REJECT;
       }
-      class_message.status = GreenPassStatus.TESTED;
-      return;
+      return GreenPassStatus.TESTED;
     }
-    class_message.status = GreenPassStatus.VACCINATED;
+    return GreenPassStatus.VACCINATED;
   }
 
   /**
