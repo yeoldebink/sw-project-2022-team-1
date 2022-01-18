@@ -8,6 +8,7 @@ import il.cshaifa.hmo_system.client.events.AppointmentListEvent;
 import il.cshaifa.hmo_system.client.events.AssignStaffEvent;
 import il.cshaifa.hmo_system.client.events.ClinicEvent;
 import il.cshaifa.hmo_system.client.events.ClinicStaffEvent;
+import il.cshaifa.hmo_system.client.events.GreenPassStatusEvent;
 import il.cshaifa.hmo_system.client.events.LoginEvent;
 import il.cshaifa.hmo_system.client.events.LoginEvent.Response;
 import il.cshaifa.hmo_system.client.events.ReportEvent;
@@ -27,6 +28,7 @@ import il.cshaifa.hmo_system.messages.AdminAppointmentMessage.RequestType;
 import il.cshaifa.hmo_system.messages.AppointmentMessage;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
 import il.cshaifa.hmo_system.messages.ClinicStaffMessage;
+import il.cshaifa.hmo_system.messages.GreenPassStatusMessage;
 import il.cshaifa.hmo_system.messages.LoginMessage;
 import il.cshaifa.hmo_system.messages.Message.MessageType;
 import il.cshaifa.hmo_system.messages.ReportMessage;
@@ -100,8 +102,14 @@ public class HMOClient extends AbstractClient {
         handleSetAppointmentMessage((SetAppointmentMessage) message);
       } else if (message.getClass().equals(SetSpecialistAppointmentMessage.class)) {
         handleSpecialistAppointmentMessage((SetSpecialistAppointmentMessage) message);
+      } else if (message.getClass().equals(GreenPassStatusMessage.class)){
+        handleGreenPassStatusMessage((GreenPassStatusMessage) message);
       }
     }
+  }
+
+  private void handleGreenPassStatusMessage(GreenPassStatusMessage message) {
+    EventBus.getDefault().post(new GreenPassStatusEvent(this, message.last_vaccine, message.last_covid_test, message.status));
   }
 
   private void handleSpecialistAppointmentMessage(SetSpecialistAppointmentMessage message) {
@@ -347,6 +355,10 @@ public class HMOClient extends AbstractClient {
         new StaffAssignmentMessage(
             staff, connected_employee_clinics.get(0), StaffAssignmentAction.UNASSIGN);
     client.sendToServer(message);
+  }
+
+  public void getGreenPassStatus() throws IOException{
+    client.sendToServer(new GreenPassStatusMessage(connected_patient));
   }
 
   /**

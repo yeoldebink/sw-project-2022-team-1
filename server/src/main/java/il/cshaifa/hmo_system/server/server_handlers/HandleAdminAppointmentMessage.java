@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
@@ -19,7 +18,6 @@ import org.hibernate.Session;
 public class HandleAdminAppointmentMessage extends MessageHandler {
   private final AdminAppointmentMessage class_message;
   private static Map<String, Long> appointment_duration;
-  private final CriteriaBuilder cb;
   private final CriteriaQuery<Appointment> cr;
   private final Root<Appointment> root;
 
@@ -35,7 +33,6 @@ public class HandleAdminAppointmentMessage extends MessageHandler {
       appointment_duration.put("COVID Vaccine", 10L);
       appointment_duration.put("Flu Vaccine", 10L);
     }
-    cb = session.getCriteriaBuilder();
     cr = cb.createQuery(Appointment.class);
     root = cr.from(Appointment.class);
   }

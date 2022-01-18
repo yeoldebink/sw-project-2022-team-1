@@ -7,7 +7,6 @@ import il.cshaifa.hmo_system.messages.SetSpecialistAppointmentMessage;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
@@ -33,7 +32,6 @@ public class HandleSetSpecialistAppointmentMessage extends MessageHandler {
   }
 
   private void getSpecialistRoleList() {
-    CriteriaBuilder cb = session.getCriteriaBuilder();
     CriteriaQuery<Role> cr = cb.createQuery(Role.class);
     Root<Role> root = cr.from(Role.class);
     cr.select(root).where(cb.isTrue(root.get("is_specialist")));
@@ -42,7 +40,6 @@ public class HandleSetSpecialistAppointmentMessage extends MessageHandler {
 
   @SuppressWarnings("ComparatorMethodParameterNotUsed")
   private void getSpecialistAppointments() {
-    CriteriaBuilder cb = session.getCriteriaBuilder();
     CriteriaQuery<Appointment> cr = cb.createQuery(Appointment.class);
     Root<Appointment> root = cr.from(Appointment.class);
 

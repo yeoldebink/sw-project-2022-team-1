@@ -5,7 +5,6 @@ import il.cshaifa.hmo_system.entities.ClinicStaff;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.StaffAssignmentMessage;
 import java.util.List;
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
@@ -36,7 +35,6 @@ public class HandleStaffAssignmentMessage extends MessageHandler {
   }
 
   private void unassignStaff() {
-    CriteriaBuilder cb = session.getCriteriaBuilder();
     CriteriaQuery<ClinicStaff> cr = cb.createQuery(ClinicStaff.class);
     Root<ClinicStaff> root = cr.from(ClinicStaff.class);
 

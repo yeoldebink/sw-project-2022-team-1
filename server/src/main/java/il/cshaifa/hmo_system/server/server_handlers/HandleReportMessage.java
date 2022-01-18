@@ -14,7 +14,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
@@ -23,7 +22,6 @@ public class HandleReportMessage extends MessageHandler {
   ReportMessage class_message;
   private HashMap<LocalDate, HashMap<Integer, DailyReport>> daily_reports_map;
   HashMap<LocalDate, HashMap<Integer, HashMap<User, Integer>>> total_appointments_map;
-  private final CriteriaBuilder cb;
   private final CriteriaQuery<Appointment> cr;
   private final Root<Appointment> root;
   private List<Appointment> relevant_appointments;
@@ -32,7 +30,6 @@ public class HandleReportMessage extends MessageHandler {
   public HandleReportMessage(ReportMessage message, Session session) {
     super(message, session);
     this.class_message = (ReportMessage) this.message;
-    cb = session.getCriteriaBuilder();
     cr = cb.createQuery(Appointment.class);
     root = cr.from(Appointment.class);
     if (clinics_general_services == null) {

@@ -17,4 +17,10 @@ public class CommonEnums {
     ASSIGN,
     UNASSIGN
   }
+
+  public enum GreenPassStatus {
+    VACCINATED,
+    TESTED,
+    REJECT
+  }
 }

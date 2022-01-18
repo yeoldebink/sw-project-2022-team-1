@@ -6,7 +6,6 @@ import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.ClinicStaffMessage;
 import java.util.HashSet;
 import java.util.List;
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
@@ -21,7 +20,6 @@ public class HandleStaffMessage extends MessageHandler {
 
   @Override
   public void handleMessage() {
-    CriteriaBuilder cb = session.getCriteriaBuilder();
     CriteriaQuery<ClinicStaff> cr = cb.createQuery(ClinicStaff.class);
     Root<ClinicStaff> root = cr.from(ClinicStaff.class);
     cr.select(root);

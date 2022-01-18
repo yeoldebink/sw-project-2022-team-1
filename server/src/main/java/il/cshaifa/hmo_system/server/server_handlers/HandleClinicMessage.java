@@ -2,7 +2,6 @@ package il.cshaifa.hmo_system.server.server_handlers;
 
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
@@ -30,7 +29,6 @@ public class HandleClinicMessage extends MessageHandler {
 
   /** Get clinics list */
   protected void getClinics() {
-    CriteriaBuilder cb = session.getCriteriaBuilder();
     CriteriaQuery<Clinic> cr = cb.createQuery(Clinic.class);
     Root<Clinic> root = cr.from(Clinic.class);
     cr.select(root);
