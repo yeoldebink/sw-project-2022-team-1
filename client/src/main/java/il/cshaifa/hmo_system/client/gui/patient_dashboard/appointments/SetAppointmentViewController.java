@@ -345,7 +345,6 @@ public class SetAppointmentViewController extends ViewController {
 
   @FXML
   public void backToChooseType(ActionEvent event) {
-    //    if (!lastUpdatedAppointmentType.getName().equals("Specialist"))
     requestAppointments(lastUpdatedAppointmentType, lastUpdatedSpecialistRole);
 
     switchToPane(chooseApptTypeAccordion);
