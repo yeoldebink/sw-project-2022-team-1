@@ -113,9 +113,18 @@ public class ReportListViewController extends RoleDefinedViewController {
         (obs, oldValue, newValue) ->
         {
             if (newValue != null){
+              var isHMOManager = HMOClient.getClient().getConnected_user().getRole().getName().equals("HMO Manager");
               if (newValue == reportTypeComboBox.getItems().get(2)){
+                if(isHMOManager){
+                  clinicList.getSelectionModel().selectAll();
+                  clinicList.setDisable(true);
+                }
                 switchToPane(staffListPane);
               }else{
+                if (isHMOManager){
+                  clinicList.getSelectionModel().clearSelection();
+                  clinicList.setDisable(false);
+                }
                 switchToPane(clinicListPane);
               }
             }

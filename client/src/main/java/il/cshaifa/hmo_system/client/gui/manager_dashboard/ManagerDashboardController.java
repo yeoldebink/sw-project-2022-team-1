@@ -19,6 +19,8 @@ import il.cshaifa.hmo_system.entities.ClinicStaff;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Objects;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
@@ -72,7 +74,12 @@ public class ManagerDashboardController extends Controller {
 
     var role = HMOClient.getClient().getConnected_user().getRole().getName();
     if (Objects.equals(role, "HMO Manager")){
-      clinicStaff.addAll(event.clinic_staff);
+      var unique_staffs_map = new HashMap<String, ClinicStaff>();
+      for (var member : event.clinic_staff){
+        var name = member.getUser().getFirstName() + " " + member.getUser().getLastName();
+        unique_staffs_map.put(name, member);
+      }
+      clinicStaff.addAll(new ArrayList<>(unique_staffs_map.values()));
     } else{
       var clinic_manager_id = HMOClient.getClient().getConnected_user().getId();
       for(var staff_member : event.clinic_staff){
@@ -82,9 +89,9 @@ public class ManagerDashboardController extends Controller {
           clinicStaff.add(staff_member);
         }
       }
-      clinicStaff.sort(Comparator.comparing(ClinicStaff::toString));
-      reportListController.updateStaffMembers(clinicStaff);
     }
+    clinicStaff.sort(Comparator.comparing(ClinicStaff::toString));
+    reportListController.updateStaffMembers(clinicStaff);
   }
   /**
    * Event that handle the user request to edit its own clinic.
