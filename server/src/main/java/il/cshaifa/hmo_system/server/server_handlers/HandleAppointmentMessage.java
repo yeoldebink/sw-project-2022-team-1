@@ -3,7 +3,6 @@ package il.cshaifa.hmo_system.server.server_handlers;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.messages.AppointmentMessage;
 import il.cshaifa.hmo_system.messages.AppointmentMessage.*;
-import il.cshaifa.hmo_system.server.App;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,31 +11,29 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
-import org.hibernate.criterion.Order;
 
 public class HandleAppointmentMessage extends MessageHandler {
   private final AppointmentMessage class_message;
   // Represented as weeks
-  private final Map<String, Long> max_future_appointments;
-  private final CriteriaBuilder cb;
+  private static Map<String, Long> max_future_appointments;
   private final CriteriaQuery<Appointment> cr;
   private final Root<Appointment> root;
 
   public HandleAppointmentMessage(AppointmentMessage message, Session session) {
     super(message, session);
     this.class_message = (AppointmentMessage) this.message;
-    this.max_future_appointments = new HashMap<>();
-    this.max_future_appointments.put("Family Doctor", 4L);
-    this.max_future_appointments.put("Pediatrician", 4L);
-    this.max_future_appointments.put("Specialist", 12L);
-    this.max_future_appointments.put("COVID Test", 4L);
-    this.max_future_appointments.put("COVID Vaccine", 4L);
-    this.max_future_appointments.put("Flu Vaccine", 4L);
-    cb = session.getCriteriaBuilder();
+    if (max_future_appointments == null) {
+      max_future_appointments = new HashMap<>();
+      max_future_appointments.put("Family Doctor", 4L);
+      max_future_appointments.put("Pediatrician", 4L);
+      max_future_appointments.put("Specialist", 12L);
+      max_future_appointments.put("COVID Test", 4L);
+      max_future_appointments.put("COVID Vaccine", 4L);
+      max_future_appointments.put("Flu Vaccine", 4L);
+    }
     cr = cb.createQuery(Appointment.class);
     root = cr.from(Appointment.class);
   }

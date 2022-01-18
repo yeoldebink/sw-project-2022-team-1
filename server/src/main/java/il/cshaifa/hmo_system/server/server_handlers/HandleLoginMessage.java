@@ -9,7 +9,6 @@ import il.cshaifa.hmo_system.messages.LoginMessage;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
@@ -35,7 +34,6 @@ public class HandleLoginMessage extends MessageHandler {
   @Override
   public void handleMessage() {
     User user = session.get(User.class, class_message.id);
-    CriteriaBuilder cb = session.getCriteriaBuilder();
     CriteriaQuery<Clinic> cr = cb.createQuery(Clinic.class);
 
     if (user != null) {
@@ -74,7 +72,6 @@ public class HandleLoginMessage extends MessageHandler {
   }
 
   private Patient getUserPatient(User user) {
-    CriteriaBuilder cb = session.getCriteriaBuilder();
     CriteriaQuery<Patient> cr = cb.createQuery(Patient.class);
     Root<Patient> root = cr.from(Patient.class);
     cr.select(root).where(cb.equal(root.get("user"), user));

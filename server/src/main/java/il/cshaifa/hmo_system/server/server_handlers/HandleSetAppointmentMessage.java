@@ -5,7 +5,6 @@ import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.messages.SetAppointmentMessage;
 import java.time.LocalDateTime;
 import java.util.List;
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
@@ -58,7 +57,6 @@ public class HandleSetAppointmentMessage extends MessageHandler {
     }
 
     // get from db all patients locked appointments
-    CriteriaBuilder cb = session.getCriteriaBuilder();
     CriteriaQuery<Appointment> cr = cb.createQuery(Appointment.class);
     Root<Appointment> root = cr.from(Appointment.class);
     cr.select(root)

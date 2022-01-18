@@ -11,6 +11,7 @@ import il.cshaifa.hmo_system.messages.AdminAppointmentMessage;
 import il.cshaifa.hmo_system.messages.AppointmentMessage;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
 import il.cshaifa.hmo_system.messages.ClinicStaffMessage;
+import il.cshaifa.hmo_system.messages.GreenPassStatusMessage;
 import il.cshaifa.hmo_system.messages.LoginMessage;
 import il.cshaifa.hmo_system.messages.Message.MessageType;
 import il.cshaifa.hmo_system.messages.ReportMessage;
@@ -22,6 +23,7 @@ import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import il.cshaifa.hmo_system.server.server_handlers.HandleAdminAppointmentMessage;
 import il.cshaifa.hmo_system.server.server_handlers.HandleAppointmentMessage;
 import il.cshaifa.hmo_system.server.server_handlers.HandleClinicMessage;
+import il.cshaifa.hmo_system.server.server_handlers.HandleGreenPassStatusMessage;
 import il.cshaifa.hmo_system.server.server_handlers.HandleLoginMessage;
 import il.cshaifa.hmo_system.server.server_handlers.HandleReportMessage;
 import il.cshaifa.hmo_system.server.server_handlers.HandleSetAppointmentMessage;
@@ -84,6 +86,8 @@ public class HMOServer extends AbstractServer {
         handler = new HandleAppointmentMessage((AppointmentMessage) msg, session);
       } else if (msg_class == ClinicMessage.class) {
         handler = new HandleClinicMessage((ClinicMessage) msg, session);
+      } else if (msg_class == GreenPassStatusMessage.class){
+        handler = new HandleGreenPassStatusMessage((GreenPassStatusMessage) msg, session);
       } else if (msg_class == LoginMessage.class) {
         handler = new HandleLoginMessage((LoginMessage) msg, session, client);
       } else if (msg_class == ReportMessage.class) {
