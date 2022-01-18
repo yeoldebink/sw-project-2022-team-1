@@ -12,7 +12,10 @@ public class OnSiteSetAppointmentMessage extends Message{
 
   public int place_in_line;
 
-  public OnSiteSetAppointmentMessage() {
+  public OnSiteSetAppointmentMessage(AppointmentType type, Clinic clinic, Patient patient) {
     super(MessageType.REQUEST);
+    this.type = type;
+    this.clinic = clinic;
+    this.patient = patient;
   }
 }
