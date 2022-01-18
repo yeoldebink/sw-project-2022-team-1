@@ -6,11 +6,14 @@ import il.cshaifa.hmo_system.client.events.SetAppointmentEvent;
 import il.cshaifa.hmo_system.client.utils.Utils;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.AppointmentType;
+import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.entities.Role;
+import il.cshaifa.hmo_system.entities.User;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -49,6 +52,7 @@ import org.kordamp.ikonli.javafx.FontIcon;
 public class SetAppointmentViewController extends ViewController {
   private final Patient patient;
   private HashMap<LocalDate, ArrayList<Appointment>> appointmentsByDate;
+  private HashMap<User, ArrayList<Appointment>> appointmentsByDoctor;
   private AppointmentType lastUpdatedAppointmentType;
   private Role lastUpdatedSpecialistRole;
 
@@ -62,8 +66,8 @@ public class SetAppointmentViewController extends ViewController {
   @FXML private Button gpAppointmentsButton;
 
   @FXML private VBox spAppointmentsVBox;
-  @FXML private Button spAppointmentsButton;
-  @FXML private ComboBox<Role> spComboBox;
+  @FXML private ComboBox<Role> spTypeComboBox;
+  @FXML private ComboBox<SPDoctorItem> spDoctorComboBox;
 
   private final DatePicker apptDatePicker;
   private Pane apptDatePickerParent;
@@ -129,6 +133,7 @@ public class SetAppointmentViewController extends ViewController {
               }
             });
 
+    // for specialist type combobox
     Callback<ListView<Role>, ListCell<Role>> spComboCellFactory =
         new Callback<>() {
           @Override
@@ -157,7 +162,7 @@ public class SetAppointmentViewController extends ViewController {
                       iconLiteral = "mdi-wrench";
                       break;
                     default:
-                      new NotImplementedException("Specialist role not implemented")
+                      new NotImplementedException(String.format("Specialist role not implemented: %s", role.getName()))
                           .printStackTrace();
                   }
 
@@ -170,11 +175,32 @@ public class SetAppointmentViewController extends ViewController {
           }
         };
 
-    spComboBox.setButtonCell(spComboCellFactory.call(null));
-    spComboBox.setCellFactory(spComboCellFactory);
+    spTypeComboBox.setButtonCell(spComboCellFactory.call(null));
+    spTypeComboBox.setCellFactory(spComboCellFactory);
 
-    spComboBox.valueProperty().addListener((newRole) -> {
-      if (newRole != null) spAppointmentsButton.setVisible(true);
+    spTypeComboBox.valueProperty().addListener((newRole) -> {
+      if (spTypeComboBox.getValue() != null) {
+        errorLabel.setVisible(false);
+        requestAppointments(new AppointmentType("Specialist"), spTypeComboBox.getValue());
+      }
+    });
+
+    spDoctorComboBox.valueProperty().addListener((newDoctor) -> {
+      if (spDoctorComboBox.getValue() != null) {
+        populateAppointmentDates(appointmentsByDoctor.get(spDoctorComboBox.getValue().getDoctor()), true);
+      }
+    });
+
+    spDoctorComboBox.setButtonCell(new ListCell<>() {
+      @Override
+      protected void updateItem(SPDoctorItem doctorItem, boolean empty) {
+        super.updateItem(doctorItem, empty);
+        if (empty || doctorItem == null) {
+          setText("Select a clinic and doctor");
+        } else {
+          setText(doctorItem.toString());
+        }
+      }
     });
 
     // onAction for buttons
@@ -182,12 +208,6 @@ public class SetAppointmentViewController extends ViewController {
         (event) -> {
           errorLabel.setVisible(false);
           requestAppointments(new AppointmentType("Family Doctor"), null);
-        });
-
-    spAppointmentsButton.setOnAction(
-        (event) -> {
-          errorLabel.setVisible(false);
-          requestAppointments(new AppointmentType("Specialist"), spComboBox.getValue());
         });
   }
 
@@ -203,7 +223,8 @@ public class SetAppointmentViewController extends ViewController {
         newParent = gpAppointmentVBox;
         break;
       case "Specialist":
-        return;
+        newParent = spAppointmentsVBox;
+        break;
       default:
         return;
     }
@@ -213,23 +234,46 @@ public class SetAppointmentViewController extends ViewController {
   }
 
   public void populateSpecialistRoles(List<Role> specialistRoles) {
-    spComboBox.getItems().setAll(specialistRoles);
+    spTypeComboBox.getItems().setAll(specialistRoles);
   }
 
-  public void populateAppointmentDates(List<Appointment> appointments) {
+  public void populateSpecialistData(List<Appointment> appointments) {
+    appointmentsByDoctor = new HashMap<>();
+
+    spDoctorComboBox.getItems().clear();
+    HashMap<User, HashSet<Clinic>> doctorClinics = new HashMap<>();
+
+    for (var appt : appointments) {
+      var clinic = appt.getClinic();
+      var doctor = appt.getStaff_member();
+      doctorClinics.putIfAbsent(doctor, new HashSet<>());
+      // returns true if the clinic was not already present for this doctor
+      if (doctorClinics.get(doctor).add(clinic)) {
+        spDoctorComboBox.getItems().add(new SPDoctorItem(doctor, clinic));
+      }
+      appointmentsByDoctor.putIfAbsent(doctor, new ArrayList<>());
+      appointmentsByDoctor.get(doctor).add(appt);
+    }
+
+    spDoctorComboBox.setVisible(true);
+  }
+
+  public void populateAppointments(List<Appointment> appointments) {
     if (appointments == null || appointments.size() == 0) {
       errorLabel.setVisible(true);
+      spDoctorComboBox.setVisible(false);
       return;
     } else {
       errorLabel.setVisible(false);
     }
 
-    // if specialist, immediately populate and return
+    // if specialist, populate the doctor/clinic list
     if (appointments.get(0).getType().getName().equals("Specialist")) {
-      populateAppointmentsTable(appointments);
-      return;
-    }
+      populateSpecialistData(appointments);
+    } else populateAppointmentDates(appointments, true);
+  }
 
+  public void populateAppointmentDates(List<Appointment> appointments, boolean showDates) {
     // hash appts by date for the picker
     appointmentsByDate = new HashMap<>();
 
@@ -248,7 +292,7 @@ public class SetAppointmentViewController extends ViewController {
               }
             });
 
-    moveApptDatePicker(appointments.get(0).getType());
+    if (showDates) moveApptDatePicker(appointments.get(0).getType());
   }
 
   private void populateAppointmentsTable(LocalDate date) {
@@ -292,7 +336,7 @@ public class SetAppointmentViewController extends ViewController {
 
   @FXML
   public void backToChooseType(ActionEvent event) {
-    if (!lastUpdatedAppointmentType.getName().equals("Specialist"))
+//    if (!lastUpdatedAppointmentType.getName().equals("Specialist"))
       requestAppointments(lastUpdatedAppointmentType, lastUpdatedSpecialistRole);
 
     switchToPane(chooseApptTypeAccordion);
@@ -375,6 +419,24 @@ public class SetAppointmentViewController extends ViewController {
 
     public String getAppointmentDateTime() {
       return Utils.prettifyDateTime(appointment.getDate());
+    }
+  }
+
+  public static class SPDoctorItem {
+    private final User doctor;
+    private final Clinic clinic;
+
+    public SPDoctorItem(User doctor, Clinic clinic) {
+      this.doctor = doctor;
+      this.clinic = clinic;
+    }
+
+    public String toString() {
+      return String.format("%s • %s %s", clinic.getName(), doctor.getFirstName(), doctor.getLastName());
+    }
+
+    public User getDoctor() {
+      return doctor;
     }
   }
 }
