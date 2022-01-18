@@ -60,10 +60,7 @@ public class HandleSetAppointmentMessage extends MessageHandler {
     CriteriaQuery<Appointment> cr = cb.createQuery(Appointment.class);
     Root<Appointment> root = cr.from(Appointment.class);
     cr.select(root)
-        .where(
-            cb.between(
-                root.get("lock_time"), LocalDateTime.now(), LocalDateTime.now().plusMinutes(5)),
-            cb.equal(root.get("patient"), class_message.patient));
+        .where(cb.isFalse(root.get("taken")), cb.equal(root.get("patient"), class_message.patient));
     List<Appointment> users_locked_appointments = session.createQuery(cr).getResultList();
 
     // lock the relevant appointment

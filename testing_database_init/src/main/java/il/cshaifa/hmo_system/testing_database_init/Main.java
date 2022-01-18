@@ -350,9 +350,7 @@ public class Main {
             LocalDateTime.of(2021, 1, 10, 12, 20),
             LocalDateTime.of(2021, 1, 10, 12, 22),
             null,
-            true
-        )
-    );
+            true));
 
     appointments.add(
         new Appointment(
@@ -364,9 +362,7 @@ public class Main {
             LocalDateTime.of(2021, 1, 10, 12, 20),
             LocalDateTime.of(2021, 1, 10, 12, 22),
             null,
-            true
-        )
-    );
+            true));
 
     appointments.add(
         new Appointment(
@@ -378,9 +374,7 @@ public class Main {
             LocalDateTime.of(2021, 1, 11, 12, 20),
             LocalDateTime.of(2021, 1, 11, 12, 22),
             null,
-            true
-        )
-    );
+            true));
 
     appointments.add(
         new Appointment(
@@ -392,11 +386,7 @@ public class Main {
             LocalDateTime.of(2021, 1, 9, 12, 20),
             LocalDateTime.of(2021, 1, 9, 12, 22),
             null,
-            true
-        )
-    );
-
-
+            true));
 
     for (var appt : appointments) {
       session.save(appt);

@@ -70,7 +70,7 @@ public class SetAppointmentController extends Controller {
     Platform.runLater(
         () ->
             ((SetAppointmentViewController) view_controller)
-                .populateAppointmentDates(event.appointments));
+                .populateAppointments(event.appointments));
   }
 
   @Subscribe
