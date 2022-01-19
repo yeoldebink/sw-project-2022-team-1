@@ -96,7 +96,7 @@ public class HandleReportMessage extends MessageHandler {
     LocalDate report_end_date = class_message.end_date.toLocalDate();
 
     for (LocalDate current_date = class_message.start_date.toLocalDate();
-        !current_date.isAfter(LocalDate.now());
+        !current_date.isAfter(report_end_date);
         current_date = current_date.plusDays(1)){
       daily_reports_map.put(current_date, new HashMap<>());
       total_appointments_map.put(current_date, new HashMap<>());
@@ -214,12 +214,12 @@ public class HandleReportMessage extends MessageHandler {
     }
   }
 
-  private List<ClinicStaff> getClinicStaff(List<Clinic> clinic){
+  private List<ClinicStaff> getClinicStaff(List<Clinic> clinics){
     CriteriaQuery<ClinicStaff> cr_ClinicStaff = cb.createQuery(ClinicStaff.class);
     Root<ClinicStaff> root_ClinicStaff = cr_ClinicStaff.from(ClinicStaff.class);
     cr_ClinicStaff
         .select(root_ClinicStaff)
-        .where(root_ClinicStaff.get("clinic").in(class_message.clinics));
+        .where(root_ClinicStaff.get("clinic").in(clinics));
     return session.createQuery(cr_ClinicStaff).getResultList();
   }
 }
