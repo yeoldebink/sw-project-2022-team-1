@@ -113,7 +113,8 @@ public class ReportListController extends Controller {
     DailyAverageWaitTimeReport aggregateReport = new DailyAverageWaitTimeReport(null, null);
 
     // we need to keep track of how many days each staff member worked
-    HashMap<User, Integer> daysWorked = new HashMap<>();
+    // user is un-hashable, we use user_id instead
+    HashMap<Integer, Integer> daysWorked = new HashMap<>();
 
     var agReportData = aggregateReport.report_data;
 

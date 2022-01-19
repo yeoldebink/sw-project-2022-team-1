@@ -110,7 +110,7 @@ public class HandleReportMessage extends MessageHandler {
 
           ((DailyAverageWaitTimeReport)
                   daily_reports_map.get(current_date).get(clinic.getId()))
-              .report_data.put(class_message.staff_member.getUser(), 0);
+              .report_data.put(class_message.staff_member.getUser().getId(), 0);
 
           total_appointments_map
               .get(current_date)
@@ -147,6 +147,7 @@ public class HandleReportMessage extends MessageHandler {
   private void getAverageWaitTimeReport() {
     cr.select(root)
         .where(
+            cb.equal(root.get("staff_member"), class_message.staff_member.getUser()),
             cb.between(root.get("appt_date"), class_message.start_date, class_message.end_date),
             cb.isTrue(root.get("taken")),
             root.get("clinic").in(class_message.clinics),
@@ -163,7 +164,7 @@ public class HandleReportMessage extends MessageHandler {
           (DailyAverageWaitTimeReport) daily_reports_map.get(appt_date).get(appt_clinic.getId());
 
       report.report_data.put(
-          appt_staff_member, report.report_data.get(appt_staff_member) + wait_time);
+          appt_staff_member.getId(), report.report_data.get(appt_staff_member.getId()) + wait_time);
 
       total_appointments_map
           .get(appt_date)
@@ -176,13 +177,13 @@ public class HandleReportMessage extends MessageHandler {
       for (int clinic_id : daily_reports_map.get(date).keySet()) {
         DailyAverageWaitTimeReport dailies =
             (DailyAverageWaitTimeReport) daily_reports_map.get(date).get(clinic_id);
-        for (User staff_member : dailies.report_data.keySet()) {
+        for (int staff_member_id : dailies.report_data.keySet()) {
           int total_appt = total_appointments_map.get(date).get(clinic_id);
-          int total_wait_time = dailies.report_data.get(staff_member);
+          int total_wait_time = dailies.report_data.get(staff_member_id);
           if (total_appt == 0) {
-            dailies.report_data.put(staff_member, null);
+            dailies.report_data.put(staff_member_id, null);
           } else {
-            dailies.report_data.put(staff_member, total_wait_time / total_appt);
+            dailies.report_data.put(staff_member_id, total_wait_time / total_appt);
           }
         }
       }

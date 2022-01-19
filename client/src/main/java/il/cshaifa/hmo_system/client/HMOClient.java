@@ -141,7 +141,7 @@ public class HMOClient extends AbstractClient {
     ReportEvent event =
         new ReportEvent(
             message.clinics,
-            null,
+            message.staff_member,
             message.report_type,
             message.start_date,
             message.end_date,
