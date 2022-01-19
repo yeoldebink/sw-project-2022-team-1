@@ -36,6 +36,13 @@ public class AddAppointmentsController extends Controller {
   @Subscribe
   public void addAppointments(AddAppointmentEvent event) {
     if (!event.getSender().equals(this.view_controller)) return;
+    if (event.count <= 0){
+      Platform.runLater(()->
+          ((AddAppointmentsViewController) this.view_controller)
+              .setErrorMessage("The amount should be larger then 0"));
+
+      return;
+    }
 
     User staff_member = null;
     AppointmentType appt_type;
