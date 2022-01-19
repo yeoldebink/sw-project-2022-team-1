@@ -11,6 +11,7 @@ import org.hibernate.Session;
 
 public class HandleSetAppointmentMessage extends MessageHandler {
   public SetAppointmentMessage class_message;
+  public String appt_comments;
 
   public HandleSetAppointmentMessage(SetAppointmentMessage message, Session session) {
     super(message, session);
@@ -20,6 +21,7 @@ public class HandleSetAppointmentMessage extends MessageHandler {
   @Override
   public void handleMessage() {
     // before changing the state of the appointment, get the updated version of it
+    appt_comments = class_message.appointment.getComments();
     session.flush();
     session.refresh(class_message.appointment);
 
@@ -66,6 +68,7 @@ public class HandleSetAppointmentMessage extends MessageHandler {
     // lock the relevant appointment
     class_message.appointment.setLock_time(LocalDateTime.now().plusSeconds(330));
     class_message.appointment.setPatient(class_message.patient);
+    class_message.appointment.setComments(appt_comments);
     session.update(class_message.appointment);
 
     // release the other appointments by the patient
@@ -79,6 +82,7 @@ public class HandleSetAppointmentMessage extends MessageHandler {
     appt.setLock_time(null);
     appt.setTaken(false);
     appt.setPatient(null);
+    appt.setComments(null);
     session.update(appt);
   }
 }
