@@ -61,26 +61,6 @@ public class AdminAppointmentListController extends Controller {
         AddAppointmentsViewController.class,
         AddAppointmentsController.class, false,
         c -> new AddAppointmentsViewController(event.staff_member));
-//    );
-//    var loader =
-//        new FXMLLoader(
-//            getClass()
-//                .getResource(ResourcePath.get_fxml(AddAppointmentsViewController.class)));
-//
-//    loader.setControllerFactory(
-//        c -> {
-//          return new AddAppointmentsViewController(event.staff_member);
-//        });
-//
-//    try {
-//      Utils.openNewWindow(
-//          AddAppointmentsViewController.class,
-//          AddAppointmentsController.class,
-//          loader,
-//          false);
-//    } catch (Exception e) {
-//      e.printStackTrace();
-//    }
     }
 
 
