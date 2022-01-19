@@ -14,8 +14,18 @@ import org.greenrobot.eventbus.Subscribe;
 
 public class AddAppointmentsController extends Controller {
 
-  public AddAppointmentsController(ViewController view_controller, Stage stage) {
+  private static AddAppointmentsController instance;
+
+  private AddAppointmentsController(ViewController view_controller, Stage stage) {
     super(view_controller, stage);
+  }
+
+  public static AddAppointmentsController getInstance(){return instance;}
+
+  public static void create(ViewController view_controller, Stage stage){
+    if (instance != null && instance.view_controller != null) return;
+
+    instance = new AddAppointmentsController(view_controller, stage);
   }
 
   /**

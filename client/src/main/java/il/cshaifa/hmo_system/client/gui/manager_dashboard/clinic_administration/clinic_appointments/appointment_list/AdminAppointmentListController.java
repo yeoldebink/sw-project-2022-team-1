@@ -56,26 +56,33 @@ public class AdminAppointmentListController extends Controller {
   @Subscribe
   public void onShowAddAppointmentDialog(AddAppointmentEvent event) {
     if (!event.getSender().equals(this.view_controller)) return;
-    var loader =
-        new FXMLLoader(
-            getClass()
-                .getResource(ResourcePath.get_fxml(AddAppointmentsViewController.class)));
 
-    loader.setControllerFactory(
-        c -> {
-          return new AddAppointmentsViewController(event.staff_member);
-        });
-
-    try {
-      Utils.openNewWindow(
-          AddAppointmentsViewController.class,
-          AddAppointmentsController.class,
-          loader,
-          false);
-    } catch (Exception e) {
-      e.printStackTrace();
+    Utils.openNewSingletonWindow(
+        AddAppointmentsViewController.class,
+        AddAppointmentsController.class, false,
+        c -> new AddAppointmentsViewController(event.staff_member));
+//    );
+//    var loader =
+//        new FXMLLoader(
+//            getClass()
+//                .getResource(ResourcePath.get_fxml(AddAppointmentsViewController.class)));
+//
+//    loader.setControllerFactory(
+//        c -> {
+//          return new AddAppointmentsViewController(event.staff_member);
+//        });
+//
+//    try {
+//      Utils.openNewWindow(
+//          AddAppointmentsViewController.class,
+//          AddAppointmentsController.class,
+//          loader,
+//          false);
+//    } catch (Exception e) {
+//      e.printStackTrace();
+//    }
     }
-  }
+
 
   /**
    * Event to handle the response from the client of appointment list received to populate the view
