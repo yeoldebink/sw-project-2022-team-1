@@ -33,9 +33,8 @@ public class ReportListController extends Controller {
   public void onReportsRequest(ReportEvent event) {
     if (!event.getSender().equals(this.view_controller) || event.clinics.size() == 0) return;
     try {
-      //TODO update this function with getting a clinicStaff
       HMOClient.getClient()
-          .requestReports(event.clinics, event.start_date, event.end_date, event.type);
+          .requestReports(event.clinics, event.staff_member ,event.start_date, event.end_date, event.type);
     } catch (IOException e) {
       e.printStackTrace();
     }
