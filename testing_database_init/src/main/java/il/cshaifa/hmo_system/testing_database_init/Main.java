@@ -389,6 +389,18 @@ public class Main {
             null,
             true));
 
+    appointments.add(
+        new Appointment(
+            patients.get("Tyler Durden"),
+            appt_types.get("COVID Vaccine"),
+            null,
+            users.get("LaVerne Roberts"),
+            clinics.get("Carmel Center"),
+            LocalDateTime.of(2022, 1, 9, 12, 20),
+            LocalDateTime.of(2022, 1, 9, 12, 22),
+            null,
+            true));
+
     for (var appt : appointments) {
       session.save(appt);
       session.flush();

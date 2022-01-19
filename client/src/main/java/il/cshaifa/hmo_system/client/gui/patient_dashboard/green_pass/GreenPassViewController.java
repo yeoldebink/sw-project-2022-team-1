@@ -55,16 +55,21 @@ public class GreenPassViewController extends ViewController {
 
     if (lastTestDate == null && lastVaccineDate == null) {
       expDateString = "N/A";
-    } else if (lastTestDate != null) {
-      var testExpiration = lastTestDate.plusWeeks(1);
-      if (lastVaccineDate == null) {
-        expDateString = Utils.prettifyDateTime(testExpiration);
-      } else {
-        var vaccineExpiration = lastVaccineDate.plusMonths(6);
+    } else {
+      LocalDateTime vaccineExpiration = null, testExpiration = null;
+      if (lastVaccineDate != null) {
+        vaccineExpiration = lastVaccineDate.plusMonths(6);
+      }
+
+      if (lastTestDate != null) {
+        testExpiration = lastTestDate.plusWeeks(1);
+      }
+
+      if (vaccineExpiration != null && testExpiration != null) {
         expDateString = Utils.prettifyDateTime(
             vaccineExpiration.isAfter(testExpiration) ? vaccineExpiration : testExpiration
         );
-      }
+      } else expDateString = Utils.prettifyDateTime(vaccineExpiration == null ? testExpiration : vaccineExpiration);
     }
 
     infoLabel.setText(String.format("Last COVID-19 vaccine: %s\nLast COVID-19 test: %s\nExpiration date: %s",
