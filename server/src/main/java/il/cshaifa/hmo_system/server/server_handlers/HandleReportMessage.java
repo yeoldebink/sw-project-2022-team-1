@@ -68,7 +68,7 @@ public class HandleReportMessage extends MessageHandler {
     List<ClinicStaff> clinics_staff = getClinicStaff(class_message.clinics);
 
     for (LocalDate current_date = class_message.start_date.toLocalDate();
-        !current_date.isAfter(LocalDate.now());
+        !current_date.isAfter(report_end_date);
         current_date = current_date.plusDays(1)){
       daily_reports_map.put(current_date, new HashMap<>());
       // for each clinic fill General services as 0
