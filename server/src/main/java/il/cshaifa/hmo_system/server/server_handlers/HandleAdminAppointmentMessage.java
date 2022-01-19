@@ -123,10 +123,11 @@ public class HandleAdminAppointmentMessage extends MessageHandler {
 
     cr.select(root)
         .where(
-            cb.equal(root.get("clinic"), class_message.clinic),
             cb.equal(root.get("staff_member"), class_message.staff_member),
             cb.between(
-                root.get("appt_date"), class_message.start_datetime, end_datetime.minusSeconds(1)));
+                root.get("appt_date"),
+                class_message.start_datetime.minusMinutes(duration).plusSeconds(1),
+                end_datetime.minusSeconds(1)));
     if (session.createQuery(cr).getResultList().size() > 0) {
       class_message.success = false;
       class_message.reject = AddAppointmentRejectionReason.OVERLAPPING;

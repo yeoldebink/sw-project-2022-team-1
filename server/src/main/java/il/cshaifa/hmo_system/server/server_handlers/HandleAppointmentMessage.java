@@ -18,7 +18,7 @@ import org.hibernate.Session;
 public class HandleAppointmentMessage extends MessageHandler {
   private final AppointmentMessage class_message;
   // Represented as weeks
-  private static Map<String, Long> max_future_appointments;
+  public static Map<String, Long> max_future_appointments;
   private final CriteriaQuery<Appointment> cr;
   private final Root<Appointment> root;
 
@@ -120,7 +120,8 @@ public class HandleAppointmentMessage extends MessageHandler {
     cr.select(root)
         .where(
             cb.equal(root.get("staff_member"), class_message.user),
-            cb.greaterThanOrEqualTo(root.get("appt_date"), LocalDateTime.now()));
+            cb.greaterThanOrEqualTo(root.get("appt_date"), LocalDateTime.now()),
+            cb.equal(root.get("clinic"), class_message.clinic));
     class_message.appointments = session.createQuery(cr).getResultList();
   }
 }

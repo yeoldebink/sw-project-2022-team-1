@@ -63,7 +63,10 @@ public class HandleSetSpecialistAppointmentMessage extends MessageHandler {
     cr.select(root)
         .where(
             cb.equal(root.get("specialist_role"), class_message.chosen_role),
-            cb.greaterThan(root.get("appt_date"), LocalDateTime.now()),
+            cb.between(
+                root.get("appt_date"),
+                LocalDateTime.now(),
+                LocalDateTime.now().plusWeeks(HandleAppointmentMessage.max_future_appointments.get("Specialist"))),
             cb.isFalse(root.get("taken")),
             cb.or(
                 cb.isNull(root.get("lock_time")),

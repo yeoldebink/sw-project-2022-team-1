@@ -30,6 +30,14 @@ public class AppointmentMessage extends Message {
     this.request = request;
   }
 
+  /** constructor for use of staff member/manager */
+  public AppointmentMessage(User user, Clinic clinic, RequestType request) {
+    super(MessageType.REQUEST);
+    this.user = user;
+    this.clinic = clinic;
+    this.request = request;
+  }
+
   /** constructor for use of patient to request free appointments/appointment history */
   public AppointmentMessage(Patient patient, RequestType request) {
     super(MessageType.REQUEST);
