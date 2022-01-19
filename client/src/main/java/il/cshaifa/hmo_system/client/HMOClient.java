@@ -316,7 +316,7 @@ public class HMOClient extends AbstractClient {
   public void getStaffAppointments(User staff_member) throws IOException {
     client.sendToServer(
         new AppointmentMessage(
-            staff_member, AppointmentMessage.RequestType.STAFF_FUTURE_APPOINTMENTS));
+            staff_member, connected_employee_clinics.get(0), AppointmentMessage.RequestType.STAFF_FUTURE_APPOINTMENTS));
   }
 
   public void getSpecialistRoles() throws IOException {

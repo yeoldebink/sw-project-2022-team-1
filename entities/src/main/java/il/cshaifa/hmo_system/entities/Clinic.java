@@ -213,6 +213,7 @@ public class Clinic implements Serializable {
     }
 
     List<LocalTime> result = new ArrayList<>();
+    if (day_hours == null) return result;
     String[] hours = day_hours.strip().split(", ");
     for (String time_window : hours) {
       String open, close;
