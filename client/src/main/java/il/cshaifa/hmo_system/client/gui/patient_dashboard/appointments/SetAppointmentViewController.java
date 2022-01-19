@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -30,6 +31,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.ComboBoxListCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -68,6 +70,11 @@ public class SetAppointmentViewController extends ViewController {
   @FXML private VBox spAppointmentsVBox;
   @FXML private ComboBox<Role> spTypeComboBox;
   @FXML private ComboBox<SPDoctorItem> spDoctorComboBox;
+
+  @FXML private VBox testAppointmentsVBox;
+  @FXML private ComboBox<String> symptomsComboBox;
+  @FXML private TextArea symptomsTextArea;
+  @FXML private Button testAppointmentsButton;
 
   @FXML private VBox vaxAppointmentsVBox;
   @FXML private ComboBox<AppointmentType> vaxTypeComboBox;
@@ -258,8 +265,9 @@ public class SetAppointmentViewController extends ViewController {
     vaxTypeComboBox.setButtonCell(vaxTypeComboCellFactory.call(null));
     vaxTypeComboBox.setCellFactory(vaxTypeComboCellFactory);
 
-    vaxTypeComboBox.getItems().add(new AppointmentType("COVID Vaccine"));
-    vaxTypeComboBox.getItems().add(new AppointmentType("Flu Vaccine"));
+    vaxTypeComboBox.getItems().setAll(FXCollections.observableArrayList(
+        new AppointmentType("COVID Vaccine"),
+        new AppointmentType("Flu Vaccine")));
 
     vaxTypeComboBox
         .valueProperty()
@@ -268,6 +276,51 @@ public class SetAppointmentViewController extends ViewController {
             requestAppointments(newT, null);
           }
         });
+
+    // COVID TEST GUI
+    symptomsComboBox.setCellFactory(stringListView -> new ComboBoxListCell<>() {
+      @Override
+      public void updateItem(String str, boolean empty) {
+        super.updateItem(str, empty);
+        if (!empty) {
+          setText(str);
+          String iconLiteral = null;
+          switch (str) {
+            case "Yes":
+              iconLiteral = "mdi-emoticon-sad";
+              break;
+            case "No":
+              iconLiteral = "mdi-emoticon-happy";
+              break;
+          }
+
+          var icon = new FontIcon();
+          icon.setIconLiteral(iconLiteral);
+          setGraphic(icon);
+        }
+      }
+    });
+    symptomsComboBox.setButtonCell(symptomsComboBox.getCellFactory().call(null));
+
+    symptomsComboBox.getItems().setAll(FXCollections.observableArrayList("No", "Yes"));
+
+    symptomsComboBox.valueProperty().addListener((obs, oldStr, newStr) -> {
+      testAppointmentsButton.setVisible(true);
+      if (newStr.equals("Yes")) {
+        symptomsTextArea.setVisible(true);
+        if (!newStr.equals(oldStr)) {
+          symptomsTextArea.clear();
+          testAppointmentsButton.setDisable(true);
+        }
+      } else {
+        testAppointmentsButton.setDisable(false);
+        symptomsTextArea.setVisible(false);
+      }
+    });
+
+    symptomsTextArea.textProperty().addListener((obs, oldStr, newStr) -> testAppointmentsButton.setDisable(newStr == null || newStr.equals("")));
+
+    testAppointmentsButton.setOnAction((event) -> requestAppointments(new AppointmentType("COVID Test"), null));
   }
 
   private void moveApptDatePicker(AppointmentType apptType) {
@@ -287,6 +340,9 @@ public class SetAppointmentViewController extends ViewController {
       case "COVID Vaccine":
       case "Flu Vaccine":
         newParent = vaxAppointmentsVBox;
+        break;
+      case "COVID Test":
+        newParent = testAppointmentsVBox;
         break;
       default:
         return;
@@ -375,13 +431,17 @@ public class SetAppointmentViewController extends ViewController {
 
   @FXML
   public void takeAppointment(ActionEvent event) {
+    var appt = appointmentsTable.getSelectionModel().getSelectedItem().getAppointment();
+    if (lastUpdatedAppointmentType.getName().equals("COVID Test"))
+      appt.setComments(String.format("Has symptoms: %s\n%s", symptomsComboBox.getValue(), symptomsTextArea.getText()));
+
     EventBus.getDefault()
         .post(
             new SetAppointmentEvent(
                 this,
                 SetAppointmentAction.TAKE,
                 patient,
-                appointmentsTable.getSelectionModel().getSelectedItem().getAppointment()));
+                appt));
   }
 
   public void switchToPane(Object pane) {

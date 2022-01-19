@@ -61,6 +61,7 @@ public class SetAppointmentController extends Controller {
 
         case "COVID Vaccine":
         case "Flu Vaccine":
+        case "COVID Test":
           HMOClient.getClient().getFamilyDoctorAppointments(event.appointmentType);
           break;
         default:
