@@ -4,6 +4,7 @@ import il.cshaifa.hmo_system.client.HMOClient;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.AppointmentListEvent;
+import il.cshaifa.hmo_system.client.events.GreenPassStatusEvent;
 import il.cshaifa.hmo_system.client.events.MyClinicEvent;
 import il.cshaifa.hmo_system.client.events.NextAppointmentEvent;
 import il.cshaifa.hmo_system.client.events.SetAppointmentEvent;
@@ -12,12 +13,15 @@ import il.cshaifa.hmo_system.client.gui.patient_dashboard.appointments.SetAppoin
 import il.cshaifa.hmo_system.client.gui.patient_dashboard.appointments.SetAppointmentViewController;
 import il.cshaifa.hmo_system.client.gui.patient_dashboard.clinic_view.MyClinicController;
 import il.cshaifa.hmo_system.client.gui.patient_dashboard.clinic_view.MyClinicViewController;
+import il.cshaifa.hmo_system.client.gui.patient_dashboard.green_pass.GreenPassController;
+import il.cshaifa.hmo_system.client.gui.patient_dashboard.green_pass.GreenPassViewController;
 import il.cshaifa.hmo_system.client.gui.patient_dashboard.patient_history.PatientAppointmentHistoryListController;
 import il.cshaifa.hmo_system.client.gui.patient_dashboard.patient_history.PatientAppointmentHistoryListViewController;
 import il.cshaifa.hmo_system.client.utils.Utils;
 import il.cshaifa.hmo_system.entities.Appointment;
 import java.io.IOException;
 import javafx.application.Platform;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import org.greenrobot.eventbus.Subscribe;
@@ -86,6 +90,22 @@ public class PatientDashboardController extends Controller {
   public void onNextAppointmentEvent(NextAppointmentEvent event) {
     if (event.getSender().equals(HMOClient.getClient())) {
       Platform.runLater(() -> ((PatientDashboardViewController) view_controller).updateNextAppointmentInfo(event.appointment));
+    }
+  }
+
+  @Subscribe
+  public void onGreenPassStatusEvent(GreenPassStatusEvent event) {
+    if (event.getSender() == this.view_controller) {
+      try {
+        HMOClient.getClient().getGreenPassStatus();
+      } catch (IOException ioException) {
+        ioException.printStackTrace();
+      }
+    } else {
+      var loader = new FXMLLoader(getClass().getResource(ResourcePath.get_fxml(
+          GreenPassViewController.class)));
+
+      Utils.openNewSingletonWindow(GreenPassViewController.class, GreenPassController.class, false, c -> new GreenPassViewController(event));
     }
   }
 }

@@ -13,14 +13,14 @@ import org.hibernate.Session;
 
 public class HandleGreenPassStatusMessage extends MessageHandler {
 
-  private GreenPassStatusMessage class_message;
+  private final GreenPassStatusMessage class_message;
   private final Patient patient;
   private final CriteriaQuery<Appointment> cr;
   private final Root<Appointment> root;
 
   public HandleGreenPassStatusMessage(Message message, Session session) {
     super(message, session);
-    this.message = message;
+    this.class_message = (GreenPassStatusMessage) this.message;
     this.patient = ((GreenPassStatusMessage) message).patient;
     cr = cb.createQuery(Appointment.class);
     root = cr.from(Appointment.class);

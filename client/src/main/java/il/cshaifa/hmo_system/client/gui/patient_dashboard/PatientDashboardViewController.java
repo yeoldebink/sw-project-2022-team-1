@@ -2,6 +2,7 @@ package il.cshaifa.hmo_system.client.gui.patient_dashboard;
 
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.AppointmentListEvent;
+import il.cshaifa.hmo_system.client.events.GreenPassStatusEvent;
 import il.cshaifa.hmo_system.client.events.MyClinicEvent;
 import il.cshaifa.hmo_system.client.events.SetAppointmentEvent;
 import il.cshaifa.hmo_system.entities.Appointment;
@@ -81,5 +82,9 @@ public class PatientDashboardViewController extends ViewController {
   @FXML
   public void viewMyClinic(ActionEvent event) {
     EventBus.getDefault().post(new MyClinicEvent(this));
+  }
+
+  @FXML public void viewMyGreenPass(ActionEvent event) {
+    EventBus.getDefault().post(new GreenPassStatusEvent(this));
   }
 }
