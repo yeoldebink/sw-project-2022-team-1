@@ -122,7 +122,9 @@ public class HMOClient extends AbstractClient {
   }
 
   private void handleSetAppointmentMessage(SetAppointmentMessage message) {
-    if (message.action == SetAppointmentAction.LOCK) return;
+    if (message.action == SetAppointmentAction.LOCK) {
+      return;
+    }
 
     SetAppointmentEvent event =
         new SetAppointmentEvent(this, getConnected_patient(), message.appointment);
@@ -139,6 +141,7 @@ public class HMOClient extends AbstractClient {
     ReportEvent event =
         new ReportEvent(
             message.clinics,
+            message.staff_member,
             message.report_type,
             message.start_date,
             message.end_date,
@@ -180,7 +183,9 @@ public class HMOClient extends AbstractClient {
   }
 
   private void handleClinicMessage(ClinicMessage message) {
-    if (message.message_type == MessageType.REQUEST) return;
+    if (message.message_type == MessageType.REQUEST) {
+      return;
+    }
     ArrayList<Clinic> clinics = (ArrayList<Clinic>) message.clinics;
     ClinicEvent event = new ClinicEvent(clinics, this);
     EventBus.getDefault().post(event);
@@ -212,19 +217,25 @@ public class HMOClient extends AbstractClient {
     client.sendToServer(new ClinicMessage());
   }
 
-  /** Requests all HMO staff */
+  /**
+   * Requests all HMO staff
+   */
   public void getStaff() throws IOException {
     client.sendToServer(new ClinicStaffMessage());
   }
 
-  /** Requests a staff member's future appointments */
+  /**
+   * Requests a staff member's future appointments
+   */
   public void getStaffMemberFutureAppointments(User staff_member_user) throws IOException {
     client.sendToServer(
         new AppointmentMessage(
             staff_member_user, AppointmentMessage.RequestType.STAFF_FUTURE_APPOINTMENTS));
   }
 
-  /** Opens in DB new appointments */
+  /**
+   * Opens in DB new appointments
+   */
   public void createAppointments(
       User staff_member, LocalDateTime start_time, int count, AppointmentType appt_type)
       throws IOException {
@@ -239,14 +250,18 @@ public class HMOClient extends AbstractClient {
             appt_type));
   }
 
-  /** delete given appts from db * */
+  /**
+   * delete given appts from db *
+   */
   public void deleteAppointments(ArrayList<Appointment> appointments_to_delete) throws IOException {
     client.sendToServer(
         new AdminAppointmentMessage(
             RequestType.DELETE, null, null, null, 0, appointments_to_delete, null));
   }
 
-  /** Requests from server all of the connected patients appointments, past & future */
+  /**
+   * Requests from server all of the connected patients appointments, past & future
+   */
   public void getPatientHistory() throws IOException {
     client.sendToServer(
         new AppointmentMessage(
@@ -268,13 +283,17 @@ public class HMOClient extends AbstractClient {
     client.sendToServer(appt_msg);
   }
 
-  /** locks the requested appointment * */
+  /**
+   * locks the requested appointment *
+   */
   public void lockAppointment(Appointment appointment) throws IOException {
     client.sendToServer(
         new SetAppointmentMessage(SetAppointmentAction.LOCK, connected_patient, appointment));
   }
 
-  /** takes the requested appointment * */
+  /**
+   * takes the requested appointment *
+   */
   public void takeAppointment(Appointment appointment) throws IOException {
     client.sendToServer(
         new SetAppointmentMessage(SetAppointmentAction.TAKE, connected_patient, appointment));
@@ -285,7 +304,9 @@ public class HMOClient extends AbstractClient {
         new SetAppointmentMessage(SetAppointmentAction.RELEASE, connected_patient, appointment));
   }
 
-  /** Requests from server all of today's appointments of current connected staff member client */
+  /**
+   * Requests from server all of today's appointments of current connected staff member client
+   */
   public void getStaffDailyAppointments() throws IOException {
     client.sendToServer(
         new AppointmentMessage(
@@ -307,26 +328,29 @@ public class HMOClient extends AbstractClient {
   }
 
   public void getPatientNextAppointment() throws IOException {
-    client.sendToServer(new AppointmentMessage(connected_patient, AppointmentMessage.RequestType.PATIENT_NEXT_APPOINTMENT));
+    client.sendToServer(new AppointmentMessage(connected_patient,
+        AppointmentMessage.RequestType.PATIENT_NEXT_APPOINTMENT));
   }
 
   /**
    * Sends to server a request to get report
    *
-   * @param clinics list of clinics we want to get reports about
-   * @param start_date the day we want the report to begin
-   * @param end_date the day we want the report to end
+   * @param clinics     list of clinics we want to get reports about
+   * @param start_date  the day we want the report to begin
+   * @param end_date    the day we want the report to end
    * @param report_type attendance / missed / avg. waiting time
    * @throws IOException
    */
   public void requestReports(
       List<Clinic> clinics,
+      ClinicStaff staff_member,
       LocalDateTime start_date,
       LocalDateTime end_date,
       ReportType report_type)
       throws IOException {
-    client.sendToServer(new ReportMessage(clinics, report_type, start_date, end_date));
+    client.sendToServer(new ReportMessage(clinics, staff_member, report_type, start_date, end_date));
   }
+
 
   /**
    * Receives a changed clinic object and updates it in DB
@@ -337,11 +361,14 @@ public class HMOClient extends AbstractClient {
   public void updateClinic(Clinic clinic) throws IOException {
     client.sendToServer(new ClinicMessage(clinic));
     // ensure new clinic data is saved locally as well for HMO manager
-    if (connected_user.getRole().getName().equals("Clinic Manager"))
+    if (connected_user.getRole().getName().equals("Clinic Manager")) {
       connected_employee_clinics.set(0, clinic);
+    }
   }
 
-  /** Receives a list of staff members to assign to the current Clinic Manager's clinic */
+  /**
+   * Receives a list of staff members to assign to the current Clinic Manager's clinic
+   */
   public void assignStaff(List<User> staff) throws IOException {
     StaffAssignmentMessage message =
         new StaffAssignmentMessage(
@@ -349,7 +376,9 @@ public class HMOClient extends AbstractClient {
     client.sendToServer(message);
   }
 
-  /** Receives a list of staff members to unassign from the current Clinic Manager's clinic */
+  /**
+   * Receives a list of staff members to unassign from the current Clinic Manager's clinic
+   */
   public void unassignStaff(List<User> staff) throws IOException {
     StaffAssignmentMessage message =
         new StaffAssignmentMessage(
@@ -362,7 +391,7 @@ public class HMOClient extends AbstractClient {
   }
 
   /**
-   * @param user The id of the login request
+   * @param user     The id of the login request
    * @param password The password the user has entered
    * @throws IOException SQL exception
    */
