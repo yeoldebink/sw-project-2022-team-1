@@ -119,7 +119,8 @@ public class HandleAppointmentMessage extends MessageHandler {
             cb.greaterThanOrEqualTo(root.get("appt_date"), LocalDateTime.now()));
     cr.orderBy(cb.asc(root.get("appt_date")));
     class_message.appointments = new ArrayList<>();
-    class_message.appointments.add(session.createQuery(cr).getResultList().get(0));
+    var lst = session.createQuery(cr).getResultList();
+    class_message.appointments.add(lst.size() > 0 ? lst.get(0) : null);
   }
 
   /**

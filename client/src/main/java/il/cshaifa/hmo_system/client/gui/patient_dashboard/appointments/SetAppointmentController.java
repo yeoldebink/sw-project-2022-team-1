@@ -113,6 +113,12 @@ public class SetAppointmentController extends Controller {
                       event.response == ResponseType.AUTHORIZE,
                       (int) stage.getX() + 100,
                       (int) stage.getY() + 100));
+
+      try {
+        HMOClient.getClient().getPatientNextAppointment();
+      } catch (IOException ioException) {
+        ioException.printStackTrace();
+      }
     } else if (event.specialistRoles != null) {
       ((SetAppointmentViewController) view_controller)
           .populateSpecialistRoles(event.specialistRoles);

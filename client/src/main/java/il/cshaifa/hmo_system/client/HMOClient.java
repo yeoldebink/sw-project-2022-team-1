@@ -11,6 +11,7 @@ import il.cshaifa.hmo_system.client.events.ClinicStaffEvent;
 import il.cshaifa.hmo_system.client.events.GreenPassStatusEvent;
 import il.cshaifa.hmo_system.client.events.LoginEvent;
 import il.cshaifa.hmo_system.client.events.LoginEvent.Response;
+import il.cshaifa.hmo_system.client.events.NextAppointmentEvent;
 import il.cshaifa.hmo_system.client.events.ReportEvent;
 import il.cshaifa.hmo_system.client.events.SetAppointmentEvent;
 import il.cshaifa.hmo_system.client.events.WarningEvent;
@@ -163,9 +164,12 @@ public class HMOClient extends AbstractClient {
           .post(
               new AdminAppointmentListEvent(
                   message.user, (ArrayList<Appointment>) message.appointments, this));
+    } else if (message.request == AppointmentMessage.RequestType.PATIENT_NEXT_APPOINTMENT) {
+      var appt = message.appointments == null ? null : message.appointments.get(0);
+      EventBus.getDefault().post(new NextAppointmentEvent(this, appt));
     } else {
       // Applies for:
-      // CLINIC_APPOINTMENTS, PATIENT_HISTORY, STAFF_MEMBER_DAILY_APPOINTMENTS, NEXT_APPOINTMENT
+      // CLINIC_APPOINTMENTS, PATIENT_HISTORY, STAFF_MEMBER_DAILY_APPOINTMENTS
       EventBus.getDefault()
           .post(new AppointmentListEvent((ArrayList<Appointment>) message.appointments, this));
     }
