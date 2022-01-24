@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.MenuItem?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefWidth="900.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="il.cshaifa.hmo_system.client.desktop.gui.patient_dashboard.patient_history.PatientAppointmentHistoryListViewController"
+stylesheets="@../../../../hmo_lite.css">
+    <VBox AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0"
+          AnchorPane.topAnchor="10.0" prefWidth="900.0">
+        <Label text="Appointments History" styleClass="h1-label" />
+        <TableView fx:id="appt_table" onContextMenuRequested="#contextMenuRequested" tableMenuButtonVisible="true"
+                   VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="appt_date" prefWidth="75.0" text="Date &amp; Time"/>
+                <TableColumn fx:id="appt_type_name" prefWidth="75.0" text="Treatment Type"/>
+                <TableColumn fx:id="role_name" prefWidth="75.0" text="Staff Role"/>
+                <TableColumn fx:id="staff_member_name" prefWidth="75.0" text="Staff Name"/>
+                <TableColumn fx:id="clinic_name" prefWidth="75.0" text="Clinic"/>
+                <TableColumn fx:id="appt_passed" minWidth="40.0" prefWidth="75.0" text="Passed"/>
+            </columns>
+            <contextMenu>
+                <ContextMenu fx:id="context_menu">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#requestCancelAppointments"
+                                  text="Cancel Appointment" fx:id="cancel_menu_item"/>
+                    </items>
+                </ContextMenu>
+            </contextMenu>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+            </columnResizePolicy>
+        </TableView>
+    </VBox>
+</AnchorPane>

@@ -2,7 +2,6 @@ package il.cshaifa.hmo_system.client.utils;
 
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
-import il.cshaifa.hmo_system.client.gui.ResourcePath;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
@@ -54,8 +53,7 @@ public class Utils {
             if (instance != null && ((Controller) instance).hasViewController()) return;
 
             // load
-            var loader =
-                new FXMLLoader(controller.getResource(ResourcePath.get_fxml(view_controller)));
+            var loader = new FXMLLoader(controller.getResource(Utils.get_fxml(view_controller)));
             if (ctrl_factory != null) loader.setControllerFactory(ctrl_factory);
 
             Stage stage = new Stage();
@@ -82,7 +80,7 @@ public class Utils {
   public static LoadedPane loadFXML(
       Class<?> requestor, Class<?> target, Callback<Class<?>, Object> ctrl_factory)
       throws IOException {
-    var loader = new FXMLLoader(requestor.getResource(ResourcePath.get_fxml(target)));
+    var loader = new FXMLLoader(requestor.getResource(Utils.get_fxml(target)));
 
     if (ctrl_factory != null) {
       loader.setControllerFactory(ctrl_factory);
@@ -107,5 +105,11 @@ public class Utils {
         date.getYear(),
         date.getHour(),
         date.getMinute());
+  }
+
+  public static String get_fxml(Class<?> view_controller_class) {
+    String canonicalName = view_controller_class.getCanonicalName();
+    String path = "/" + canonicalName.replace(".", "/").replace("Controller", "");
+    return path + ".fxml";
   }
 }

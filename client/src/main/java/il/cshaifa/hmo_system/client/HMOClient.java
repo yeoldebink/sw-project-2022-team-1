@@ -1,11 +1,9 @@
 package il.cshaifa.hmo_system.client;
 
-import il.cshaifa.hmo_system.client.events.AdminAppointmentListEvent;
 import il.cshaifa.hmo_system.client.events.AppointmentListEvent;
 import il.cshaifa.hmo_system.client.events.ClinicEvent;
 import il.cshaifa.hmo_system.client.events.LoginEvent;
 import il.cshaifa.hmo_system.client.events.LoginEvent.Response;
-import il.cshaifa.hmo_system.client.events.NextAppointmentEvent;
 import il.cshaifa.hmo_system.client.events.WarningEvent;
 import il.cshaifa.hmo_system.client.ocsf.AbstractClient;
 import il.cshaifa.hmo_system.entities.Appointment;
@@ -57,21 +55,11 @@ public abstract class HMOClient extends AbstractClient {
     }
   }
 
-  private void handleAppointmentMessage(AppointmentMessage message) {
-    if (message.request == AppointmentMessage.RequestType.STAFF_FUTURE_APPOINTMENTS) {
-      EventBus.getDefault()
-          .post(
-              new AdminAppointmentListEvent(
-                  message.user, (ArrayList<Appointment>) message.appointments, this));
-    } else if (message.request == AppointmentMessage.RequestType.PATIENT_NEXT_APPOINTMENT) {
-      var appt = message.appointments == null ? null : message.appointments.get(0);
-      EventBus.getDefault().post(new NextAppointmentEvent(this, appt));
-    } else {
-      // Applies for:
-      // CLINIC_APPOINTMENTS, PATIENT_HISTORY, STAFF_MEMBER_DAILY_APPOINTMENTS
-      EventBus.getDefault()
-          .post(new AppointmentListEvent((ArrayList<Appointment>) message.appointments, this));
-    }
+  protected void handleAppointmentMessage(AppointmentMessage message) {
+    // Applies for:
+    // CLINIC_APPOINTMENTS, PATIENT_HISTORY, STAFF_MEMBER_DAILY_APPOINTMENTS
+    EventBus.getDefault()
+        .post(new AppointmentListEvent((ArrayList<Appointment>) message.appointments, this));
   }
 
   private void handleClinicMessage(ClinicMessage message) {
