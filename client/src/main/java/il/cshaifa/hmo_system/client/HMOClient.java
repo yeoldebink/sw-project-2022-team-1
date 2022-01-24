@@ -277,8 +277,7 @@ public class HMOClient extends AbstractClient {
    *
    * @param type The type of appointment the user requested family doctor/covid test...
    */
-  public void getFamilyDoctorAppointments(AppointmentType type) throws IOException {
-    // TODO: Change name to getClinicAppointment(type)
+  public void getHomeClinicAppointments(AppointmentType type) throws IOException {
     AppointmentMessage appt_msg =
         new AppointmentMessage(
             this.connected_patient, AppointmentMessage.RequestType.CLINIC_APPOINTMENTS);

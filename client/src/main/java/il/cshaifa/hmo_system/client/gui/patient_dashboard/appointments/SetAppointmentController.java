@@ -51,7 +51,7 @@ public class SetAppointmentController extends Controller {
       switch (event.appointmentType.getName()) {
         case "Family Doctor":
           HMOClient.getClient()
-              .getFamilyDoctorAppointments(
+              .getHomeClinicAppointments(
                   new AppointmentType(patientIsMinor() ? "Pediatrician" : "Family Doctor"));
           break;
 
@@ -62,7 +62,7 @@ public class SetAppointmentController extends Controller {
         case "COVID Vaccine":
         case "Flu Vaccine":
         case "COVID Test":
-          HMOClient.getClient().getFamilyDoctorAppointments(event.appointmentType);
+          HMOClient.getClient().getHomeClinicAppointments(event.appointmentType);
           break;
         default:
           throw new NotImplementedException(String.format("Appointment type request not implemented: %s", event.appointmentType));
