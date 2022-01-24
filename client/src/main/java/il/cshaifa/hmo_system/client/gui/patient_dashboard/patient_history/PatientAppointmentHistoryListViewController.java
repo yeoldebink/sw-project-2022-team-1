@@ -6,6 +6,7 @@ import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.Patient;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -48,6 +49,8 @@ public class PatientAppointmentHistoryListViewController extends ViewController 
     for (var appt : appt_list) {
       appts_to_populate.add(new AppointmentForPatientHistoryView(appt));
     }
+
+    appts_to_populate.sort(Comparator.comparing(AppointmentForPatientHistoryView::getAppt_date).reversed());
 
     appt_table.getItems().setAll(appts_to_populate);
   }
@@ -106,8 +109,15 @@ public class PatientAppointmentHistoryListViewController extends ViewController 
       this.id = appointment.getId();
       this.appt_date = appointment.getDate();
       this.appt_type_name = appointment.getType().getName();
-      this.role_name = appointment.getStaff_member().getRole().getName();
-      this.staff_member_name = staff_member.getFirstName() + " " + staff_member.getLastName();
+
+      if (staff_member != null) {
+        this.role_name = appointment.getStaff_member().getRole().getName();
+        this.staff_member_name = staff_member.getFirstName() + " " + staff_member.getLastName();
+      } else {
+        this.role_name = "";
+        this.staff_member_name = "";
+      }
+
       this.clinic_name = appointment.getClinic().getName();
       this.appt_passed = LocalDateTime.now().isAfter(appointment.getDate()) ? "Yes" : "No";
       this.appt = appointment;

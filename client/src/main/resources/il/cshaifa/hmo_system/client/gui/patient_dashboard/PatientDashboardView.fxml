@@ -47,6 +47,11 @@
           <FontIcon iconLiteral="mdi-store" iconSize="20" />
         </graphic>
       </Button>
+      <Button text="Green Pass" onAction="#viewMyGreenPass">
+        <graphic>
+          <FontIcon iconLiteral="mdi-checkbox-marked-circle-outline" iconSize="20" />
+        </graphic>
+      </Button>
     </HBox>
   </VBox>
 

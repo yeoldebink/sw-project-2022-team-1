@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import javafx.application.Platform;
 import javafx.stage.Stage;
+import jdk.jshell.spi.ExecutionControl.NotImplementedException;
 import org.greenrobot.eventbus.Subscribe;
 
 public class SetAppointmentController extends Controller {
@@ -50,18 +51,24 @@ public class SetAppointmentController extends Controller {
       switch (event.appointmentType.getName()) {
         case "Family Doctor":
           HMOClient.getClient()
-              .getFamilyDoctorAppointments(
+              .getHomeClinicAppointments(
                   new AppointmentType(patientIsMinor() ? "Pediatrician" : "Family Doctor"));
           break;
 
         case "Specialist":
           HMOClient.getClient().getSpecialistAppointments(event.role);
           break;
-        default:
+
+        case "COVID Vaccine":
+        case "Flu Vaccine":
+        case "COVID Test":
+          HMOClient.getClient().getHomeClinicAppointments(event.appointmentType);
           break;
+        default:
+          throw new NotImplementedException(String.format("Appointment type request not implemented: %s", event.appointmentType));
       }
-    } catch (IOException ioException) {
-      ioException.printStackTrace();
+    } catch (IOException | NotImplementedException e) {
+      e.printStackTrace();
     }
   }
 
@@ -106,6 +113,12 @@ public class SetAppointmentController extends Controller {
                       event.response == ResponseType.AUTHORIZE,
                       (int) stage.getX() + 100,
                       (int) stage.getY() + 100));
+
+      try {
+        HMOClient.getClient().getPatientNextAppointment();
+      } catch (IOException ioException) {
+        ioException.printStackTrace();
+      }
     } else if (event.specialistRoles != null) {
       ((SetAppointmentViewController) view_controller)
           .populateSpecialistRoles(event.specialistRoles);

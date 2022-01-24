@@ -10,6 +10,7 @@
 <?import javafx.scene.image.Image?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 <?import javafx.scene.text.Font?>
+<?import javafx.collections.ObservableList?>
 <AnchorPane xmlns="http://javafx.com/javafx"
   xmlns:fx="http://javafx.com/fxml"
   fx:controller="il.cshaifa.hmo_system.client.gui.patient_dashboard.appointments.SetAppointmentViewController"
@@ -64,9 +65,32 @@
             </AnchorPane>
           </TitledPane>
 
-          <TitledPane text="COVID-19 Vaccination">
+          <TitledPane text="Vaccinations">
+            <graphic>
+              <FontIcon iconLiteral="mdi-needle" />
+            </graphic>
             <AnchorPane>
+              <VBox AnchorPane.topAnchor="10" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" spacing="10"  fx:id="vaxAppointmentsVBox">
+                  <ComboBox promptText="Select vaccine type" fx:id="vaxTypeComboBox" />
+              </VBox>
+            </AnchorPane>
+          </TitledPane>
 
+          <TitledPane text="COVID Test">
+            <graphic>
+              <FontIcon iconLiteral="mdi-biohazard" />
+            </graphic>
+
+            <AnchorPane>
+              <VBox AnchorPane.topAnchor="10" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" spacing="10"  fx:id="testAppointmentsVBox">
+                <ComboBox fx:id="symptomsComboBox" promptText="Are you experiencing symptoms?" />
+                <TextArea fx:id="symptomsTextArea" visible="false" promptText="Enter your symptoms here" />
+                <Button text="View appointments" fx:id="testAppointmentsButton" visible="false">
+                  <graphic>
+                    <FontIcon iconLiteral="mdi-calendar-question" iconSize="20" />
+                  </graphic>
+                </Button>
+              </VBox>
             </AnchorPane>
           </TitledPane>
         </panes>

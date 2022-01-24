@@ -45,6 +45,12 @@ public class PatientAppointmentHistoryListController extends Controller {
           ((PatientAppointmentHistoryListViewController) this.view_controller)
               .populateAppointmentsTable(event.appointments);
         });
+
+    try {
+      HMOClient.getClient().getPatientNextAppointment();
+    } catch (IOException ioException) {
+      ioException.printStackTrace();
+    }
   }
 
   @Subscribe
