@@ -1,42 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns="http://maven.apache.org/POM/4.0.0"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <artifactId>client</artifactId>
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>javafx-maven-plugin</artifactId>
-        <configuration>
-          <mainClass>il.cshaifa.hmo_system.client.Main</mainClass>
-        </configuration>
-        <groupId>org.openjfx</groupId>
-        <version>0.0.4</version>
-      </plugin>
-      <plugin>
-        <artifactId>maven-shade-plugin</artifactId>
-        <executions>
-          <execution>
-            <configuration>
-              <transformers>
-                <transformer
-                  implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                  <mainClass>il.cshaifa.hmo_system.client.Main</mainClass>
-                </transformer>
-                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
-              </transformers>
-            </configuration>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-            <phase>package</phase>
-          </execution>
-        </executions>
-        <groupId>org.apache.maven.plugins</groupId>
-        <version>3.2.3</version>
-      </plugin>
-    </plugins>
-  </build>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>hmo_system</artifactId>
+    <groupId>il.cshaifa</groupId>
+    <version>prototype</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>client_base</artifactId>
+  <groupId>il.cshaifa.hmo_system</groupId>
+  <packaging>jar</packaging>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -113,17 +89,6 @@
       <artifactId>javase</artifactId>
       <version>2.0</version>
     </dependency>
-    <dependency>
-      <groupId>il.cshaifa.hmo_system</groupId>
-      <artifactId>client_base</artifactId>
-      <version>prototype</version>
-    </dependency>
   </dependencies>
-  <groupId>il.cshaifa.hmo_system</groupId>
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <artifactId>hmo_system</artifactId>
-    <groupId>il.cshaifa</groupId>
-    <version>prototype</version>
-  </parent>
+
 </project>

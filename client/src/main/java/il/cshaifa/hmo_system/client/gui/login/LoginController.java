@@ -1,14 +1,14 @@
 package il.cshaifa.hmo_system.client.gui.login;
 
+import il.cshaifa.hmo_system.client.HMODesktopClient;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
-import il.cshaifa.hmo_system.client.desktop.HMODesktopClient;
-import il.cshaifa.hmo_system.client.desktop.gui.manager_dashboard.ManagerDashboardController;
-import il.cshaifa.hmo_system.client.desktop.gui.manager_dashboard.ManagerDashboardViewController;
-import il.cshaifa.hmo_system.client.desktop.gui.patient_dashboard.PatientDashboardController;
-import il.cshaifa.hmo_system.client.desktop.gui.patient_dashboard.PatientDashboardViewController;
 import il.cshaifa.hmo_system.client.events.LoginEvent;
 import il.cshaifa.hmo_system.client.events.LoginEvent.Response;
+import il.cshaifa.hmo_system.client.gui.manager_dashboard.ManagerDashboardController;
+import il.cshaifa.hmo_system.client.gui.manager_dashboard.ManagerDashboardViewController;
+import il.cshaifa.hmo_system.client.gui.patient_dashboard.PatientDashboardController;
+import il.cshaifa.hmo_system.client.gui.patient_dashboard.PatientDashboardViewController;
 import il.cshaifa.hmo_system.client.utils.Utils;
 import il.cshaifa.hmo_system.entities.User;
 import java.io.IOException;
