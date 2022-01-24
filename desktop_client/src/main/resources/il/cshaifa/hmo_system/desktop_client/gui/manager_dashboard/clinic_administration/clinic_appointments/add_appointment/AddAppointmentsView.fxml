@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<?import com.sun.javafx.scene.control.IntegerField?>
+<AnchorPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+  fx:controller="il.cshaifa.hmo_system.desktop_client.gui.manager_dashboard.clinic_administration.clinic_appointments.add_appointment.AddAppointmentsViewController"
+  stylesheets="@../../../../../hmo_lite.css" prefWidth="400">
+    <VBox AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0"
+      AnchorPane.topAnchor="10.0">
+        <Label text="Add Appointments" styleClass="h1-label"/>
+        <Label fx:id="staff_member_name" styleClass="h2-label"/>
+        <GridPane vgap="10" hgap="10">
+            <Label text="Date" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+            <DatePicker fx:id="start_date" promptText="START DATETIME" GridPane.rowIndex="1"
+              GridPane.columnIndex="2"/>
+
+            <Label text="Start Time" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+            <TextField fx:id="start_time" promptText="HH:MM" GridPane.rowIndex="2"
+              GridPane.columnIndex="2" maxWidth="100"/>
+
+            <Label text="Amount" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+            <TextField fx:id="num_appts" GridPane.rowIndex="3" GridPane.columnIndex="2"  maxWidth="50" promptText="#"/>
+        </GridPane>
+        <VBox/>
+        <VBox alignment="BASELINE_CENTER">
+            <Button fx:id="create_appts" onAction="#requestCreateAppointments"
+              text="Create Appointment(s)">
+                <VBox.margin>
+                    <Insets top="15.0"/>
+                </VBox.margin>
+            </Button>
+            <Label fx:id="error_text">
+                <VBox.margin>
+                    <Insets top="10.0"/>
+                </VBox.margin>
+            </Label>
+        </VBox>
+    </VBox>
+</AnchorPane>

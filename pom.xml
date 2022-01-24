@@ -10,7 +10,7 @@
   <modules>
     <module>server</module>
     <module>entities</module>
-    <module>client</module>
+    <module>desktop_client</module>
     <module>testing_database_init</module>
     <module>client_base</module>
   </modules>
