@@ -1,6 +1,6 @@
 package il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_view;
 
-import il.cshaifa.hmo_system.client.HMOClient;
+import il.cshaifa.hmo_system.client.HMODesktopClient;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.ClinicEvent;
@@ -66,7 +66,7 @@ public class AdminClinicController extends Controller {
       }
     }
 
-    var client = HMOClient.getClient();
+    var client = HMODesktopClient.getClient();
     try {
       client.updateClinic(event.clinic);
       client.getClinics();

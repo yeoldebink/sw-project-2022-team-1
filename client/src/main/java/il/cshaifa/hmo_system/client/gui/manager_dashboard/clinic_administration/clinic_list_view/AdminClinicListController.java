@@ -1,6 +1,6 @@
 package il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_list_view;
 
-import il.cshaifa.hmo_system.client.HMOClient;
+import il.cshaifa.hmo_system.client.HMODesktopClient;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.ClinicEvent;
@@ -36,13 +36,13 @@ public class AdminClinicListController extends Controller {
 
     // this is for the HMO manager
     if (event.clinic == null) {
-      event.clinic = HMOClient.getClient().getConnected_employee_clinics().get(0);
+      event.clinic = HMODesktopClient.getClient().getConnected_employee_clinics().get(0);
     }
 
     loader.setControllerFactory(
         c -> {
           return new AdminClinicViewController(
-              event.clinic, HMOClient.getClient().getConnected_user().getRole());
+              event.clinic, HMODesktopClient.getClient().getConnected_user().getRole());
         });
     try {
       Utils.openNewWindow(

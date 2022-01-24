@@ -1,6 +1,6 @@
 package il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.report_view;
 
-import il.cshaifa.hmo_system.client.HMOClient;
+import il.cshaifa.hmo_system.client.HMODesktopClient;
 import il.cshaifa.hmo_system.client.base_controllers.RoleDefinedViewController;
 import il.cshaifa.hmo_system.client.events.Event;
 import il.cshaifa.hmo_system.client.events.ReportEvent;
@@ -55,7 +55,7 @@ public class ReportListViewController extends RoleDefinedViewController {
   @Override
   protected void applyRoleBehavior() {
     if (role.getName().equals("Clinic Manager")) {
-      clinicList.getItems().setAll(HMOClient.getClient().getConnected_employee_clinics());
+      clinicList.getItems().setAll(HMODesktopClient.getClient().getConnected_employee_clinics());
       clinicList.getSelectionModel().select(0);
       clinicList.setDisable(true);
     }
@@ -116,7 +116,7 @@ public class ReportListViewController extends RoleDefinedViewController {
             (obs, oldValue, newValue) -> {
               if (newValue != null) {
                 var isHMOManager =
-                    HMOClient.getClient()
+                    HMODesktopClient.getClient()
                         .getConnected_user()
                         .getRole()
                         .getName()

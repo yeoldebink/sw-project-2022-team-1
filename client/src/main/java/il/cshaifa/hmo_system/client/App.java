@@ -19,7 +19,7 @@ public class App extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    client = HMOClient.getClient();
+    client = HMODesktopClient.getClient();
     client.openConnection();
 
     FXMLLoader loader =

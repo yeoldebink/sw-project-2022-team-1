@@ -1,7 +1,7 @@
 package il.cshaifa.hmo_system.client.gui.patient_dashboard.appointments;
 
 import il.cshaifa.hmo_system.CommonEnums.SetAppointmentAction;
-import il.cshaifa.hmo_system.client.HMOClient;
+import il.cshaifa.hmo_system.client.HMODesktopClient;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.AppointmentListEvent;
@@ -22,7 +22,7 @@ public class SetAppointmentController extends Controller {
   private SetAppointmentController(ViewController view_controller, Stage stage) {
     super(view_controller, stage);
     try {
-      HMOClient.getClient().getSpecialistRoles();
+      HMODesktopClient.getClient().getSpecialistRoles();
     } catch (IOException ioException) {
       ioException.printStackTrace();
     }
@@ -38,7 +38,7 @@ public class SetAppointmentController extends Controller {
   }
 
   private boolean patientIsMinor() {
-    return HMOClient.getClient()
+    return HMODesktopClient.getClient()
         .getConnected_patient()
         .getBirthday()
         .isAfter(LocalDateTime.now().minusYears(18));
@@ -50,19 +50,19 @@ public class SetAppointmentController extends Controller {
     try {
       switch (event.appointmentType.getName()) {
         case "Family Doctor":
-          HMOClient.getClient()
-              .getHomeClinicAppointments(
+          HMODesktopClient.getClient()
+              .getClinicAppointments(
                   new AppointmentType(patientIsMinor() ? "Pediatrician" : "Family Doctor"));
           break;
 
         case "Specialist":
-          HMOClient.getClient().getSpecialistAppointments(event.role);
+          HMODesktopClient.getClient().getSpecialistAppointments(event.role);
           break;
 
         case "COVID Vaccine":
         case "Flu Vaccine":
         case "COVID Test":
-          HMOClient.getClient().getHomeClinicAppointments(event.appointmentType);
+          HMODesktopClient.getClient().getClinicAppointments(event.appointmentType);
           break;
         default:
           throw new NotImplementedException(
@@ -87,13 +87,13 @@ public class SetAppointmentController extends Controller {
     try {
       switch (event.action) {
         case RELEASE:
-          HMOClient.getClient().cancelAppointment(event.appointment);
+          HMODesktopClient.getClient().cancelAppointment(event.appointment);
           break;
         case LOCK:
-          HMOClient.getClient().lockAppointment(event.appointment);
+          HMODesktopClient.getClient().lockAppointment(event.appointment);
           break;
         case TAKE:
-          HMOClient.getClient().takeAppointment(event.appointment);
+          HMODesktopClient.getClient().takeAppointment(event.appointment);
           break;
         default:
           break;
@@ -105,7 +105,7 @@ public class SetAppointmentController extends Controller {
 
   @Subscribe
   public void onResponseFromClient(SetAppointmentEvent event) {
-    if (!event.getSender().equals(HMOClient.getClient())) return;
+    if (!event.getSender().equals(HMODesktopClient.getClient())) return;
     if (event.action == SetAppointmentAction.TAKE) {
       Platform.runLater(
           () ->
@@ -116,7 +116,7 @@ public class SetAppointmentController extends Controller {
                       (int) stage.getY() + 100));
 
       try {
-        HMOClient.getClient().getPatientNextAppointment();
+        HMODesktopClient.getClient().getPatientNextAppointment();
       } catch (IOException ioException) {
         ioException.printStackTrace();
       }

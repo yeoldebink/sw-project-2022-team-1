@@ -1,7 +1,7 @@
 package il.cshaifa.hmo_system.client.gui.patient_dashboard.green_pass;
 
 import il.cshaifa.hmo_system.CommonEnums.GreenPassStatus;
-import il.cshaifa.hmo_system.client.HMOClient;
+import il.cshaifa.hmo_system.client.HMODesktopClient;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.GreenPassStatusEvent;
 import il.cshaifa.hmo_system.client.utils.Utils;
@@ -43,7 +43,7 @@ public class GreenPassViewController extends ViewController {
       imageName = "your_green_pass.jpg";
       // generate QR
       ByteArrayOutputStream out =
-          QRCode.from(String.valueOf((HMOClient.getClient().getConnected_user().getId())))
+          QRCode.from(String.valueOf((HMODesktopClient.getClient().getConnected_user().getId())))
               .to(ImageType.PNG)
               .withSize(200, 200)
               .stream();

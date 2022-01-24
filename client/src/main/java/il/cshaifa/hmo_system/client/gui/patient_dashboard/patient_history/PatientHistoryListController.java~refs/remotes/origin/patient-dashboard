@@ -1,6 +1,6 @@
 package il.cshaifa.hmo_system.client.gui.patient_dashboard.patient_history;
 
-import il.cshaifa.hmo_system.client.HMOClient;
+import il.cshaifa.hmo_system.client.HMODesktopClient;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.AppointmentListEvent;
@@ -16,7 +16,7 @@ public class PatientAppointmentHistoryListController extends Controller {
     super(view_controller, stage);
 
     try {
-      HMOClient.getClient().getPatientHistory();
+      HMODesktopClient.getClient().getPatientHistory();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -24,7 +24,7 @@ public class PatientAppointmentHistoryListController extends Controller {
 
   @Subscribe
   public void onPatientHistoryRespond(AppointmentListEvent event) {
-    if (!event.getSender().equals(HMOClient.getClient())) return;
+    if (!event.getSender().equals(HMODesktopClient.getClient())) return;
 
     Platform.runLater(() -> System.out.println("Populate me!!"));
   }
@@ -41,12 +41,12 @@ public class PatientAppointmentHistoryListController extends Controller {
 
   @Subscribe
   public void onCancelAppointmentRespond(PatientAppointmentListEvent event) {
-    if (!event.getSender().equals(HMOClient.getClient())) return;
+    if (!event.getSender().equals(HMODesktopClient.getClient())) return;
 
     if (event.status == Status.ACCEPTED) {
       System.out.println("NOTIFY USER ALL GOOD");
       try {
-        HMOClient.getClient().getPatientHistory();
+        HMODesktopClient.getClient().getPatientHistory();
       } catch (IOException e) {
         e.printStackTrace();
       }

@@ -1,6 +1,6 @@
 package il.cshaifa.hmo_system.client.gui.patient_dashboard;
 
-import il.cshaifa.hmo_system.client.HMOClient;
+import il.cshaifa.hmo_system.client.HMODesktopClient;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.AppointmentListEvent;
@@ -33,7 +33,7 @@ public class PatientDashboardController extends Controller {
     super(view_controller, null);
 
     try {
-      HMOClient.getClient().getPatientNextAppointment();
+      HMODesktopClient.getClient().getPatientNextAppointment();
     } catch (IOException ioException) {
       ioException.printStackTrace();
     }
@@ -51,7 +51,9 @@ public class PatientDashboardController extends Controller {
           SetAppointmentViewController.class,
           SetAppointmentController.class,
           false,
-          c -> new SetAppointmentViewController(HMOClient.getClient().getConnected_patient()));
+          c ->
+              new SetAppointmentViewController(
+                  HMODesktopClient.getClient().getConnected_patient()));
     }
   }
 
@@ -63,7 +65,7 @@ public class PatientDashboardController extends Controller {
         false,
         c ->
             new MyClinicViewController(
-                HMOClient.getClient().getConnected_patient().getHome_clinic()));
+                HMODesktopClient.getClient().getConnected_patient().getHome_clinic()));
   }
 
   @Subscribe
@@ -82,12 +84,12 @@ public class PatientDashboardController extends Controller {
         false,
         c ->
             new PatientAppointmentHistoryListViewController(
-                HMOClient.getClient().getConnected_patient()));
+                HMODesktopClient.getClient().getConnected_patient()));
   }
 
   @Subscribe
   public void onNextAppointmentEvent(NextAppointmentEvent event) {
-    if (event.getSender().equals(HMOClient.getClient())) {
+    if (event.getSender().equals(HMODesktopClient.getClient())) {
       Platform.runLater(
           () ->
               ((PatientDashboardViewController) view_controller)
@@ -99,7 +101,7 @@ public class PatientDashboardController extends Controller {
   public void onGreenPassStatusEvent(GreenPassStatusEvent event) {
     if (event.getSender() == this.view_controller) {
       try {
-        HMOClient.getClient().getGreenPassStatus();
+        HMODesktopClient.getClient().getGreenPassStatus();
       } catch (IOException ioException) {
         ioException.printStackTrace();
       }

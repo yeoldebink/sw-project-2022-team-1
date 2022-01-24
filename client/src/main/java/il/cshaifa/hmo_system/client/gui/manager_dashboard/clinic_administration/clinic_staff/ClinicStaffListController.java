@@ -1,7 +1,7 @@
 package il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_staff;
 
 import il.cshaifa.hmo_system.CommonEnums.StaffAssignmentAction;
-import il.cshaifa.hmo_system.client.HMOClient;
+import il.cshaifa.hmo_system.client.HMODesktopClient;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.AdminAppointmentListEvent;
@@ -24,7 +24,7 @@ public class ClinicStaffListController extends Controller {
   public ClinicStaffListController(ViewController view_controller) {
     super(view_controller, null);
     try {
-      HMOClient.getClient().getStaff();
+      HMODesktopClient.getClient().getStaff();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -37,8 +37,8 @@ public class ClinicStaffListController extends Controller {
    */
   @Subscribe
   public void clinicStaffListReceived(ClinicStaffEvent event) {
-    if (!event.getSender().equals(HMOClient.getClient())) return;
-    var current_clinic_manager = HMOClient.getClient().getConnected_user();
+    if (!event.getSender().equals(HMODesktopClient.getClient())) return;
+    var current_clinic_manager = HMODesktopClient.getClient().getConnected_user();
     var assignment_map = new TreeMap<User, Boolean>(Comparator.comparing(User::getLastName));
 
     for (var clinic_staff_row : event.clinic_staff) {
@@ -81,9 +81,9 @@ public class ClinicStaffListController extends Controller {
       }
 
       if (event.action == StaffAssignmentAction.ASSIGN)
-        HMOClient.getClient().assignStaff(staff_users);
+        HMODesktopClient.getClient().assignStaff(staff_users);
       else if (event.action == StaffAssignmentAction.UNASSIGN)
-        HMOClient.getClient().unassignStaff(staff_users);
+        HMODesktopClient.getClient().unassignStaff(staff_users);
     } catch (IOException ioException) {
       ioException.printStackTrace();
     }
@@ -96,9 +96,9 @@ public class ClinicStaffListController extends Controller {
    */
   @Subscribe
   public void onClinicStaffAssignmentRespond(AssignStaffEvent event) {
-    if (event.getSender().equals(HMOClient.getClient())) {
+    if (event.getSender().equals(HMODesktopClient.getClient())) {
       try {
-        HMOClient.getClient().getStaff();
+        HMODesktopClient.getClient().getStaff();
       } catch (IOException e) {
         e.printStackTrace();
       }

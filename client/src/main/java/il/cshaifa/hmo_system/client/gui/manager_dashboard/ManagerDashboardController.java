@@ -1,6 +1,6 @@
 package il.cshaifa.hmo_system.client.gui.manager_dashboard;
 
-import il.cshaifa.hmo_system.client.HMOClient;
+import il.cshaifa.hmo_system.client.HMODesktopClient;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.AddAppointmentEvent;
@@ -46,8 +46,8 @@ public class ManagerDashboardController extends Controller {
             ((ManagerDashboardViewController) view_controller).getReportListViewController());
 
     try {
-      HMOClient.getClient().getClinics();
-      HMOClient.getClient().getStaff();
+      HMODesktopClient.getClient().getClinics();
+      HMODesktopClient.getClient().getStaff();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -60,7 +60,7 @@ public class ManagerDashboardController extends Controller {
    */
   @Subscribe
   public void onClinicsReceived(ClinicEvent event) {
-    if (!event.getSender().equals(HMOClient.getClient())) return;
+    if (!event.getSender().equals(HMODesktopClient.getClient())) return;
 
     adminClinicListController.updateClinics(event.receivedClinics);
     reportListController.updateClinics(event.receivedClinics);
@@ -68,10 +68,10 @@ public class ManagerDashboardController extends Controller {
 
   @Subscribe
   public void onClinicStaffReceived(ClinicStaffEvent event) {
-    if (!event.getSender().equals(HMOClient.getClient())) return;
+    if (!event.getSender().equals(HMODesktopClient.getClient())) return;
     ArrayList<ClinicStaff> clinicStaff = new ArrayList<>();
 
-    var role = HMOClient.getClient().getConnected_user().getRole().getName();
+    var role = HMODesktopClient.getClient().getConnected_user().getRole().getName();
     if (Objects.equals(role, "HMO Manager")) {
       var unique_staffs_map = new HashMap<String, ClinicStaff>();
       for (var member : event.clinic_staff) {
@@ -80,7 +80,7 @@ public class ManagerDashboardController extends Controller {
       }
       clinicStaff.addAll(new ArrayList<>(unique_staffs_map.values()));
     } else {
-      var clinic_manager_id = HMOClient.getClient().getConnected_user().getId();
+      var clinic_manager_id = HMODesktopClient.getClient().getConnected_user().getId();
       for (var staff_member : event.clinic_staff) {
         var staff_manager =
             staff_member.getClinic() == null ? null : staff_member.getClinic().getManager_user();
@@ -109,13 +109,13 @@ public class ManagerDashboardController extends Controller {
 
     // this is for the HMO manager
     if (event.clinic == null) {
-      event.clinic = HMOClient.getClient().getConnected_employee_clinics().get(0);
+      event.clinic = HMODesktopClient.getClient().getConnected_employee_clinics().get(0);
     }
 
     loader.setControllerFactory(
         c -> {
           return new AdminClinicViewController(
-              event.clinic, HMOClient.getClient().getConnected_user().getRole());
+              event.clinic, HMODesktopClient.getClient().getConnected_user().getRole());
         });
     try {
       Utils.openNewWindow(

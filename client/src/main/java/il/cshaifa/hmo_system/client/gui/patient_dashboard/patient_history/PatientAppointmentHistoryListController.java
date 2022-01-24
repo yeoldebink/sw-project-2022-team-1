@@ -1,6 +1,6 @@
 package il.cshaifa.hmo_system.client.gui.patient_dashboard.patient_history;
 
-import il.cshaifa.hmo_system.client.HMOClient;
+import il.cshaifa.hmo_system.client.HMODesktopClient;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.AppointmentListEvent;
@@ -21,7 +21,7 @@ public class PatientAppointmentHistoryListController extends Controller {
     super(view_controller, stage);
 
     try {
-      HMOClient.getClient().getPatientHistory();
+      HMODesktopClient.getClient().getPatientHistory();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -38,7 +38,7 @@ public class PatientAppointmentHistoryListController extends Controller {
 
   @Subscribe
   public void onPatientHistoryRespond(AppointmentListEvent event) {
-    if (!event.getSender().equals(HMOClient.getClient())) return;
+    if (!event.getSender().equals(HMODesktopClient.getClient())) return;
 
     Platform.runLater(
         () -> {
@@ -47,7 +47,7 @@ public class PatientAppointmentHistoryListController extends Controller {
         });
 
     try {
-      HMOClient.getClient().getPatientNextAppointment();
+      HMODesktopClient.getClient().getPatientNextAppointment();
     } catch (IOException ioException) {
       ioException.printStackTrace();
     }
@@ -58,7 +58,7 @@ public class PatientAppointmentHistoryListController extends Controller {
     if (!event.getSender().equals(this.view_controller)) return;
 
     try {
-      HMOClient.getClient().cancelAppointment(event.appointments.get(0));
+      HMODesktopClient.getClient().cancelAppointment(event.appointments.get(0));
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -66,11 +66,11 @@ public class PatientAppointmentHistoryListController extends Controller {
 
   @Subscribe
   public void onCancelAppointmentRespond(SetAppointmentEvent event) {
-    if (!event.getSender().equals(HMOClient.getClient())) return;
+    if (!event.getSender().equals(HMODesktopClient.getClient())) return;
 
     if (event.response == ResponseType.AUTHORIZE) {
       try {
-        HMOClient.getClient().getPatientHistory();
+        HMODesktopClient.getClient().getPatientHistory();
       } catch (IOException e) {
         e.printStackTrace();
       }

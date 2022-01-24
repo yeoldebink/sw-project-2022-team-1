@@ -9,7 +9,7 @@ public class PrimaryController {
   @FXML
   void sendWarning(ActionEvent event) {
     try {
-      HMOClient.getClient().sendToServer("#warning");
+      HMODesktopClient.getClient().sendToServer("#warning");
     } catch (IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();

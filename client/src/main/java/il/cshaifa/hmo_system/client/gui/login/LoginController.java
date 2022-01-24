@@ -1,6 +1,6 @@
 package il.cshaifa.hmo_system.client.gui.login;
 
-import il.cshaifa.hmo_system.client.HMOClient;
+import il.cshaifa.hmo_system.client.HMODesktopClient;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.LoginEvent;
@@ -35,7 +35,7 @@ public class LoginController extends Controller {
     if (event.getSender().equals(this.view_controller)) {
       try {
         String pass = event.password.equals("") ? null : event.password;
-        HMOClient.getClient().loginRequest(event.id, pass);
+        HMODesktopClient.getClient().loginRequest(event.id, pass);
       } catch (IOException e) {
         e.printStackTrace();
       }
@@ -50,7 +50,7 @@ public class LoginController extends Controller {
    */
   @Subscribe
   public void OnLoginRequestResponse(LoginEvent event) throws Exception {
-    if (event.getSender().equals(HMOClient.getClient())) {
+    if (event.getSender().equals(HMODesktopClient.getClient())) {
       if (event.response == Response.REJECT) {
         incorrectUser();
       } else if (event.response == Response.LOGGED_IN) {
@@ -108,7 +108,9 @@ public class LoginController extends Controller {
                     .getResource(ResourcePath.get_fxml(PatientDashboardViewController.class)));
 
         loader.setControllerFactory(
-            c -> new PatientDashboardViewController(HMOClient.getClient().getConnected_patient()));
+            c ->
+                new PatientDashboardViewController(
+                    HMODesktopClient.getClient().getConnected_patient()));
 
         Utils.openNewWindow(
             PatientDashboardViewController.class, PatientDashboardController.class, loader, false);

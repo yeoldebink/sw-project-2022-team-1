@@ -1,7 +1,7 @@
 package il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.add_appointment;
 
 import il.cshaifa.hmo_system.CommonEnums.AddAppointmentRejectionReason;
-import il.cshaifa.hmo_system.client.HMOClient;
+import il.cshaifa.hmo_system.client.HMODesktopClient;
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client.events.AddAppointmentEvent;
@@ -58,7 +58,7 @@ public class AddAppointmentsController extends Controller {
       appt_type = event.type;
     }
     try {
-      HMOClient.getClient()
+      HMODesktopClient.getClient()
           .createAppointments(staff_member, event.start_datetime, event.count, appt_type);
     } catch (IOException e) {
       e.printStackTrace();
@@ -73,7 +73,7 @@ public class AddAppointmentsController extends Controller {
    */
   @Subscribe
   public void onAppointmentCreationResponse(AddAppointmentEvent event) {
-    if (!event.getSender().equals(HMOClient.getClient())) return;
+    if (!event.getSender().equals(HMODesktopClient.getClient())) return;
     if (!event.success) {
       String rejectionMessage = "";
       if (event.reject == AddAppointmentRejectionReason.OVERLAPPING) {
