@@ -39,7 +39,7 @@ public class AddAppointmentsController extends Controller {
     if (event.count <= 0){
       Platform.runLater(()->
           ((AddAppointmentsViewController) this.view_controller)
-              .setErrorMessage("The amount should be larger then 0"));
+              .setErrorMessage("The amount should be larger than 0"));
 
       return;
     }
