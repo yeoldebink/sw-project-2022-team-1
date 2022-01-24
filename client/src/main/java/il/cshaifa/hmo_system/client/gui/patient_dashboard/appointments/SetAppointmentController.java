@@ -65,7 +65,8 @@ public class SetAppointmentController extends Controller {
           HMOClient.getClient().getHomeClinicAppointments(event.appointmentType);
           break;
         default:
-          throw new NotImplementedException(String.format("Appointment type request not implemented: %s", event.appointmentType));
+          throw new NotImplementedException(
+              String.format("Appointment type request not implemented: %s", event.appointmentType));
       }
     } catch (IOException | NotImplementedException e) {
       e.printStackTrace();

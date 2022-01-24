@@ -21,7 +21,6 @@ import il.cshaifa.hmo_system.client.utils.Utils;
 import il.cshaifa.hmo_system.entities.Appointment;
 import java.io.IOException;
 import javafx.application.Platform;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import org.greenrobot.eventbus.Subscribe;
@@ -89,7 +88,10 @@ public class PatientDashboardController extends Controller {
   @Subscribe
   public void onNextAppointmentEvent(NextAppointmentEvent event) {
     if (event.getSender().equals(HMOClient.getClient())) {
-      Platform.runLater(() -> ((PatientDashboardViewController) view_controller).updateNextAppointmentInfo(event.appointment));
+      Platform.runLater(
+          () ->
+              ((PatientDashboardViewController) view_controller)
+                  .updateNextAppointmentInfo(event.appointment));
     }
   }
 
@@ -102,10 +104,15 @@ public class PatientDashboardController extends Controller {
         ioException.printStackTrace();
       }
     } else {
-      var loader = new FXMLLoader(getClass().getResource(ResourcePath.get_fxml(
-          GreenPassViewController.class)));
+      var loader =
+          new FXMLLoader(
+              getClass().getResource(ResourcePath.get_fxml(GreenPassViewController.class)));
 
-      Utils.openNewSingletonWindow(GreenPassViewController.class, GreenPassController.class, false, c -> new GreenPassViewController(event));
+      Utils.openNewSingletonWindow(
+          GreenPassViewController.class,
+          GreenPassController.class,
+          false,
+          c -> new GreenPassViewController(event));
     }
   }
 }

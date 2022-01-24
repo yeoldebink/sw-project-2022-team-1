@@ -50,7 +50,8 @@ public class PatientAppointmentHistoryListViewController extends ViewController 
       appts_to_populate.add(new AppointmentForPatientHistoryView(appt));
     }
 
-    appts_to_populate.sort(Comparator.comparing(AppointmentForPatientHistoryView::getAppt_date).reversed());
+    appts_to_populate.sort(
+        Comparator.comparing(AppointmentForPatientHistoryView::getAppt_date).reversed());
 
     appt_table.getItems().setAll(appts_to_populate);
   }

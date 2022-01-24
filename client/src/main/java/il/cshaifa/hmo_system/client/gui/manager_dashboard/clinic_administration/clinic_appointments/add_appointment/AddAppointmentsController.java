@@ -20,9 +20,11 @@ public class AddAppointmentsController extends Controller {
     super(view_controller, stage);
   }
 
-  public static AddAppointmentsController getInstance(){return instance;}
+  public static AddAppointmentsController getInstance() {
+    return instance;
+  }
 
-  public static void create(ViewController view_controller, Stage stage){
+  public static void create(ViewController view_controller, Stage stage) {
     if (instance != null && instance.view_controller != null) return;
 
     instance = new AddAppointmentsController(view_controller, stage);
@@ -36,21 +38,23 @@ public class AddAppointmentsController extends Controller {
   @Subscribe
   public void addAppointments(AddAppointmentEvent event) {
     if (!event.getSender().equals(this.view_controller)) return;
-    if (event.count <= 0){
-      Platform.runLater(()->
-          ((AddAppointmentsViewController) this.view_controller)
-              .setErrorMessage("The amount should be larger than 0"));
+    if (event.count <= 0) {
+      Platform.runLater(
+          () ->
+              ((AddAppointmentsViewController) this.view_controller)
+                  .setErrorMessage("The amount should be larger than 0"));
 
       return;
     }
 
     User staff_member = null;
     AppointmentType appt_type;
-    if (event.staff_member != null){
-      if (event.staff_member.getRole().isSpecialist()) appt_type = new AppointmentType("Specialist");
+    if (event.staff_member != null) {
+      if (event.staff_member.getRole().isSpecialist())
+        appt_type = new AppointmentType("Specialist");
       else appt_type = new AppointmentType(event.staff_member.getRole().getName());
       staff_member = new User(event.staff_member);
-    } else{
+    } else {
       appt_type = event.type;
     }
     try {

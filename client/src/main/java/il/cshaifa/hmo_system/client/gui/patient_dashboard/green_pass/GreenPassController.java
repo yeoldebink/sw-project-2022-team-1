@@ -2,7 +2,6 @@ package il.cshaifa.hmo_system.client.gui.patient_dashboard.green_pass;
 
 import il.cshaifa.hmo_system.client.base_controllers.Controller;
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
-import il.cshaifa.hmo_system.client.gui.patient_dashboard.appointments.SetAppointmentController;
 import javafx.stage.Stage;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -10,9 +9,7 @@ public class GreenPassController extends Controller {
 
   private static GreenPassController instance;
 
-  private GreenPassController(
-      ViewController view_controller,
-      Stage stage) {
+  private GreenPassController(ViewController view_controller, Stage stage) {
     super(view_controller, stage);
   }
 

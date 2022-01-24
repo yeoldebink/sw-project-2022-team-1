@@ -265,62 +265,75 @@ public class SetAppointmentViewController extends ViewController {
     vaxTypeComboBox.setButtonCell(vaxTypeComboCellFactory.call(null));
     vaxTypeComboBox.setCellFactory(vaxTypeComboCellFactory);
 
-    vaxTypeComboBox.getItems().setAll(FXCollections.observableArrayList(
-        new AppointmentType("COVID Vaccine"),
-        new AppointmentType("Flu Vaccine")));
+    vaxTypeComboBox
+        .getItems()
+        .setAll(
+            FXCollections.observableArrayList(
+                new AppointmentType("COVID Vaccine"), new AppointmentType("Flu Vaccine")));
 
     vaxTypeComboBox
         .valueProperty()
-        .addListener((observableValue, oldT, newT) -> {
-          if (newT != null && newT != oldT) {
-            requestAppointments(newT, null);
-          }
-        });
+        .addListener(
+            (observableValue, oldT, newT) -> {
+              if (newT != null && newT != oldT) {
+                requestAppointments(newT, null);
+              }
+            });
 
     // COVID TEST GUI
-    symptomsComboBox.setCellFactory(stringListView -> new ComboBoxListCell<>() {
-      @Override
-      public void updateItem(String str, boolean empty) {
-        super.updateItem(str, empty);
-        if (!empty) {
-          setText(str);
-          String iconLiteral = null;
-          switch (str) {
-            case "Yes":
-              iconLiteral = "mdi-emoticon-sad";
-              break;
-            case "No":
-              iconLiteral = "mdi-emoticon-happy";
-              break;
-          }
+    symptomsComboBox.setCellFactory(
+        stringListView ->
+            new ComboBoxListCell<>() {
+              @Override
+              public void updateItem(String str, boolean empty) {
+                super.updateItem(str, empty);
+                if (!empty) {
+                  setText(str);
+                  String iconLiteral = null;
+                  switch (str) {
+                    case "Yes":
+                      iconLiteral = "mdi-emoticon-sad";
+                      break;
+                    case "No":
+                      iconLiteral = "mdi-emoticon-happy";
+                      break;
+                  }
 
-          var icon = new FontIcon();
-          icon.setIconLiteral(iconLiteral);
-          setGraphic(icon);
-        }
-      }
-    });
+                  var icon = new FontIcon();
+                  icon.setIconLiteral(iconLiteral);
+                  setGraphic(icon);
+                }
+              }
+            });
     symptomsComboBox.setButtonCell(symptomsComboBox.getCellFactory().call(null));
 
     symptomsComboBox.getItems().setAll(FXCollections.observableArrayList("No", "Yes"));
 
-    symptomsComboBox.valueProperty().addListener((obs, oldStr, newStr) -> {
-      testAppointmentsButton.setVisible(true);
-      if (newStr.equals("Yes")) {
-        symptomsTextArea.setVisible(true);
-        if (!newStr.equals(oldStr)) {
-          symptomsTextArea.clear();
-          testAppointmentsButton.setDisable(true);
-        }
-      } else {
-        testAppointmentsButton.setDisable(false);
-        symptomsTextArea.setVisible(false);
-      }
-    });
+    symptomsComboBox
+        .valueProperty()
+        .addListener(
+            (obs, oldStr, newStr) -> {
+              testAppointmentsButton.setVisible(true);
+              if (newStr.equals("Yes")) {
+                symptomsTextArea.setVisible(true);
+                if (!newStr.equals(oldStr)) {
+                  symptomsTextArea.clear();
+                  testAppointmentsButton.setDisable(true);
+                }
+              } else {
+                testAppointmentsButton.setDisable(false);
+                symptomsTextArea.setVisible(false);
+              }
+            });
 
-    symptomsTextArea.textProperty().addListener((obs, oldStr, newStr) -> testAppointmentsButton.setDisable(newStr == null || newStr.equals("")));
+    symptomsTextArea
+        .textProperty()
+        .addListener(
+            (obs, oldStr, newStr) ->
+                testAppointmentsButton.setDisable(newStr == null || newStr.equals("")));
 
-    testAppointmentsButton.setOnAction((event) -> requestAppointments(new AppointmentType("COVID Test"), null));
+    testAppointmentsButton.setOnAction(
+        (event) -> requestAppointments(new AppointmentType("COVID Test"), null));
   }
 
   private void moveApptDatePicker(AppointmentType apptType) {
@@ -433,15 +446,12 @@ public class SetAppointmentViewController extends ViewController {
   public void takeAppointment(ActionEvent event) {
     var appt = appointmentsTable.getSelectionModel().getSelectedItem().getAppointment();
     if (lastUpdatedAppointmentType.getName().equals("COVID Test"))
-      appt.setComments(String.format("Has symptoms: %s\n%s", symptomsComboBox.getValue(), symptomsTextArea.getText()));
+      appt.setComments(
+          String.format(
+              "Has symptoms: %s\n%s", symptomsComboBox.getValue(), symptomsTextArea.getText()));
 
     EventBus.getDefault()
-        .post(
-            new SetAppointmentEvent(
-                this,
-                SetAppointmentAction.TAKE,
-                patient,
-                appt));
+        .post(new SetAppointmentEvent(this, SetAppointmentAction.TAKE, patient, appt));
   }
 
   public void switchToPane(Object pane) {

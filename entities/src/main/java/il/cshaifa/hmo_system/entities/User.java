@@ -117,13 +117,12 @@ public class User implements Serializable {
   }
 
   @Override
-  public boolean equals(Object user){
+  public boolean equals(Object user) {
     return this.id == ((User) user).getId();
   }
 
   @Override
-  public int hashCode(){
+  public int hashCode() {
     return Objects.hash(this.id);
   }
-
 }

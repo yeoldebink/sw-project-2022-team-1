@@ -79,7 +79,8 @@ public class Main {
         new User(9000, "null", "Jordan", "Sullivan", null, null, roles.get("HMO Manager")));
     users.put(
         "Carla Espinosa",
-        new User(1618, "QUEEN_carla", "Carla", "Espinosa", null, null, roles.get("Clinic Manager")));
+        new User(
+            1618, "QUEEN_carla", "Carla", "Espinosa", null, null, roles.get("Clinic Manager")));
     users.put(
         "Carmen Sandiego",
         new User(8793, null, "Carmen", "Sandiego", null, null, roles.get("Clinic Manager")));

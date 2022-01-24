@@ -32,17 +32,18 @@ public class AddAppointmentsViewController extends ViewController {
     this.type = null;
   }
 
-  public AddAppointmentsViewController(AppointmentType type){
+  public AddAppointmentsViewController(AppointmentType type) {
     this.staff_member = null;
     this.type = type;
   }
 
   public void initialize() {
     this.start_date.getEditor().setDisable(true); // Block from writing text into the DatePicker
-    if (this.staff_member == null){
+    if (this.staff_member == null) {
       this.staff_member_name.setText(type.getName());
-    } else{
-      this.staff_member_name.setText(staff_member.getFirstName() + " " + staff_member.getLastName());
+    } else {
+      this.staff_member_name.setText(
+          staff_member.getFirstName() + " " + staff_member.getLastName());
     }
   }
 
@@ -60,7 +61,8 @@ public class AddAppointmentsViewController extends ViewController {
           LocalDateTime.of(start_date.getValue(), time_value.toLocalTime());
 
       Integer count_appointments = Integer.parseInt(num_appts.getText());
-      var event = new AddAppointmentEvent(this.staff_member, start_datetime, count_appointments, this);
+      var event =
+          new AddAppointmentEvent(this.staff_member, start_datetime, count_appointments, this);
       event.type = this.type;
       EventBus.getDefault().post(event);
 

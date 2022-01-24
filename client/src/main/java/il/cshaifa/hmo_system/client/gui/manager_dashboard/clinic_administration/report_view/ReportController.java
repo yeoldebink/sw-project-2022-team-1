@@ -24,7 +24,7 @@ public class ReportController extends Controller {
   }
 
   @Subscribe
-  public void dummy(Event event){}
+  public void dummy(Event event) {}
 
   @Override
   public void onWindowClose() {}

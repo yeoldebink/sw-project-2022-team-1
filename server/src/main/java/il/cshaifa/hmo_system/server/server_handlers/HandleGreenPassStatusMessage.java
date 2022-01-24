@@ -31,12 +31,9 @@ public class HandleGreenPassStatusMessage extends MessageHandler {
     class_message.status = getGreenPassStatus();
   }
 
-  /**
-   * Updates the status of patients COVID-19 green-pass
-   */
+  /** Updates the status of patients COVID-19 green-pass */
   public GreenPassStatus getGreenPassStatus() {
-    LocalDateTime last_vaccine = getLastCovidVaccineDate(),
-        last_test = getLastCovidTestDate();
+    LocalDateTime last_vaccine = getLastCovidVaccineDate(), last_test = getLastCovidTestDate();
 
     if (last_vaccine == null || last_vaccine.plusMonths(6).isBefore(LocalDateTime.now())) {
       if (last_test == null || last_test.plusDays(3).isBefore(LocalDateTime.now())) {
@@ -47,16 +44,14 @@ public class HandleGreenPassStatusMessage extends MessageHandler {
     return GreenPassStatus.VACCINATED;
   }
 
-  /**
-   * @return The date of the patients last COVID-19 test.
-   */
+  /** @return The date of the patients last COVID-19 test. */
   public LocalDateTime getLastCovidTestDate() {
-    cr.select(root).where(
-        cb.equal(root.get("patient"), patient),
-        cb.equal(root.get("type").get("name"), "COVID Test"),
-        cb.lessThanOrEqualTo(root.get("appt_date"), LocalDateTime.now()),
-        cb.isNotNull(root.get("called_time"))
-    );
+    cr.select(root)
+        .where(
+            cb.equal(root.get("patient"), patient),
+            cb.equal(root.get("type").get("name"), "COVID Test"),
+            cb.lessThanOrEqualTo(root.get("appt_date"), LocalDateTime.now()),
+            cb.isNotNull(root.get("called_time")));
     cr.orderBy(cb.asc(root.get("appt_date")));
     List<Appointment> covid_test_appt = session.createQuery(cr).getResultList();
     if (covid_test_appt.size() > 0) {
@@ -66,16 +61,14 @@ public class HandleGreenPassStatusMessage extends MessageHandler {
     return null;
   }
 
-  /**
-   * @return The date of the patients last COVID-19 vaccine.
-   */
+  /** @return The date of the patients last COVID-19 vaccine. */
   public LocalDateTime getLastCovidVaccineDate() {
-    cr.select(root).where(
-        cb.equal(root.get("patient"), patient),
-        cb.equal(root.get("type").get("name"), "COVID Vaccine"),
-        cb.lessThanOrEqualTo(root.get("appt_date"), LocalDateTime.now()),
-        cb.isNotNull(root.get("called_time"))
-    );
+    cr.select(root)
+        .where(
+            cb.equal(root.get("patient"), patient),
+            cb.equal(root.get("type").get("name"), "COVID Vaccine"),
+            cb.lessThanOrEqualTo(root.get("appt_date"), LocalDateTime.now()),
+            cb.isNotNull(root.get("called_time")));
     cr.orderBy(cb.asc(root.get("appt_date")));
     List<Appointment> covid_vaccine_appt = session.createQuery(cr).getResultList();
     if (covid_vaccine_appt.size() > 0) {

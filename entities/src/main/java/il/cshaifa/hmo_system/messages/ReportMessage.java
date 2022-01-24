@@ -2,7 +2,6 @@ package il.cshaifa.hmo_system.messages;
 
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.ClinicStaff;
-import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.reports.DailyReport;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,5 +32,4 @@ public class ReportMessage extends Message {
     this.start_date = start_date;
     this.end_date = end_date;
   }
-
 }

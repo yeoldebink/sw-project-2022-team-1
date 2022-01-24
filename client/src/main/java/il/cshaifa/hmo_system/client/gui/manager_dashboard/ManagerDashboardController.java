@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Objects;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
@@ -68,24 +67,25 @@ public class ManagerDashboardController extends Controller {
   }
 
   @Subscribe
-  public void onClinicStaffReceived(ClinicStaffEvent event){
-    if(!event.getSender().equals(HMOClient.getClient())) return;
+  public void onClinicStaffReceived(ClinicStaffEvent event) {
+    if (!event.getSender().equals(HMOClient.getClient())) return;
     ArrayList<ClinicStaff> clinicStaff = new ArrayList<>();
 
     var role = HMOClient.getClient().getConnected_user().getRole().getName();
-    if (Objects.equals(role, "HMO Manager")){
+    if (Objects.equals(role, "HMO Manager")) {
       var unique_staffs_map = new HashMap<String, ClinicStaff>();
-      for (var member : event.clinic_staff){
+      for (var member : event.clinic_staff) {
         var name = member.getUser().getFirstName() + " " + member.getUser().getLastName();
         unique_staffs_map.put(name, member);
       }
       clinicStaff.addAll(new ArrayList<>(unique_staffs_map.values()));
-    } else{
+    } else {
       var clinic_manager_id = HMOClient.getClient().getConnected_user().getId();
-      for(var staff_member : event.clinic_staff){
-        var staff_manager = staff_member.getClinic() == null ? null : staff_member.getClinic().getManager_user();
+      for (var staff_member : event.clinic_staff) {
+        var staff_manager =
+            staff_member.getClinic() == null ? null : staff_member.getClinic().getManager_user();
 
-        if (staff_manager != null && staff_manager.getId() == clinic_manager_id){
+        if (staff_manager != null && staff_manager.getId() == clinic_manager_id) {
           clinicStaff.add(staff_member);
         }
       }
@@ -126,22 +126,21 @@ public class ManagerDashboardController extends Controller {
   }
 
   @Subscribe
-  public void onTestOrVaccineAddingRequest(AddAppointmentEvent event){
-    if(!event.getSender().equals(this.view_controller)) return;
+  public void onTestOrVaccineAddingRequest(AddAppointmentEvent event) {
+    if (!event.getSender().equals(this.view_controller)) return;
 
-    FXMLLoader loader = new FXMLLoader(getClass().getResource(ResourcePath.get_fxml(
-        AddAppointmentsViewController.class)));
+    FXMLLoader loader =
+        new FXMLLoader(
+            getClass().getResource(ResourcePath.get_fxml(AddAppointmentsViewController.class)));
 
     loader.setControllerFactory(
-        c-> {
+        c -> {
           return new AddAppointmentsViewController(event.type);
         });
 
     try {
       Utils.openNewWindow(
-          AddAppointmentsViewController.class, AddAppointmentsController.class,
-          loader, false
-      );
+          AddAppointmentsViewController.class, AddAppointmentsController.class, loader, false);
     } catch (Exception e) {
       e.printStackTrace();
     }

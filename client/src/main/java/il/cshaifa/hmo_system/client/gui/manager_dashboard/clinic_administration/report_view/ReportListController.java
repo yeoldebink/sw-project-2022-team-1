@@ -34,7 +34,8 @@ public class ReportListController extends Controller {
     if (!event.getSender().equals(this.view_controller) || event.clinics.size() == 0) return;
     try {
       HMOClient.getClient()
-          .requestReports(event.clinics, event.staff_member ,event.start_date, event.end_date, event.type);
+          .requestReports(
+              event.clinics, event.staff_member, event.start_date, event.end_date, event.type);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -64,7 +65,7 @@ public class ReportListController extends Controller {
         () -> ((ReportListViewController) this.view_controller).populateClinicList(clinics));
   }
 
-  public void updateStaffMembers(ArrayList<ClinicStaff> staff_members){
+  public void updateStaffMembers(ArrayList<ClinicStaff> staff_members) {
     Platform.runLater(
         () -> ((ReportListViewController) this.view_controller).populateStaffList(staff_members));
   }
@@ -124,7 +125,7 @@ public class ReportListController extends Controller {
         var staffMember = entry.getKey();
         var waitTime = entry.getValue();
 
-        if (entry.getValue() == null){
+        if (entry.getValue() == null) {
           continue;
         }
 

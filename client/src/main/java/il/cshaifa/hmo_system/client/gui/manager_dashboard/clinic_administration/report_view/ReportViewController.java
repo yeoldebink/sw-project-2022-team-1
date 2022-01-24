@@ -1,7 +1,6 @@
 package il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.report_view;
 
 import il.cshaifa.hmo_system.client.base_controllers.ViewController;
-import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.ReportMessage.ReportType;
 import java.time.Duration;
@@ -61,9 +60,7 @@ public class ReportViewController extends ViewController {
       }
     } else {
       for (var entry : report_data.entrySet()) {
-        report_table
-            .getItems()
-            .add(new ReportDataRow(entry.getKey().toString(), entry.getValue()));
+        report_table.getItems().add(new ReportDataRow(entry.getKey().toString(), entry.getValue()));
       }
     }
   }

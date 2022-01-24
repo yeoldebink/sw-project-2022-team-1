@@ -66,7 +66,8 @@ public class HandleSetSpecialistAppointmentMessage extends MessageHandler {
             cb.between(
                 root.get("appt_date"),
                 LocalDateTime.now(),
-                LocalDateTime.now().plusWeeks(HandleAppointmentMessage.max_future_appointments.get("Specialist"))),
+                LocalDateTime.now()
+                    .plusWeeks(HandleAppointmentMessage.max_future_appointments.get("Specialist"))),
             cb.isFalse(root.get("taken")),
             cb.or(
                 cb.isNull(root.get("lock_time")),

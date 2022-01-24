@@ -86,7 +86,7 @@ public class HMOServer extends AbstractServer {
         handler = new HandleAppointmentMessage((AppointmentMessage) msg, session);
       } else if (msg_class == ClinicMessage.class) {
         handler = new HandleClinicMessage((ClinicMessage) msg, session);
-      } else if (msg_class == GreenPassStatusMessage.class){
+      } else if (msg_class == GreenPassStatusMessage.class) {
         handler = new HandleGreenPassStatusMessage((GreenPassStatusMessage) msg, session);
       } else if (msg_class == LoginMessage.class) {
         handler = new HandleLoginMessage((LoginMessage) msg, session, client);

@@ -56,7 +56,12 @@ public class PatientDashboardViewController extends ViewController {
       String apptTypeInfo = "";
 
       if (appointment.getStaff_member() != null) {
-        apptTypeInfo = String.format("Dr. %s %s, %s\n", appointment.getStaff_member().getFirstName(), appointment.getStaff_member().getLastName(), appointment.getStaff_member().getRole().getName());
+        apptTypeInfo =
+            String.format(
+                "Dr. %s %s, %s\n",
+                appointment.getStaff_member().getFirstName(),
+                appointment.getStaff_member().getLastName(),
+                appointment.getStaff_member().getRole().getName());
       } else {
         apptTypeInfo = appointment.getType().getName() + "\n";
       }
@@ -84,7 +89,8 @@ public class PatientDashboardViewController extends ViewController {
     EventBus.getDefault().post(new MyClinicEvent(this));
   }
 
-  @FXML public void viewMyGreenPass(ActionEvent event) {
+  @FXML
+  public void viewMyGreenPass(ActionEvent event) {
     EventBus.getDefault().post(new GreenPassStatusEvent(this));
   }
 }

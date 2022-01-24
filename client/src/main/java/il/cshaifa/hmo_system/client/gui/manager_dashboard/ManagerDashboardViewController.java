@@ -92,7 +92,6 @@ public class ManagerDashboardViewController extends RoleDefinedViewController {
     addTestOrVaccineAppointments(new AppointmentType("Flu Vaccine"));
   }
 
-
   public void addCovidVaccinceAppt(ActionEvent actionEvent) {
     addTestOrVaccineAppointments(new AppointmentType("COVID Vaccine"));
   }
@@ -101,7 +100,7 @@ public class ManagerDashboardViewController extends RoleDefinedViewController {
     addTestOrVaccineAppointments(new AppointmentType("COVID Test"));
   }
 
-  private void addTestOrVaccineAppointments(AppointmentType appointmentType){
+  private void addTestOrVaccineAppointments(AppointmentType appointmentType) {
     var event = new AddAppointmentEvent(null, null, null, this);
     event.type = appointmentType;
     EventBus.getDefault().post(event);

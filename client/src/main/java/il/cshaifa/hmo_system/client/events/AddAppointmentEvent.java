@@ -16,6 +16,7 @@ public class AddAppointmentEvent extends Event {
   public AddAppointmentEvent(Object sender) {
     super(sender);
   }
+
   public AppointmentType type;
 
   public AddAppointmentEvent(

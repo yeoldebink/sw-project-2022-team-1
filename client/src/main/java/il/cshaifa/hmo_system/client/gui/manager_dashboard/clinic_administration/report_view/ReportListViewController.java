@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -26,7 +25,6 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -83,8 +81,10 @@ public class ReportListViewController extends RoleDefinedViewController {
               @Override
               protected void updateItem(ClinicStaff staff, boolean b) {
                 super.updateItem(staff, b);
-                setText(staff == null ? null
-                    : staff.getUser().getLastName() + " " + staff.getUser().getFirstName());
+                setText(
+                    staff == null
+                        ? null
+                        : staff.getUser().getLastName() + " " + staff.getUser().getFirstName());
               }
             });
 
@@ -109,46 +109,51 @@ public class ReportListViewController extends RoleDefinedViewController {
         .getItems()
         .add(new ReportTypeComboBoxItem(ReportType.AVERAGE_WAIT_TIMES, "Average wait times"));
 
-    reportTypeComboBox.getSelectionModel().selectedItemProperty().addListener(
-        (obs, oldValue, newValue) ->
-        {
-            if (newValue != null){
-              var isHMOManager = HMOClient.getClient().getConnected_user().getRole().getName().equals("HMO Manager");
-              if (newValue == reportTypeComboBox.getItems().get(2)){
-                if(isHMOManager){
-                  clinicList.getSelectionModel().selectAll();
-                  clinicList.setDisable(true);
+    reportTypeComboBox
+        .getSelectionModel()
+        .selectedItemProperty()
+        .addListener(
+            (obs, oldValue, newValue) -> {
+              if (newValue != null) {
+                var isHMOManager =
+                    HMOClient.getClient()
+                        .getConnected_user()
+                        .getRole()
+                        .getName()
+                        .equals("HMO Manager");
+                if (newValue == reportTypeComboBox.getItems().get(2)) {
+                  if (isHMOManager) {
+                    clinicList.getSelectionModel().selectAll();
+                    clinicList.setDisable(true);
+                  }
+                  switchToPane(staffListPane);
+                } else {
+                  if (isHMOManager) {
+                    clinicList.getSelectionModel().clearSelection();
+                    clinicList.setDisable(false);
+                  }
+                  switchToPane(clinicListPane);
                 }
-                switchToPane(staffListPane);
-              }else{
-                if (isHMOManager){
-                  clinicList.getSelectionModel().clearSelection();
-                  clinicList.setDisable(false);
-                }
-                switchToPane(clinicListPane);
               }
-            }
-        }
-    );
+            });
 
     reportTypeComboBox.getSelectionModel().select(0);
 
-
-
-    reportsTable.getSelectionModel().selectedItemProperty().addListener(
-        (obs, oldValue, newValue) ->
-        {
-          splitPane.getItems().set(2, new Pane());
-          if (newValue != null){
-            EventBus.getDefault()
-                .post(
-                    new ViewReportEvent(
-                        this,
-                        reportsTable.getSelectionModel().getSelectedItems(),
-                        reportTypeComboBox.getValue().reportType));
-          }
-        }
-    );
+    reportsTable
+        .getSelectionModel()
+        .selectedItemProperty()
+        .addListener(
+            (obs, oldValue, newValue) -> {
+              splitPane.getItems().set(2, new Pane());
+              if (newValue != null) {
+                EventBus.getDefault()
+                    .post(
+                        new ViewReportEvent(
+                            this,
+                            reportsTable.getSelectionModel().getSelectedItems(),
+                            reportTypeComboBox.getValue().reportType));
+              }
+            });
 
     switchToPane(clinicListPane);
   }
@@ -169,7 +174,7 @@ public class ReportListViewController extends RoleDefinedViewController {
     }
   }
 
-  public void populateStaffList(List<ClinicStaff> staff_members){
+  public void populateStaffList(List<ClinicStaff> staff_members) {
     staff_members.sort(Comparator.comparing(ClinicStaff::toString));
     staffList.getItems().setAll(staff_members);
   }
@@ -197,11 +202,11 @@ public class ReportListViewController extends RoleDefinedViewController {
     if (report_type != ReportType.AVERAGE_WAIT_TIMES) {
       report_event =
           new ReportEvent(selected_clinics, null, report_type, startDate, endDate, null, this);
-    } else{
-      var selected_staff_member = staffList.getSelectionModel().getSelectedItems()
-          .get(0);
+    } else {
+      var selected_staff_member = staffList.getSelectionModel().getSelectedItems().get(0);
       report_event =
-          new ReportEvent(selected_clinics, selected_staff_member, report_type, startDate, endDate, null, this);
+          new ReportEvent(
+              selected_clinics, selected_staff_member, report_type, startDate, endDate, null, this);
     }
     EventBus.getDefault().post(report_event);
   }

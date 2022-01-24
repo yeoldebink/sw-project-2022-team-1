@@ -7,7 +7,6 @@ import il.cshaifa.hmo_system.client.events.GreenPassStatusEvent;
 import il.cshaifa.hmo_system.client.utils.Utils;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -21,8 +20,7 @@ public class GreenPassViewController extends ViewController {
   GreenPassStatus status;
   LocalDateTime lastVaccineDate, lastTestDate;
 
-  @FXML
-  private ImageView bannerImageView;
+  @FXML private ImageView bannerImageView;
 
   @FXML private Label infoLabel;
 
@@ -44,8 +42,11 @@ public class GreenPassViewController extends ViewController {
     } else {
       imageName = "your_green_pass.jpg";
       // generate QR
-      ByteArrayOutputStream out = QRCode.from(
-          String.valueOf((HMOClient.getClient().getConnected_user().getId()))).to(ImageType.PNG).withSize(200, 200).stream();
+      ByteArrayOutputStream out =
+          QRCode.from(String.valueOf((HMOClient.getClient().getConnected_user().getId())))
+              .to(ImageType.PNG)
+              .withSize(200, 200)
+              .stream();
       ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
 
       qrCodeImageView.setImage(new Image(in));
@@ -66,15 +67,20 @@ public class GreenPassViewController extends ViewController {
       }
 
       if (vaccineExpiration != null && testExpiration != null) {
-        expDateString = Utils.prettifyDateTime(
-            vaccineExpiration.isAfter(testExpiration) ? vaccineExpiration : testExpiration
-        );
-      } else expDateString = Utils.prettifyDateTime(vaccineExpiration == null ? testExpiration : vaccineExpiration);
+        expDateString =
+            Utils.prettifyDateTime(
+                vaccineExpiration.isAfter(testExpiration) ? vaccineExpiration : testExpiration);
+      } else
+        expDateString =
+            Utils.prettifyDateTime(vaccineExpiration == null ? testExpiration : vaccineExpiration);
     }
 
-    infoLabel.setText(String.format("Last COVID-19 vaccine: %s\nLast COVID-19 test: %s\nExpiration date: %s",
-        lastVaccineDate == null ? "N/A" : Utils.prettifyDateTime(lastVaccineDate),
-        lastTestDate == null ? "N/A": Utils.prettifyDateTime(lastTestDate), expDateString));
+    infoLabel.setText(
+        String.format(
+            "Last COVID-19 vaccine: %s\nLast COVID-19 test: %s\nExpiration date: %s",
+            lastVaccineDate == null ? "N/A" : Utils.prettifyDateTime(lastVaccineDate),
+            lastTestDate == null ? "N/A" : Utils.prettifyDateTime(lastTestDate),
+            expDateString));
 
     bannerImageView.setImage(new Image(getClass().getResourceAsStream(imageName)));
     bannerImageView.setFitWidth(430);

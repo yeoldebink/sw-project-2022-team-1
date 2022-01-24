@@ -54,17 +54,16 @@ public class HandleAppointmentMessage extends MessageHandler {
     }
   }
 
-  /**
-   * Gets available appointments for any service type in clinic
-   */
+  /** Gets available appointments for any service type in clinic */
   private void getClinicAppointments() {
     LocalDateTime start = LocalDateTime.now();
     LocalDateTime end =
         LocalDateTime.now().plusWeeks(max_future_appointments.get(class_message.type.getName()));
-    if (class_message.type.getName().equals("COVID Test") ||
-        class_message.type.getName().equals("COVID Vaccine") ||
-        class_message.type.getName().equals("Flu Vaccine")) {
-      cr.select(root).where(
+    if (class_message.type.getName().equals("COVID Test")
+        || class_message.type.getName().equals("COVID Vaccine")
+        || class_message.type.getName().equals("Flu Vaccine")) {
+      cr.select(root)
+          .where(
               cb.between(root.get("appt_date"), start, end),
               cb.equal(root.get("type"), class_message.type),
               cb.isFalse(root.get("taken")),
@@ -73,7 +72,8 @@ public class HandleAppointmentMessage extends MessageHandler {
                   cb.lessThan(root.get("lock_time"), start),
                   cb.equal(root.get("patient"), class_message.patient)));
     } else {
-      cr.select(root).where(
+      cr.select(root)
+          .where(
               cb.between(root.get("appt_date"), start, end),
               cb.equal(root.get("type"), class_message.type),
               cb.equal(root.get("clinic"), class_message.clinic),
@@ -99,18 +99,14 @@ public class HandleAppointmentMessage extends MessageHandler {
     }
   }
 
-  /**
-   * Get a patient's appointments past and future
-   */
+  /** Get a patient's appointments past and future */
   private void getPatientHistory() {
     cr.select(root)
         .where(cb.equal(root.get("patient"), class_message.patient), cb.isTrue(root.get("taken")));
     class_message.appointments = session.createQuery(cr).getResultList();
   }
 
-  /**
-   * Get a patient's next appointment
-   */
+  /** Get a patient's next appointment */
   private void getPatientNextAppointment() {
     cr.select(root)
         .where(
@@ -123,9 +119,7 @@ public class HandleAppointmentMessage extends MessageHandler {
     class_message.appointments.add(lst.size() > 0 ? lst.get(0) : null);
   }
 
-  /**
-   * Gets a staff members all appointments for today
-   */
+  /** Gets a staff members all appointments for today */
   private void getStaffDailyAppointments() {
     LocalDateTime start = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
     LocalDateTime end = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
@@ -137,9 +131,7 @@ public class HandleAppointmentMessage extends MessageHandler {
     class_message.appointments = session.createQuery(cr).getResultList();
   }
 
-  /**
-   * Gets a staff member future appointments
-   */
+  /** Gets a staff member future appointments */
   private void getStaffFutureAppointments() {
     cr.select(root)
         .where(

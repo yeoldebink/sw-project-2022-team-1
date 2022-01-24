@@ -3,7 +3,6 @@ package il.cshaifa.hmo_system.server.server_handlers;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.ClinicStaff;
-import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.ReportMessage;
 import il.cshaifa.hmo_system.messages.ReportMessage.ReportType;
 import il.cshaifa.hmo_system.reports.DailyAppointmentTypesReport;
@@ -14,7 +13,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
@@ -69,12 +67,15 @@ public class HandleReportMessage extends MessageHandler {
 
     for (LocalDate current_date = class_message.start_date.toLocalDate();
         !current_date.isAfter(report_end_date);
-        current_date = current_date.plusDays(1)){
+        current_date = current_date.plusDays(1)) {
       daily_reports_map.put(current_date, new HashMap<>());
       // for each clinic fill General services as 0
       for (Clinic clinic : class_message.clinics) {
-        daily_reports_map.get(current_date).put(
-                clinic.getId(), new DailyAppointmentTypesReport(current_date.atStartOfDay(), clinic));
+        daily_reports_map
+            .get(current_date)
+            .put(
+                clinic.getId(),
+                new DailyAppointmentTypesReport(current_date.atStartOfDay(), clinic));
         for (String service : clinics_general_services) {
           ((DailyAppointmentTypesReport) daily_reports_map.get(current_date).get(clinic.getId()))
               .report_data.put(service, 0);
@@ -97,25 +98,22 @@ public class HandleReportMessage extends MessageHandler {
 
     for (LocalDate current_date = class_message.start_date.toLocalDate();
         !current_date.isAfter(report_end_date);
-        current_date = current_date.plusDays(1)){
+        current_date = current_date.plusDays(1)) {
       daily_reports_map.put(current_date, new HashMap<>());
       total_appointments_map.put(current_date, new HashMap<>());
-      for (Clinic clinic : class_message.clinics){
-          DailyAverageWaitTimeReport clinic_daily_report =
-              new DailyAverageWaitTimeReport(current_date.atStartOfDay(), clinic);
+      for (Clinic clinic : class_message.clinics) {
+        DailyAverageWaitTimeReport clinic_daily_report =
+            new DailyAverageWaitTimeReport(current_date.atStartOfDay(), clinic);
 
-          daily_reports_map.get(current_date).putIfAbsent(clinic.getId(), clinic_daily_report);
+        daily_reports_map.get(current_date).putIfAbsent(clinic.getId(), clinic_daily_report);
 
-          total_appointments_map.get(current_date).put(clinic.getId(), 0);
+        total_appointments_map.get(current_date).put(clinic.getId(), 0);
 
-          ((DailyAverageWaitTimeReport)
-                  daily_reports_map.get(current_date).get(clinic.getId()))
-              .report_data.put(class_message.staff_member.getUser(), 0);
+        ((DailyAverageWaitTimeReport) daily_reports_map.get(current_date).get(clinic.getId()))
+            .report_data.put(class_message.staff_member.getUser(), 0);
 
-          total_appointments_map
-              .get(current_date)
-              .put(clinic.getId(), 0);
-        }
+        total_appointments_map.get(current_date).put(clinic.getId(), 0);
+      }
     }
   }
 
@@ -165,17 +163,16 @@ public class HandleReportMessage extends MessageHandler {
       var total_waited_time = report.report_data.get(appt_staff_member);
 
       if (total_waited_time == null) {
-        report.report_data.put(
-            appt_staff_member, wait_time);
+        report.report_data.put(appt_staff_member, wait_time);
       } else {
         report.report_data.put(
             appt_staff_member, report.report_data.get(appt_staff_member) + wait_time);
       }
       total_appointments_map
           .get(appt_date)
-          .put(appt_clinic.getId(),
+          .put(
+              appt_clinic.getId(),
               total_appointments_map.get(appt_date).get(appt_clinic.getId()) + 1);
-
     }
 
     for (LocalDate date : daily_reports_map.keySet()) {
@@ -220,12 +217,10 @@ public class HandleReportMessage extends MessageHandler {
     }
   }
 
-  private List<ClinicStaff> getClinicStaff(List<Clinic> clinics){
+  private List<ClinicStaff> getClinicStaff(List<Clinic> clinics) {
     CriteriaQuery<ClinicStaff> cr_ClinicStaff = cb.createQuery(ClinicStaff.class);
     Root<ClinicStaff> root_ClinicStaff = cr_ClinicStaff.from(ClinicStaff.class);
-    cr_ClinicStaff
-        .select(root_ClinicStaff)
-        .where(root_ClinicStaff.get("clinic").in(clinics));
+    cr_ClinicStaff.select(root_ClinicStaff).where(root_ClinicStaff.get("clinic").in(clinics));
     return session.createQuery(cr_ClinicStaff).getResultList();
   }
 }
