@@ -15,7 +15,7 @@
 <AnchorPane xmlns="http://javafx.com/javafx/17"
   xmlns:fx="http://javafx.com/fxml/1"
   fx:controller="il.cshaifa.hmo_system.desktop_client.gui.manager_dashboard.clinic_administration.report_view.ReportListViewController"
-  stylesheets="@../../../../hmo_lite.css">
+  stylesheets="@../../../hmo_lite.css">
 
   <VBox AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10"
     AnchorPane.rightAnchor="10">

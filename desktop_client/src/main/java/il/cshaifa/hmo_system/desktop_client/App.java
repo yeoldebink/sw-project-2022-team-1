@@ -2,8 +2,8 @@ package il.cshaifa.hmo_system.desktop_client;
 
 import il.cshaifa.hmo_system.client_base.HMOClient;
 import il.cshaifa.hmo_system.client_base.utils.Utils;
-import il.cshaifa.hmo_system.desktop_client.gui.login.LoginController;
-import il.cshaifa.hmo_system.desktop_client.gui.login.LoginViewController;
+import il.cshaifa.hmo_system.desktop_client.gui.login.DesktopLoginController;
+import il.cshaifa.hmo_system.desktop_client.gui.login.DesktopLoginViewController;
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -23,8 +23,9 @@ public class App extends Application {
     client.openConnection();
 
     FXMLLoader loader =
-        new FXMLLoader(App.class.getResource(Utils.get_fxml(LoginViewController.class)));
-    Utils.openNewWindow(LoginViewController.class, LoginController.class, loader, false);
+        new FXMLLoader(App.class.getResource(Utils.get_fxml(DesktopLoginViewController.class)));
+    Utils.openNewWindow(
+        DesktopLoginViewController.class, DesktopLoginController.class, loader, false);
   }
 
   @Override

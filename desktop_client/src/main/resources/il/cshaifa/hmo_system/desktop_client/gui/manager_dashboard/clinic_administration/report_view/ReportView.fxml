@@ -9,7 +9,7 @@
 
 <AnchorPane prefWidth="300.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="il.cshaifa.hmo_system.desktop_client.gui.manager_dashboard.clinic_administration.report_view.ReportViewController"
-  stylesheets="@../../../../hmo_lite.css">
+  stylesheets="@../../../hmo_lite.css">
     <children>
         <VBox prefWidth="270.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0"
               AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">

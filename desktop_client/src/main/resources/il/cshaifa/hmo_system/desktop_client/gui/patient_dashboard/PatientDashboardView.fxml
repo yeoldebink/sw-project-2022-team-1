@@ -17,7 +17,7 @@
 <AnchorPane
   xmlns="http://javafx.com/javafx/17"
   xmlns:fx="http://javafx.com/fxml/1"
-  fx:controller="il.cshaifa.hmo_system.desktop_client.gui.patient_dashboard.PatientDashboardViewController" stylesheets="@../../hmo_lite.css">
+  fx:controller="il.cshaifa.hmo_system.desktop_client.gui.patient_dashboard.PatientDashboardViewController" stylesheets="@../hmo_lite.css">
 
   <background>
     <Background>

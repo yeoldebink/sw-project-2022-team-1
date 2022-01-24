@@ -18,10 +18,11 @@ import javafx.stage.Stage;
 import jdk.jshell.spi.ExecutionControl.NotImplementedException;
 import org.greenrobot.eventbus.Subscribe;
 
-public class LoginController extends Controller {
+public class DesktopLoginController extends Controller {
 
-  public LoginController(ViewController view_controller, Stage stage) {
+  public DesktopLoginController(ViewController view_controller, Stage stage) {
     super(view_controller, stage);
+    stage.setTitle("HMO System ~ Login");
   }
 
   /**
@@ -64,7 +65,7 @@ public class LoginController extends Controller {
   private void alreadyLoggedInUser() {
     Platform.runLater(
         () ->
-            ((LoginViewController) this.view_controller)
+            ((DesktopLoginViewController) this.view_controller)
                 .setFailedText("This user is already logged in"));
   }
 
@@ -72,7 +73,9 @@ public class LoginController extends Controller {
   private void incorrectUser() {
     // Letting the controller to call this function on the UI thread, and apply the changes
     Platform.runLater(
-        () -> ((LoginViewController) view_controller).setFailedText("Incorrect ID or password"));
+        () ->
+            ((DesktopLoginViewController) view_controller)
+                .setFailedText("Incorrect ID or password"));
   }
 
   /**

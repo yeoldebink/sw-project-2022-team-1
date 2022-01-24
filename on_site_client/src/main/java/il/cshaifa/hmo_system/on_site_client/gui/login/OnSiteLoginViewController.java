@@ -1,4 +1,4 @@
-package il.cshaifa.hmo_system.desktop_client.gui.login;
+package il.cshaifa.hmo_system.on_site_client.gui.login;
 
 import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client_base.events.LoginEvent;
@@ -11,7 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import org.greenrobot.eventbus.EventBus;
 
-public class LoginViewController extends ViewController {
+public class OnSiteLoginViewController extends ViewController {
 
   @FXML
   public void initialize() {}

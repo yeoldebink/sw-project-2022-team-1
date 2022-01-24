@@ -11,7 +11,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="il.cshaifa.hmo_system.desktop_client.gui.manager_dashboard.clinic_administration.clinic_staff.ClinicStaffListViewController"
-  stylesheets="@../../../../hmo_lite.css">
+  stylesheets="@../../../hmo_lite.css">
     <VBox AnchorPane.topAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.bottomAnchor="10.0">
         <Label text="Clinic Staff List" styleClass="h1-label" />
         <TableView fx:id="staff_table" tableMenuButtonVisible="true" onContextMenuRequested="#contextMenuRequested" VBox.vgrow="ALWAYS">

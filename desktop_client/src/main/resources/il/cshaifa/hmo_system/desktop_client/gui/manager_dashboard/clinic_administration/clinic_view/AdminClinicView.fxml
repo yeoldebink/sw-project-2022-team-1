@@ -13,7 +13,7 @@
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1"
   xmlns="http://javafx.com/javafx/17"
   fx:controller="il.cshaifa.hmo_system.desktop_client.gui.manager_dashboard.clinic_administration.clinic_view.AdminClinicViewController"
-  stylesheets="@../../../../hmo_lite.css">
+  stylesheets="@../../../hmo_lite.css">
   <VBox AnchorPane.topAnchor="10" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10"
     AnchorPane.rightAnchor="10" spacing="10">
     <Label text="Edit Clinic" styleClass="h1-label" />

@@ -10,7 +10,7 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
   xmlns:fx="http://javafx.com/fxml"
   fx:controller="il.cshaifa.hmo_system.desktop_client.gui.patient_dashboard.green_pass.GreenPassViewController"
-  prefHeight="400.0" prefWidth="700.0" stylesheets="@../../../hmo_lite.css">
+  prefHeight="400.0" prefWidth="700.0" stylesheets="@../../hmo_lite.css">
 
   <VBox AnchorPane.rightAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="10" spacing="10">
     <ImageView fx:id="bannerImageView"/>

@@ -13,7 +13,7 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
   xmlns:fx="http://javafx.com/fxml"
   fx:controller="il.cshaifa.hmo_system.desktop_client.gui.patient_dashboard.clinic_view.MyClinicViewController"
-  prefWidth="450.0" stylesheets="@../../../hmo_lite.css">
+  prefWidth="450.0" stylesheets="@../../hmo_lite.css">
 
   <VBox AnchorPane.topAnchor="10" AnchorPane.bottomAnchor="30" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" spacing="10">
     <ImageView>

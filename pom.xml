@@ -13,6 +13,7 @@
     <module>desktop_client</module>
     <module>testing_database_init</module>
     <module>client_base</module>
+    <module>on_site_client</module>
   </modules>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
