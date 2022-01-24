@@ -76,10 +76,11 @@ public class Main {
     Map<String, User> users = new HashMap<>();
     users.put(
         "Jordan Sullivan",
-        new User(9000, null, "Jordan", "Sullivan", null, null, roles.get("HMO Manager")));
+        new User(9000, "null", "Jordan", "Sullivan", null, null, roles.get("HMO Manager")));
     users.put(
         "Carla Espinosa",
-        new User(1618, null, "Carla", "Espinosa", null, null, roles.get("Clinic Manager")));
+        new User(
+            1618, "QUEEN_carla", "Carla", "Espinosa", null, null, roles.get("Clinic Manager")));
     users.put(
         "Carmen Sandiego",
         new User(8793, null, "Carmen", "Sandiego", null, null, roles.get("Clinic Manager")));
@@ -95,7 +96,7 @@ public class Main {
 
     users.put(
         "Elliot Reed",
-        new User(7893, null, "Elliot", "Reed", null, null, roles.get("Family Doctor")));
+        new User(7893, null, "Elliot", "Reed", null, null, roles.get("Neurologist")));
 
     users.put(
         "John Dorian",
@@ -128,7 +129,7 @@ public class Main {
 
     users.put(
         "Tyler Durden",
-        new User(254789321, null, "Tyler", "Durden", null, null, roles.get("Patient")));
+        new User(254789321, "password", "Tyler", "Durden", null, null, roles.get("Patient")));
 
     users.put(
         "Marquis De Carabas",
@@ -213,6 +214,7 @@ public class Main {
     ArrayList<ClinicStaff> clinicStaff = new ArrayList<>();
 
     var carmel = clinics.get("Carmel Center");
+    clinicStaff.add(new ClinicStaff(carmel, users.get("Bob Kelso")));
     clinicStaff.add(new ClinicStaff(carmel, users.get("John Dorian")));
     clinicStaff.add(new ClinicStaff(carmel, users.get("Sarah Tizdale")));
     clinicStaff.add(new ClinicStaff(carmel, users.get("Perry Cox")));
@@ -262,8 +264,8 @@ public class Main {
         "Jill Tracy",
         new Patient(
             users.get("Jill Tracy"),
-            clinics.get("Mile End"),
-            LocalDateTime.of(1977, 12, 5, 2, 34)));
+            clinics.get("Carmel Center"),
+            LocalDateTime.of(2010, 8, 12, 2, 34)));
 
     for (var patient : patients.values()) {
       session.save(patient);
@@ -300,7 +302,8 @@ public class Main {
       Map<String, Patient> patients,
       Map<String, User> users,
       Map<String, Clinic> clinics,
-      Map<String, AppointmentType> appt_types) {
+      Map<String, AppointmentType> appt_types,
+      Map<String, Role> roles) {
     ArrayList<Appointment> appointments = new ArrayList<>();
 
     appointments.add(
@@ -308,7 +311,7 @@ public class Main {
             patients.get("Tyler Durden"),
             appt_types.get("Family Doctor"),
             null,
-            users.get("John Dorian"),
+            users.get("Bob Kelso"),
             clinics.get("Carmel Center"),
             LocalDateTime.of(2022, 2, 1, 12, 20),
             LocalDateTime.of(2022, 2, 1, 12, 22, 41),
@@ -320,10 +323,82 @@ public class Main {
             patients.get("Marquis De Carabas"),
             appt_types.get("Family Doctor"),
             null,
-            users.get("John Dorian"),
+            users.get("Bob Kelso"),
             clinics.get("Carmel Center"),
             LocalDateTime.of(2022, 2, 3, 10, 40),
             LocalDateTime.of(2022, 2, 3, 10, 45, 11),
+            null,
+            true));
+
+    appointments.add(
+        new Appointment(
+            patients.get("Tyler Durden"),
+            appt_types.get("Family Doctor"),
+            null,
+            users.get("Bob Kelso"),
+            clinics.get("Carmel Center"),
+            LocalDateTime.of(2020, 2, 1, 12, 20),
+            LocalDateTime.of(2020, 2, 1, 12, 22, 41),
+            null,
+            true));
+
+    appointments.add(
+        new Appointment(
+            patients.get("Tyler Durden"),
+            appt_types.get("Specialist"),
+            roles.get("Neurologist"),
+            users.get("Elliot Reed"),
+            clinics.get("Carmel Center"),
+            LocalDateTime.of(2021, 1, 10, 12, 20),
+            LocalDateTime.of(2021, 1, 10, 12, 22),
+            null,
+            true));
+
+    appointments.add(
+        new Appointment(
+            patients.get("Tyler Durden"),
+            appt_types.get("Specialist"),
+            roles.get("Neurologist"),
+            users.get("Elliot Reed"),
+            clinics.get("Carmel Center"),
+            LocalDateTime.of(2021, 1, 10, 12, 20),
+            LocalDateTime.of(2021, 1, 10, 12, 22),
+            null,
+            true));
+
+    appointments.add(
+        new Appointment(
+            patients.get("Tyler Durden"),
+            appt_types.get("Specialist"),
+            roles.get("Neurologist"),
+            users.get("Elliot Reed"),
+            clinics.get("Carmel Center"),
+            LocalDateTime.of(2021, 1, 11, 12, 20),
+            LocalDateTime.of(2021, 1, 11, 12, 22),
+            null,
+            true));
+
+    appointments.add(
+        new Appointment(
+            patients.get("Tyler Durden"),
+            appt_types.get("Specialist"),
+            roles.get("Neurologist"),
+            users.get("Christopher Turk"),
+            clinics.get("Carmel Center"),
+            LocalDateTime.of(2021, 1, 9, 12, 20),
+            LocalDateTime.of(2021, 1, 9, 12, 22),
+            null,
+            true));
+
+    appointments.add(
+        new Appointment(
+            patients.get("Tyler Durden"),
+            appt_types.get("COVID Vaccine"),
+            null,
+            users.get("LaVerne Roberts"),
+            clinics.get("Carmel Center"),
+            LocalDateTime.of(2022, 1, 9, 12, 20),
+            LocalDateTime.of(2022, 1, 9, 12, 22),
             null,
             true));
 
@@ -345,7 +420,7 @@ public class Main {
       var clinicStaff = assignStaff(users, clinics);
       var patients = createPatients(users, clinics);
       var appointment_types = createAppointmentTypes();
-      var appointments = createAppointments(patients, users, clinics, appointment_types);
+      var appointments = createAppointments(patients, users, clinics, appointment_types, roles);
       session.getTransaction().commit();
     } catch (Exception e) {
       e.printStackTrace();

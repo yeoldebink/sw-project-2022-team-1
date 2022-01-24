@@ -2,9 +2,11 @@ package il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration
 
 import il.cshaifa.hmo_system.client.HMOClient;
 import il.cshaifa.hmo_system.client.base_controllers.RoleDefinedViewController;
+import il.cshaifa.hmo_system.client.events.Event;
 import il.cshaifa.hmo_system.client.events.ReportEvent;
 import il.cshaifa.hmo_system.client.events.ViewReportEvent;
 import il.cshaifa.hmo_system.entities.Clinic;
+import il.cshaifa.hmo_system.entities.ClinicStaff;
 import il.cshaifa.hmo_system.entities.Role;
 import il.cshaifa.hmo_system.messages.ReportMessage.ReportType;
 import il.cshaifa.hmo_system.reports.DailyReport;
@@ -23,12 +25,17 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import org.greenrobot.eventbus.EventBus;
 
 public class ReportListViewController extends RoleDefinedViewController {
 
+  @FXML private AnchorPane clinicListPane;
+  @FXML private AnchorPane staffListPane;
+  @FXML private StackPane listStackPane;
+  @FXML private ListView<ClinicStaff> staffList;
   @FXML private SplitPane splitPane;
   @FXML private TableView<DailyReport> reportsTable;
 
@@ -68,6 +75,21 @@ public class ReportListViewController extends RoleDefinedViewController {
 
     clinicList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
+    staffList.setCellFactory(
+        staff ->
+            new ListCell<>() {
+              @Override
+              protected void updateItem(ClinicStaff staff, boolean b) {
+                super.updateItem(staff, b);
+                setText(
+                    staff == null
+                        ? null
+                        : staff.getUser().getLastName() + " " + staff.getUser().getFirstName());
+              }
+            });
+
+    staffList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+
     reportsTable.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
     clinicNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("ClinicName"));
     reportDateTableColumn.setCellValueFactory(new PropertyValueFactory<>("Date"));
@@ -87,10 +109,59 @@ public class ReportListViewController extends RoleDefinedViewController {
         .getItems()
         .add(new ReportTypeComboBoxItem(ReportType.AVERAGE_WAIT_TIMES, "Average wait times"));
 
+    reportTypeComboBox
+        .getSelectionModel()
+        .selectedItemProperty()
+        .addListener(
+            (obs, oldValue, newValue) -> {
+              if (newValue != null) {
+                var isHMOManager =
+                    HMOClient.getClient()
+                        .getConnected_user()
+                        .getRole()
+                        .getName()
+                        .equals("HMO Manager");
+                if (newValue == reportTypeComboBox.getItems().get(2)) {
+                  if (isHMOManager) {
+                    clinicList.getSelectionModel().selectAll();
+                    clinicList.setDisable(true);
+                  }
+                  switchToPane(staffListPane);
+                } else {
+                  if (isHMOManager) {
+                    clinicList.getSelectionModel().clearSelection();
+                    clinicList.setDisable(false);
+                  }
+                  switchToPane(clinicListPane);
+                }
+              }
+            });
+
     reportTypeComboBox.getSelectionModel().select(0);
+
+    reportsTable
+        .getSelectionModel()
+        .selectedItemProperty()
+        .addListener(
+            (obs, oldValue, newValue) -> {
+              splitPane.getItems().set(2, new Pane());
+              if (newValue != null) {
+                EventBus.getDefault()
+                    .post(
+                        new ViewReportEvent(
+                            this,
+                            reportsTable.getSelectionModel().getSelectedItems(),
+                            reportTypeComboBox.getValue().reportType));
+              }
+            });
+
+    switchToPane(clinicListPane);
   }
 
   public void populateReportsTable(List<DailyReport> reports) {
+
+    reports.sort(Comparator.comparing(DailyReport::getDate));
+
     reportsTable.getItems().setAll(reports);
   }
 
@@ -103,40 +174,41 @@ public class ReportListViewController extends RoleDefinedViewController {
     }
   }
 
+  public void populateStaffList(List<ClinicStaff> staff_members) {
+    staff_members.sort(Comparator.comparing(ClinicStaff::toString));
+    staffList.getItems().setAll(staff_members);
+  }
+
+  public void switchToPane(Object pane) {
+    for (var p : listStackPane.getChildren()) {
+      p.setVisible(p.equals(pane));
+    }
+  }
+
   @FXML
   public void requestReports(ActionEvent event) {
     // clear the pane and the list
     splitPane.getItems().set(2, new Pane());
     reportsTable.getItems().clear();
-
-    var selected_clinics = new ArrayList<>(clinicList.getSelectionModel().getSelectedItems());
+    Event report_event;
 
     var report_type = reportTypeComboBox.getValue().reportType;
     var startDate = startDatePicker.getValue().atStartOfDay();
 
     // we want to get reports INCLUDING the last day
     var endDate = endDatePicker.getValue().atTime(23, 59, 59);
+    var selected_clinics = new ArrayList<>(clinicList.getSelectionModel().getSelectedItems());
 
-    var report_event =
-        new ReportEvent(selected_clinics, report_type, startDate, endDate, null, this);
-
-    EventBus.getDefault().post(report_event);
-  }
-
-  @FXML
-  public void onMouseClickedInReportsTable(MouseEvent event) {
-    // clear the pane
-    splitPane.getItems().set(2, new Pane());
-
-    var selected_reports = reportsTable.getSelectionModel().getSelectedItems();
-    if (selected_reports.size() > 0) {
-      EventBus.getDefault()
-          .post(
-              new ViewReportEvent(
-                  this,
-                  reportsTable.getSelectionModel().getSelectedItems(),
-                  reportTypeComboBox.getValue().reportType));
+    if (report_type != ReportType.AVERAGE_WAIT_TIMES) {
+      report_event =
+          new ReportEvent(selected_clinics, null, report_type, startDate, endDate, null, this);
+    } else {
+      var selected_staff_member = staffList.getSelectionModel().getSelectedItems().get(0);
+      report_event =
+          new ReportEvent(
+              selected_clinics, selected_staff_member, report_type, startDate, endDate, null, this);
     }
+    EventBus.getDefault().post(report_event);
   }
 
   public void setViewedReport(Pane reportPane) {

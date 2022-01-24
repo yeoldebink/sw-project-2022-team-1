@@ -1,9 +1,7 @@
 package il.cshaifa.hmo_system.client.base_controllers;
 
-import il.cshaifa.hmo_system.client.events.CloseWindowEvent;
 import javafx.stage.Stage;
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 public abstract class Controller {
   protected ViewController view_controller;
@@ -13,10 +11,16 @@ public abstract class Controller {
     this.view_controller = view_controller;
     this.stage = stage;
     EventBus.getDefault().register(this);
+
+    if (stage != null) stage.setOnCloseRequest(windowEvent -> onWindowClose());
   }
 
-  @Subscribe
-  public void onWindowCloseEvent(CloseWindowEvent event) {
-    if (event.getSender().equals(this.view_controller)) EventBus.getDefault().unregister(this);
+  public boolean hasViewController() {
+    return view_controller != null;
+  }
+
+  protected void onWindowClose() {
+    EventBus.getDefault().unregister(this);
+    this.view_controller = null;
   }
 }

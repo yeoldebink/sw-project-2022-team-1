@@ -11,21 +11,14 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0"
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
             prefWidth="900.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.appointment_list.AdminAppointmentListViewController">
+            fx:controller="il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.clinic_appointments.appointment_list.AdminAppointmentListViewController"
+            stylesheets="@../../../../hmo_lite.css">
     <VBox AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
-        <Label text="Appointments List">
-            <font>
-                <Font name="DejaVu Sans Bold" size="22.0"/>
-            </font>
-        </Label>
-        <Label fx:id="staff_member_name" text="">
-            <font>
-                <Font name="DejaVu Sans Bold" size="16.0"/>
-            </font>
-        </Label>
-        <TableView fx:id="appt_table" prefHeight="370.0" prefWidth="574.0" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
+        <Label text="Appointments List" styleClass="h1-label"/>
+        <Label fx:id="staff_member_name" styleClass="h2-label"/>
+        <TableView fx:id="appt_table" prefWidth="574.0" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
             <columns>
                 <TableColumn fx:id="appt_date" prefWidth="75.0" text="Date &amp; Time"/>
                 <TableColumn fx:id="appt_type" prefWidth="75.0" text="Type"/>

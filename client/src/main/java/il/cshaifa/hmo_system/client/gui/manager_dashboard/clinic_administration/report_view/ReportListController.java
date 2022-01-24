@@ -6,6 +6,7 @@ import il.cshaifa.hmo_system.client.events.ReportEvent;
 import il.cshaifa.hmo_system.client.events.ViewReportEvent;
 import il.cshaifa.hmo_system.client.utils.Utils;
 import il.cshaifa.hmo_system.entities.Clinic;
+import il.cshaifa.hmo_system.entities.ClinicStaff;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.ReportMessage.ReportType;
 import il.cshaifa.hmo_system.reports.DailyAppointmentTypesReport;
@@ -33,7 +34,8 @@ public class ReportListController extends Controller {
     if (!event.getSender().equals(this.view_controller) || event.clinics.size() == 0) return;
     try {
       HMOClient.getClient()
-          .requestReports(event.clinics, event.start_date, event.end_date, event.type);
+          .requestReports(
+              event.clinics, event.staff_member, event.start_date, event.end_date, event.type);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -61,6 +63,11 @@ public class ReportListController extends Controller {
   public void updateClinics(ArrayList<Clinic> clinics) {
     Platform.runLater(
         () -> ((ReportListViewController) this.view_controller).populateClinicList(clinics));
+  }
+
+  public void updateStaffMembers(ArrayList<ClinicStaff> staff_members) {
+    Platform.runLater(
+        () -> ((ReportListViewController) this.view_controller).populateStaffList(staff_members));
   }
 
   @Subscribe
@@ -108,6 +115,7 @@ public class ReportListController extends Controller {
     DailyAverageWaitTimeReport aggregateReport = new DailyAverageWaitTimeReport(null, null);
 
     // we need to keep track of how many days each staff member worked
+    // user is un-hashable, we use user_id instead
     HashMap<User, Integer> daysWorked = new HashMap<>();
 
     var agReportData = aggregateReport.report_data;
@@ -116,6 +124,10 @@ public class ReportListController extends Controller {
       for (var entry : ((DailyAverageWaitTimeReport) report).report_data.entrySet()) {
         var staffMember = entry.getKey();
         var waitTime = entry.getValue();
+
+        if (entry.getValue() == null) {
+          continue;
+        }
 
         // first encounter of staff member
         if (!daysWorked.containsKey(staffMember)) {

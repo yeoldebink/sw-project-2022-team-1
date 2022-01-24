@@ -2,6 +2,7 @@ package il.cshaifa.hmo_system.entities;
 
 import java.io.Serializable;
 import java.security.NoSuchAlgorithmException;
+import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -113,5 +114,15 @@ public class User implements Serializable {
   @Override
   public String toString() {
     return firstName + " " + lastName;
+  }
+
+  @Override
+  public boolean equals(Object user) {
+    return this.id == ((User) user).getId();
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(this.id);
   }
 }

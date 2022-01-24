@@ -11,20 +11,29 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.StackPane?>
 <AnchorPane xmlns="http://javafx.com/javafx/17"
   xmlns:fx="http://javafx.com/fxml/1"
-  fx:controller="il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.report_view.ReportListViewController">
+  fx:controller="il.cshaifa.hmo_system.client.gui.manager_dashboard.clinic_administration.report_view.ReportListViewController"
+  stylesheets="@../../../hmo_lite.css">
 
   <VBox AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10"
     AnchorPane.rightAnchor="10">
     <SplitPane VBox.vgrow="ALWAYS" fx:id="splitPane">
-      <AnchorPane SplitPane.resizableWithParent="NO" maxWidth="150" minWidth="150">
-        <ListView fx:id="clinicList" AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="0"
-          AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="0"/>
-      </AnchorPane>
+      <StackPane fx:id="listStackPane">
+        <AnchorPane SplitPane.resizableWithParent="NO" fx:id="clinicListPane">
+          <ListView fx:id="clinicList" AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="0"
+            AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="0"/>
+        </AnchorPane>
+
+        <AnchorPane SplitPane.resizableWithParent="NO" fx:id="staffListPane">
+          <ListView fx:id="staffList" AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="0"
+            AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="0"/>
+        </AnchorPane>
+      </StackPane>
       <AnchorPane minWidth="370">
         <TableView fx:id="reportsTable" AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="0"
-          AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="0" onMouseClicked="#onMouseClickedInReportsTable">
+          AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="0">
           <columnResizePolicy>
             <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
           </columnResizePolicy>

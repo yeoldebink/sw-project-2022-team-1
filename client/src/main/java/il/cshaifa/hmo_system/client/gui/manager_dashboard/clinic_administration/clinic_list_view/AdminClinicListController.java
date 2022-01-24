@@ -45,7 +45,7 @@ public class AdminClinicListController extends Controller {
               event.clinic, HMOClient.getClient().getConnected_user().getRole());
         });
     try {
-      Utils.OpenNewWindow(
+      Utils.openNewWindow(
           AdminClinicViewController.class, AdminClinicController.class, loader, true);
     } catch (Exception e) {
       e.printStackTrace();

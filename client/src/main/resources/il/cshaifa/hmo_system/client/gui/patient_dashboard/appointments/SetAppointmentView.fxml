@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+<?import javafx.scene.text.Font?>
+<?import javafx.collections.ObservableList?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+  xmlns:fx="http://javafx.com/fxml"
+  fx:controller="il.cshaifa.hmo_system.client.gui.patient_dashboard.appointments.SetAppointmentViewController"
+  prefHeight="500.0" prefWidth="1000.0" stylesheets="@../../hmo_lite.css">
+
+  <background>
+    <Background>
+      <fills>
+        <BackgroundFill fill="white" />
+      </fills>
+    </Background>
+  </background>
+
+  <VBox spacing="10" AnchorPane.rightAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.bottomAnchor="10" AnchorPane.topAnchor="10">
+    <ImageView>
+      <Image url="@set-an-appointment-banner.jpg"/>
+    </ImageView>
+
+    <StackPane fx:id="stackPane">
+      <Accordion fx:id="chooseApptTypeAccordion">
+        <panes>
+          <TitledPane text="General Physician">
+            <graphic>
+              <FontIcon iconLiteral="mdi-stethoscope" />
+            </graphic>
+            <AnchorPane>
+              <VBox AnchorPane.topAnchor="10" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" spacing="10"  fx:id="gpAppointmentVBox">
+                <HBox>
+                  <Label text="Your clinic: " />
+                  <Label fx:id="clinicNameLabel"/>
+                </HBox>
+                <Button text="View appointments" fx:id="gpAppointmentsButton">
+                  <graphic>
+                    <FontIcon iconLiteral="mdi-calendar-question" iconSize="20"/>
+                  </graphic>
+                </Button>
+              </VBox>
+            </AnchorPane>
+          </TitledPane>
+
+          <TitledPane text="Specialist">
+            <graphic>
+              <FontIcon iconLiteral="mdi-multiplication"/>
+            </graphic>
+            <AnchorPane>
+              <VBox AnchorPane.topAnchor="10" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" spacing="10"  fx:id="spAppointmentsVBox">
+                <HBox spacing="10">
+                  <ComboBox fx:id="spTypeComboBox" promptText="Select a service  " />
+                  <ComboBox fx:id="spDoctorComboBox" visible="false" promptText="Select a clinic and doctor" />
+                </HBox>
+              </VBox>
+            </AnchorPane>
+          </TitledPane>
+
+          <TitledPane text="Vaccinations">
+            <graphic>
+              <FontIcon iconLiteral="mdi-needle" />
+            </graphic>
+            <AnchorPane>
+              <VBox AnchorPane.topAnchor="10" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" spacing="10"  fx:id="vaxAppointmentsVBox">
+                  <ComboBox promptText="Select vaccine type" fx:id="vaxTypeComboBox" />
+              </VBox>
+            </AnchorPane>
+          </TitledPane>
+
+          <TitledPane text="COVID Test">
+            <graphic>
+              <FontIcon iconLiteral="mdi-biohazard" />
+            </graphic>
+
+            <AnchorPane>
+              <VBox AnchorPane.topAnchor="10" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" spacing="10"  fx:id="testAppointmentsVBox">
+                <ComboBox fx:id="symptomsComboBox" promptText="Are you experiencing symptoms?" />
+                <TextArea fx:id="symptomsTextArea" visible="false" promptText="Enter your symptoms here" />
+                <Button text="View appointments" fx:id="testAppointmentsButton" visible="false">
+                  <graphic>
+                    <FontIcon iconLiteral="mdi-calendar-question" iconSize="20" />
+                  </graphic>
+                </Button>
+              </VBox>
+            </AnchorPane>
+          </TitledPane>
+        </panes>
+      </Accordion>
+
+      <AnchorPane fx:id="appointmentsTablePane">
+        <VBox spacing="10" AnchorPane.rightAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.bottomAnchor="10" AnchorPane.topAnchor="10">
+          <TableView fx:id="appointmentsTable" VBox.vgrow="ALWAYS">
+            <columns>
+              <TableColumn fx:id="clinicNameColumn" text="Clinic" />
+              <TableColumn fx:id="clinicAddressColumn" text="Address" />
+              <TableColumn fx:id="apptDoctorColumn" text="Doctor" />
+              <TableColumn fx:id="apptDateColumn" text="Date + Time" />
+            </columns>
+            <columnResizePolicy>
+              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+            </columnResizePolicy>
+          </TableView>
+
+          <HBox>
+            <HBox>
+              <Button text="Set appointment" fx:id="setAppointmentButton" onAction="#takeAppointment">
+                <graphic>
+                  <FontIcon iconLiteral="mdi-calendar-check" iconSize="20"/>
+                </graphic>
+              </Button>
+            </HBox>
+            <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+              <Button text="Back" onAction="#backToChooseType">
+                <graphic>
+                  <FontIcon iconLiteral="mdi-undo-variant" iconSize="20" />
+                </graphic>
+              </Button>
+            </HBox>
+          </HBox>
+        </VBox>
+      </AnchorPane>
+    </StackPane>
+    <Label fx:id="errorLabel" visible="false" text="There are no appointments available for the service you selected.">
+      <graphic>
+        <FontIcon iconLiteral="mdi-alert-outline" iconSize="20" />
+      </graphic>
+    </Label>
+  </VBox>
+
+</AnchorPane>
