@@ -14,8 +14,18 @@ import org.greenrobot.eventbus.Subscribe;
 
 public class AddAppointmentsController extends Controller {
 
-  public AddAppointmentsController(ViewController view_controller, Stage stage) {
+  private static AddAppointmentsController instance;
+
+  private AddAppointmentsController(ViewController view_controller, Stage stage) {
     super(view_controller, stage);
+  }
+
+  public static AddAppointmentsController getInstance(){return instance;}
+
+  public static void create(ViewController view_controller, Stage stage){
+    if (instance != null && instance.view_controller != null) return;
+
+    instance = new AddAppointmentsController(view_controller, stage);
   }
 
   /**
@@ -26,6 +36,13 @@ public class AddAppointmentsController extends Controller {
   @Subscribe
   public void addAppointments(AddAppointmentEvent event) {
     if (!event.getSender().equals(this.view_controller)) return;
+    if (event.count <= 0){
+      Platform.runLater(()->
+          ((AddAppointmentsViewController) this.view_controller)
+              .setErrorMessage("The amount should be larger than 0"));
+
+      return;
+    }
 
     User staff_member = null;
     AppointmentType appt_type;
