@@ -10,33 +10,28 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
-<AnchorPane prefWidth="300" xmlns="http://javafx.com/javafx/17"
+<AnchorPane prefWidth="400" xmlns="http://javafx.com/javafx/17"
   xmlns:fx="http://javafx.com/fxml/1"
   fx:controller="il.cshaifa.hmo_system.client.gui.login.LoginViewController" stylesheets="@../hmo_lite.css">
-  <VBox layoutX="10" layoutY="10" prefWidth="280">
+  <VBox AnchorPane.bottomAnchor="10" AnchorPane.topAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10">
 
     <TextField fx:id="idTextField" promptText="ID" onAction="#requestLogin"
       onKeyPressed="#clearStatusText"/>
     <PasswordField fx:id="passwordField" promptText="Password" onAction="#requestLogin"
       onKeyPressed="#clearStatusText"/>
 
-    <HBox>
+    <HBox spacing="15">
       <VBox.margin>
-        <Insets top="10"/>
+        <Insets top="10" />
       </VBox.margin>
       <Button mnemonicParsing="false" onAction="#requestLogin" text="Log In" fx:id="loginButton">
         <graphic>
           <FontIcon iconLiteral="mdi-login" />
         </graphic>
       </Button>
-      <Label fx:id="statusLabel">
-        <HBox.margin>
-          <Insets left="15" top="5"/>
-        </HBox.margin>
-      </Label>
-      <VBox.margin>
-        <Insets bottom="10"/>
-      </VBox.margin>
+      <VBox alignment="CENTER">
+        <Label fx:id="statusLabel" />
+      </VBox>
     </HBox>
   </VBox>
 </AnchorPane>
