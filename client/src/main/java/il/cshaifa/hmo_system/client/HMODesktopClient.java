@@ -13,6 +13,7 @@ import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.ClinicStaff;
+import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.entities.Role;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.AdminAppointmentMessage;
@@ -21,6 +22,7 @@ import il.cshaifa.hmo_system.messages.AppointmentMessage;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
 import il.cshaifa.hmo_system.messages.ClinicStaffMessage;
 import il.cshaifa.hmo_system.messages.GreenPassStatusMessage;
+import il.cshaifa.hmo_system.messages.LoginMessage;
 import il.cshaifa.hmo_system.messages.ReportMessage;
 import il.cshaifa.hmo_system.messages.ReportMessage.ReportType;
 import il.cshaifa.hmo_system.messages.SetAppointmentMessage;
@@ -35,6 +37,12 @@ import org.greenrobot.eventbus.EventBus;
 public class HMODesktopClient extends HMOClient {
 
   private static HMODesktopClient client = null;
+
+  protected Patient connected_patient;
+
+  public Patient getConnected_patient() {
+    return connected_patient;
+  }
 
   private HMODesktopClient(String host, int port) {
     super(host, port);
@@ -54,6 +62,11 @@ public class HMODesktopClient extends HMOClient {
       handleAdminAppointmentMessage((AdminAppointmentMessage) message);
     } else if (message.getClass().equals(SetSpecialistAppointmentMessage.class)) {
       handleSpecialistAppointmentMessage((SetSpecialistAppointmentMessage) message);
+    } else if (message.getClass().equals(LoginMessage.class)) {
+      this.connected_patient = ((LoginMessage) message).patient_data;
+      super.handleMessageFromServer(message);
+    } else if (message.getClass().equals(SetAppointmentMessage.class)) {
+      handleSetAppointmentMessage((SetAppointmentMessage) message);
     } else {
       super.handleMessageFromServer(message);
     }
@@ -66,7 +79,9 @@ public class HMODesktopClient extends HMOClient {
     return client;
   }
 
+  //
   // ************************* METHODS TO CALL FROM GUI *************************
+  //
 
   public void getGreenPassStatus() throws IOException {
     sendToServer(new GreenPassStatusMessage(connected_patient));
@@ -202,7 +217,15 @@ public class HMODesktopClient extends HMOClient {
         new SetAppointmentMessage(SetAppointmentAction.RELEASE, connected_patient, appointment));
   }
 
+  public void getPatientNextAppointment() throws IOException {
+    sendToServer(
+        new AppointmentMessage(
+            connected_patient, AppointmentMessage.RequestType.PATIENT_NEXT_APPOINTMENT));
+  }
+
+  //
   // ********************************* HANDLERS *********************************
+  //
 
   private void handleReportMessage(ReportMessage message) {
     ReportEvent event =
@@ -249,5 +272,21 @@ public class HMODesktopClient extends HMOClient {
     } else if (message.request == SetSpecialistAppointmentMessage.RequestType.GET_ROLES) {
       EventBus.getDefault().post(new SetAppointmentEvent(this, message.role_list));
     }
+  }
+
+  private void handleSetAppointmentMessage(SetAppointmentMessage message) {
+    if (message.action == SetAppointmentAction.LOCK) {
+      return;
+    }
+
+    SetAppointmentEvent event =
+        new SetAppointmentEvent(this, getConnected_patient(), message.appointment);
+    event.action = message.action;
+    if (message.success) {
+      event.response = SetAppointmentEvent.ResponseType.AUTHORIZE;
+    } else {
+      event.response = SetAppointmentEvent.ResponseType.REJECT;
+    }
+    EventBus.getDefault().post(event);
   }
 }

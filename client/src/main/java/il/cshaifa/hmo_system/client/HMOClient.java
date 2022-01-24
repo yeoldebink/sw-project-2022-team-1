@@ -1,25 +1,21 @@
 package il.cshaifa.hmo_system.client;
 
-import il.cshaifa.hmo_system.CommonEnums.SetAppointmentAction;
 import il.cshaifa.hmo_system.client.events.AdminAppointmentListEvent;
 import il.cshaifa.hmo_system.client.events.AppointmentListEvent;
 import il.cshaifa.hmo_system.client.events.ClinicEvent;
 import il.cshaifa.hmo_system.client.events.LoginEvent;
 import il.cshaifa.hmo_system.client.events.LoginEvent.Response;
 import il.cshaifa.hmo_system.client.events.NextAppointmentEvent;
-import il.cshaifa.hmo_system.client.events.SetAppointmentEvent;
 import il.cshaifa.hmo_system.client.events.WarningEvent;
 import il.cshaifa.hmo_system.client.ocsf.AbstractClient;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.Clinic;
-import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.entities.Warning;
 import il.cshaifa.hmo_system.messages.AppointmentMessage;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
 import il.cshaifa.hmo_system.messages.LoginMessage;
 import il.cshaifa.hmo_system.messages.Message.MessageType;
-import il.cshaifa.hmo_system.messages.SetAppointmentMessage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +25,6 @@ public abstract class HMOClient extends AbstractClient {
 
   protected User connected_user;
   protected List<Clinic> connected_employee_clinics;
-  protected Patient connected_patient;
 
   protected HMOClient(String host, int port) {
     super(host, port);
@@ -43,10 +38,6 @@ public abstract class HMOClient extends AbstractClient {
     return connected_employee_clinics;
   }
 
-  public Patient getConnected_patient() {
-    return connected_patient;
-  }
-
   /**
    * @param message the message sent. This message can be of several types, handled by controller.
    */
@@ -57,32 +48,13 @@ public abstract class HMOClient extends AbstractClient {
     } else {
       if (message.getClass().equals(LoginMessage.class)) {
         this.connected_user = ((LoginMessage) message).user;
-        this.connected_patient = ((LoginMessage) message).patient_data;
         handleLoginMessage((LoginMessage) message);
       } else if (message.getClass().equals(ClinicMessage.class)) {
         handleClinicMessage((ClinicMessage) message);
       } else if (message.getClass().equals(AppointmentMessage.class)) {
         handleAppointmentMessage((AppointmentMessage) message);
-      } else if (message.getClass().equals(SetAppointmentMessage.class)) {
-        handleSetAppointmentMessage((SetAppointmentMessage) message);
       }
     }
-  }
-
-  private void handleSetAppointmentMessage(SetAppointmentMessage message) {
-    if (message.action == SetAppointmentAction.LOCK) {
-      return;
-    }
-
-    SetAppointmentEvent event =
-        new SetAppointmentEvent(this, getConnected_patient(), message.appointment);
-    event.action = message.action;
-    if (message.success) {
-      event.response = SetAppointmentEvent.ResponseType.AUTHORIZE;
-    } else {
-      event.response = SetAppointmentEvent.ResponseType.REJECT;
-    }
-    EventBus.getDefault().post(event);
   }
 
   private void handleAppointmentMessage(AppointmentMessage message) {
@@ -137,24 +109,11 @@ public abstract class HMOClient extends AbstractClient {
     sendToServer(new ClinicMessage());
   }
 
-  /** Requests a staff member's future appointments */
-  public void getStaffMemberFutureAppointments(User staff_member_user) throws IOException {
-    sendToServer(
-        new AppointmentMessage(
-            staff_member_user, AppointmentMessage.RequestType.STAFF_FUTURE_APPOINTMENTS));
-  }
-
   /** Requests from server all of today's appointments of current connected staff member client */
   public void getStaffDailyAppointments() throws IOException {
     sendToServer(
         new AppointmentMessage(
             this.connected_user, AppointmentMessage.RequestType.STAFF_MEMBER_DAILY_APPOINTMENTS));
-  }
-
-  public void getPatientNextAppointment() throws IOException {
-    sendToServer(
-        new AppointmentMessage(
-            connected_patient, AppointmentMessage.RequestType.PATIENT_NEXT_APPOINTMENT));
   }
 
   /**
