@@ -34,7 +34,8 @@ public class ManagerDashboardController extends Controller {
 
     var user = HMODesktopClient.getClient().getConnected_user();
 
-    stage.setTitle(String.format("Management Console ~ %s %s", user.getFirstName(), user.getLastName()));
+    stage.setTitle(
+        String.format("Management Console ~ %s %s", user.getFirstName(), user.getLastName()));
 
     adminClinicListController =
         new AdminClinicListController(
