@@ -44,6 +44,11 @@ public class ClinicStaffListController extends Controller {
       var staff_member = clinic_staff_row.getUser();
       var row_clinic_manager = clinic_staff_row.getClinic().getManager_user();
 
+      if (!staff_member.getRole().isSpecialist()
+          && row_clinic_manager != null
+          && row_clinic_manager.getId() != current_clinic_manager.getId())
+        continue;
+
       // staff member either not present in the map or not assigned to this clinic,
       // set their value in the map to be the whether or not that row implies an
       // assignment to this clinic

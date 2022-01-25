@@ -61,7 +61,7 @@ public class ClinicStaffListViewController extends ViewController {
   }
 
   void assignOrUnassignSelectedStaffMembers(StaffAssignmentAction request) {
-    var users = new ArrayList<AssignedUser>(staff_table.getSelectionModel().getSelectedItems());
+    var users = new ArrayList<>(staff_table.getSelectionModel().getSelectedItems());
 
     EventBus.getDefault().post(new AssignStaffEvent(users, this, request));
   }
