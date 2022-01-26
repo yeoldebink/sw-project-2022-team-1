@@ -71,17 +71,22 @@ public class AddAppointmentsController extends Controller {
    *
    * @param event Holds all the params of the respond from the client
    */
+  @SuppressWarnings("EnhancedSwitchMigration")
   @Subscribe
   public void onAppointmentCreationResponse(AddAppointmentEvent event) {
     if (!event.getSender().equals(HMODesktopClient.getClient())) return;
     if (!event.success) {
       String rejectionMessage = "";
-      if (event.reject == AddAppointmentRejectionReason.OVERLAPPING) {
-        rejectionMessage = "Staff member is busy at this time";
-      } else if (event.reject == AddAppointmentRejectionReason.IN_THE_PAST) {
-        rejectionMessage = "Cannot open appointments in the past";
+      switch (event.reject){
+        case IN_THE_PAST:
+          rejectionMessage = "Cannot open appointments in the past";
+          break;
+        case OVERLAPPING:
+          rejectionMessage = "Staff member is busy at this time";
+          break;
+        case CLINIC_CLOSED:
+          rejectionMessage = "Clinic is closed at those hours";
       }
-
       String finalRejectionMessage =
           rejectionMessage; // Java requested this... didn't like that I changed the value...
       Platform.runLater(
