@@ -99,7 +99,7 @@ public class HandleAdminAppointmentMessage extends MessageHandler {
                   current_datetime,
                   null,
                   null,
-                  false);
+                  false, false);
         }
       }
       if (appt == null) {
@@ -158,7 +158,7 @@ public class HandleAdminAppointmentMessage extends MessageHandler {
                   current_datetime,
                   null,
                   null,
-                  false);
+                  false, false);
         }
       }
       if (appt == null) {

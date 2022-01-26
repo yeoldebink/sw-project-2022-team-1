@@ -34,6 +34,10 @@ public class HandleOnSiteEntryMessage extends MessageHandler {
       }
       Appointment patient_appt = patients_appts.get(0);
 
+      patient_appt.setArrived(true);
+      session.update(patient_appt);
+      session.flush();
+
       class_message.place_in_line = ClinicQueues.push(patient_appt);
     }
   }
@@ -58,7 +62,8 @@ public class HandleOnSiteEntryMessage extends MessageHandler {
             cb.equal(root.get("patient"), patient),
             cb.equal(root.get("clinic"), class_message.clinic),
             cb.isTrue(root.get("taken")),
-            cb.isNotNull(root.get("called_time")));
+            cb.isNull(root.get("called_time")),
+            cb.isFalse(root.get("arrived")));
     cr.orderBy(cb.asc(root.get("appt_date")));
     return session.createQuery(cr).getResultList();
   }

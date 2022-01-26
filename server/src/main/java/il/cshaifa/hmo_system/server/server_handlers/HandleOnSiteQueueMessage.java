@@ -38,7 +38,7 @@ public class HandleOnSiteQueueMessage extends MessageHandler {
             LocalDateTime.now().minusSeconds(30),
             null,
             null,
-            true);
+            true, false);
 
     session.save(appointment);
     session.flush();
