@@ -28,7 +28,7 @@ public class AppointmentForAdminTableView {
     this.called_time = called_time;
     this.comments = comments;
     this.taken = taken;
-    if (patient != null) {
+    if (patient != null && taken) { // only display patient name for taken appointments
       this.patient_name = patient.getUser().getFirstName() + " " + patient.getUser().getLastName();
     } else {
       this.patient_name = "";

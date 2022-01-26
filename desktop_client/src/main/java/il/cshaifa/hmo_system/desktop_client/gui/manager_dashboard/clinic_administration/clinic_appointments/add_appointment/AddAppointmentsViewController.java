@@ -67,13 +67,10 @@ public class AddAppointmentsViewController extends ViewController {
       EventBus.getDefault().post(event);
 
     } catch (ParseException e) {
-      e.printStackTrace();
       setErrorMessage("Invalid time format");
     } catch (NumberFormatException e) {
-      e.printStackTrace();
       setErrorMessage("# appointment cannot be empty");
     } catch (NullPointerException e) {
-      e.printStackTrace();
       setErrorMessage("Missing Date");
     }
   }
