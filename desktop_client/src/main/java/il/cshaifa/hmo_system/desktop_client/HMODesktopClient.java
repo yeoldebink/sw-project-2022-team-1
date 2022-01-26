@@ -25,7 +25,7 @@ import il.cshaifa.hmo_system.messages.AppointmentMessage;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
 import il.cshaifa.hmo_system.messages.ClinicStaffMessage;
 import il.cshaifa.hmo_system.messages.GreenPassStatusMessage;
-import il.cshaifa.hmo_system.messages.LoginMessage;
+import il.cshaifa.hmo_system.messages.DesktopLoginMessage;
 import il.cshaifa.hmo_system.messages.ReportMessage;
 import il.cshaifa.hmo_system.messages.ReportMessage.ReportType;
 import il.cshaifa.hmo_system.messages.SetAppointmentMessage;
@@ -220,8 +220,8 @@ public class HMODesktopClient extends HMOClient {
       handleAdminAppointmentMessage((AdminAppointmentMessage) message);
     } else if (message.getClass().equals(SetSpecialistAppointmentMessage.class)) {
       handleSpecialistAppointmentMessage((SetSpecialistAppointmentMessage) message);
-    } else if (message.getClass().equals(LoginMessage.class)) {
-      this.connected_patient = ((LoginMessage) message).patient_data;
+    } else if (message.getClass().equals(DesktopLoginMessage.class)) {
+      this.connected_patient = ((DesktopLoginMessage) message).patient_data;
       super.handleMessageFromServer(message);
     } else if (message.getClass().equals(SetAppointmentMessage.class)) {
       handleSetAppointmentMessage((SetAppointmentMessage) message);
