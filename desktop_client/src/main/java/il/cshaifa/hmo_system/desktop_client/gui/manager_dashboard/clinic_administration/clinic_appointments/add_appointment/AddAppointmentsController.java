@@ -89,7 +89,12 @@ public class AddAppointmentsController extends Controller {
               ((AddAppointmentsViewController) this.view_controller)
                   .setErrorMessage(finalRejectionMessage));
     } else {
-      Platform.runLater(() -> stage.close());
+      Platform.runLater(() ->
+      {
+        this.onWindowClose();
+        stage.close();
+      }
+      );
     }
   }
 }
