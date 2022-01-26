@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -230,5 +231,15 @@ public class Clinic implements Serializable {
   @Override
   public String toString() {
     return this.name;
+  }
+
+  @Override
+  public boolean equals(Object c) {
+    return c instanceof Clinic && ((Clinic) c).id == id;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(id);
   }
 }
