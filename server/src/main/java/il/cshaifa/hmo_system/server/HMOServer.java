@@ -55,6 +55,8 @@ public class HMOServer extends AbstractServer {
 
   public HMOServer(int port) {
     super(port);
+    AppointmentReminder appointment_reminder = new AppointmentReminder();
+    appointment_reminder.start();
   }
 
   /**
@@ -172,4 +174,32 @@ public class HMOServer extends AbstractServer {
       exception.printStackTrace();
     }
   }
+
+  public static class AppointmentReminder extends Thread {
+    @Override
+    public void run() {
+      int current_hour = LocalDateTime.now().getHour();
+      while (true){
+        while (current_hour == LocalDateTime.now().getHour()){}
+
+        current_hour = LocalDateTime.now().getHour();
+        session = getSessionFactory().openSession();
+        session.beginTransaction();
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<Appointment> cr = cb.createQuery(Appointment.class);
+        Root<Appointment> root = cr.from(Appointment.class);
+        cr.select(root).where(
+            cb.between(root.get("appt_date"), LocalDateTime.now().plusHours(23), LocalDateTime.now().plusHours(24)),
+            cb.isTrue(root.get("taken"))
+        );
+        List<Appointment> tommorows_appts =  session.createQuery(cr).getResultList();
+        session.close();
+
+        for (Appointment appt : tommorows_appts){
+          // TODO: add message to patient
+        }
+      }
+    }
+  }
 }
+
