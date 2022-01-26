@@ -32,6 +32,11 @@ public class ManagerDashboardController extends Controller {
   public ManagerDashboardController(ViewController view_controller, Stage stage) {
     super(view_controller, stage);
 
+    var user = HMODesktopClient.getClient().getConnected_user();
+
+    stage.setTitle(
+        String.format("Management Console ~ %s %s", user.getFirstName(), user.getLastName()));
+
     adminClinicListController =
         new AdminClinicListController(
             ((ManagerDashboardViewController) view_controller).getAdminClinicListViewController());

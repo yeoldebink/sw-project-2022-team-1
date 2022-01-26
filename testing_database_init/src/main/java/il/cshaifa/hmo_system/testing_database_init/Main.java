@@ -223,7 +223,6 @@ public class Main {
 
     var dizengoff = clinics.get("Dizengoff");
     clinicStaff.add(new ClinicStaff(dizengoff, users.get("Elliot Reed")));
-    clinicStaff.add(new ClinicStaff(dizengoff, users.get("John Dorian")));
     clinicStaff.add(new ClinicStaff(dizengoff, users.get("LaVerne Roberts")));
     clinicStaff.add(new ClinicStaff(dizengoff, users.get("Christopher Turk")));
     clinicStaff.add(new ClinicStaff(dizengoff, users.get("Franklin Kurosawa")));
