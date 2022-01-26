@@ -43,12 +43,18 @@ public class HandleOnSiteQueueMessage extends MessageHandler {
     session.save(appointment);
     session.flush();
 
+    class_message.appointment = appointment;
     class_message.number_in_line = ClinicQueues.push(appointment);
   }
 
   private void pop() {
     var q_appt = ClinicQueues.pop(class_message.staff_member, class_message.clinic);
     if (q_appt != null) {
+      // set the called time
+      q_appt.appointment.setCalled_time(LocalDateTime.now());
+      session.update(q_appt.appointment);
+      session.flush();
+
       class_message.appointment = q_appt.appointment;
       class_message.number_in_line = q_appt.place;
     }

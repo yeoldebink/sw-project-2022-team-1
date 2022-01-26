@@ -77,7 +77,7 @@ public class ClinicQueues {
     }
   }
 
-  public static String queueName(Appointment appointment) {
+  private static String queueName(Appointment appointment) {
     var type_name = appointment.getType().getName();
     if (Arrays.asList("Family Doctor", "Pediatrician", "Specialist").contains(type_name)) {
       return String.format(
@@ -89,7 +89,7 @@ public class ClinicQueues {
     }
   }
 
-  public static String queueName(User staff_member) {
+  private static String queueName(User staff_member) {
     var role_name = staff_member.getRole().getName();
     if (staff_member.getRole().isSpecialist()
         || Arrays.asList("Family Doctor", "Pediatrician").contains(role_name)) {

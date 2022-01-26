@@ -83,6 +83,7 @@ public class HandleAppointmentMessage extends MessageHandler {
                   cb.lessThan(root.get("lock_time"), start),
                   cb.equal(root.get("patient"), class_message.patient)));
     }
+
     List<Appointment> all_appointments = session.createQuery(cr).getResultList();
     List<Appointment> appointments_in_work_hours = new ArrayList<>();
     for (Appointment appt : all_appointments) {
@@ -91,7 +92,7 @@ public class HandleAppointmentMessage extends MessageHandler {
       for (int i = 0; i < clinic_hours.toArray().length; i += 2) {
         LocalTime open_time = clinic_hours.get(i), close_time = clinic_hours.get(i + 1);
         LocalTime appt_time = appt.getDate().toLocalTime();
-        if (appt_time.isAfter(open_time) && appt_time.isBefore(close_time)) {
+        if (appt_time.isAfter(open_time.minusSeconds(1)) && appt_time.isBefore(close_time)) {
           appointments_in_work_hours.add(appt);
         }
       }

@@ -132,19 +132,7 @@ public class ManagerDashboardController extends Controller {
   public void onTestOrVaccineAddingRequest(AddAppointmentEvent event) {
     if (!event.getSender().equals(this.view_controller)) return;
 
-    FXMLLoader loader =
-        new FXMLLoader(getClass().getResource(Utils.get_fxml(AddAppointmentsViewController.class)));
-
-    loader.setControllerFactory(
-        c -> {
-          return new AddAppointmentsViewController(event.type);
-        });
-
-    try {
-      Utils.openNewWindow(
-          AddAppointmentsViewController.class, AddAppointmentsController.class, loader, false);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+    Utils.openNewSingletonWindow(AddAppointmentsViewController.class, AddAppointmentsController.class, false,
+        c -> new AddAppointmentsViewController(event.type));
   }
 }

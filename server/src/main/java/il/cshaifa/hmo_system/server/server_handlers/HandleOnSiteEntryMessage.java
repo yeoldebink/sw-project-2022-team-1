@@ -28,8 +28,6 @@ public class HandleOnSiteEntryMessage extends MessageHandler {
       Patient patient = getUserPatient(user);
       class_message.patient = patient;
 
-      class_message.belongs_to_clinic = patient.getHome_clinic().equals(class_message.clinic);
-
       List<Appointment> patients_appts = getPatientsNextAppointment(patient);
       if (patients_appts.size() == 0) {
         return;
