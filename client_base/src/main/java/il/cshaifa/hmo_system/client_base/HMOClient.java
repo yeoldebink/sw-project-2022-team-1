@@ -13,6 +13,7 @@ import il.cshaifa.hmo_system.entities.Warning;
 import il.cshaifa.hmo_system.messages.AppointmentMessage;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
 import il.cshaifa.hmo_system.messages.DesktopLoginMessage;
+import il.cshaifa.hmo_system.messages.LoginMessage;
 import il.cshaifa.hmo_system.messages.Message.MessageType;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,9 +45,9 @@ public abstract class HMOClient extends AbstractClient {
     if (message.getClass().equals(Warning.class)) {
       EventBus.getDefault().post(new WarningEvent((Warning) message));
     } else {
-      if (message.getClass().equals(DesktopLoginMessage.class)) {
-        this.connected_user = ((DesktopLoginMessage) message).user;
-        handleLoginMessage((DesktopLoginMessage) message);
+      if (message instanceof LoginMessage) {
+        this.connected_user = ((LoginMessage) message).user;
+        handleLoginMessage((LoginMessage) message);
       } else if (message.getClass().equals(ClinicMessage.class)) {
         handleClinicMessage((ClinicMessage) message);
       } else if (message.getClass().equals(AppointmentMessage.class)) {
@@ -71,19 +72,21 @@ public abstract class HMOClient extends AbstractClient {
     EventBus.getDefault().post(event);
   }
 
-  private void handleLoginMessage(DesktopLoginMessage message) {
+  private void handleLoginMessage(LoginMessage message) {
     LoginEvent event = new LoginEvent(0, "", this);
     if (message.user == null) {
       event.response = Response.REJECT;
-    } else if (message.already_logged_in) {
+    } else if (message instanceof DesktopLoginMessage && ((DesktopLoginMessage) message).already_logged_in) {
       event.response = Response.LOGGED_IN;
     } else {
       event.id = message.id;
       event.password = message.password;
       event.response = Response.AUTHORIZE;
       event.userData = message.user;
-      event.patientData = message.patient_data;
-      this.connected_employee_clinics = message.employee_clinics;
+      if (message instanceof DesktopLoginMessage) {
+        event.patientData = ((DesktopLoginMessage) message).patient_data;
+        this.connected_employee_clinics = ((DesktopLoginMessage) message).employee_clinics;
+      }
     }
     EventBus.getDefault().post(event);
   }
@@ -102,14 +105,5 @@ public abstract class HMOClient extends AbstractClient {
     sendToServer(
         new AppointmentMessage(
             this.connected_user, AppointmentMessage.RequestType.STAFF_MEMBER_DAILY_APPOINTMENTS));
-  }
-
-  /**
-   * @param user The id of the login request
-   * @param password The password the user has entered
-   * @throws IOException SQL exception
-   */
-  public void loginRequest(int user, String password) throws IOException {
-    sendToServer(new DesktopLoginMessage(user, password));
   }
 }

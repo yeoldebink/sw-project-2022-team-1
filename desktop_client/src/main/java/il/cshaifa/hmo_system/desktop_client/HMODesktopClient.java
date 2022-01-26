@@ -62,6 +62,15 @@ public class HMODesktopClient extends HMOClient {
   // ************************* METHODS TO CALL FROM GUI *************************
   //
 
+  /**
+   * @param user The id of the login request
+   * @param password The password the user has entered
+   * @throws IOException SQL exception
+   */
+  public void loginRequest(int user, String password) throws IOException {
+    sendToServer(new DesktopLoginMessage(user, password));
+  }
+
   public void getGreenPassStatus() throws IOException {
     sendToServer(new GreenPassStatusMessage(connected_patient));
   }

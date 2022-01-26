@@ -2,9 +2,13 @@ package il.cshaifa.hmo_system.on_site_client.gui.login;
 
 import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client_base.events.LoginEvent;
+import il.cshaifa.hmo_system.entities.Clinic;
+import il.cshaifa.hmo_system.on_site_client.events.OnSiteLoginEvent;
+import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -13,8 +17,18 @@ import org.greenrobot.eventbus.EventBus;
 
 public class OnSiteLoginViewController extends ViewController {
 
+  @FXML private ComboBox<Clinic> clinicComboBox;
+
   @FXML
-  public void initialize() {}
+  public void initialize() {
+    clinicComboBox.valueProperty().addListener(
+        (obs, oldval, newval) -> {
+          if (newval != null) {
+            loginButton.setDisable(false);
+          }
+        }
+    );
+  }
 
   @FXML private TextField idTextField;
 
@@ -28,10 +42,12 @@ public class OnSiteLoginViewController extends ViewController {
     idTextField.setDisable(f);
     passwordField.setDisable(f);
     loginButton.setDisable(f);
+    clinicComboBox.setDisable(f);
   }
 
   @FXML
   void requestLogin(ActionEvent event) {
+    if (this.loginButton.isDisable()) return;
     // this is to prevent extra login attempts before the server responds
     setDisable(true);
 
@@ -39,8 +55,8 @@ public class OnSiteLoginViewController extends ViewController {
     statusLabel.setText("Please wait");
 
     try {
-      LoginEvent login_event =
-          new LoginEvent(Integer.parseInt(idTextField.getText()), passwordField.getText(), this);
+      var login_event =
+          new OnSiteLoginEvent(Integer.parseInt(idTextField.getText()), passwordField.getText(), clinicComboBox.getValue(), this);
       EventBus.getDefault().post(login_event);
     } catch (NumberFormatException e) {
       statusLabel.setTextFill(Color.DARKRED);
@@ -60,5 +76,9 @@ public class OnSiteLoginViewController extends ViewController {
 
     // re-enable changes
     setDisable(false);
+  }
+
+  public void populateClinics(List<Clinic> clinics) {
+    clinicComboBox.getItems().setAll(clinics);
   }
 }
