@@ -8,6 +8,7 @@ import java.util.List;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
+import org.hibernate.UnresolvableObjectException;
 
 public class HandleSetAppointmentMessage extends MessageHandler {
   public SetAppointmentMessage class_message;
@@ -23,7 +24,15 @@ public class HandleSetAppointmentMessage extends MessageHandler {
     // before changing the state of the appointment, get the updated version of it
     appt_comments = class_message.appointment.getComments();
     session.flush();
-    session.refresh(class_message.appointment);
+
+    // if the patient attempted to grab a deleted appointment we reject
+    try {
+      session.refresh(class_message.appointment);
+    } catch (UnresolvableObjectException e) {
+      class_message.success = false;
+      session.flush();
+      return;
+    }
 
     if (class_message.action == SetAppointmentAction.TAKE) {
       class_message.success = takeAppointment();
