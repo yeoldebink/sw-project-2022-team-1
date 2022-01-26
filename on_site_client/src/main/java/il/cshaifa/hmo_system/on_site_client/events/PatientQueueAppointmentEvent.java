@@ -8,13 +8,13 @@ import il.cshaifa.hmo_system.entities.Patient;
 public class PatientQueueAppointmentEvent extends Event {
 
     public AppointmentType appointment_type;
-    public String appointment_number;
+    public String number_in_line;
     public Patient patient;
 
-    public PatientQueueAppointmentEvent(AppointmentType appointment_type, String appointment_number, Patient patient, Object sender) {
+    public PatientQueueAppointmentEvent(AppointmentType appointment_type, String number_in_line, Patient patient, Object sender) {
         super(sender);
         this.appointment_type = appointment_type;
-        this.appointment_number = appointment_number;
+        this.number_in_line = number_in_line;
         this.patient = patient;
     }
 }

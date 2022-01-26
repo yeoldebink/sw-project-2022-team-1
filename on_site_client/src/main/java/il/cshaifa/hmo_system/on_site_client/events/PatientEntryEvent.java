@@ -13,7 +13,7 @@ public class PatientEntryEvent extends Event {
 
     public int id;
     public Appointment appointment;
-    public String appointment_number;
+    public String number_in_line;
     public Patient patient;
     public Response response;
 
@@ -22,10 +22,10 @@ public class PatientEntryEvent extends Event {
         this.id = id;
     }
 
-    public PatientEntryEvent(Appointment appointment, String appointment_number, Patient patient, Object sender) {
+    public PatientEntryEvent(Appointment appointment, String number_in_line, Patient patient, Object sender) {
         super(sender);
         this.appointment = appointment;
-        this.appointment_number = appointment_number;
+        this.number_in_line = number_in_line;
         this.patient = patient;
     }
 }
