@@ -8,9 +8,12 @@ import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.DesktopLoginMessage;
 import il.cshaifa.hmo_system.messages.LoginMessage;
 import il.cshaifa.hmo_system.messages.OnSiteLoginMessage;
+import il.cshaifa.hmo_system.messages.OnSiteLoginMessage.Action;
+import il.cshaifa.hmo_system.server.ClinicQueues;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -19,8 +22,16 @@ import org.hibernate.Session;
 public class HandleLoginMessage extends MessageHandler {
   public LoginMessage class_message;
 
-  private static HashMap<Integer, ConnectionToClient> connected_users;
-  private static HashMap<ConnectionToClient, User> connected_clients;
+  private static final HashMap<Integer, ConnectionToClient> connected_users;
+  private static final HashMap<ConnectionToClient, User> connected_clients;
+  private static final HashMap<ConnectionToClient, Clinic> onsite_connections;
+  private static final HashMap<Clinic, HashSet<ConnectionToClient>> onsite_connections_by_clinic;
+  static {
+    connected_users = new HashMap<>();
+    connected_clients = new HashMap<>();
+    onsite_connections = new HashMap<>();
+    onsite_connections_by_clinic = new HashMap<>();
+  }
 
   private final ConnectionToClient client;
 
@@ -28,9 +39,6 @@ public class HandleLoginMessage extends MessageHandler {
     super(message, session);
     this.class_message = (LoginMessage) this.message;
     this.client = client;
-
-    if (connected_clients == null) connected_clients = new HashMap<>();
-    if (connected_users == null) connected_users = new HashMap<>();
   }
 
   /** If login successful will update the LoginMessage with user and his details */
@@ -65,14 +73,37 @@ public class HandleLoginMessage extends MessageHandler {
             }
             break;
 
-          default:
+          default: // this is for Clinic Mgr & clinic staff
             var clinics = employeeClinics(user);
-            if (!is_desktop) {
+
+            // all clinic staff (incl. the Clinic Manager) are allowed to log in via the on-site app
+            // provided what they want to do is open the application
+            if (!is_desktop && ((OnSiteLoginMessage) this.class_message).action == Action.LOGIN) {
               class_message.user = user;
               ((OnSiteLoginMessage) this.class_message).authorized = clinics.contains(((OnSiteLoginMessage) this.class_message).clinic);
+
             } else if (user.getRole().getName().equals("Clinic Manager")) {
+              // she can log in both on desktop and on-site
               class_message.user = user;
-              ((DesktopLoginMessage) this.class_message).employee_clinics = clinics;
+              if (is_desktop) ((DesktopLoginMessage) this.class_message).employee_clinics = clinics;
+
+              // on-site login for a clinic manager hinges on them being the manager of this clinic
+              else {
+                ((OnSiteLoginMessage) this.class_message).authorized = clinics.contains(((OnSiteLoginMessage) this.class_message).clinic);
+                if (((OnSiteLoginMessage) this.class_message).authorized) {
+                  switch (((OnSiteLoginMessage) this.class_message).action) {
+                    case LOGIN:
+                      connectOnSiteStation();
+                      break;
+                    case CLOSE_STATION:
+                      disconnectOnSiteStation(client);
+                      break;
+                    case CLOSE_CLINIC:
+                      closeClinic(((OnSiteLoginMessage) this.class_message).clinic);
+                      break;
+                  }
+                }
+              }
             }
             break;
         }
@@ -89,8 +120,13 @@ public class HandleLoginMessage extends MessageHandler {
 
   private List<Clinic> employeeClinics(User user) {
     CriteriaQuery<Clinic> cr = cb.createQuery(Clinic.class);
-    Root<ClinicStaff> root = cr.from(ClinicStaff.class);
-    cr.select(root.get("clinic")).where(cb.equal(root.get("user"), user));
+    if (user.getRole().getName().equals("Clinic Manager")) {
+      Root<Clinic> root = cr.from(Clinic.class);
+      cr.select(root).where(cb.equal(root.get("manager_user"), user));
+    } else {
+      Root<ClinicStaff> root = cr.from(ClinicStaff.class);
+      cr.select(root.get("clinic")).where(cb.equal(root.get("user"), user));
+    }
     return session.createQuery(cr).getResultList();
   }
 
@@ -99,6 +135,32 @@ public class HandleLoginMessage extends MessageHandler {
     Root<Patient> root = cr.from(Patient.class);
     cr.select(root).where(cb.equal(root.get("user"), user));
     return session.createQuery(cr).getResultList().get(0);
+  }
+
+  public void connectOnSiteStation() {
+    var clinic = ((OnSiteLoginMessage) class_message).clinic;
+    onsite_connections.put(this.client, clinic);
+    onsite_connections_by_clinic.putIfAbsent(clinic, new HashSet<>());
+    onsite_connections_by_clinic.get(clinic).add(client);
+  }
+
+  public static void disconnectOnSiteStation(ConnectionToClient client) {
+    var clinic = onsite_connections.remove(client);
+    onsite_connections_by_clinic.get(clinic).remove(client);
+
+    if (onsite_connections_by_clinic.get(clinic).size() == 0) {
+      onsite_connections_by_clinic.remove(clinic);
+      ClinicQueues.close(clinic);
+    }
+  }
+
+  public static void closeClinic(Clinic clinic) {
+    for (var client : onsite_connections_by_clinic.get(clinic)) {
+      onsite_connections.remove(client);
+    }
+
+    onsite_connections_by_clinic.remove(clinic);
+    ClinicQueues.close(clinic);
   }
 
   public static void disconnectClient(ConnectionToClient client) {

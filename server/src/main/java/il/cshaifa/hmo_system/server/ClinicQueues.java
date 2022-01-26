@@ -127,4 +127,8 @@ public class ClinicQueues {
       return clinicQueues.get(clinic).get(q_name).pop();
     }
   }
+
+  public static void close(Clinic clinic) {
+    clinicQueues.remove(clinic);
+  }
 }
