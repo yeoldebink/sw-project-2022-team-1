@@ -4,6 +4,7 @@ import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.OnSiteEntryMessage;
+import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import il.cshaifa.hmo_system.server.server_handlers.queues.ClinicQueues;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,10 +15,13 @@ import org.hibernate.Session;
 public class HandleOnSiteEntryMessage extends MessageHandler {
 
   OnSiteEntryMessage class_message;
+  private final ConnectionToClient client;
 
-  public HandleOnSiteEntryMessage(OnSiteEntryMessage message, Session session) {
+  public HandleOnSiteEntryMessage(OnSiteEntryMessage message, Session session,
+      ConnectionToClient client) {
     super(message, session);
     this.class_message = (OnSiteEntryMessage) this.message;
+    this.client = client;
   }
 
   @Override
@@ -38,7 +42,7 @@ public class HandleOnSiteEntryMessage extends MessageHandler {
       session.update(patient_appt);
       session.flush();
 
-      class_message.place_in_line = ClinicQueues.push(patient_appt);
+      class_message.q_appt = ClinicQueues.push(patient_appt);
     }
   }
 
@@ -60,7 +64,7 @@ public class HandleOnSiteEntryMessage extends MessageHandler {
                 LocalDateTime.now().minusHours(1),
                 LocalDateTime.now().plusMinutes(15)),
             cb.equal(root.get("patient"), patient),
-            cb.equal(root.get("clinic"), class_message.clinic),
+            cb.equal(root.get("clinic"), HandleLoginMessage.stationClinic(client)),
             cb.isTrue(root.get("taken")),
             cb.isNull(root.get("called_time")),
             cb.isFalse(root.get("arrived")));

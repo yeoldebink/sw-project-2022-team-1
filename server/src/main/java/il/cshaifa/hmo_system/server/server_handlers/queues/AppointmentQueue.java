@@ -36,12 +36,12 @@ class AppointmentQueue {
     numberPrefix = sbuild.toString();
   }
 
-  public String push(Appointment appointment) {
+  public QueuedAppointment push(Appointment appointment) {
     var num_str = String.format("%s%03d", numberPrefix, ++count);
     QueuedAppointment qappt = new QueuedAppointment(appointment, num_str);
 
     (appointment.getDate().isBefore(LocalDateTime.now()) ? late : on_time).addLast(qappt);
-    return num_str;
+    return qappt;
   }
 
   public QueuedAppointment pop() {

@@ -3,16 +3,20 @@ package il.cshaifa.hmo_system.server.server_handlers;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.messages.Message;
 import il.cshaifa.hmo_system.messages.OnSiteQueueMessage;
+import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import il.cshaifa.hmo_system.server.server_handlers.queues.ClinicQueues;
 import java.time.LocalDateTime;
 import org.hibernate.Session;
 
 public class HandleOnSiteQueueMessage extends MessageHandler {
   OnSiteQueueMessage class_message;
+  private final ConnectionToClient client;
 
-  public HandleOnSiteQueueMessage(Message msg, Session session) {
+  public HandleOnSiteQueueMessage(Message msg, Session session,
+      ConnectionToClient client) {
     super(msg, session);
     class_message = (OnSiteQueueMessage) this.message;
+    this.client = client;
   }
 
   @Override
@@ -34,7 +38,7 @@ public class HandleOnSiteQueueMessage extends MessageHandler {
             class_message.appt_type,
             null,
             null,
-            class_message.clinic,
+            HandleLoginMessage.stationClinic(client),
             LocalDateTime.now().minusSeconds(30),
             null,
             null,
@@ -43,20 +47,20 @@ public class HandleOnSiteQueueMessage extends MessageHandler {
     session.save(appointment);
     session.flush();
 
-    class_message.appointment = appointment;
-    class_message.number_in_line = ClinicQueues.push(appointment);
+    class_message.q_appt = ClinicQueues.push(appointment);
+    class_message.updated_queue = ClinicQueues.getQueueAsList(client);
   }
 
   private void pop() {
-    var q_appt = ClinicQueues.pop(class_message.staff_member, class_message.clinic);
+    var q_appt = ClinicQueues.pop(client);
     if (q_appt != null) {
       // set the called time
       q_appt.appointment.setCalled_time(LocalDateTime.now());
       session.update(q_appt.appointment);
       session.flush();
 
-      class_message.appointment = q_appt.appointment;
-      class_message.number_in_line = q_appt.place;
+      class_message.q_appt = q_appt;
+      class_message.updated_queue = ClinicQueues.getQueueAsList(client);
     }
   }
 }

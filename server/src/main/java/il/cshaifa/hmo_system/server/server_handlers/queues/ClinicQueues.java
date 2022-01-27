@@ -5,11 +5,8 @@ import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import il.cshaifa.hmo_system.structs.QueuedAppointment;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -106,7 +103,7 @@ public class ClinicQueues {
     }
   }
 
-  public static String push(Appointment appointment) {
+  public static QueuedAppointment push(Appointment appointment) {
     clinicQueuesLock.lock();
 
     try {
@@ -117,16 +114,11 @@ public class ClinicQueues {
     }
   }
 
-  public static QueuedAppointment pop(User staff_member, Clinic clinic) {
+  public static QueuedAppointment pop(ConnectionToClient client) {
     clinicQueuesLock.lock();
 
     try {
-      var q_name = queueName(staff_member);
-      if (!clinicQueues.containsKey(clinic) || !clinicQueues.get(clinic).containsKey(q_name)) {
-        return null;
-      } else {
-        return clinicQueues.get(clinic).get(q_name).pop();
-      }
+      return clientQueues.get(client).pop();
     } finally {
       clinicQueuesLock.unlock();
     }

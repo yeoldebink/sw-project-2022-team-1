@@ -44,6 +44,10 @@ public class HandleLoginMessage extends MessageHandler {
     this.client = client;
   }
 
+  public static Clinic stationClinic(ConnectionToClient client) {
+    return onsite_connections.get(client);
+  }
+
   /** If login successful will update the LoginMessage with user and his details */
   @Override
   public void handleMessage() {

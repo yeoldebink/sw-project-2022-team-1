@@ -12,7 +12,6 @@ import il.cshaifa.hmo_system.messages.AppointmentMessage;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
 import il.cshaifa.hmo_system.messages.ClinicStaffMessage;
 import il.cshaifa.hmo_system.messages.GreenPassStatusMessage;
-import il.cshaifa.hmo_system.messages.DesktopLoginMessage;
 import il.cshaifa.hmo_system.messages.LoginMessage;
 import il.cshaifa.hmo_system.messages.Message.MessageType;
 import il.cshaifa.hmo_system.messages.OnSiteEntryMessage;
@@ -97,9 +96,9 @@ public class HMOServer extends AbstractServer {
       } else if (msg instanceof LoginMessage) { // because of subclasses
         handler = new HandleLoginMessage((LoginMessage) msg, session, client);
       } else if (msg_class == OnSiteEntryMessage.class) {
-        handler = new HandleOnSiteEntryMessage((OnSiteEntryMessage) msg, session);
+        handler = new HandleOnSiteEntryMessage((OnSiteEntryMessage) msg, session, client);
       } else if (msg_class == OnSiteQueueMessage.class) {
-        handler = new HandleOnSiteQueueMessage((OnSiteQueueMessage) msg, session);
+        handler = new HandleOnSiteQueueMessage((OnSiteQueueMessage) msg, session, client);
       } else if (msg_class == ReportMessage.class) {
         handler = new HandleReportMessage((ReportMessage) msg, session);
       } else if (msg_class == SetAppointmentMessage.class) {
