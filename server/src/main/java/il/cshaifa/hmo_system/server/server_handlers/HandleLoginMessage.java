@@ -9,7 +9,7 @@ import il.cshaifa.hmo_system.messages.DesktopLoginMessage;
 import il.cshaifa.hmo_system.messages.LoginMessage;
 import il.cshaifa.hmo_system.messages.OnSiteLoginMessage;
 import il.cshaifa.hmo_system.messages.OnSiteLoginMessage.Action;
-import il.cshaifa.hmo_system.server.ClinicQueues;
+import il.cshaifa.hmo_system.server.server_handlers.queues.ClinicQueues;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -167,7 +167,7 @@ public class HandleLoginMessage extends MessageHandler {
 
       if (onsite_connections_by_clinic.get(clinic).size() == 0) {
         onsite_connections_by_clinic.remove(clinic);
-        ClinicQueues.close(clinic);
+        ClinicQueues.closeClinic(clinic);
       }
     } finally {
       connection_maps_lock.unlock();
@@ -183,7 +183,7 @@ public class HandleLoginMessage extends MessageHandler {
       }
 
       onsite_connections_by_clinic.remove(clinic);
-      ClinicQueues.close(clinic);
+      ClinicQueues.closeClinic(clinic);
     } finally {
       connection_maps_lock.unlock();
     }

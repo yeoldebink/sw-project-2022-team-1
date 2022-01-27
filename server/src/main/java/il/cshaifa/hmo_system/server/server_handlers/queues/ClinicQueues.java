@@ -1,12 +1,14 @@
-package il.cshaifa.hmo_system.server;
+package il.cshaifa.hmo_system.server.server_handlers.queues;
 
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.User;
+import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import il.cshaifa.hmo_system.structs.QueuedAppointment;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -22,51 +24,6 @@ public class ClinicQueues {
     queueNames.put("Nurse", "Nurse");
     queueNames.put("Lab Tests", "Lab Tests");
     queueNames.put("Lab Technician", "Lab Tests");
-  }
-
-  private static class AppointmentQueue {
-    private final String name;
-    private final String numberPrefix;
-    private final LinkedList<QueuedAppointment> on_time;
-    private final LinkedList<QueuedAppointment> late;
-    private int count;
-    private boolean from_late_queue;
-
-    public AppointmentQueue(String name) {
-      this.name = name;
-      on_time = new LinkedList<>();
-      late = new LinkedList<>();
-      count = 0;
-
-      var split = name.split(" ");
-      var sbuild = new StringBuilder();
-      for (var w : split) {
-        sbuild.append(w.charAt(0));
-      }
-
-      numberPrefix = sbuild.toString();
-    }
-
-    public String push(Appointment appointment) {
-      var num_str = String.format("%s%03d", numberPrefix, ++count);
-      QueuedAppointment qappt = new QueuedAppointment(appointment, num_str);
-
-      (appointment.getDate().isBefore(LocalDateTime.now()) ? late : on_time).addLast(qappt);
-      return num_str;
-    }
-
-    public QueuedAppointment pop() {
-      if (late.isEmpty() && on_time.isEmpty()) return null;
-      else if (from_late_queue) {
-        from_late_queue = false;
-        if (late.isEmpty()) return this.pop();
-        else return late.pop();
-      } else {
-        from_late_queue = true;
-        if (on_time.isEmpty()) return this.pop();
-        else return on_time.pop();
-      }
-    }
   }
 
   private static String queueName(Appointment appointment) {
@@ -94,16 +51,31 @@ public class ClinicQueues {
   // hashes clinics to maps of queues based on type or staff member
   private static final HashMap<Clinic, HashMap<String, AppointmentQueue>> clinicQueues;
 
+  // this maps clients to their connected queues
+  private static final HashMap<ConnectionToClient, AppointmentQueue> clientQueues;
+
   static {
     clinicQueues = new HashMap<>();
+    clientQueues = new HashMap<>();
   }
 
-  private static void initQueue(Appointment appointment) {
+  private static String initQueue(Appointment appointment) {
     var clinic = appointment.getClinic();
     clinicQueues.putIfAbsent(clinic, new HashMap<>());
 
     var q_name = queueName(appointment);
     clinicQueues.get(clinic).putIfAbsent(q_name, new AppointmentQueue(q_name));
+
+    return q_name;
+  }
+
+  private static String initQueue(User staff_member, Clinic clinic) {
+    clinicQueues.putIfAbsent(clinic, new HashMap<>());
+    var q_name = queueName(staff_member);
+
+    clinicQueues.get(clinic).putIfAbsent(q_name, new AppointmentQueue(q_name));
+
+    return q_name;
   }
 
   private final static ReentrantLock clinicQueuesLock;
@@ -111,12 +83,34 @@ public class ClinicQueues {
     clinicQueuesLock = new ReentrantLock(true);
   }
 
+  public static void connectToQueue(User staff_member, Clinic clinic, ConnectionToClient client) {
+    clinicQueuesLock.lock();
+    try {
+      var q_name = initQueue(staff_member, clinic);
+      var appt_queue = clinicQueues.get(clinic).get(q_name);
+      appt_queue.connectClient(client);
+      clientQueues.put(client, appt_queue);
+    } finally {
+      clinicQueuesLock.unlock();
+    }
+  }
+
+  public static void disconnectClient(ConnectionToClient client) {
+    clinicQueuesLock.lock();
+    try {
+      var appt_queue = clientQueues.get(client);
+      appt_queue.disconnectClient(client);
+    } finally {
+      clinicQueuesLock.unlock();
+    }
+  }
+
   public static String push(Appointment appointment) {
     clinicQueuesLock.lock();
 
     try {
-      initQueue(appointment);
-      return clinicQueues.get(appointment.getClinic()).get(queueName(appointment)).push(appointment);
+      var q_name = initQueue(appointment);
+      return clinicQueues.get(appointment.getClinic()).get(q_name).push(appointment);
     } finally {
       clinicQueuesLock.unlock();
     }
@@ -137,7 +131,7 @@ public class ClinicQueues {
     }
   }
 
-  public static void close(Clinic clinic) {
+  public static void closeClinic(Clinic clinic) {
     clinicQueuesLock.lock();
     try {
       clinicQueues.remove(clinic);

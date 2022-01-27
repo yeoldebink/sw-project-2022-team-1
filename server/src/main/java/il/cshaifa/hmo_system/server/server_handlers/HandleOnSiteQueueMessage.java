@@ -3,7 +3,7 @@ package il.cshaifa.hmo_system.server.server_handlers;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.messages.Message;
 import il.cshaifa.hmo_system.messages.OnSiteQueueMessage;
-import il.cshaifa.hmo_system.server.ClinicQueues;
+import il.cshaifa.hmo_system.server.server_handlers.queues.ClinicQueues;
 import java.time.LocalDateTime;
 import org.hibernate.Session;
 

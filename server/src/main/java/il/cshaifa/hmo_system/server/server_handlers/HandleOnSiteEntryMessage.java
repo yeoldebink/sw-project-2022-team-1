@@ -4,7 +4,7 @@ import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.OnSiteEntryMessage;
-import il.cshaifa.hmo_system.server.ClinicQueues;
+import il.cshaifa.hmo_system.server.server_handlers.queues.ClinicQueues;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.criteria.CriteriaQuery;
