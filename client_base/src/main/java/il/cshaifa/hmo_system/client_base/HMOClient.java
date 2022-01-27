@@ -15,8 +15,10 @@ import il.cshaifa.hmo_system.messages.ClinicMessage;
 import il.cshaifa.hmo_system.messages.DesktopLoginMessage;
 import il.cshaifa.hmo_system.messages.LoginMessage;
 import il.cshaifa.hmo_system.messages.Message.MessageType;
+import il.cshaifa.hmo_system.messages.OnSiteLoginMessage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.greenrobot.eventbus.EventBus;
 
@@ -86,6 +88,8 @@ public abstract class HMOClient extends AbstractClient {
       if (message instanceof DesktopLoginMessage) {
         event.patientData = ((DesktopLoginMessage) message).patient_data;
         this.connected_employee_clinics = ((DesktopLoginMessage) message).employee_clinics;
+      } else {
+        this.connected_employee_clinics = Collections.singletonList(((OnSiteLoginMessage) message).clinic);
       }
     }
     EventBus.getDefault().post(event);

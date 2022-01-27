@@ -11,6 +11,7 @@ import il.cshaifa.hmo_system.messages.OnSiteLoginMessage;
 import il.cshaifa.hmo_system.messages.OnSiteLoginMessage.Action;
 import il.cshaifa.hmo_system.server.server_handlers.queues.ClinicQueues;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -193,6 +194,11 @@ public class HandleLoginMessage extends MessageHandler {
     try {
       for (var client : onsite_connections_by_clinic.get(clinic)) {
         onsite_connections.remove(client);
+        try {
+          client.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
       }
 
       onsite_connections_by_clinic.remove(clinic);

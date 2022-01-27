@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+  xmlns:fx="http://javafx.com/fxml"
+  fx:controller="il.cshaifa.hmo_system.on_site_client.gui.patient.OnSitePatientViewController"
+  prefHeight="768.0" prefWidth="1024.0" stylesheets="@../hmo_lite.css">
+
+  <VBox AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="10">
+    <MenuBar>
+      <Menu text="Exit">
+        <MenuItem text="Close station" fx:id="closeStationMenuItem" />
+        <MenuItem text="Close clinic" fx:id="closeClinicMenuItem" />
+      </Menu>
+    </MenuBar>
+  </VBox>
+
+  <ImageView>
+    <Image url="@onsite-welcome.jpg" />
+  </ImageView>
+
+  <VBox layoutX="436" layoutY="307" spacing="10">
+    <Label fx:id="clinicWelcomeLabel" styleClass="h1-label" />
+    <Label text="Swipe your card or enter your ID to get started." />
+    <HBox spacing="10">
+      <TextField promptText="ID" fx:id="idTextField" />
+      <Button text="Go">
+        <graphic>
+          <FontIcon iconLiteral="mdi-arrow-right-bold-circle" iconSize="20" />
+        </graphic>
+      </Button>
+    </HBox>
+  </VBox>
+</AnchorPane>
