@@ -36,6 +36,7 @@ import il.cshaifa.hmo_system.server.server_handlers.HandleSetSpecialistAppointme
 import il.cshaifa.hmo_system.server.server_handlers.HandleStaffAssignmentMessage;
 import il.cshaifa.hmo_system.server.server_handlers.HandleStaffMessage;
 import il.cshaifa.hmo_system.server.server_handlers.MessageHandler;
+import il.cshaifa.hmo_system.server.server_handlers.queues.ClinicQueues;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -130,8 +131,11 @@ public class HMOServer extends AbstractServer {
   @Override
   protected synchronized void clientDisconnected(ConnectionToClient client) {
     User user = HandleLoginMessage.connectedUser(client);
-    System.out.println("Client disconnected: " + user.getFirstName() + " " + user.getLastName());
+    if (user != null)
+      System.out.println("Client disconnected: " + user.getFirstName() + " " + user.getLastName());
+
     HandleLoginMessage.disconnectClient(client);
+    ClinicQueues.disconnectClient(client);
 
     super.clientDisconnected(client);
   }

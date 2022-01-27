@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class ClinicQueues {
@@ -126,6 +127,15 @@ public class ClinicQueues {
       } else {
         return clinicQueues.get(clinic).get(q_name).pop();
       }
+    } finally {
+      clinicQueuesLock.unlock();
+    }
+  }
+
+  public static List<QueuedAppointment> getQueueAsList(ConnectionToClient client) {
+    clinicQueuesLock.lock();
+    try {
+      return clientQueues.get(client).getList();
     } finally {
       clinicQueuesLock.unlock();
     }

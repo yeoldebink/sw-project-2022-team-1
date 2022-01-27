@@ -82,10 +82,19 @@ public class HandleLoginMessage extends MessageHandler {
             // all clinic staff (incl. the Clinic Manager) are allowed to log in via the on-site app
             // provided what they want to do is open the application
             if (!is_desktop && ((OnSiteLoginMessage) this.class_message).action == Action.LOGIN) {
-              if (clinics.contains(((OnSiteLoginMessage) this.class_message).clinic)) this.class_message.user = user;
+              if (clinics.contains(((OnSiteLoginMessage) this.class_message).clinic)) {
+                this.class_message.user = user;
+
+                if (!user.getRole().getName().equals("Clinic Manager")) {
+                  // this is an employee who needs to be connected to their patient queue
+                  connectOnSiteStation();
+                  ClinicQueues.connectToQueue(
+                      user, ((OnSiteLoginMessage) this.class_message).clinic, client);
+                }
+              }
 
             } else if (user.getRole().getName().equals("Clinic Manager")) {
-              // she can log in both on desktop and on-site
+              // she can log in both on desktop and on-site to open stations
               if (is_desktop) {
                 ((DesktopLoginMessage) this.class_message).employee_clinics = clinics;
                 this.class_message.user = user;
@@ -194,7 +203,10 @@ public class HandleLoginMessage extends MessageHandler {
 
     try {
       var user = connected_clients.remove(client);
-      connected_users.remove(user.getId());
+      if (user != null) connected_users.remove(user.getId());
+
+      var clinic = onsite_connections.remove(client);
+      if (clinic != null) onsite_connections_by_clinic.get(clinic).remove(client);
     } finally {
       connection_maps_lock.unlock();
     }
