@@ -3,10 +3,12 @@ package il.cshaifa.hmo_system.server;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.User;
+import il.cshaifa.hmo_system.structs.QueuedAppointment;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class ClinicQueues {
 
@@ -22,17 +24,7 @@ public class ClinicQueues {
     queueNames.put("Lab Technician", "Lab Tests");
   }
 
-  public static class QueuedAppointment {
-    public final Appointment appointment;
-    public final String place;
-
-    public QueuedAppointment(Appointment appointment, String place) {
-      this.appointment = appointment;
-      this.place = place;
-    }
-  }
-
-  public static class AppointmentQueue {
+  private static class AppointmentQueue {
     private final String name;
     private final String numberPrefix;
     private final LinkedList<QueuedAppointment> on_time;
@@ -114,21 +106,43 @@ public class ClinicQueues {
     clinicQueues.get(clinic).putIfAbsent(q_name, new AppointmentQueue(q_name));
   }
 
+  private final static ReentrantLock clinicQueuesLock;
+  static {
+    clinicQueuesLock = new ReentrantLock(true);
+  }
+
   public static String push(Appointment appointment) {
-    initQueue(appointment);
-    return clinicQueues.get(appointment.getClinic()).get(queueName(appointment)).push(appointment);
+    clinicQueuesLock.lock();
+
+    try {
+      initQueue(appointment);
+      return clinicQueues.get(appointment.getClinic()).get(queueName(appointment)).push(appointment);
+    } finally {
+      clinicQueuesLock.unlock();
+    }
   }
 
   public static QueuedAppointment pop(User staff_member, Clinic clinic) {
-    var q_name = queueName(staff_member);
-    if (!clinicQueues.containsKey(clinic) || !clinicQueues.get(clinic).containsKey(q_name)) {
-      return null;
-    } else {
-      return clinicQueues.get(clinic).get(q_name).pop();
+    clinicQueuesLock.lock();
+
+    try {
+      var q_name = queueName(staff_member);
+      if (!clinicQueues.containsKey(clinic) || !clinicQueues.get(clinic).containsKey(q_name)) {
+        return null;
+      } else {
+        return clinicQueues.get(clinic).get(q_name).pop();
+      }
+    } finally {
+      clinicQueuesLock.unlock();
     }
   }
 
   public static void close(Clinic clinic) {
-    clinicQueues.remove(clinic);
+    clinicQueuesLock.lock();
+    try {
+      clinicQueues.remove(clinic);
+    } finally {
+      clinicQueuesLock.unlock();
+    }
   }
 }
