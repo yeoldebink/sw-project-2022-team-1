@@ -11,10 +11,18 @@ public class PatientQueueAppointmentEvent extends Event {
     public String number_in_line;
     public Patient patient;
 
-    public PatientQueueAppointmentEvent(AppointmentType appointment_type, String number_in_line, Patient patient, Object sender) {
+    private PatientQueueAppointmentEvent(AppointmentType appointment_type, String number_in_line, Patient patient, Object sender) {
         super(sender);
         this.appointment_type = appointment_type;
         this.number_in_line = number_in_line;
         this.patient = patient;
+    }
+
+    public static PatientQueueAppointmentEvent newAppointmentRequest(Patient patient, AppointmentType appointmentType, Object sender) {
+        return new PatientQueueAppointmentEvent(appointmentType, null, patient, sender);
+    }
+
+    public static PatientQueueAppointmentEvent newAppointmentResponse(String number_in_line, Object sender) {
+        return new PatientQueueAppointmentEvent(null, number_in_line, null, sender);
     }
 }
