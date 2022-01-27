@@ -12,7 +12,6 @@ import il.cshaifa.hmo_system.messages.AppointmentMessage;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
 import il.cshaifa.hmo_system.messages.ClinicStaffMessage;
 import il.cshaifa.hmo_system.messages.GreenPassStatusMessage;
-import il.cshaifa.hmo_system.messages.DesktopLoginMessage;
 import il.cshaifa.hmo_system.messages.LoginMessage;
 import il.cshaifa.hmo_system.messages.Message.MessageType;
 import il.cshaifa.hmo_system.messages.OnSiteEntryMessage;
@@ -36,6 +35,7 @@ import il.cshaifa.hmo_system.server.server_handlers.HandleSetSpecialistAppointme
 import il.cshaifa.hmo_system.server.server_handlers.HandleStaffAssignmentMessage;
 import il.cshaifa.hmo_system.server.server_handlers.HandleStaffMessage;
 import il.cshaifa.hmo_system.server.server_handlers.MessageHandler;
+import il.cshaifa.hmo_system.server.server_handlers.queues.ClinicQueues;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -96,9 +96,9 @@ public class HMOServer extends AbstractServer {
       } else if (msg instanceof LoginMessage) { // because of subclasses
         handler = new HandleLoginMessage((LoginMessage) msg, session, client);
       } else if (msg_class == OnSiteEntryMessage.class) {
-        handler = new HandleOnSiteEntryMessage((OnSiteEntryMessage) msg, session);
+        handler = new HandleOnSiteEntryMessage((OnSiteEntryMessage) msg, session, client);
       } else if (msg_class == OnSiteQueueMessage.class) {
-        handler = new HandleOnSiteQueueMessage((OnSiteQueueMessage) msg, session);
+        handler = new HandleOnSiteQueueMessage((OnSiteQueueMessage) msg, session, client);
       } else if (msg_class == ReportMessage.class) {
         handler = new HandleReportMessage((ReportMessage) msg, session);
       } else if (msg_class == SetAppointmentMessage.class) {
@@ -130,8 +130,11 @@ public class HMOServer extends AbstractServer {
   @Override
   protected synchronized void clientDisconnected(ConnectionToClient client) {
     User user = HandleLoginMessage.connectedUser(client);
-    System.out.println("Client disconnected: " + user.getFirstName() + " " + user.getLastName());
+    if (user != null)
+      System.out.println("Client disconnected: " + user.getFirstName() + " " + user.getLastName());
+
     HandleLoginMessage.disconnectClient(client);
+    ClinicQueues.disconnectClient(client);
 
     super.clientDisconnected(client);
   }
