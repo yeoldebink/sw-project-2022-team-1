@@ -79,18 +79,19 @@ public class HandleLoginMessage extends MessageHandler {
             // all clinic staff (incl. the Clinic Manager) are allowed to log in via the on-site app
             // provided what they want to do is open the application
             if (!is_desktop && ((OnSiteLoginMessage) this.class_message).action == Action.LOGIN) {
-              class_message.user = user;
-              ((OnSiteLoginMessage) this.class_message).authorized = clinics.contains(((OnSiteLoginMessage) this.class_message).clinic);
+              if (clinics.contains(((OnSiteLoginMessage) this.class_message).clinic)) this.class_message.user = user;
 
             } else if (user.getRole().getName().equals("Clinic Manager")) {
               // she can log in both on desktop and on-site
-              class_message.user = user;
-              if (is_desktop) ((DesktopLoginMessage) this.class_message).employee_clinics = clinics;
+              if (is_desktop) {
+                ((DesktopLoginMessage) this.class_message).employee_clinics = clinics;
+                this.class_message.user = user;
+              }
 
               // on-site login for a clinic manager hinges on them being the manager of this clinic
               else {
-                ((OnSiteLoginMessage) this.class_message).authorized = clinics.contains(((OnSiteLoginMessage) this.class_message).clinic);
-                if (((OnSiteLoginMessage) this.class_message).authorized) {
+                if (clinics.contains(((OnSiteLoginMessage) this.class_message).clinic)) {
+                  this.class_message.user = user;
                   switch (((OnSiteLoginMessage) this.class_message).action) {
                     case LOGIN:
                       connectOnSiteStation();

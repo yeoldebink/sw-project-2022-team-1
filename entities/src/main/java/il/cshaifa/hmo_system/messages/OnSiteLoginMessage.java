@@ -13,12 +13,9 @@ public class OnSiteLoginMessage extends LoginMessage {
   public Clinic clinic;
   public Action action;
 
-  // response
-  public boolean authorized;
-
-  public OnSiteLoginMessage(MessageType message_type, int id, String password,
+  public OnSiteLoginMessage(int id, String password,
       Clinic clinic, Action action) {
-    super(message_type, id, password);
+    super(MessageType.REQUEST, id, password);
     this.clinic = clinic;
     this.action = action;
   }
