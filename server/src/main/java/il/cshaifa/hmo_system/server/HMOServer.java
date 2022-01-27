@@ -12,8 +12,11 @@ import il.cshaifa.hmo_system.messages.AppointmentMessage;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
 import il.cshaifa.hmo_system.messages.ClinicStaffMessage;
 import il.cshaifa.hmo_system.messages.GreenPassStatusMessage;
+import il.cshaifa.hmo_system.messages.DesktopLoginMessage;
 import il.cshaifa.hmo_system.messages.LoginMessage;
 import il.cshaifa.hmo_system.messages.Message.MessageType;
+import il.cshaifa.hmo_system.messages.OnSiteEntryMessage;
+import il.cshaifa.hmo_system.messages.OnSiteQueueMessage;
 import il.cshaifa.hmo_system.messages.ReportMessage;
 import il.cshaifa.hmo_system.messages.SetAppointmentMessage;
 import il.cshaifa.hmo_system.messages.SetSpecialistAppointmentMessage;
@@ -25,6 +28,8 @@ import il.cshaifa.hmo_system.server.server_handlers.HandleAppointmentMessage;
 import il.cshaifa.hmo_system.server.server_handlers.HandleClinicMessage;
 import il.cshaifa.hmo_system.server.server_handlers.HandleGreenPassStatusMessage;
 import il.cshaifa.hmo_system.server.server_handlers.HandleLoginMessage;
+import il.cshaifa.hmo_system.server.server_handlers.HandleOnSiteEntryMessage;
+import il.cshaifa.hmo_system.server.server_handlers.HandleOnSiteQueueMessage;
 import il.cshaifa.hmo_system.server.server_handlers.HandleReportMessage;
 import il.cshaifa.hmo_system.server.server_handlers.HandleSetAppointmentMessage;
 import il.cshaifa.hmo_system.server.server_handlers.HandleSetSpecialistAppointmentMessage;
@@ -88,8 +93,12 @@ public class HMOServer extends AbstractServer {
         handler = new HandleClinicMessage((ClinicMessage) msg, session);
       } else if (msg_class == GreenPassStatusMessage.class) {
         handler = new HandleGreenPassStatusMessage((GreenPassStatusMessage) msg, session);
-      } else if (msg_class == LoginMessage.class) {
+      } else if (msg instanceof LoginMessage) { // because of subclasses
         handler = new HandleLoginMessage((LoginMessage) msg, session, client);
+      } else if (msg_class == OnSiteEntryMessage.class) {
+        handler = new HandleOnSiteEntryMessage((OnSiteEntryMessage) msg, session);
+      } else if (msg_class == OnSiteQueueMessage.class) {
+        handler = new HandleOnSiteQueueMessage((OnSiteQueueMessage) msg, session);
       } else if (msg_class == ReportMessage.class) {
         handler = new HandleReportMessage((ReportMessage) msg, session);
       } else if (msg_class == SetAppointmentMessage.class) {

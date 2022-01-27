@@ -12,7 +12,7 @@ import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.entities.Warning;
 import il.cshaifa.hmo_system.messages.AppointmentMessage;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
-import il.cshaifa.hmo_system.messages.LoginMessage;
+import il.cshaifa.hmo_system.messages.DesktopLoginMessage;
 import il.cshaifa.hmo_system.messages.Message.MessageType;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,9 +44,9 @@ public abstract class HMOClient extends AbstractClient {
     if (message.getClass().equals(Warning.class)) {
       EventBus.getDefault().post(new WarningEvent((Warning) message));
     } else {
-      if (message.getClass().equals(LoginMessage.class)) {
-        this.connected_user = ((LoginMessage) message).user;
-        handleLoginMessage((LoginMessage) message);
+      if (message.getClass().equals(DesktopLoginMessage.class)) {
+        this.connected_user = ((DesktopLoginMessage) message).user;
+        handleLoginMessage((DesktopLoginMessage) message);
       } else if (message.getClass().equals(ClinicMessage.class)) {
         handleClinicMessage((ClinicMessage) message);
       } else if (message.getClass().equals(AppointmentMessage.class)) {
@@ -71,7 +71,7 @@ public abstract class HMOClient extends AbstractClient {
     EventBus.getDefault().post(event);
   }
 
-  private void handleLoginMessage(LoginMessage message) {
+  private void handleLoginMessage(DesktopLoginMessage message) {
     LoginEvent event = new LoginEvent(0, "", this);
     if (message.user == null) {
       event.response = Response.REJECT;
@@ -110,6 +110,6 @@ public abstract class HMOClient extends AbstractClient {
    * @throws IOException SQL exception
    */
   public void loginRequest(int user, String password) throws IOException {
-    sendToServer(new LoginMessage(user, password));
+    sendToServer(new DesktopLoginMessage(user, password));
   }
 }
