@@ -1,10 +1,12 @@
 package il.cshaifa.hmo_system.on_site_client.gui.patient;
 
+import il.cshaifa.hmo_system.CommonEnums.OnSiteLoginAction;
 import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.on_site_client.HMOOnSiteClient;
 import il.cshaifa.hmo_system.on_site_client.events.OnSiteEntryEvent;
+import il.cshaifa.hmo_system.on_site_client.events.OnSiteLoginEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
@@ -47,6 +49,16 @@ public class OnSitePatientViewController extends ViewController {
         invalidID();
       }
     });
+
+    closeStationMenuItem.setOnAction((actionEvent) -> postExitEvent(OnSiteLoginAction.CLOSE_STATION));
+
+    closeClinicMenuItem.setOnAction((actionEvent) -> postExitEvent(OnSiteLoginAction.CLOSE_CLINIC));
+  }
+
+  private void postExitEvent(OnSiteLoginAction action) {
+    OnSiteLoginEvent event = new OnSiteLoginEvent(0, null, null, this);
+    event.action = action;
+    EventBus.getDefault().post(event);
   }
 
   private void setError(String error) {
@@ -66,9 +78,4 @@ public class OnSitePatientViewController extends ViewController {
   public void showDashboard(Patient patient) {} // TODO implement me!
 
   public void returnToEntryScreen() {} // TODO implement me!
-
-  public void showExitContextMenu(ContextMenuEvent contextMenuEvent) {
-    ContextMenu cm = new ContextMenu();
-    cm.getItems().add(new MenuItem("Hello!"));
-  }
 }

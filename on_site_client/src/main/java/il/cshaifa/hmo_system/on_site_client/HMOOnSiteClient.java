@@ -1,11 +1,10 @@
 package il.cshaifa.hmo_system.on_site_client;
 
+import il.cshaifa.hmo_system.CommonEnums.OnSiteLoginAction;
 import il.cshaifa.hmo_system.client_base.HMOClient;
 import il.cshaifa.hmo_system.entities.Clinic;
-import il.cshaifa.hmo_system.messages.DesktopLoginMessage;
 import il.cshaifa.hmo_system.messages.OnSiteEntryMessage;
 import il.cshaifa.hmo_system.messages.OnSiteLoginMessage;
-import il.cshaifa.hmo_system.messages.OnSiteLoginMessage.Action;
 import il.cshaifa.hmo_system.on_site_client.events.OnSiteEntryEvent;
 import java.io.IOException;
 import org.greenrobot.eventbus.EventBus;
@@ -35,7 +34,7 @@ public class HMOOnSiteClient extends HMOClient {
    * @throws java.io.IOException SQL exception
    */
   public void loginRequest(int user, String password, Clinic clinic) throws IOException {
-    sendToServer(new OnSiteLoginMessage(user, password, clinic, Action.LOGIN));
+    sendToServer(new OnSiteLoginMessage(user, password, clinic, OnSiteLoginAction.LOGIN));
   }
 
   public void patientEntryRequest(int id) throws IOException {
@@ -45,6 +44,10 @@ public class HMOOnSiteClient extends HMOClient {
   public Clinic getStationClinic() {
     return connected_employee_clinics.get(0);
   }
+
+  public void requestCloseStation() {} // TODO implement me!
+
+  public void requestCloseClinic() {} // TODO implement me!
 
   //
   // ********************************* HANDLERS *********************************

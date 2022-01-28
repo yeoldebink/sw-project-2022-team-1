@@ -58,6 +58,7 @@ public class DesktopLoginController extends Controller {
       } else if (event.response == Response.AUTHORIZE) {
         openMainScreenByRole(event.userData);
         Platform.runLater(() -> this.stage.close());
+        onWindowClose();
       }
     }
   }

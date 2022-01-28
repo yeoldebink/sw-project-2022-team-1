@@ -1,5 +1,6 @@
 package il.cshaifa.hmo_system.on_site_client.gui.login;
 
+import il.cshaifa.hmo_system.CommonEnums.OnSiteLoginAction;
 import il.cshaifa.hmo_system.client_base.base_controllers.Controller;
 import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client_base.events.ClinicEvent;
@@ -8,20 +9,33 @@ import il.cshaifa.hmo_system.client_base.events.LoginEvent.Response;
 import il.cshaifa.hmo_system.client_base.utils.Utils;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.on_site_client.HMOOnSiteClient;
+import il.cshaifa.hmo_system.on_site_client.events.CloseStationEvent;
 import il.cshaifa.hmo_system.on_site_client.events.OnSiteLoginEvent;
 import il.cshaifa.hmo_system.on_site_client.gui.patient.OnSitePatientController;
 import il.cshaifa.hmo_system.on_site_client.gui.patient.OnSitePatientViewController;
 import java.io.IOException;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import jdk.jshell.spi.ExecutionControl.NotImplementedException;
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 public class OnSiteLoginController extends Controller {
 
-  public OnSiteLoginController(ViewController view_controller, Stage stage) {
+  private final OnSiteLoginAction action;
+
+  public OnSiteLoginController(ViewController view_controller, Stage stage,
+      OnSiteLoginAction action) {
     super(view_controller, stage);
+    this.action = action;
     try {
       HMOOnSiteClient.getClient().getClinics();
     } catch (IOException ioException) {
@@ -58,8 +72,21 @@ public class OnSiteLoginController extends Controller {
       if (event.response == Response.REJECT) {
         incorrectUser();
       } else if (event.response == Response.AUTHORIZE) {
-        openMainScreenByRole(event.userData);
+        if (this.action == OnSiteLoginAction.LOGIN) {
+          openMainScreenByRole(event.userData);
+        } else {
+          Platform.runLater(() -> {
+            var dialog = new Dialog<String>();
+            dialog.setContentText(String.format("Closed %s successfully", this.action == OnSiteLoginAction.CLOSE_CLINIC ? "clinic" : "station"));
+            dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+            dialog.initModality(Modality.APPLICATION_MODAL);
+            dialog.show();
+            EventBus.getDefault().post(new CloseStationEvent(this));
+          });
+        }
+
         Platform.runLater(() -> this.stage.close());
+        onWindowClose();
       }
     }
   }

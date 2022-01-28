@@ -1,5 +1,6 @@
 package il.cshaifa.hmo_system.server.server_handlers;
 
+import il.cshaifa.hmo_system.CommonEnums.OnSiteLoginAction;
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.ClinicStaff;
 import il.cshaifa.hmo_system.entities.HMOUtilities;
@@ -8,7 +9,6 @@ import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.DesktopLoginMessage;
 import il.cshaifa.hmo_system.messages.LoginMessage;
 import il.cshaifa.hmo_system.messages.OnSiteLoginMessage;
-import il.cshaifa.hmo_system.messages.OnSiteLoginMessage.Action;
 import il.cshaifa.hmo_system.server.server_handlers.queues.ClinicQueues;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import java.io.IOException;
@@ -86,7 +86,7 @@ public class HandleLoginMessage extends MessageHandler {
 
             // all clinic staff (incl. the Clinic Manager) are allowed to log in via the on-site app
             // provided what they want to do is open the application
-            if (!is_desktop && ((OnSiteLoginMessage) this.class_message).action == Action.LOGIN) {
+            if (!is_desktop && ((OnSiteLoginMessage) this.class_message).action == OnSiteLoginAction.LOGIN) {
               if (clinics.contains(((OnSiteLoginMessage) this.class_message).clinic)) {
                 this.class_message.user = user;
 

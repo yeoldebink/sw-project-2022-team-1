@@ -23,4 +23,10 @@ public class CommonEnums {
     TESTED,
     REJECT
   }
+
+  public enum OnSiteLoginAction {
+    LOGIN,
+    CLOSE_STATION,
+    CLOSE_CLINIC
+  }
 }

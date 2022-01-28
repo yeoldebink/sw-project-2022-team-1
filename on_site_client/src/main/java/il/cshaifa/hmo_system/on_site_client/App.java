@@ -1,12 +1,15 @@
 package il.cshaifa.hmo_system.on_site_client;
 
+import il.cshaifa.hmo_system.CommonEnums.OnSiteLoginAction;
 import il.cshaifa.hmo_system.client_base.HMOClient;
 import il.cshaifa.hmo_system.client_base.utils.Utils;
 import il.cshaifa.hmo_system.on_site_client.gui.login.OnSiteLoginController;
 import il.cshaifa.hmo_system.on_site_client.gui.login.OnSiteLoginViewController;
+import il.cshaifa.hmo_system.on_site_client.gui.patient.OnSitePatientController;
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class App extends Application {
@@ -24,8 +27,13 @@ public class App extends Application {
 
     FXMLLoader loader =
         new FXMLLoader(App.class.getResource(Utils.get_fxml(OnSiteLoginViewController.class)));
-    Utils.openNewWindow(
-        OnSiteLoginViewController.class, OnSiteLoginController.class, loader, false);
+
+    Scene scene = new Scene(loader.load());
+    Stage stage = new Stage();
+    stage.setScene(scene);
+
+    OnSiteLoginController c = new OnSiteLoginController(loader.getController(), stage, OnSiteLoginAction.LOGIN);
+    stage.show();
   }
 
   @Override
