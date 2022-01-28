@@ -25,14 +25,14 @@ public class HandleLoginMessage extends MessageHandler {
   public LoginMessage class_message;
 
   private static final ReentrantLock connection_maps_lock;
-  private static final HashMap<Integer, ConnectionToClient> connected_users;
-  private static final HashMap<ConnectionToClient, User> connected_clients;
+  private static final HashMap<Integer, ConnectionToClient> connected_desktop_users;
+  private static final HashMap<ConnectionToClient, User> connected_desktop_clients;
   private static final HashMap<ConnectionToClient, Clinic> onsite_connections;
   private static final HashMap<Clinic, HashSet<ConnectionToClient>> onsite_connections_by_clinic;
   static {
     connection_maps_lock = new ReentrantLock(true);
-    connected_users = new HashMap<>();
-    connected_clients = new HashMap<>();
+    connected_desktop_users = new HashMap<>();
+    connected_desktop_clients = new HashMap<>();
     onsite_connections = new HashMap<>();
     onsite_connections_by_clinic = new HashMap<>();
   }
@@ -89,10 +89,23 @@ public class HandleLoginMessage extends MessageHandler {
             if (!is_desktop && ((OnSiteLoginMessage) this.class_message).action == OnSiteLoginAction.LOGIN) {
               if (clinics.contains(((OnSiteLoginMessage) this.class_message).clinic)) {
                 this.class_message.user = user;
+                connectOnSiteStation();
 
-                if (!user.getRole().getName().equals("Clinic Manager")) {
+                // on-site login for a clinic manager hinges on them being the manager of this clinic
+                if (user.getRole().getName().equals("Clinic Manager")
+                    && clinics.contains(((OnSiteLoginMessage) this.class_message).clinic)) {
+                  switch (((OnSiteLoginMessage) this.class_message).action) {
+                    case CLOSE_STATION:
+                      disconnectOnSiteStation(client);
+                      break;
+                    case CLOSE_CLINIC:
+                      closeClinic(((OnSiteLoginMessage) this.class_message).clinic);
+                      break;
+                    default:
+                      break;
+                  }
+                } else {
                   // this is an employee who needs to be connected to their patient queue
-                  connectOnSiteStation();
                   ClinicQueues.connectToQueue(
                       user, ((OnSiteLoginMessage) this.class_message).clinic, client);
                 }
@@ -104,36 +117,21 @@ public class HandleLoginMessage extends MessageHandler {
                 ((DesktopLoginMessage) this.class_message).employee_clinics = clinics;
                 this.class_message.user = user;
               }
-
-              // on-site login for a clinic manager hinges on them being the manager of this clinic
-              else {
-                if (clinics.contains(((OnSiteLoginMessage) this.class_message).clinic)) {
-                  this.class_message.user = user;
-                  switch (((OnSiteLoginMessage) this.class_message).action) {
-                    case LOGIN:
-                      connectOnSiteStation();
-                      break;
-                    case CLOSE_STATION:
-                      disconnectOnSiteStation(client);
-                      break;
-                    case CLOSE_CLINIC:
-                      closeClinic(((OnSiteLoginMessage) this.class_message).clinic);
-                      break;
-                  }
-                }
-              }
             }
             break;
         }
 
+
+        if (!is_desktop) return;
+
         connection_maps_lock.lock();
 
         try {
-          if (is_desktop && connected_users.containsKey(user.getId())) {
+          if(connected_desktop_users.containsKey(user.getId())) {
             ((DesktopLoginMessage) this.class_message).already_logged_in = true;
           } else {
-            connected_users.put(user.getId(), client);
-            connected_clients.put(client, user);
+            connected_desktop_users.put(user.getId(), client);
+            connected_desktop_clients.put(client, user);
           }
         } finally {
           connection_maps_lock.unlock();
@@ -212,8 +210,8 @@ public class HandleLoginMessage extends MessageHandler {
     connection_maps_lock.lock();
 
     try {
-      var user = connected_clients.remove(client);
-      if (user != null) connected_users.remove(user.getId());
+      var user = connected_desktop_clients.remove(client);
+      if (user != null) connected_desktop_users.remove(user.getId());
 
       var clinic = onsite_connections.remove(client);
       if (clinic != null) onsite_connections_by_clinic.get(clinic).remove(client);
@@ -225,7 +223,7 @@ public class HandleLoginMessage extends MessageHandler {
   public static User connectedUser(ConnectionToClient client) {
     connection_maps_lock.lock();
     try {
-      return connected_clients.get(client);
+      return connected_desktop_clients.get(client);
     } finally {
       connection_maps_lock.unlock();
     }

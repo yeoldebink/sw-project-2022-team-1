@@ -80,7 +80,7 @@ public class Main {
     users.put(
         "Carla Espinosa",
         new User(
-            1618, "QUEEN_carla", "Carla", "Espinosa", null, null, roles.get("Clinic Manager")));
+            1618, null, "Carla", "Espinosa", null, null, roles.get("Clinic Manager")));
     users.put(
         "Carmen Sandiego",
         new User(8793, null, "Carmen", "Sandiego", null, null, roles.get("Clinic Manager")));
@@ -129,7 +129,7 @@ public class Main {
 
     users.put(
         "Tyler Durden",
-        new User(254789321, "password", "Tyler", "Durden", null, null, roles.get("Patient")));
+        new User(254789321, null, "Tyler", "Durden", null, null, roles.get("Patient")));
 
     users.put(
         "Marquis De Carabas",

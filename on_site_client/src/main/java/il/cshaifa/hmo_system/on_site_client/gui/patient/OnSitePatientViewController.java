@@ -13,8 +13,10 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import org.greenrobot.eventbus.EventBus;
 
@@ -22,8 +24,10 @@ import static java.lang.Thread.sleep;
 
 public class OnSitePatientViewController extends ViewController {
 
-  @FXML private MenuItem closeStationMenuItem; // TODO implement me!
-  @FXML private MenuItem closeClinicMenuItem; // TODO implement me!
+  @FXML private StackPane stackPane;
+
+  @FXML private MenuItem closeStationMenuItem;
+  @FXML private MenuItem closeClinicMenuItem;
 
   @FXML private Label clinicWelcomeLabel;
   @FXML private TextField idTextField;
@@ -43,7 +47,9 @@ public class OnSitePatientViewController extends ViewController {
 
     goButton.setOnAction((event) -> {
       try {
-        int id = Integer.parseInt(idTextField.getText());
+        String txt = idTextField.getText();
+        idTextField.clear();
+        int id = Integer.parseInt(txt);
         EventBus.getDefault().post(OnSiteEntryEvent.entryRequestEvent(id, this));
       } catch (NumberFormatException e) {
         invalidID();

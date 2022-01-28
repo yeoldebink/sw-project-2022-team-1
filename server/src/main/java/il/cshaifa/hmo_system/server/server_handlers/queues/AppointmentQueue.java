@@ -1,6 +1,7 @@
 package il.cshaifa.hmo_system.server.server_handlers.queues;
 
 import il.cshaifa.hmo_system.entities.Appointment;
+import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import il.cshaifa.hmo_system.structs.QueuedAppointment;
 import java.time.LocalDateTime;
@@ -20,11 +21,14 @@ class AppointmentQueue {
 
   private final HashSet<ConnectionToClient> connected_clients;
 
+  private final HashSet<Patient> patients_in_queue;
+
   public AppointmentQueue(String name) {
     this.name = name;
     on_time = new LinkedList<>();
     late = new LinkedList<>();
     connected_clients = new HashSet<>();
+    patients_in_queue = new HashSet<>();
     count = 0;
 
     var split = name.split(" ");
@@ -37,6 +41,9 @@ class AppointmentQueue {
   }
 
   public QueuedAppointment push(Appointment appointment) {
+
+    if (!patients_in_queue.add(appointment.getPatient())) return null;
+
     var num_str = String.format("%s%03d", numberPrefix, ++count);
     QueuedAppointment qappt = new QueuedAppointment(appointment, num_str);
 
@@ -45,6 +52,12 @@ class AppointmentQueue {
   }
 
   public QueuedAppointment pop() {
+    var q_appt = _pop();
+    if (q_appt != null) patients_in_queue.remove(q_appt.appointment.getPatient());
+    return q_appt;
+  }
+
+  private QueuedAppointment _pop() {
     if (late.isEmpty() && on_time.isEmpty()) return null;
     else if (pop_from_late_queue) {
       pop_from_late_queue = false;

@@ -31,21 +31,25 @@
     </MenuBar>
   </VBox>
 
-  <VBox layoutX="440" layoutY="307" spacing="15">
-    <Label fx:id="clinicWelcomeLabel" styleClass="h1-label" />
-    <Label text="Swipe your card or enter your ID to get started."/>
-    <HBox spacing="10">
-      <TextField promptText="ID" fx:id="idTextField" />
-      <Button fx:id="goButton">
-        <graphic>
-          <FontIcon iconLiteral="mdi-arrow-right-bold-circle" iconSize="28" iconColor="cadetblue"/>
-        </graphic>
-      </Button>
-    </HBox>
-    <Label fx:id="errorLabel" visible="false">
-      <graphic>
-        <FontIcon iconLiteral="mdi-alert-outline" />
-      </graphic>
-    </Label>
-  </VBox>
+  <StackPane layoutX="440" layoutY="307" fx:id="stackPane">
+    <AnchorPane>
+      <VBox spacing="15">
+        <Label fx:id="clinicWelcomeLabel" styleClass="h1-label" />
+        <Label text="Swipe your card or enter your ID to get started."/>
+        <HBox spacing="10">
+          <TextField promptText="ID" fx:id="idTextField" />
+          <Button fx:id="goButton">
+            <graphic>
+              <FontIcon iconLiteral="mdi-arrow-right-bold-circle" iconSize="28" iconColor="cadetblue"/>
+            </graphic>
+          </Button>
+        </HBox>
+        <Label fx:id="errorLabel" visible="false">
+          <graphic>
+            <FontIcon iconLiteral="mdi-alert-outline" />
+          </graphic>
+        </Label>
+      </VBox>
+    </AnchorPane>
+  </StackPane>
 </AnchorPane>
