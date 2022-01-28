@@ -1,14 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.MenuItem?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefWidth="900.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="il.cshaifa.hmo_system.on_site_client.gui.staff_appointment_list.StaffAppointmentListViewController"
-            prefHeight="400.0" prefWidth="600.0">
+            stylesheets="@../hmo_lite.css">
+    <VBox AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0"
+          AnchorPane.topAnchor="10.0" prefWidth="900.0">
+        <Label text="Upcoming Appointments" styleClass="h1-label" />
+        <Label fx:id="staff_member_role_name" styleClass="h2-label" />
+        <Label fx:id="current_date" />
+        <TableView fx:id="appt_table"  tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="appt_time" prefWidth="75.0" text="Time"/>
+                <TableColumn fx:id="appt_type_name" prefWidth="75.0" text="Treatment Type"/>
+                <TableColumn fx:id="patient_name" prefWidth="75.0" text="Patient Name"/>
+                <TableColumn fx:id="patient_home_clinic" prefWidth="75.0" text="Patient Home Clinic"/>
 
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+            </columnResizePolicy>
+        </TableView>
+    </VBox>
 </AnchorPane>
