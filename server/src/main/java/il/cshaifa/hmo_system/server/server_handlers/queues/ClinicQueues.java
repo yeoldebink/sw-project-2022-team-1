@@ -97,7 +97,7 @@ public class ClinicQueues {
     clinicQueuesLock.lock();
     try {
       var appt_queue = clientQueues.get(client);
-      appt_queue.disconnectClient(client);
+      if (appt_queue != null) appt_queue.disconnectClient(client);
     } finally {
       clinicQueuesLock.unlock();
     }

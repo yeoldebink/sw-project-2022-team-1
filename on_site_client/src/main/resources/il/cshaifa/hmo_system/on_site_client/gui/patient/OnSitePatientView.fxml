@@ -9,34 +9,43 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
+<?import javafx.scene.text.Font?>
 <AnchorPane xmlns="http://javafx.com/javafx"
   xmlns:fx="http://javafx.com/fxml"
   fx:controller="il.cshaifa.hmo_system.on_site_client.gui.patient.OnSitePatientViewController"
-  prefHeight="768.0" prefWidth="1024.0" stylesheets="@../hmo_lite.css">
+  prefHeight="768.0" prefWidth="1024.0" stylesheets="@../hmo_lite_large.css">
 
-  <VBox AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="10">
+  <ImageView>
+    <Image url="@onsite-welcome.jpg" />
+  </ImageView>
+
+  <VBox AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
     <MenuBar>
-      <Menu text="Exit">
+      <Menu>
+        <graphic>
+          <FontIcon iconLiteral="mdi-close-network" iconSize="20" />
+        </graphic>
         <MenuItem text="Close station" fx:id="closeStationMenuItem" />
         <MenuItem text="Close clinic" fx:id="closeClinicMenuItem" />
       </Menu>
     </MenuBar>
   </VBox>
 
-  <ImageView>
-    <Image url="@onsite-welcome.jpg" />
-  </ImageView>
-
-  <VBox layoutX="436" layoutY="307" spacing="10">
+  <VBox layoutX="440" layoutY="307" spacing="15">
     <Label fx:id="clinicWelcomeLabel" styleClass="h1-label" />
-    <Label text="Swipe your card or enter your ID to get started." />
+    <Label text="Swipe your card or enter your ID to get started."/>
     <HBox spacing="10">
       <TextField promptText="ID" fx:id="idTextField" />
-      <Button text="Go">
+      <Button fx:id="goButton">
         <graphic>
-          <FontIcon iconLiteral="mdi-arrow-right-bold-circle" iconSize="20" />
+          <FontIcon iconLiteral="mdi-arrow-right-bold-circle" iconSize="28" iconColor="cadetblue"/>
         </graphic>
       </Button>
     </HBox>
+    <Label fx:id="errorLabel" visible="false">
+      <graphic>
+        <FontIcon iconLiteral="mdi-alert-outline" />
+      </graphic>
+    </Label>
   </VBox>
 </AnchorPane>

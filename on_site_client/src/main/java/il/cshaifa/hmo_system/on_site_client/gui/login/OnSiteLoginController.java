@@ -5,12 +5,17 @@ import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client_base.events.ClinicEvent;
 import il.cshaifa.hmo_system.client_base.events.LoginEvent;
 import il.cshaifa.hmo_system.client_base.events.LoginEvent.Response;
+import il.cshaifa.hmo_system.client_base.utils.Utils;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.on_site_client.HMOOnSiteClient;
 import il.cshaifa.hmo_system.on_site_client.events.OnSiteLoginEvent;
+import il.cshaifa.hmo_system.on_site_client.gui.patient.OnSitePatientController;
+import il.cshaifa.hmo_system.on_site_client.gui.patient.OnSitePatientViewController;
 import java.io.IOException;
 import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
+import jdk.jshell.spi.ExecutionControl.NotImplementedException;
 import org.greenrobot.eventbus.Subscribe;
 
 public class OnSiteLoginController extends Controller {
@@ -74,7 +79,14 @@ public class OnSiteLoginController extends Controller {
    * @param user The user that logged in to the system
    * @throws Exception Thrown when opening the screen failed
    */
-  private void openMainScreenByRole(User user) throws Exception {}
+  private void openMainScreenByRole(User user) throws Exception {
+    if (user.getRole().getName().equals("Clinic Manager")) { // open up the patient view
+      var loader = new FXMLLoader(getClass().getResource(Utils.get_fxml(OnSitePatientViewController.class)));
+      Utils.openNewWindow(OnSitePatientViewController.class, OnSitePatientController.class, loader, false);
+    } else {
+      new NotImplementedException("The princess is in another castle, BITCH").printStackTrace();
+    }
+  }
 
   @Subscribe
   public void onClinicEvent(ClinicEvent event) {
