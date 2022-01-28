@@ -88,7 +88,7 @@ public class HandleAppointmentMessage extends MessageHandler {
     List<Appointment> appointments_in_work_hours = new ArrayList<>();
     for (Appointment appt : all_appointments) {
       DayOfWeek day = appt.getDate().toLocalDate().getDayOfWeek();
-      List<LocalTime> clinic_hours = class_message.clinic.timeStringToLocalTimeList(day.getValue());
+      List<LocalTime> clinic_hours = appt.getClinic().timeStringToLocalTimeList(day.getValue());
       for (int i = 0; i < clinic_hours.toArray().length; i += 2) {
         LocalTime open_time = clinic_hours.get(i), close_time = clinic_hours.get(i + 1);
         LocalTime appt_time = appt.getDate().toLocalTime();
