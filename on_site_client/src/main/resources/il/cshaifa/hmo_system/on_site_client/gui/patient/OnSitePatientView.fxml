@@ -10,6 +10,7 @@
 <?import javafx.scene.image.Image?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 <?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
 <AnchorPane xmlns="http://javafx.com/javafx"
   xmlns:fx="http://javafx.com/fxml"
   fx:controller="il.cshaifa.hmo_system.on_site_client.gui.patient.OnSitePatientViewController"
@@ -44,11 +45,23 @@
             </graphic>
           </Button>
         </HBox>
-        <Label fx:id="errorLabel" visible="false">
+        <Label fx:id="errorLabel" visible="false" />
+      </VBox>
+    </AnchorPane>
+
+    <AnchorPane>
+      <VBox spacing="25" AnchorPane.topAnchor="20">
+        <Label fx:id="dashboardWelcomeLabel" styleClass="h1-label" />
+        <Button fx:id="nurseButton" text="Visit a nurse" prefWidth="250">
           <graphic>
-            <FontIcon iconLiteral="mdi-alert-outline" />
+            <FontIcon iconLiteral="mdi-hospital" iconColor="red" iconSize="28" />
           </graphic>
-        </Label>
+        </Button>
+        <Button fx:id="labButton" text="Lab tests"  prefWidth="250">
+          <graphic>
+            <FontIcon iconLiteral="mdi-test-tube" iconColor="forestgreen" iconSize="28" />
+          </graphic>
+        </Button>
       </VBox>
     </AnchorPane>
   </StackPane>

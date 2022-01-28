@@ -36,9 +36,16 @@ public class OnSitePatientViewController extends ViewController {
 
   @FXML private Label errorLabel;
 
+  @FXML private Label dashboardWelcomeLabel;
+
+  @FXML private Button nurseButton;
+  @FXML private Button labButton;
+
   public OnSitePatientViewController() {}
 
   @FXML public void initialize() {
+    stackPane.getChildren().get(1).setVisible(false);
+
     errorLabel.setTextFill(Color.DARKRED);
 
     clinicWelcomeLabel.setText(String.format("Welcome to %s Clinic", HMOOnSiteClient.getClient().getStationClinic()));
@@ -56,9 +63,13 @@ public class OnSitePatientViewController extends ViewController {
       }
     });
 
+    idTextField.setOnAction(goButton.getOnAction());
+
     closeStationMenuItem.setOnAction((actionEvent) -> postExitEvent(OnSiteLoginAction.CLOSE_STATION));
 
     closeClinicMenuItem.setOnAction((actionEvent) -> postExitEvent(OnSiteLoginAction.CLOSE_CLINIC));
+
+    dashboardWelcomeLabel.setTextFill(Color.web("#4eb5d5"));
   }
 
   private void postExitEvent(OnSiteLoginAction action) {
@@ -78,10 +89,18 @@ public class OnSitePatientViewController extends ViewController {
 
   public void notInClinic(Clinic clinic) {
     setError(String.format("You have no appointments in this clinic.\n"
-        + "For walk-in appointments please visit your home clinic (%s).", clinic.getName()));
+        + "For walk-in appointments please visit\nyour home clinic (%s).", clinic.getName()));
   }
 
-  public void showDashboard(Patient patient) {} // TODO implement me!
+  public void showDashboard(Patient patient) {
+    dashboardWelcomeLabel.setText(String.format("Welcome, %s", patient.getUser()));
 
-  public void returnToEntryScreen() {} // TODO implement me!
+    stackPane.getChildren().get(0).setVisible(false);
+    stackPane.getChildren().get(1).setVisible(true);
+  }
+
+  public void returnToEntryScreen() {
+    stackPane.getChildren().get(0).setVisible(true);
+    stackPane.getChildren().get(1).setVisible(false);
+  }
 }
