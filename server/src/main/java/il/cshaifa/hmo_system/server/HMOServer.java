@@ -42,6 +42,15 @@ import il.cshaifa.hmo_system.server.server_handlers.MessageHandler;
 import il.cshaifa.hmo_system.server.server_handlers.queues.ClinicQueues;
 import il.cshaifa.hmo_system.server.server_handlers.queues.QueueUpdate;
 import java.io.EOFException;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Properties;
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -196,10 +205,64 @@ public class HMOServer extends AbstractServer {
         session.close();
 
         for (Appointment appt : tommorows_appts){
-          // TODO: add message to patient
+          PrepareAndSendEmail(appt);
         }
       }
     }
+
+    private void PrepareAndSendEmail(Appointment appt) {
+      User currPatient = appt.getPatient().getUser();
+
+      String subject = "Reminder for " + appt.getType().getName() + " appointment";
+
+      String bodyText = "Hello, " + currPatient.getFirstName() + ".\n This is a reminder that you have a " + appt.getType().getName() +
+              " appointment at " + appt.getDate();
+
+      EmailSender.SendEmail(currPatient.getEmail(), subject, bodyText);
+    }
   }
+
+  public static class EmailSender {
+    private static final String host = "***REMOVED***";
+    private static final String port = "2525";
+    private static final String user_name = "***REMOVED***";
+    private static final String password = "***REMOVED***";
+    private static final String from = "***REMOVED***"; // Needs to remain this email for smtp-pulse API
+
+
+    public static void SendEmail(String to, String subject, String bodyText) {
+      // Get system properties & setup mail server
+      Properties properties = System.getProperties();
+      properties.setProperty("mail.smtp.host", host);
+      properties.setProperty("mail.smtp.auth", "true");
+      properties.setProperty("mail.smtp.ssl.trust", host);
+      properties.setProperty("mail.smtp.port", port);
+
+      try {
+        javax.mail.Session session = javax.mail.Session.getDefaultInstance(properties, new Authenticator() {
+          @Override
+          protected PasswordAuthentication getPasswordAuthentication() {
+            return new PasswordAuthentication(user_name, password);
+          }
+        });
+
+        // Create message using session object
+        MimeMessage message = new MimeMessage(session);
+
+        message.setFrom(new InternetAddress(from));
+        message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+
+        message.setSubject(subject);
+        message.setText(bodyText);
+
+        Transport.send(message);
+        System.out.println("Sent email successfully....");
+      } catch (MessagingException mex) {
+        mex.printStackTrace();
+      }
+    }
+  }
+
+
 }
 
