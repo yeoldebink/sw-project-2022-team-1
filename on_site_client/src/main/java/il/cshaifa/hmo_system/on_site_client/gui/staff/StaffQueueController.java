@@ -4,19 +4,27 @@ import il.cshaifa.hmo_system.client_base.base_controllers.Controller;
 import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
 import il.cshaifa.hmo_system.on_site_client.HMOOnSiteClient;
 import il.cshaifa.hmo_system.on_site_client.events.StaffNextAppointmentEvent;
+import il.cshaifa.hmo_system.structs.QueuedAppointment;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 import org.greenrobot.eventbus.Subscribe;
 
 public class StaffQueueController extends Controller {
 
-  private ReentrantLock queue_lock;
+  private final ReentrantLock queue_lock;
+  private LocalDateTime queue_timestamp;
 
   public StaffQueueController(
       ViewController view_controller,
-      Stage stage) {
+      Stage stage, List<QueuedAppointment> initial_queue, LocalDateTime queue_timestamp) {
     super(view_controller, stage);
+    queue_lock = new ReentrantLock(true);
+    this.queue_timestamp = queue_timestamp;
+    Platform.runLater(() -> ((StaffQueueViewController) view_controller).populateAppointmentsTable(initial_queue));
   }
 
   @Subscribe
@@ -30,8 +38,7 @@ public class StaffQueueController extends Controller {
     } else if (event.getSender().equals(HMOOnSiteClient.getClient())) {
       queue_lock.lock();
       try {
-        ((StaffQueueViewController) view_controller).populateAppointmentsTable(event.updated_queue,
-            event.queue_timestamp);
+        ((StaffQueueViewController) view_controller).populateAppointmentsTable(event.updated_queue);
       } finally {
         queue_lock.unlock();
       }

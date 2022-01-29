@@ -27,8 +27,6 @@ import org.greenrobot.eventbus.EventBus;
 
 public class StaffQueueViewController extends ViewController {
 
-    private LocalDateTime queue_timestamp;
-
     @FXML private Button call_next_patient_button;
     @FXML private TableView<AppointmentPatientRow> appt_table;
     @FXML private TableColumn<AppointmentPatientRow, LocalTime> appt_time;
@@ -72,11 +70,7 @@ public class StaffQueueViewController extends ViewController {
         patient_name.setCellValueFactory((new PropertyValueFactory<>("Patient_name")));
     }
 
-    void populateAppointmentsTable(List<QueuedAppointment> appt_list,
-        LocalDateTime queue_timestamp) {
-
-        // we want only the latest queue update
-        if (queue_timestamp.isBefore(this.queue_timestamp)) return;
+    void populateAppointmentsTable(List<QueuedAppointment> appt_list) {
 
         ArrayList<AppointmentPatientRow> appts_to_populate =
                 new ArrayList<AppointmentPatientRow>();

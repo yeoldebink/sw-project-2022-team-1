@@ -61,7 +61,7 @@ public class HandleOnSiteQueueMessage extends MessageHandler {
     session.save(appointment);
     session.flush();
 
-    var q_update = ClinicQueues.push(appointment);
+    q_update = ClinicQueues.push(appointment);
     class_message.q_appt = q_update.q_appt;
 
     if (q_update.q_appt == null) {

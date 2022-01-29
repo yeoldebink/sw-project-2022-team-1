@@ -75,7 +75,7 @@ public class OnSiteLoginController extends Controller {
         incorrectUser();
       } else if (event.response == Response.AUTHORIZE) {
         if (this.action == OnSiteLoginAction.LOGIN) {
-          openMainScreenByRole(event.userData);
+          openMainScreenByRole(event);
         } else {
           Platform.runLater(() -> {
             var dialog = new Dialog<String>();
@@ -105,17 +105,33 @@ public class OnSiteLoginController extends Controller {
   /**
    * Handle which main screen we want to show by user role
    *
-   * @param user The user that logged in to the system
+   * @param event the received LoginEvent
    * @throws Exception Thrown when opening the screen failed
    */
-  private void openMainScreenByRole(User user) throws Exception {
+  private void openMainScreenByRole(LoginEvent event) throws Exception {
+    var user = event.userData;
     if (user.getRole().getName().equals("Clinic Manager")) { // open up the patient view
       var loader = new FXMLLoader(getClass().getResource(Utils.get_fxml(OnSitePatientViewController.class)));
       Utils.openNewWindow(OnSitePatientViewController.class, OnSitePatientController.class, loader, false);
     } else {
       var loader = new FXMLLoader(getClass().getResource(Utils.get_fxml(StaffQueueViewController.class)));
       loader.setControllerFactory(c -> new StaffQueueViewController(user));
-      Utils.openNewWindow(StaffQueueViewController.class, StaffQueueController.class, loader, true);
+
+      Platform.runLater(() -> {
+        Stage nstage = new Stage();
+        Scene scene = null;
+        try {
+          scene = new Scene(loader.load());
+        } catch (IOException ioException) {
+          ioException.printStackTrace();
+        }
+
+        var c = new StaffQueueController(loader.getController(), nstage, ((OnSiteLoginEvent) event).staff_member_queue,
+            ((OnSiteLoginEvent) event).queue_timestamp);
+
+        nstage.setScene(scene);
+        nstage.show();
+      });
     }
   }
 
