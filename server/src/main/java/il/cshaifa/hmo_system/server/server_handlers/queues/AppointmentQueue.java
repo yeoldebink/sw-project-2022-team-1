@@ -82,7 +82,7 @@ class AppointmentQueue {
     connected_clients.remove(client);
   }
 
-  public List<QueuedAppointment> getList() {
+  public List<QueuedAppointment> getAsList() {
     Iterator<QueuedAppointment> i1, i2;
     if (pop_from_late_queue) {
       i1 = late.iterator();

@@ -8,7 +8,6 @@ import il.cshaifa.hmo_system.structs.QueuedAppointment;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class ClinicQueues {
@@ -82,13 +81,21 @@ public class ClinicQueues {
     clinicQueuesLock = new ReentrantLock(true);
   }
 
-  public static void connectToQueue(User staff_member, Clinic clinic, ConnectionToClient client) {
+  /**
+   * Connects the staff member to the relevant queue and returns the current queue as a list
+   * @param staff_member
+   * @param clinic
+   * @param client
+   * @return
+   */
+  public static QueueUpdate connectToQueue(User staff_member, Clinic clinic, ConnectionToClient client) {
     clinicQueuesLock.lock();
     try {
       var q_name = initQueue(staff_member, clinic);
       var appt_queue = clinicQueues.get(clinic).get(q_name);
       appt_queue.connectClient(client);
       clientQueues.put(client, appt_queue);
+      return new QueueUpdate(null, appt_queue.getAsList(), null);
     } finally {
       clinicQueuesLock.unlock();
     }
@@ -97,7 +104,7 @@ public class ClinicQueues {
   public static void disconnectClient(ConnectionToClient client) {
     clinicQueuesLock.lock();
     try {
-      var appt_queue = clientQueues.get(client);
+      var appt_queue = clientQueues.remove(client);
       if (appt_queue != null) appt_queue.disconnectClient(client);
     } finally {
       clinicQueuesLock.unlock();
@@ -111,7 +118,7 @@ public class ClinicQueues {
       var q_name = initQueue(appointment);
       var appt_queue = clinicQueues.get(appointment.getClinic()).get(q_name);
       var q_appt = appt_queue.push(appointment);
-      return new QueueUpdate(q_appt, appt_queue.getList(), appt_queue.getConnectedClients());
+      return new QueueUpdate(q_appt, appt_queue.getAsList(), appt_queue.getConnectedClients());
     } finally {
       clinicQueuesLock.unlock();
     }
@@ -123,7 +130,7 @@ public class ClinicQueues {
     try {
       var appt_queue = clientQueues.get(client);
       var q_appt = appt_queue.pop();
-      return new QueueUpdate(q_appt, appt_queue.getList(), appt_queue.getConnectedClients());
+      return new QueueUpdate(q_appt, appt_queue.getAsList(), appt_queue.getConnectedClients());
     } finally {
       clinicQueuesLock.unlock();
     }

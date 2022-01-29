@@ -4,13 +4,15 @@ import il.cshaifa.hmo_system.CommonEnums.OnSiteQueueRejectionReason;
 import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.structs.QueuedAppointment;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class OnSiteQueueMessage extends Message {
 
   public enum Action {
     PUSH,
-    POP
+    POP,
+    UPDATE_QUEUE
   }
 
   // shared for all messages of this type
@@ -23,6 +25,7 @@ public class OnSiteQueueMessage extends Message {
   // response
   public QueuedAppointment q_appt;
   public List<QueuedAppointment> updated_queue;
+  public LocalDateTime queue_timestamp;
   public OnSiteQueueRejectionReason rejection_reason;
 
   private OnSiteQueueMessage(MessageType message_type) {
@@ -40,10 +43,12 @@ public class OnSiteQueueMessage extends Message {
     this.rejection_reason = null;
   }
 
-  private OnSiteQueueMessage(MessageType messageType, List<QueuedAppointment> updated_queue) {
+  private OnSiteQueueMessage(MessageType messageType, List<QueuedAppointment> updated_queue, LocalDateTime queue_timestamp) {
     super(messageType);
     this.updated_queue = updated_queue;
+    this.queue_timestamp = queue_timestamp;
     this.rejection_reason = null;
+    this.action = Action.UPDATE_QUEUE;
   }
 
   /**
@@ -70,7 +75,7 @@ public class OnSiteQueueMessage extends Message {
   /**
    * Creates an update message for the clients
    */
-  public static OnSiteQueueMessage updateMessage(List<QueuedAppointment> updated_queue) {
-    return new OnSiteQueueMessage(MessageType.RESPONSE, updated_queue);
+  public static OnSiteQueueMessage updateMessage(List<QueuedAppointment> updated_queue, LocalDateTime queue_timestamp) {
+    return new OnSiteQueueMessage(MessageType.RESPONSE, updated_queue, queue_timestamp);
   }
 }

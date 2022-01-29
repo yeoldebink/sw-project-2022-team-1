@@ -49,7 +49,7 @@ public abstract class HMOClient extends AbstractClient {
     } else {
       if (message instanceof LoginMessage) {
         this.connected_user = ((LoginMessage) message).user;
-        handleLoginMessage((LoginMessage) message);
+        handleLoginMessage((LoginMessage) message, null);
       } else if (message.getClass().equals(ClinicMessage.class)) {
         handleClinicMessage((ClinicMessage) message);
       } else if (message.getClass().equals(AppointmentMessage.class)) {
@@ -74,8 +74,12 @@ public abstract class HMOClient extends AbstractClient {
     EventBus.getDefault().post(event);
   }
 
-  private void handleLoginMessage(LoginMessage message) {
-    LoginEvent event = new LoginEvent(0, "", this);
+  protected void handleLoginMessage(LoginMessage message,
+      LoginEvent _event) {
+
+    // this allows the on-site client to provide a pre-made LoginEvent for posting
+    // such an event may contain staff member queue information
+    LoginEvent event = _event == null ? new LoginEvent(0, "", this) : _event;
     if (message.user == null) {
       event.response = Response.REJECT;
     } else if (message instanceof DesktopLoginMessage && ((DesktopLoginMessage) message).already_logged_in) {
@@ -102,12 +106,5 @@ public abstract class HMOClient extends AbstractClient {
    */
   public void getClinics() throws IOException {
     sendToServer(new ClinicMessage());
-  }
-
-  /** Requests from server all of today's appointments of current connected staff member client */
-  public void getStaffDailyAppointments() throws IOException {
-    sendToServer(
-        new AppointmentMessage(
-            this.connected_user, AppointmentMessage.RequestType.STAFF_MEMBER_DAILY_APPOINTMENTS));
   }
 }

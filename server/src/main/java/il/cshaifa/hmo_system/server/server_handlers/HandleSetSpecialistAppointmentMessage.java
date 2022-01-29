@@ -4,7 +4,10 @@ import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.Role;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.SetSpecialistAppointmentMessage;
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.persistence.criteria.CriteriaQuery;
@@ -76,7 +79,20 @@ public class HandleSetSpecialistAppointmentMessage extends MessageHandler {
                     cb.isNotNull(root.get("lock_time")),
                     cb.equal(root.get("patient"), class_message.patient))));
 
-    List<Appointment> available_appts = session.createQuery(cr).getResultList();
+    List<Appointment> available_appts_all = session.createQuery(cr).getResultList();
+
+    List<Appointment> available_appts = new ArrayList<>();
+    for (Appointment appt : available_appts_all) {
+      DayOfWeek day = appt.getDate().toLocalDate().getDayOfWeek();
+      List<LocalTime> clinic_hours = appt.getClinic().timeStringToLocalTimeList(day.getValue());
+      for (int i = 0; i < clinic_hours.toArray().length; i += 2) {
+        LocalTime open_time = clinic_hours.get(i), close_time = clinic_hours.get(i + 1);
+        LocalTime appt_time = appt.getDate().toLocalTime();
+        if (appt_time.isAfter(open_time.minusSeconds(1)) && appt_time.isBefore(close_time)) {
+          available_appts.add(appt);
+        }
+      }
+    }
 
     available_appts.sort(
         (appt_a, appt_b) -> {

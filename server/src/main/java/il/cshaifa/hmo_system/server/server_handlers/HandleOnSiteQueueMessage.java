@@ -2,6 +2,7 @@ package il.cshaifa.hmo_system.server.server_handlers;
 
 import il.cshaifa.hmo_system.CommonEnums.OnSiteQueueRejectionReason;
 import il.cshaifa.hmo_system.entities.Appointment;
+import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.Message;
 import il.cshaifa.hmo_system.messages.OnSiteQueueMessage;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
@@ -61,7 +62,7 @@ public class HandleOnSiteQueueMessage extends MessageHandler {
     session.save(appointment);
     session.flush();
 
-    var q_update = ClinicQueues.push(appointment);
+    q_update = ClinicQueues.push(appointment);
     class_message.q_appt = q_update.q_appt;
 
     if (q_update.q_appt == null) {
@@ -76,10 +77,12 @@ public class HandleOnSiteQueueMessage extends MessageHandler {
     if (q_update.q_appt != null) {
       // set the called time
       q_update.q_appt.appointment.setCalled_time(LocalDateTime.now());
+      q_update.q_appt.appointment.setStaff_member((User) client.getInfo("user"));
       session.update(q_update.q_appt.appointment);
       session.flush();
 
       class_message.q_appt = q_update.q_appt;
+      class_message.queue_timestamp = q_update.timestamp;
     }
   }
 }
