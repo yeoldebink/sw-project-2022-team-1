@@ -58,92 +58,94 @@ public class HandleLoginMessage extends MessageHandler {
   @Override
   public void handleMessage() {
     User user = session.get(User.class, class_message.id);
-    CriteriaQuery<Clinic> cr = cb.createQuery(Clinic.class);
 
     boolean is_desktop = this.class_message instanceof DesktopLoginMessage;
 
-    if (user != null) {
-      String user_encoded_password = user.getPassword();
-      String entered_password = null;
-      try {
-        entered_password = HMOUtilities.encodePassword(class_message.password, user.getSalt());
-      } catch (NoSuchAlgorithmException e) {
-        e.printStackTrace();
-      }
-      if (user_encoded_password.equals(entered_password)) {
-        // patients and HMO Mgr are only able to login on the desktop client
-        switch (user.getRole().getName()) {
-          case "Patient":
-            if (is_desktop) {
-              setUser(user);
-              ((DesktopLoginMessage) this.class_message).patient_data = getUserPatient(user);
-            }
-            break;
+    if (user == null) return;
 
-          case "HMO Manager":
-            if (is_desktop) {
-              setUser(user);
-            }
-            break;
+    String user_encoded_password = user.getPassword();
+    String entered_password = null;
+    try {
+      entered_password = HMOUtilities.encodePassword(class_message.password, user.getSalt());
+    } catch (NoSuchAlgorithmException e) {
+      e.printStackTrace();
+    }
 
-          default: // this is for Clinic Mgr & clinic staff
-            var clinics = employeeClinics(user);
+    if (!user_encoded_password.equals(entered_password)) return;
 
-            // all clinic staff (incl. the Clinic Manager) are allowed to log in via the on-site app
-            // provided what they want to do is open the application
-            if (!is_desktop && ((OnSiteLoginMessage) this.class_message).action == OnSiteLoginAction.LOGIN) {
-              if (clinics.contains(((OnSiteLoginMessage) this.class_message).clinic)) {
-                this.setUser(user);
+    // patients and HMO Mgr are only able to login on the desktop client
+    switch (user.getRole().getName()) {
+      case "Patient":
+        if (is_desktop) {
+          setUser(user);
+          ((DesktopLoginMessage) this.class_message).patient_data = getUserPatient(user);
+        }
+        break;
+
+      case "HMO Manager":
+        if (is_desktop) {
+          setUser(user);
+        }
+        break;
+
+      default: // this is for Clinic Mgr & clinic staff
+        var employee_clinics = employeeClinics(user);
+        boolean is_clinic_manager = user.getRole().getName().equals("Clinic Manager");
+
+        var desktop_message = class_message instanceof DesktopLoginMessage ? (DesktopLoginMessage) class_message : null;
+        var on_site_message = class_message instanceof OnSiteLoginMessage ? (OnSiteLoginMessage) class_message : null;
+
+        boolean works_here = on_site_message != null && employee_clinics.contains(on_site_message.clinic);
+
+        if (is_clinic_manager) {
+          if (desktop_message != null) {
+            desktop_message.employee_clinics = employee_clinics;
+            this.setUser(user);
+
+          } else if (on_site_message != null && works_here) {
+            this.setUser(user);
+
+            switch (on_site_message.action) {
+              case LOGIN:
                 connectOnSiteStation();
+                break;
 
-                // on-site login for a clinic manager hinges on them being the manager of this clinic
-                if (user.getRole().getName().equals("Clinic Manager")
-                    && clinics.contains(((OnSiteLoginMessage) this.class_message).clinic)) {
-                  switch (((OnSiteLoginMessage) this.class_message).action) {
-                    case CLOSE_STATION:
-                      disconnectOnSiteStation(client);
-                      break;
-                    case CLOSE_CLINIC:
-                      closeClinic(((OnSiteLoginMessage) this.class_message).clinic);
-                      break;
-                    default:
-                      break;
-                  }
-                } else {
-                  // this is an employee who needs to be connected to their patient queue
-                  // connect and put their current queue in the message
-                  var q_update = ClinicQueues.connectToQueue(user, ((OnSiteLoginMessage) this.class_message).clinic, client);
-                  ((OnSiteLoginMessage) class_message).staff_member_queue = q_update.updated_queue;
-                  ((OnSiteLoginMessage) class_message).queue_timestamp = q_update.timestamp;
-                }
-              }
+              case CLOSE_STATION:
+                disconnectOnSiteStation(client);
+                break;
 
-            } else if (user.getRole().getName().equals("Clinic Manager")) {
-              // she can log in both on desktop and on-site to open stations
-              if (is_desktop) {
-                ((DesktopLoginMessage) this.class_message).employee_clinics = clinics;
-                this.setUser(user);
-              }
+              case CLOSE_CLINIC:
+                closeClinic();
+                break;
             }
-            break;
-        }
-
-
-        if (!is_desktop) return;
-
-        connection_maps_lock.lock();
-
-        try {
-          if(connected_desktop_users.containsKey(user.getId())) {
-            ((DesktopLoginMessage) this.class_message).already_logged_in = true;
-          } else {
-            connected_desktop_users.put(user.getId(), client);
-            connected_desktop_clients.put(client, user);
           }
-        } finally {
-          connection_maps_lock.unlock();
+
+        // end desktop case
+        // now for employees
+        } else if (on_site_message != null && works_here && on_site_message.action == OnSiteLoginAction.LOGIN) {
+          setUser(user);
+          connectOnSiteStation();
+          var q_update = ClinicQueues.connectToQueue(user, ((OnSiteLoginMessage) this.class_message).clinic, client);
+          ((OnSiteLoginMessage) class_message).staff_member_queue = q_update.updated_queue;
+          ((OnSiteLoginMessage) class_message).queue_timestamp = q_update.timestamp;
         }
+
+        break;
+    }
+
+    if (!is_desktop || this.class_message.user == null) return;
+
+    connection_maps_lock.lock();
+
+    try {
+      if(connected_desktop_users.containsKey(user.getId())) {
+        ((DesktopLoginMessage) this.class_message).already_logged_in = true;
+      } else {
+        connected_desktop_users.put(user.getId(), client);
+        connected_desktop_clients.put(client, user);
       }
+    } finally {
+      connection_maps_lock.unlock();
     }
   }
 
@@ -194,20 +196,20 @@ public class HandleLoginMessage extends MessageHandler {
 
   }
 
-  public static void closeClinic(Clinic clinic) {
+  public void closeClinic() {
     connection_maps_lock.lock();
     try {
-      for (var client : onsite_connections_by_clinic.get(clinic)) {
-        onsite_connections.remove(client);
+      var clinic = ((OnSiteLoginMessage) this.class_message).clinic;
+      ClinicQueues.closeClinic(clinic);
+
+      var clients_to_disconnect = onsite_connections_by_clinic.remove(clinic);
+      for (var _client : clients_to_disconnect) {
         try {
-          client.close();
-        } catch (IOException e) {
-          e.printStackTrace();
+          _client.sendToClient(this.class_message);
+        } catch (IOException ioException) {
+          ioException.printStackTrace();
         }
       }
-
-      onsite_connections_by_clinic.remove(clinic);
-      ClinicQueues.closeClinic(clinic);
     } finally {
       connection_maps_lock.unlock();
     }

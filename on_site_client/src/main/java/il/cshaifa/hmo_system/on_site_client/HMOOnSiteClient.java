@@ -8,11 +8,16 @@ import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.messages.OnSiteEntryMessage;
 import il.cshaifa.hmo_system.messages.OnSiteLoginMessage;
 import il.cshaifa.hmo_system.messages.OnSiteQueueMessage;
+import il.cshaifa.hmo_system.on_site_client.events.CloseStationEvent;
 import il.cshaifa.hmo_system.on_site_client.events.OnSiteEntryEvent;
 import il.cshaifa.hmo_system.on_site_client.events.OnSiteLoginEvent;
 import il.cshaifa.hmo_system.on_site_client.events.PatientWalkInAppointmentEvent;
 import il.cshaifa.hmo_system.on_site_client.events.StaffNextAppointmentEvent;
 import java.io.IOException;
+import javafx.application.Platform;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.stage.Modality;
 import jdk.jshell.spi.ExecutionControl.NotImplementedException;
 import org.greenrobot.eventbus.EventBus;
 
@@ -40,8 +45,8 @@ public class HMOOnSiteClient extends HMOClient {
    * @param password The password the user has entered
    * @throws java.io.IOException SQL exception
    */
-  public void loginRequest(int user, String password, Clinic clinic) throws IOException {
-    sendToServer(new OnSiteLoginMessage(user, password, clinic, OnSiteLoginAction.LOGIN));
+  public void loginRequest(int user, String password, Clinic clinic, OnSiteLoginAction action) throws IOException {
+    sendToServer(new OnSiteLoginMessage(user, password, clinic, action));
   }
 
   public void patientEntryRequest(int id) throws IOException {
@@ -105,6 +110,24 @@ public class HMOOnSiteClient extends HMOClient {
   }
 
   private void handleOnSiteLoginMessage(OnSiteLoginMessage message) {
+    if (message.action != OnSiteLoginAction.LOGIN && message.user != null) {
+
+      try {
+        this.closeConnection();
+      } catch (IOException ioException) {
+        ioException.printStackTrace();
+      }
+
+      Platform.runLater(() -> {
+        var dialog = new Dialog<String>();
+        dialog.setContentText(String.format("%s closed by manager", message.action == OnSiteLoginAction.CLOSE_CLINIC ? "Clinic" : "Station"));
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.showAndWait();
+        System.exit(0);
+      });
+    }
+
     OnSiteLoginEvent event = new OnSiteLoginEvent(0, null, message.clinic, this);
     event.staff_member_queue = message.staff_member_queue;
     event.queue_timestamp = message.queue_timestamp;

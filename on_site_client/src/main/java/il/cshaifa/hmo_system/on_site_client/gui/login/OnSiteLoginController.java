@@ -55,7 +55,7 @@ public class OnSiteLoginController extends Controller {
     if (event.getSender().equals(this.view_controller)) {
       try {
         String pass = event.password.equals("") ? null : event.password;
-        HMOOnSiteClient.getClient().loginRequest(event.id, pass, event.clinic);
+        HMOOnSiteClient.getClient().loginRequest(event.id, pass, event.clinic, this.action);
       } catch (IOException e) {
         e.printStackTrace();
       }
@@ -76,15 +76,6 @@ public class OnSiteLoginController extends Controller {
       } else if (event.response == Response.AUTHORIZE) {
         if (this.action == OnSiteLoginAction.LOGIN) {
           openMainScreenByRole(event);
-        } else {
-          Platform.runLater(() -> {
-            var dialog = new Dialog<String>();
-            dialog.setContentText(String.format("Closed %s successfully", this.action == OnSiteLoginAction.CLOSE_CLINIC ? "clinic" : "station"));
-            dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
-            dialog.initModality(Modality.APPLICATION_MODAL);
-            dialog.show();
-            EventBus.getDefault().post(new CloseStationEvent(this));
-          });
         }
 
         Platform.runLater(() -> this.stage.close());
