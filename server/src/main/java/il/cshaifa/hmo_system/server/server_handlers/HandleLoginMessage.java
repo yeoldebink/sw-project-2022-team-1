@@ -1,16 +1,16 @@
 package il.cshaifa.hmo_system.server.server_handlers;
 
 import il.cshaifa.hmo_system.CommonEnums.OnSiteLoginAction;
+import il.cshaifa.hmo_system.Utils;
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.ClinicStaff;
-import il.cshaifa.hmo_system.Utils;
 import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.DesktopLoginMessage;
 import il.cshaifa.hmo_system.messages.LoginMessage;
 import il.cshaifa.hmo_system.messages.OnSiteLoginMessage;
-import il.cshaifa.hmo_system.server.server_handlers.queues.ClinicQueues;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
+import il.cshaifa.hmo_system.server.server_handlers.queues.ClinicQueues;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -28,6 +28,7 @@ public class HandleLoginMessage extends MessageHandler {
   private static final HashMap<User, ConnectionToClient> connected_desktop_users;
   private static final HashMap<ConnectionToClient, Clinic> onsite_connections;
   private static final HashMap<Clinic, HashSet<ConnectionToClient>> onsite_connections_by_clinic;
+
   static {
     connection_maps_lock = new ReentrantLock(true);
     connected_desktop_users = new HashMap<>();
@@ -52,7 +53,10 @@ public class HandleLoginMessage extends MessageHandler {
     this.client.setInfo("user_str", String.format("%s [id: %s]", user.toString(), user.getId()));
     this.client.setInfo("user", user);
 
-    System.out.printf("User logged in: %s, %s {%s}%n", client.getInfo("user_str"), user.getRole().getName(),
+    System.out.printf(
+        "User logged in: %s, %s {%s}%n",
+        client.getInfo("user_str"),
+        user.getRole().getName(),
         this.class_message instanceof DesktopLoginMessage ? "Desktop" : "On-site");
   }
 
@@ -94,10 +98,15 @@ public class HandleLoginMessage extends MessageHandler {
         var employee_clinics = employeeClinics(user);
         boolean is_clinic_manager = user.getRole().getName().equals("Clinic Manager");
 
-        var desktop_message = class_message instanceof DesktopLoginMessage ? (DesktopLoginMessage) class_message : null;
-        var on_site_message = class_message instanceof OnSiteLoginMessage ? (OnSiteLoginMessage) class_message : null;
+        var desktop_message =
+            class_message instanceof DesktopLoginMessage
+                ? (DesktopLoginMessage) class_message
+                : null;
+        var on_site_message =
+            class_message instanceof OnSiteLoginMessage ? (OnSiteLoginMessage) class_message : null;
 
-        boolean works_here = on_site_message != null && employee_clinics.contains(on_site_message.clinic);
+        boolean works_here =
+            on_site_message != null && employee_clinics.contains(on_site_message.clinic);
 
         if (is_clinic_manager) {
           if (desktop_message != null) {
@@ -122,12 +131,16 @@ public class HandleLoginMessage extends MessageHandler {
             }
           }
 
-        // end desktop case
-        // now for employees
-        } else if (on_site_message != null && works_here && on_site_message.action == OnSiteLoginAction.LOGIN) {
+          // end desktop case
+          // now for employees
+        } else if (on_site_message != null
+            && works_here
+            && on_site_message.action == OnSiteLoginAction.LOGIN) {
           setUser(user);
           connectOnSiteStation();
-          var q_update = ClinicQueues.connectToQueue(user, ((OnSiteLoginMessage) this.class_message).clinic, client);
+          var q_update =
+              ClinicQueues.connectToQueue(
+                  user, ((OnSiteLoginMessage) this.class_message).clinic, client);
           ((OnSiteLoginMessage) class_message).staff_member_queue = q_update.updated_queue;
           ((OnSiteLoginMessage) class_message).queue_timestamp = q_update.timestamp;
         }
@@ -140,7 +153,7 @@ public class HandleLoginMessage extends MessageHandler {
     connection_maps_lock.lock();
 
     try {
-      if(connected_desktop_users.containsKey(user)) {
+      if (connected_desktop_users.containsKey(user)) {
         ((DesktopLoginMessage) this.class_message).already_logged_in = true;
       } else {
         connected_desktop_users.put(user, client);
@@ -177,7 +190,7 @@ public class HandleLoginMessage extends MessageHandler {
       onsite_connections_by_clinic.putIfAbsent(clinic, new HashSet<>());
       onsite_connections_by_clinic.get(clinic).add(client);
     } finally {
-       connection_maps_lock.unlock();
+      connection_maps_lock.unlock();
     }
   }
 
@@ -194,7 +207,6 @@ public class HandleLoginMessage extends MessageHandler {
     } finally {
       connection_maps_lock.unlock();
     }
-
   }
 
   public void closeClinic() {

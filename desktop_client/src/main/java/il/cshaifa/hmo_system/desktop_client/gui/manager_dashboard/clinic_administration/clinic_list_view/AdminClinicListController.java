@@ -30,7 +30,8 @@ public class AdminClinicListController extends Controller {
 
     // Navigate to AdminClinicView
     FXMLLoader loader =
-        new FXMLLoader(getClass().getResource(ClientUtils.get_fxml(AdminClinicViewController.class)));
+        new FXMLLoader(
+            getClass().getResource(ClientUtils.get_fxml(AdminClinicViewController.class)));
 
     // this is for the HMO manager
     if (event.clinic == null) {

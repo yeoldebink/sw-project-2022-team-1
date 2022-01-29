@@ -34,8 +34,7 @@ public class OnSiteQueueMessage extends Message {
     this.rejection_reason = null;
   }
 
-  private OnSiteQueueMessage(
-      MessageType message_type,Patient patient, AppointmentType appt_type) {
+  private OnSiteQueueMessage(MessageType message_type, Patient patient, AppointmentType appt_type) {
     super(message_type);
     this.patient = patient;
     this.appt_type = appt_type;
@@ -43,7 +42,10 @@ public class OnSiteQueueMessage extends Message {
     this.rejection_reason = null;
   }
 
-  private OnSiteQueueMessage(MessageType messageType, List<QueuedAppointment> updated_queue, LocalDateTime queue_timestamp) {
+  private OnSiteQueueMessage(
+      MessageType messageType,
+      List<QueuedAppointment> updated_queue,
+      LocalDateTime queue_timestamp) {
     super(messageType);
     this.updated_queue = updated_queue;
     this.queue_timestamp = queue_timestamp;
@@ -67,15 +69,13 @@ public class OnSiteQueueMessage extends Message {
    * @param appt_type
    * @return
    */
-  public static OnSiteQueueMessage pushMessage(
-      Patient patient, AppointmentType appt_type) {
+  public static OnSiteQueueMessage pushMessage(Patient patient, AppointmentType appt_type) {
     return new OnSiteQueueMessage(MessageType.REQUEST, patient, appt_type);
   }
 
-  /**
-   * Creates an update message for the clients
-   */
-  public static OnSiteQueueMessage updateMessage(List<QueuedAppointment> updated_queue, LocalDateTime queue_timestamp) {
+  /** Creates an update message for the clients */
+  public static OnSiteQueueMessage updateMessage(
+      List<QueuedAppointment> updated_queue, LocalDateTime queue_timestamp) {
     return new OnSiteQueueMessage(MessageType.RESPONSE, updated_queue, queue_timestamp);
   }
 }

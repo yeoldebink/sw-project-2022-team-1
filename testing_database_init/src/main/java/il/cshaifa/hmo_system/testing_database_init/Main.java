@@ -79,8 +79,7 @@ public class Main {
         new User(9000, "null", "Jordan", "Sullivan", null, null, roles.get("HMO Manager")));
     users.put(
         "Carla Espinosa",
-        new User(
-            1618, null, "Carla", "Espinosa", null, null, roles.get("Clinic Manager")));
+        new User(1618, null, "Carla", "Espinosa", null, null, roles.get("Clinic Manager")));
     users.put(
         "Carmen Sandiego",
         new User(8793, null, "Carmen", "Sandiego", null, null, roles.get("Clinic Manager")));
@@ -315,7 +314,8 @@ public class Main {
             LocalDateTime.of(2022, 2, 1, 12, 20),
             LocalDateTime.of(2022, 2, 1, 12, 22, 41),
             null,
-            true, false));
+            true,
+            false));
 
     appointments.add(
         new Appointment(
@@ -327,7 +327,8 @@ public class Main {
             LocalDateTime.of(2022, 2, 3, 10, 40),
             LocalDateTime.of(2022, 2, 3, 10, 45, 11),
             null,
-            true, false));
+            true,
+            false));
 
     appointments.add(
         new Appointment(
@@ -339,7 +340,8 @@ public class Main {
             LocalDateTime.of(2020, 2, 1, 12, 20),
             LocalDateTime.of(2020, 2, 1, 12, 22, 41),
             null,
-            true, false));
+            true,
+            false));
 
     appointments.add(
         new Appointment(
@@ -351,7 +353,8 @@ public class Main {
             LocalDateTime.of(2021, 1, 10, 12, 20),
             LocalDateTime.of(2021, 1, 10, 12, 22),
             null,
-            true, false));
+            true,
+            false));
 
     appointments.add(
         new Appointment(
@@ -363,7 +366,8 @@ public class Main {
             LocalDateTime.of(2021, 1, 10, 12, 20),
             LocalDateTime.of(2021, 1, 10, 12, 22),
             null,
-            true, false));
+            true,
+            false));
 
     appointments.add(
         new Appointment(
@@ -375,7 +379,8 @@ public class Main {
             LocalDateTime.of(2021, 1, 11, 12, 20),
             LocalDateTime.of(2021, 1, 11, 12, 22),
             null,
-            true, false));
+            true,
+            false));
 
     appointments.add(
         new Appointment(
@@ -387,7 +392,8 @@ public class Main {
             LocalDateTime.of(2021, 1, 9, 12, 20),
             LocalDateTime.of(2021, 1, 9, 12, 22),
             null,
-            true, false));
+            true,
+            false));
 
     appointments.add(
         new Appointment(
@@ -399,7 +405,8 @@ public class Main {
             LocalDateTime.of(2022, 1, 9, 12, 20),
             LocalDateTime.of(2022, 1, 9, 12, 22),
             null,
-            true, false));
+            true,
+            false));
 
     for (var appt : appointments) {
       session.save(appt);

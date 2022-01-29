@@ -1,9 +1,9 @@
 package il.cshaifa.hmo_system.on_site_client.gui.patient;
 
+import il.cshaifa.hmo_system.Utils;
 import il.cshaifa.hmo_system.client_base.base_controllers.Controller;
 import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client_base.utils.ClientUtils;
-import il.cshaifa.hmo_system.Utils;
 import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.on_site_client.App;
@@ -43,9 +43,7 @@ public class OnSitePatientController extends Controller {
 
   private Patient patient;
 
-  public OnSitePatientController(
-      ViewController view_controller,
-      Stage stage) {
+  public OnSitePatientController(ViewController view_controller, Stage stage) {
     super(view_controller, stage);
     stage.initStyle(StageStyle.UNDECORATED);
   }
@@ -61,11 +59,18 @@ public class OnSitePatientController extends Controller {
         if (event.patient == null) {
           Platform.runLater(() -> ((OnSitePatientViewController) this.view_controller).invalidID());
         } else if (event.q_appt != null) Platform.runLater(() -> printNumber(event.q_appt));
-        else if (!event.patient.getHome_clinic().equals(HMOOnSiteClient.getClient().getStationClinic())) {
-          Platform.runLater(() -> ((OnSitePatientViewController) this.view_controller).notInClinic(event.patient.getHome_clinic()));
+        else if (!event
+            .patient
+            .getHome_clinic()
+            .equals(HMOOnSiteClient.getClient().getStationClinic())) {
+          Platform.runLater(
+              () ->
+                  ((OnSitePatientViewController) this.view_controller)
+                      .notInClinic(event.patient.getHome_clinic()));
         } else {
-          Platform.runLater(() -> ((OnSitePatientViewController) this.view_controller).showDashboard(
-              this.patient));
+          Platform.runLater(
+              () ->
+                  ((OnSitePatientViewController) this.view_controller).showDashboard(this.patient));
         }
       }
     } catch (IOException e) {
@@ -78,12 +83,14 @@ public class OnSitePatientController extends Controller {
     if (event.getSender().equals(this.view_controller)) {
 
       FXMLLoader loader =
-          new FXMLLoader(App.class.getResource(ClientUtils.get_fxml(OnSiteLoginViewController.class)));
+          new FXMLLoader(
+              App.class.getResource(ClientUtils.get_fxml(OnSiteLoginViewController.class)));
 
       Scene scene = new Scene(loader.load());
       Stage nstage = new Stage();
       nstage.setScene(scene);
-      OnSiteLoginController c = new OnSiteLoginController(loader.getController(), nstage, event.action);
+      OnSiteLoginController c =
+          new OnSiteLoginController(loader.getController(), nstage, event.action);
 
       nstage.initOwner(stage);
       nstage.initModality(Modality.WINDOW_MODAL);
@@ -115,7 +122,8 @@ public class OnSitePatientController extends Controller {
             Platform.runLater(() -> ((OnSitePatientViewController) view_controller).outOfHours());
             break;
           case ALREADY_IN_QUEUE:
-            Platform.runLater(() ->  ((OnSitePatientViewController) view_controller).alreadyInQueue());
+            Platform.runLater(
+                () -> ((OnSitePatientViewController) view_controller).alreadyInQueue());
             break;
           default:
             new NotImplementedException("Rejection reason not implemented").printStackTrace();
@@ -132,7 +140,8 @@ public class OnSitePatientController extends Controller {
     VBox vbox = new VBox();
 
     AnchorPane pane = new AnchorPane();
-    ImageView imgView = new ImageView(new Image(getClass().getResourceAsStream("print_number_bg.jpg")));
+    ImageView imgView =
+        new ImageView(new Image(getClass().getResourceAsStream("print_number_bg.jpg")));
     pane.getChildren().add(imgView);
     pane.setStyle("-fx-base: #ffffff; -fx-font-family: \"Helvetica Bold\"; -fx-font-size: 24px;");
     pane.setPrefWidth(400);
@@ -154,22 +163,25 @@ public class OnSitePatientController extends Controller {
             .stream();
     ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
 
-    vbox.getChildren().addAll(Arrays.asList(
-        new Label("Number"),
-        new Label(q_appt.place_in_line),
-        new ImageView(new Image(in))
-    ));
+    vbox.getChildren()
+        .addAll(
+            Arrays.asList(
+                new Label("Number"),
+                new Label(q_appt.place_in_line),
+                new ImageView(new Image(in))));
 
     User staff_member = q_appt.appointment.getStaff_member();
     if (staff_member != null) {
-      vbox.getChildren().addAll(Arrays.asList(
-          new Label(String.format("Dr. %s", staff_member)),
-          new Label(staff_member.getRole().getName()),
-          new Label(Utils.prettifyDateTime(q_appt.appointment.getDate()))
-      ));
+      vbox.getChildren()
+          .addAll(
+              Arrays.asList(
+                  new Label(String.format("Dr. %s", staff_member)),
+                  new Label(staff_member.getRole().getName()),
+                  new Label(Utils.prettifyDateTime(q_appt.appointment.getDate()))));
     } else {
       vbox.getChildren().add(new Label(q_appt.appointment.getType().getName()));
-      if (Arrays.asList("COVID Test", "COVID Vaccine", "Flu Vaccine").contains(q_appt.appointment.getType().getName())) {
+      if (Arrays.asList("COVID Test", "COVID Vaccine", "Flu Vaccine")
+          .contains(q_appt.appointment.getType().getName())) {
         vbox.getChildren().add(new Label(Utils.prettifyDateTime(q_appt.appointment.getDate())));
       }
     }
@@ -181,10 +193,11 @@ public class OnSitePatientController extends Controller {
 
     nstage.show();
     PauseTransition pt = new PauseTransition(Duration.seconds(10));
-    pt.setOnFinished(actionEvent -> {
-      nstage.close();
-      ((OnSitePatientViewController) view_controller).returnToEntryScreen();
-    });
+    pt.setOnFinished(
+        actionEvent -> {
+          nstage.close();
+          ((OnSitePatientViewController) view_controller).returnToEntryScreen();
+        });
     pt.play();
   }
 }

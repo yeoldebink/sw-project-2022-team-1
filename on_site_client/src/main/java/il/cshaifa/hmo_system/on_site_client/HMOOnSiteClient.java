@@ -10,7 +10,6 @@ import il.cshaifa.hmo_system.messages.OnSiteEntryMessage;
 import il.cshaifa.hmo_system.messages.OnSiteLoginMessage;
 import il.cshaifa.hmo_system.messages.OnSiteQueueMessage;
 import il.cshaifa.hmo_system.messages.UpdateAppointmentMessage;
-import il.cshaifa.hmo_system.on_site_client.events.CloseStationEvent;
 import il.cshaifa.hmo_system.on_site_client.events.OnSiteEntryEvent;
 import il.cshaifa.hmo_system.on_site_client.events.OnSiteLoginEvent;
 import il.cshaifa.hmo_system.on_site_client.events.PatientWalkInAppointmentEvent;
@@ -47,7 +46,8 @@ public class HMOOnSiteClient extends HMOClient {
    * @param password The password the user has entered
    * @throws java.io.IOException SQL exception
    */
-  public void loginRequest(int user, String password, Clinic clinic, OnSiteLoginAction action) throws IOException {
+  public void loginRequest(int user, String password, Clinic clinic, OnSiteLoginAction action)
+      throws IOException {
     sendToServer(new OnSiteLoginMessage(user, password, clinic, action));
   }
 
@@ -89,24 +89,29 @@ public class HMOOnSiteClient extends HMOClient {
   }
 
   private void handleOnSiteEntryMessage(OnSiteEntryMessage message) {
-    EventBus.getDefault().post(OnSiteEntryEvent.entryResponseEvent(message.q_appt, message.patient, this));
+    EventBus.getDefault()
+        .post(OnSiteEntryEvent.entryResponseEvent(message.q_appt, message.patient, this));
   }
 
   private void handleOnSiteQueueMessage(OnSiteQueueMessage message) {
     switch (message.action) {
       case PUSH:
         if (message.rejection_reason != null) {
-          EventBus.getDefault().post(PatientWalkInAppointmentEvent.newWalkInRejection(message.rejection_reason, this));
+          EventBus.getDefault()
+              .post(
+                  PatientWalkInAppointmentEvent.newWalkInRejection(message.rejection_reason, this));
         } else {
-          EventBus.getDefault().post(PatientWalkInAppointmentEvent.newWalkInResponse(message.q_appt, this));
+          EventBus.getDefault()
+              .post(PatientWalkInAppointmentEvent.newWalkInResponse(message.q_appt, this));
         }
         break;
 
       case POP:
       case UPDATE_QUEUE:
-        EventBus.getDefault().post(StaffNextAppointmentEvent.nextAppointmentResponseEvent(message.updated_queue,
-            message.queue_timestamp, message.q_appt, this
-        ));
+        EventBus.getDefault()
+            .post(
+                StaffNextAppointmentEvent.nextAppointmentResponseEvent(
+                    message.updated_queue, message.queue_timestamp, message.q_appt, this));
         break;
 
       default:
@@ -124,14 +129,18 @@ public class HMOOnSiteClient extends HMOClient {
         ioException.printStackTrace();
       }
 
-      Platform.runLater(() -> {
-        var dialog = new Dialog<String>();
-        dialog.setContentText(String.format("%s closed by manager", message.action == OnSiteLoginAction.CLOSE_CLINIC ? "Clinic" : "Station"));
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.showAndWait();
-        System.exit(0);
-      });
+      Platform.runLater(
+          () -> {
+            var dialog = new Dialog<String>();
+            dialog.setContentText(
+                String.format(
+                    "%s closed by manager",
+                    message.action == OnSiteLoginAction.CLOSE_CLINIC ? "Clinic" : "Station"));
+            dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+            dialog.initModality(Modality.APPLICATION_MODAL);
+            dialog.showAndWait();
+            System.exit(0);
+          });
     }
 
     OnSiteLoginEvent event = new OnSiteLoginEvent(0, null, message.clinic, this);

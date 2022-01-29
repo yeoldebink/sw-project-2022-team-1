@@ -74,7 +74,8 @@ public class PatientDashboardController extends Controller {
     FXMLLoader loader =
         new FXMLLoader(
             getClass()
-                .getResource(ClientUtils.get_fxml(PatientAppointmentHistoryListViewController.class)));
+                .getResource(
+                    ClientUtils.get_fxml(PatientAppointmentHistoryListViewController.class)));
 
     ClientUtils.openNewSingletonWindow(
         PatientAppointmentHistoryListViewController.class,
@@ -105,7 +106,8 @@ public class PatientDashboardController extends Controller {
       }
     } else {
       var loader =
-          new FXMLLoader(getClass().getResource(ClientUtils.get_fxml(GreenPassViewController.class)));
+          new FXMLLoader(
+              getClass().getResource(ClientUtils.get_fxml(GreenPassViewController.class)));
 
       ClientUtils.openNewSingletonWindow(
           GreenPassViewController.class,

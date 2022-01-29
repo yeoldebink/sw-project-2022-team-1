@@ -2,7 +2,6 @@ package il.cshaifa.hmo_system.messages;
 
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.Patient;
-import il.cshaifa.hmo_system.entities.User;
 import java.util.List;
 
 public class DesktopLoginMessage extends LoginMessage {

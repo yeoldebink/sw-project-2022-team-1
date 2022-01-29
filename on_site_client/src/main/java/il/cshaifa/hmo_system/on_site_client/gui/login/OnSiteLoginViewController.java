@@ -1,7 +1,6 @@
 package il.cshaifa.hmo_system.on_site_client.gui.login;
 
 import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
-import il.cshaifa.hmo_system.client_base.events.LoginEvent;
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.on_site_client.events.OnSiteLoginEvent;
 import java.util.List;
@@ -21,13 +20,14 @@ public class OnSiteLoginViewController extends ViewController {
 
   @FXML
   public void initialize() {
-    clinicComboBox.valueProperty().addListener(
-        (obs, oldval, newval) -> {
-          if (newval != null) {
-            loginButton.setDisable(false);
-          }
-        }
-    );
+    clinicComboBox
+        .valueProperty()
+        .addListener(
+            (obs, oldval, newval) -> {
+              if (newval != null) {
+                loginButton.setDisable(false);
+              }
+            });
   }
 
   @FXML private TextField idTextField;
@@ -56,7 +56,11 @@ public class OnSiteLoginViewController extends ViewController {
 
     try {
       var login_event =
-          new OnSiteLoginEvent(Integer.parseInt(idTextField.getText()), passwordField.getText(), clinicComboBox.getValue(), this);
+          new OnSiteLoginEvent(
+              Integer.parseInt(idTextField.getText()),
+              passwordField.getText(),
+              clinicComboBox.getValue(),
+              this);
       EventBus.getDefault().post(login_event);
     } catch (NumberFormatException e) {
       statusLabel.setTextFill(Color.DARKRED);

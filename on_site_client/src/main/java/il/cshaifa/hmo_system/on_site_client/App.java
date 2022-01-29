@@ -25,13 +25,15 @@ public class App extends Application {
     client.openConnection();
 
     FXMLLoader loader =
-        new FXMLLoader(App.class.getResource(ClientUtils.get_fxml(OnSiteLoginViewController.class)));
+        new FXMLLoader(
+            App.class.getResource(ClientUtils.get_fxml(OnSiteLoginViewController.class)));
 
     Scene scene = new Scene(loader.load());
     Stage stage = new Stage();
     stage.setScene(scene);
 
-    OnSiteLoginController c = new OnSiteLoginController(loader.getController(), stage, OnSiteLoginAction.LOGIN);
+    OnSiteLoginController c =
+        new OnSiteLoginController(loader.getController(), stage, OnSiteLoginAction.LOGIN);
     stage.show();
   }
 

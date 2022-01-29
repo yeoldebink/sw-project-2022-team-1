@@ -4,10 +4,8 @@ import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
-import il.cshaifa.hmo_system.structs.QueuedAppointment;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class ClinicQueues {
@@ -76,19 +74,22 @@ public class ClinicQueues {
     return q_name;
   }
 
-  private final static ReentrantLock clinicQueuesLock;
+  private static final ReentrantLock clinicQueuesLock;
+
   static {
     clinicQueuesLock = new ReentrantLock(true);
   }
 
   /**
    * Connects the staff member to the relevant queue and returns the current queue as a list
+   *
    * @param staff_member
    * @param clinic
    * @param client
    * @return
    */
-  public static QueueUpdate connectToQueue(User staff_member, Clinic clinic, ConnectionToClient client) {
+  public static QueueUpdate connectToQueue(
+      User staff_member, Clinic clinic, ConnectionToClient client) {
     clinicQueuesLock.lock();
     try {
       var q_name = initQueue(staff_member, clinic);

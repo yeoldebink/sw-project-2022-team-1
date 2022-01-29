@@ -108,7 +108,8 @@ public class ManagerDashboardController extends Controller {
     if (!event.getSender().equals(this.view_controller)) return;
 
     FXMLLoader loader =
-        new FXMLLoader(getClass().getResource(ClientUtils.get_fxml(AdminClinicViewController.class)));
+        new FXMLLoader(
+            getClass().getResource(ClientUtils.get_fxml(AdminClinicViewController.class)));
 
     // this is for the HMO manager
     if (event.clinic == null) {
@@ -132,8 +133,10 @@ public class ManagerDashboardController extends Controller {
   public void onTestOrVaccineAddingRequest(AddAppointmentEvent event) {
     if (!event.getSender().equals(this.view_controller)) return;
 
-    ClientUtils
-        .openNewSingletonWindow(AddAppointmentsViewController.class, AddAppointmentsController.class, false,
+    ClientUtils.openNewSingletonWindow(
+        AddAppointmentsViewController.class,
+        AddAppointmentsController.class,
+        false,
         c -> new AddAppointmentsViewController(event.type));
   }
 }

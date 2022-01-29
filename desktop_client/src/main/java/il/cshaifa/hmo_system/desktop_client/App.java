@@ -23,7 +23,8 @@ public class App extends Application {
     client.openConnection();
 
     FXMLLoader loader =
-        new FXMLLoader(App.class.getResource(ClientUtils.get_fxml(DesktopLoginViewController.class)));
+        new FXMLLoader(
+            App.class.getResource(ClientUtils.get_fxml(DesktopLoginViewController.class)));
     ClientUtils.openNewWindow(
         DesktopLoginViewController.class, DesktopLoginController.class, loader, false);
   }

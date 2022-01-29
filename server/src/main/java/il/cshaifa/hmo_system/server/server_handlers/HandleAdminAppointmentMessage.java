@@ -70,8 +70,7 @@ public class HandleAdminAppointmentMessage extends MessageHandler {
             cb.equal(root.get("clinic"), class_message.clinic),
             cb.equal(root.get("type").get("name"), class_message.appt_type.getName()),
             cb.between(
-                root.get("appt_date"), class_message.start_datetime,
-                end_datetime.minusSeconds(1)));
+                root.get("appt_date"), class_message.start_datetime, end_datetime.minusSeconds(1)));
     if (session.createQuery(cr).getResultList().size() > 0) {
       class_message.success = false;
       class_message.reject = AddAppointmentRejectionReason.OVERLAPPING;
@@ -100,7 +99,8 @@ public class HandleAdminAppointmentMessage extends MessageHandler {
                   current_datetime,
                   null,
                   null,
-                  false, false);
+                  false,
+                  false);
         }
       }
       if (appt == null) {
@@ -159,7 +159,8 @@ public class HandleAdminAppointmentMessage extends MessageHandler {
                   current_datetime,
                   null,
                   null,
-                  false, false);
+                  false,
+                  false);
         }
       }
       if (appt == null) {

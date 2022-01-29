@@ -17,8 +17,7 @@ public class HandleOnSiteQueueMessage extends MessageHandler {
   private final ConnectionToClient client;
   public QueueUpdate q_update;
 
-  public HandleOnSiteQueueMessage(Message msg, Session session,
-      ConnectionToClient client) {
+  public HandleOnSiteQueueMessage(Message msg, Session session, ConnectionToClient client) {
     super(msg, session);
     class_message = (OnSiteQueueMessage) this.message;
     this.client = client;
@@ -40,8 +39,8 @@ public class HandleOnSiteQueueMessage extends MessageHandler {
 
     var now = LocalDateTime.now().toLocalTime();
 
-    if (class_message.appt_type.getName().equals("Lab Tests") &&
-        (now.isBefore(LocalTime.of(8, 0)) || now.isAfter(LocalTime.of(10, 0)))) {
+    if (class_message.appt_type.getName().equals("Lab Tests")
+        && (now.isBefore(LocalTime.of(8, 0)) || now.isAfter(LocalTime.of(10, 0)))) {
       this.class_message.rejection_reason = OnSiteQueueRejectionReason.OUT_OF_HOURS;
       return;
     }

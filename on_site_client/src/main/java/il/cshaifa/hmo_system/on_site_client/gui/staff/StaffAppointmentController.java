@@ -10,9 +10,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 public class StaffAppointmentController extends Controller {
 
-  public StaffAppointmentController(
-      ViewController view_controller,
-      Stage stage) {
+  public StaffAppointmentController(ViewController view_controller, Stage stage) {
     super(view_controller, stage);
   }
 

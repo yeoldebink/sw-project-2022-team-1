@@ -1,6 +1,5 @@
 package il.cshaifa.hmo_system.server;
 
-import il.cshaifa.hmo_system.CommonEnums.OnSiteLoginAction;
 import il.cshaifa.hmo_system.Utils;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.AppointmentType;
@@ -17,7 +16,6 @@ import il.cshaifa.hmo_system.messages.GreenPassStatusMessage;
 import il.cshaifa.hmo_system.messages.LoginMessage;
 import il.cshaifa.hmo_system.messages.Message.MessageType;
 import il.cshaifa.hmo_system.messages.OnSiteEntryMessage;
-import il.cshaifa.hmo_system.messages.OnSiteLoginMessage;
 import il.cshaifa.hmo_system.messages.OnSiteQueueMessage;
 import il.cshaifa.hmo_system.messages.ReportMessage;
 import il.cshaifa.hmo_system.messages.SetAppointmentMessage;
@@ -144,8 +142,12 @@ public class HMOServer extends AbstractServer {
       client.sendToClient(handler.message);
 
       // janky, yes, but it's late and I'm tired
-      QueueUpdate q_update = handler instanceof HandleOnSiteEntryMessage ? ((HandleOnSiteEntryMessage) handler).q_update
-          : handler instanceof HandleOnSiteQueueMessage ? ((HandleOnSiteQueueMessage) handler).q_update : null;
+      QueueUpdate q_update =
+          handler instanceof HandleOnSiteEntryMessage
+              ? ((HandleOnSiteEntryMessage) handler).q_update
+              : handler instanceof HandleOnSiteQueueMessage
+                  ? ((HandleOnSiteQueueMessage) handler).q_update
+                  : null;
 
       if (q_update != null) {
         // need to update all those clients
@@ -168,7 +170,9 @@ public class HMOServer extends AbstractServer {
   @Override
   protected synchronized void clientDisconnected(ConnectionToClient client) {
     var user_str = client.getInfo("user_str");
-    System.out.printf("Client disconnected: [%s] @ %s\n", user_str != null ? user_str : "not logged in", client.getInfo("inet"));
+    System.out.printf(
+        "Client disconnected: [%s] @ %s\n",
+        user_str != null ? user_str : "not logged in", client.getInfo("inet"));
 
     HandleLoginMessage.disconnectClient(client);
     ClinicQueues.disconnectClient(client);
@@ -200,14 +204,17 @@ public class HMOServer extends AbstractServer {
         CriteriaBuilder cb = session.getCriteriaBuilder();
         CriteriaQuery<Appointment> cr = cb.createQuery(Appointment.class);
         Root<Appointment> root = cr.from(Appointment.class);
-        cr.select(root).where(
-            cb.between(root.get("appt_date"), LocalDateTime.now().plusHours(23), LocalDateTime.now().plusHours(24)),
-            cb.isTrue(root.get("taken"))
-        );
-        List<Appointment> tommorows_appts =  session.createQuery(cr).getResultList();
+        cr.select(root)
+            .where(
+                cb.between(
+                    root.get("appt_date"),
+                    LocalDateTime.now().plusHours(23),
+                    LocalDateTime.now().plusHours(24)),
+                cb.isTrue(root.get("taken")));
+        List<Appointment> tommorows_appts = session.createQuery(cr).getResultList();
         session.close();
 
-        for (Appointment appt : tommorows_appts){
+        for (Appointment appt : tommorows_appts) {
           PrepareAndSendEmail(appt);
           System.out.printf("Sent email for appointment id %s%n", appt.getId());
         }
@@ -223,37 +230,44 @@ public class HMOServer extends AbstractServer {
     private void PrepareAndSendEmail(Appointment appt) {
       User currPatient = appt.getPatient().getUser();
       var date_str = Utils.prettifyDateTime(appt.getDate());
-      var type_str = appt.getStaff_member() != null ? appt.getStaff_member().getRole().getName() : appt.getType().getName();
+      var type_str =
+          appt.getStaff_member() != null
+              ? appt.getStaff_member().getRole().getName()
+              : appt.getType().getName();
 
       String subject = String.format("Your %s appointment - %s", type_str, date_str);
 
-      String bodyText = String.format("""
-          Hello, %s
-          
-          This is an automated reminder that you have a %s appointment%s scheduled on %s.
-          
-          Clinic details:
-          -------------------
-          %s
-          %s
-          
-          Please be sure to arrive at the clinic between %s and %s.
-          
-          If you wish to cancel or reschedule your appointment please do so at your earliest
-          convenience via the desktop application or by phone at *2700.
-          
-          See you soon!
-          
-          ############################
-          This is an automated message. Do not reply to this email.""",
-          currPatient.getFirstName(),
-          type_str,
-          appt.getStaff_member() != null ? " with Dr. " + appt.getStaff_member().toString() : "",
-          date_str,
-          appt.getClinic().getName(),
-          appt.getClinic().getAddress(),
-          Utils.prettifyDateTime(appt.getDate().minusMinutes(15)),
-          Utils.prettifyDateTime(appt.getDate().plusHours(1)));
+      String bodyText =
+          String.format(
+              """
+              Hello, %s
+
+              This is an automated reminder that you have a %s appointment%s scheduled on %s.
+
+              Clinic details:
+              -------------------
+              %s
+              %s
+
+              Please be sure to arrive at the clinic between %s and %s.
+
+              If you wish to cancel or reschedule your appointment please do so at your earliest
+              convenience via the desktop application or by phone at *2700.
+
+              See you soon!
+
+              ############################
+              This is an automated message. Do not reply to this email.""",
+              currPatient.getFirstName(),
+              type_str,
+              appt.getStaff_member() != null
+                  ? " with Dr. " + appt.getStaff_member().toString()
+                  : "",
+              date_str,
+              appt.getClinic().getName(),
+              appt.getClinic().getAddress(),
+              Utils.prettifyDateTime(appt.getDate().minusMinutes(15)),
+              Utils.prettifyDateTime(appt.getDate().plusHours(1)));
 
       EmailSender.SendEmail(currPatient.getEmail(), subject, bodyText);
     }
@@ -264,8 +278,8 @@ public class HMOServer extends AbstractServer {
     private static final String port = "2525";
     private static final String user_name = "***REMOVED***";
     private static final String password = "***REMOVED***";
-    private static final String from = "***REMOVED***"; // Needs to remain this email for smtp-pulse API
-
+    private static final String from =
+        "***REMOVED***"; // Needs to remain this email for smtp-pulse API
 
     public static void SendEmail(String to, String subject, String bodyText) {
       // Get system properties & setup mail server
@@ -276,12 +290,15 @@ public class HMOServer extends AbstractServer {
       properties.setProperty("mail.smtp.port", port);
 
       try {
-        javax.mail.Session session = javax.mail.Session.getDefaultInstance(properties, new Authenticator() {
-          @Override
-          protected PasswordAuthentication getPasswordAuthentication() {
-            return new PasswordAuthentication(user_name, password);
-          }
-        });
+        javax.mail.Session session =
+            javax.mail.Session.getDefaultInstance(
+                properties,
+                new Authenticator() {
+                  @Override
+                  protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(user_name, password);
+                  }
+                });
 
         // Create message using session object
         MimeMessage message = new MimeMessage(session);
@@ -299,7 +316,4 @@ public class HMOServer extends AbstractServer {
       }
     }
   }
-
-
 }
-

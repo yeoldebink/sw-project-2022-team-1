@@ -1,6 +1,5 @@
 package il.cshaifa.hmo_system.desktop_client.gui.manager_dashboard.clinic_administration.clinic_appointments.add_appointment;
 
-import il.cshaifa.hmo_system.CommonEnums.AddAppointmentRejectionReason;
 import il.cshaifa.hmo_system.client_base.base_controllers.Controller;
 import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
 import il.cshaifa.hmo_system.desktop_client.HMODesktopClient;
@@ -77,7 +76,7 @@ public class AddAppointmentsController extends Controller {
     if (!event.getSender().equals(HMODesktopClient.getClient())) return;
     if (!event.success) {
       String rejectionMessage = "";
-      switch (event.reject){
+      switch (event.reject) {
         case IN_THE_PAST:
           rejectionMessage = "Cannot open appointments in the past";
           break;
@@ -94,12 +93,11 @@ public class AddAppointmentsController extends Controller {
               ((AddAppointmentsViewController) this.view_controller)
                   .setErrorMessage(finalRejectionMessage));
     } else {
-      Platform.runLater(() ->
-      {
-        this.onWindowClose();
-        stage.close();
-      }
-      );
+      Platform.runLater(
+          () -> {
+            this.onWindowClose();
+            stage.close();
+          });
     }
   }
 }

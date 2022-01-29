@@ -12,8 +12,10 @@ public class QueueUpdate {
   public ArrayList<ConnectionToClient> clients_to_update;
   public LocalDateTime timestamp;
 
-  public QueueUpdate(QueuedAppointment q_appt,
-      List<QueuedAppointment> update_queue, ArrayList<ConnectionToClient> clients_to_update) {
+  public QueueUpdate(
+      QueuedAppointment q_appt,
+      List<QueuedAppointment> update_queue,
+      ArrayList<ConnectionToClient> clients_to_update) {
     this.q_appt = q_appt;
     this.updated_queue = update_queue;
     this.clients_to_update = clients_to_update;

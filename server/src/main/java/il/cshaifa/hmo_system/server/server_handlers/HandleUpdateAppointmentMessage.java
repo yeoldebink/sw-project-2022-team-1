@@ -7,8 +7,7 @@ import org.hibernate.Session;
 public class HandleUpdateAppointmentMessage extends MessageHandler {
   public UpdateAppointmentMessage class_message;
 
-  public HandleUpdateAppointmentMessage(Message msg,
-      Session session) {
+  public HandleUpdateAppointmentMessage(Message msg, Session session) {
     super(msg, session);
     this.class_message = (UpdateAppointmentMessage) message;
   }

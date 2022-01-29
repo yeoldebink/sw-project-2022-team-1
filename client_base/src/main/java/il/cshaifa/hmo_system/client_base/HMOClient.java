@@ -74,15 +74,15 @@ public abstract class HMOClient extends AbstractClient {
     EventBus.getDefault().post(event);
   }
 
-  protected void handleLoginMessage(LoginMessage message,
-      LoginEvent _event) {
+  protected void handleLoginMessage(LoginMessage message, LoginEvent _event) {
 
     // this allows the on-site client to provide a pre-made LoginEvent for posting
     // such an event may contain staff member queue information
     LoginEvent event = _event == null ? new LoginEvent(0, "", this) : _event;
     if (message.user == null) {
       event.response = Response.REJECT;
-    } else if (message instanceof DesktopLoginMessage && ((DesktopLoginMessage) message).already_logged_in) {
+    } else if (message instanceof DesktopLoginMessage
+        && ((DesktopLoginMessage) message).already_logged_in) {
       event.response = Response.LOGGED_IN;
     } else {
       event.id = message.id;
@@ -93,7 +93,8 @@ public abstract class HMOClient extends AbstractClient {
         event.patientData = ((DesktopLoginMessage) message).patient_data;
         this.connected_employee_clinics = ((DesktopLoginMessage) message).employee_clinics;
       } else {
-        this.connected_employee_clinics = Collections.singletonList(((OnSiteLoginMessage) message).clinic);
+        this.connected_employee_clinics =
+            Collections.singletonList(((OnSiteLoginMessage) message).clinic);
       }
     }
     EventBus.getDefault().post(event);

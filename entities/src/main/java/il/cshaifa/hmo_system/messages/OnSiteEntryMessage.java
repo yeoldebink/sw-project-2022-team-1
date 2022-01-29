@@ -1,7 +1,5 @@
 package il.cshaifa.hmo_system.messages;
 
-import il.cshaifa.hmo_system.entities.Appointment;
-import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.structs.QueuedAppointment;
 

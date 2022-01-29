@@ -1,8 +1,8 @@
 package il.cshaifa.hmo_system.desktop_client.gui.patient_dashboard.green_pass;
 
 import il.cshaifa.hmo_system.CommonEnums.GreenPassStatus;
-import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
 import il.cshaifa.hmo_system.Utils;
+import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
 import il.cshaifa.hmo_system.desktop_client.HMODesktopClient;
 import il.cshaifa.hmo_system.desktop_client.events.GreenPassStatusEvent;
 import java.io.ByteArrayInputStream;

@@ -51,7 +51,8 @@ public class ClientUtils {
             if (instance != null && ((Controller) instance).hasViewController()) return;
 
             // load
-            var loader = new FXMLLoader(controller.getResource(ClientUtils.get_fxml(view_controller)));
+            var loader =
+                new FXMLLoader(controller.getResource(ClientUtils.get_fxml(view_controller)));
             if (ctrl_factory != null) loader.setControllerFactory(ctrl_factory);
 
             Stage stage = new Stage();
