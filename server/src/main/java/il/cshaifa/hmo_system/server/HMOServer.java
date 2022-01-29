@@ -60,7 +60,7 @@ import org.hibernate.service.ServiceRegistry;
 
 public class HMOServer extends AbstractServer {
 
-  public static Session session;
+  private static Session session;
 
   public HMOServer(int port) {
     super(port);
