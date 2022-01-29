@@ -9,14 +9,23 @@
 <?import javafx.scene.layout.VBox?>
 
 <?import org.kordamp.ikonli.javafx.FontIcon?>
+<?import javafx.scene.layout.HBox?>
 <AnchorPane prefWidth="900.0" stylesheets="@../hmo_lite_large.css" style="-fx-font-size: 18px;"
   xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
   fx:controller="il.cshaifa.hmo_system.on_site_client.gui.staff.StaffQueueViewController">
 
     <VBox AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" spacing="10">
         <Label styleClass="h1-label" text="Upcoming Appointments" />
-        <Label fx:id="staff_member_role_name" styleClass="h2-label" />
-        <Label fx:id="current_date" />
+
+        <HBox>
+            <HBox>
+                <Label fx:id="staff_member_role_name" styleClass="h2-label" />
+            </HBox>
+            <HBox HBox.hgrow="ALWAYS" alignment="CENTER_RIGHT">
+                <Label fx:id="current_date" />
+            </HBox>
+        </HBox>
+
         <TableView fx:id="appt_table" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
             <columns>
                 <TableColumn fx:id="place_in_line" text="Place in line" />

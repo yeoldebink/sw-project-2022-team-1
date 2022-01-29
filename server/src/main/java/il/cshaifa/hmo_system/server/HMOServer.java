@@ -37,6 +37,7 @@ import il.cshaifa.hmo_system.server.server_handlers.HandleStaffMessage;
 import il.cshaifa.hmo_system.server.server_handlers.MessageHandler;
 import il.cshaifa.hmo_system.server.server_handlers.queues.ClinicQueues;
 import il.cshaifa.hmo_system.server.server_handlers.queues.QueueUpdate;
+import java.io.EOFException;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -143,9 +144,8 @@ public class HMOServer extends AbstractServer {
 
   @Override
   protected synchronized void clientDisconnected(ConnectionToClient client) {
-    User user = HandleLoginMessage.connectedUser(client);
-    if (user != null)
-      System.out.println("Client disconnected: " + user.getFirstName() + " " + user.getLastName());
+    var user = client.getInfo("user");
+    System.out.printf("Client disconnected: [%s] @ %s\n", user != null ? user : "not logged in", client.getInfo("inet"));
 
     HandleLoginMessage.disconnectClient(client);
     ClinicQueues.disconnectClient(client);
@@ -156,11 +156,14 @@ public class HMOServer extends AbstractServer {
   @Override
   protected void clientConnected(ConnectionToClient client) {
     super.clientConnected(client);
-    System.out.println("Client connected: " + client.getInetAddress());
+    client.setInfo("inet", client.getInetAddress());
+    System.out.printf("Client connected: %s\n", client.getInetAddress());
   }
 
   @Override
   protected synchronized void clientException(ConnectionToClient client, Throwable exception) {
-    exception.printStackTrace();
+    if (!(exception instanceof EOFException) || client.toString() != null) {
+      exception.printStackTrace();
+    }
   }
 }

@@ -49,6 +49,11 @@ public class HandleLoginMessage extends MessageHandler {
     return onsite_connections.get(client);
   }
 
+  private void setUser(User user) {
+    this.class_message.user = user;
+    this.client.setInfo("user", String.format("%s [id: %s]", user.toString(), user.getId()));
+  }
+
   /** If login successful will update the LoginMessage with user and his details */
   @Override
   public void handleMessage() {
@@ -70,14 +75,14 @@ public class HandleLoginMessage extends MessageHandler {
         switch (user.getRole().getName()) {
           case "Patient":
             if (is_desktop) {
-              class_message.user = user;
+              setUser(user);
               ((DesktopLoginMessage) this.class_message).patient_data = getUserPatient(user);
             }
             break;
 
           case "HMO Manager":
             if (is_desktop) {
-              class_message.user = user;
+              setUser(user);
             }
             break;
 
@@ -88,7 +93,7 @@ public class HandleLoginMessage extends MessageHandler {
             // provided what they want to do is open the application
             if (!is_desktop && ((OnSiteLoginMessage) this.class_message).action == OnSiteLoginAction.LOGIN) {
               if (clinics.contains(((OnSiteLoginMessage) this.class_message).clinic)) {
-                this.class_message.user = user;
+                this.setUser(user);
                 connectOnSiteStation();
 
                 // on-site login for a clinic manager hinges on them being the manager of this clinic
@@ -115,7 +120,7 @@ public class HandleLoginMessage extends MessageHandler {
               // she can log in both on desktop and on-site to open stations
               if (is_desktop) {
                 ((DesktopLoginMessage) this.class_message).employee_clinics = clinics;
-                this.class_message.user = user;
+                this.setUser(user);
               }
             }
             break;

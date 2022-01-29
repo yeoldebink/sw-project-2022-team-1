@@ -5,9 +5,12 @@ import il.cshaifa.hmo_system.client_base.utils.Utils;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.on_site_client.events.StaffNextAppointmentEvent;
 import il.cshaifa.hmo_system.structs.QueuedAppointment;
+import java.time.temporal.ChronoField;
 import java.util.List;
 import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -51,10 +54,13 @@ public class StaffQueueViewController extends ViewController {
         staff_member_role_name.setText(staff_member.getFirstName() + " " + staff_member.getLastName() + ", " + staff_member.getRole().getName());
         setCellValueFactory();
 
-        clock_tick = new PauseTransition(Duration.seconds(1));
-        clock_tick.setOnFinished(actionEvent -> current_date.setText(Utils.prettifyDateTime(LocalDateTime.now())));
-        clock_tick.setCycleCount(Animation.INDEFINITE);
-        Platform.runLater(clock_tick::play);
+        Timeline clock = new Timeline(new KeyFrame(Duration.ZERO, actionEvent -> {
+            var now = LocalDateTime.now();
+            current_date.setText(String.format("%s:%02d", Utils.prettifyDateTime(now), now.get(
+                ChronoField.SECOND_OF_MINUTE)));
+        }), new KeyFrame(Duration.seconds(1)));
+        clock.setCycleCount(Animation.INDEFINITE);
+        clock.play();
 
         call_next_patient_button.setOnAction(actionEvent -> EventBus.getDefault().post(
             StaffNextAppointmentEvent.nextAppointmentRequestEvent(this)));
