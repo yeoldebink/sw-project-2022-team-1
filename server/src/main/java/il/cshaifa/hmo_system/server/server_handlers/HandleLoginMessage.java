@@ -112,8 +112,9 @@ public class HandleLoginMessage extends MessageHandler {
                 } else {
                   // this is an employee who needs to be connected to their patient queue
                   // connect and put their current queue in the message
-                  ((OnSiteLoginMessage) class_message).staff_member_queue =
-                      ClinicQueues.connectToQueue(user, ((OnSiteLoginMessage) this.class_message).clinic, client);
+                  var q_update = ClinicQueues.connectToQueue(user, ((OnSiteLoginMessage) this.class_message).clinic, client);
+                  ((OnSiteLoginMessage) class_message).staff_member_queue = q_update.updated_queue;
+                  ((OnSiteLoginMessage) class_message).queue_timestamp = q_update.timestamp;
                 }
               }
 

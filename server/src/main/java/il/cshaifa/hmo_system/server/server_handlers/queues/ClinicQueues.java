@@ -88,14 +88,14 @@ public class ClinicQueues {
    * @param client
    * @return
    */
-  public static List<QueuedAppointment> connectToQueue(User staff_member, Clinic clinic, ConnectionToClient client) {
+  public static QueueUpdate connectToQueue(User staff_member, Clinic clinic, ConnectionToClient client) {
     clinicQueuesLock.lock();
     try {
       var q_name = initQueue(staff_member, clinic);
       var appt_queue = clinicQueues.get(clinic).get(q_name);
       appt_queue.connectClient(client);
       clientQueues.put(client, appt_queue);
-      return appt_queue.getAsList();
+      return new QueueUpdate(null, appt_queue.getAsList(), null);
     } finally {
       clinicQueuesLock.unlock();
     }

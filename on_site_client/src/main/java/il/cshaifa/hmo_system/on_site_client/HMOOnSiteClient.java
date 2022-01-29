@@ -5,12 +5,11 @@ import il.cshaifa.hmo_system.client_base.HMOClient;
 import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.Patient;
-import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.OnSiteEntryMessage;
 import il.cshaifa.hmo_system.messages.OnSiteLoginMessage;
 import il.cshaifa.hmo_system.messages.OnSiteQueueMessage;
-import il.cshaifa.hmo_system.messages.OnSiteQueueMessage.Action;
 import il.cshaifa.hmo_system.on_site_client.events.OnSiteEntryEvent;
+import il.cshaifa.hmo_system.on_site_client.events.OnSiteLoginEvent;
 import il.cshaifa.hmo_system.on_site_client.events.PatientWalkInAppointmentEvent;
 import il.cshaifa.hmo_system.on_site_client.events.StaffNextAppointmentEvent;
 import java.io.IOException;
@@ -71,6 +70,8 @@ public class HMOOnSiteClient extends HMOClient {
       handleOnSiteEntryMessage((OnSiteEntryMessage) message);
     } else if (message instanceof OnSiteQueueMessage) {
       handleOnSiteQueueMessage((OnSiteQueueMessage) message);
+    } else if (message instanceof OnSiteLoginMessage) {
+      handleOnSiteLoginMessage((OnSiteLoginMessage) message);
     } else {
       super.handleMessageFromServer(message);
     }
@@ -92,12 +93,21 @@ public class HMOOnSiteClient extends HMOClient {
 
       case POP:
       case UPDATE_QUEUE:
-        EventBus.getDefault().post(StaffNextAppointmentEvent.nextAppointmentResponseEvent(message.updated_queue, message.q_appt, this));
+        EventBus.getDefault().post(StaffNextAppointmentEvent.nextAppointmentResponseEvent(message.updated_queue,
+            message.queue_timestamp, message.q_appt, this
+        ));
         break;
 
       default:
         new NotImplementedException("QueueMessage action type not implemented").printStackTrace();
         break;
     }
+  }
+
+  private void handleOnSiteLoginMessage(OnSiteLoginMessage message) {
+    OnSiteLoginEvent event = new OnSiteLoginEvent(0, null, message.clinic, this);
+    event.staff_member_queue = message.staff_member_queue;
+    event.queue_timestamp = message.queue_timestamp;
+    super.handleLoginMessage(message, event);
   }
 }

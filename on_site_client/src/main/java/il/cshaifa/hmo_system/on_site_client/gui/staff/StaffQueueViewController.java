@@ -9,9 +9,7 @@ import java.time.temporal.ChronoField;
 import java.util.List;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
-import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -29,7 +27,7 @@ import org.greenrobot.eventbus.EventBus;
 
 public class StaffQueueViewController extends ViewController {
 
-    private PauseTransition clock_tick;
+    private LocalDateTime queue_timestamp;
 
     @FXML private Button call_next_patient_button;
     @FXML private TableView<AppointmentPatientRow> appt_table;
@@ -74,7 +72,11 @@ public class StaffQueueViewController extends ViewController {
         patient_name.setCellValueFactory((new PropertyValueFactory<>("Patient_name")));
     }
 
-    void populateAppointmentsTable(List<QueuedAppointment> appt_list) {
+    void populateAppointmentsTable(List<QueuedAppointment> appt_list,
+        LocalDateTime queue_timestamp) {
+
+        // we want only the latest queue update
+        if (queue_timestamp.isBefore(this.queue_timestamp)) return;
 
         ArrayList<AppointmentPatientRow> appts_to_populate =
                 new ArrayList<AppointmentPatientRow>();

@@ -5,10 +5,13 @@ import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
 import il.cshaifa.hmo_system.on_site_client.HMOOnSiteClient;
 import il.cshaifa.hmo_system.on_site_client.events.StaffNextAppointmentEvent;
 import java.io.IOException;
+import java.util.concurrent.locks.ReentrantLock;
 import javafx.stage.Stage;
 import org.greenrobot.eventbus.Subscribe;
 
 public class StaffQueueController extends Controller {
+
+  private ReentrantLock queue_lock;
 
   public StaffQueueController(
       ViewController view_controller,
@@ -25,7 +28,13 @@ public class StaffQueueController extends Controller {
         ioException.printStackTrace();
       }
     } else if (event.getSender().equals(HMOOnSiteClient.getClient())) {
-      ((StaffQueueViewController) view_controller).populateAppointmentsTable(event.updated_queue);
+      queue_lock.lock();
+      try {
+        ((StaffQueueViewController) view_controller).populateAppointmentsTable(event.updated_queue,
+            event.queue_timestamp);
+      } finally {
+        queue_lock.unlock();
+      }
       // TODO see this appointment
     }
   }
