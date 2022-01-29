@@ -12,6 +12,7 @@ import il.cshaifa.hmo_system.entities.Role;
 import il.cshaifa.hmo_system.entities.User;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -54,7 +55,7 @@ import org.kordamp.ikonli.javafx.FontIcon;
 public class SetAppointmentViewController extends ViewController {
   private final Patient patient;
   private HashMap<LocalDate, ArrayList<Appointment>> appointmentsByDate;
-  private HashMap<User, ArrayList<Appointment>> appointmentsByDoctor;
+  private HashMap<User, HashMap<Clinic, ArrayList<Appointment>>> appointmentsByDoctorAndClinic;
   private AppointmentType lastUpdatedAppointmentType;
   private Role lastUpdatedSpecialistRole;
 
@@ -182,7 +183,7 @@ public class SetAppointmentViewController extends ViewController {
                       break;
                     default:
                       new NotImplementedException(
-                              String.format("Specialist role not implemented: %s", role.getName()))
+                          String.format("Specialist role not implemented: %s", role.getName()))
                           .printStackTrace();
                   }
 
@@ -213,8 +214,11 @@ public class SetAppointmentViewController extends ViewController {
         .addListener(
             (newDoctor) -> {
               if (spDoctorComboBox.getValue() != null) {
+                var val = spDoctorComboBox.getValue();
                 populateAppointmentDates(
-                    appointmentsByDoctor.get(spDoctorComboBox.getValue().getDoctor()), true);
+                    appointmentsByDoctorAndClinic.get(val.getDoctor()).get(val.getClinic()), true);
+              } else {
+                populateAppointmentDates(Collections.emptyList(), false);
               }
             });
 
@@ -370,7 +374,7 @@ public class SetAppointmentViewController extends ViewController {
   }
 
   public void populateSpecialistData(List<Appointment> appointments) {
-    appointmentsByDoctor = new HashMap<>();
+    appointmentsByDoctorAndClinic = new HashMap<>();
 
     spDoctorComboBox.getItems().clear();
     HashMap<User, HashSet<Clinic>> doctorClinics = new HashMap<>();
@@ -383,8 +387,9 @@ public class SetAppointmentViewController extends ViewController {
       if (doctorClinics.get(doctor).add(clinic)) {
         spDoctorComboBox.getItems().add(new SPDoctorItem(doctor, clinic));
       }
-      appointmentsByDoctor.putIfAbsent(doctor, new ArrayList<>());
-      appointmentsByDoctor.get(doctor).add(appt);
+      appointmentsByDoctorAndClinic.putIfAbsent(doctor, new HashMap<>());
+      appointmentsByDoctorAndClinic.get(doctor).putIfAbsent(clinic, new ArrayList<>());
+      appointmentsByDoctorAndClinic.get(doctor).get(clinic).add(appt);
     }
 
     spDoctorComboBox.setVisible(true);
@@ -574,6 +579,10 @@ public class SetAppointmentViewController extends ViewController {
 
     public User getDoctor() {
       return doctor;
+    }
+
+    public Clinic getClinic() {
+      return clinic;
     }
   }
 }
