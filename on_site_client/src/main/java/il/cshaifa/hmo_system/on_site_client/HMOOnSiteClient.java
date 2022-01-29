@@ -2,10 +2,14 @@ package il.cshaifa.hmo_system.on_site_client;
 
 import il.cshaifa.hmo_system.CommonEnums.OnSiteLoginAction;
 import il.cshaifa.hmo_system.client_base.HMOClient;
+import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.Clinic;
+import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.messages.OnSiteEntryMessage;
 import il.cshaifa.hmo_system.messages.OnSiteLoginMessage;
+import il.cshaifa.hmo_system.messages.OnSiteQueueMessage;
 import il.cshaifa.hmo_system.on_site_client.events.OnSiteEntryEvent;
+import il.cshaifa.hmo_system.on_site_client.events.PatientWalkInAppointmentEvent;
 import java.io.IOException;
 import org.greenrobot.eventbus.EventBus;
 
@@ -45,9 +49,9 @@ public class HMOOnSiteClient extends HMOClient {
     return connected_employee_clinics.get(0);
   }
 
-  public void requestCloseStation() {} // TODO implement me!
-
-  public void requestCloseClinic() {} // TODO implement me!
+  public void patientWalkInRequest(Patient patient, AppointmentType appt_type) throws IOException {
+    sendToServer(OnSiteQueueMessage.pushMessage(patient, appt_type));
+  }
 
   //
   // ********************************* HANDLERS *********************************
@@ -57,6 +61,8 @@ public class HMOOnSiteClient extends HMOClient {
   protected void handleMessageFromServer(Object message) {
     if (message instanceof OnSiteEntryMessage) {
       handleOnSiteEntryMessage((OnSiteEntryMessage) message);
+    } else if (message instanceof OnSiteQueueMessage) {
+      handleOnSiteQueueMessage((OnSiteQueueMessage) message);
     } else {
       super.handleMessageFromServer(message);
     }
@@ -64,5 +70,9 @@ public class HMOOnSiteClient extends HMOClient {
 
   private void handleOnSiteEntryMessage(OnSiteEntryMessage message) {
     EventBus.getDefault().post(OnSiteEntryEvent.entryResponseEvent(message.q_appt, message.patient, this));
+  }
+
+  private void handleOnSiteQueueMessage(OnSiteQueueMessage message) {
+    EventBus.getDefault().post(PatientWalkInAppointmentEvent.newWalkInResponse(message.q_appt, this));
   }
 }

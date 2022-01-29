@@ -11,6 +11,7 @@ import il.cshaifa.hmo_system.on_site_client.HMOOnSiteClient;
 import il.cshaifa.hmo_system.on_site_client.events.CloseStationEvent;
 import il.cshaifa.hmo_system.on_site_client.events.OnSiteEntryEvent;
 import il.cshaifa.hmo_system.on_site_client.events.OnSiteLoginEvent;
+import il.cshaifa.hmo_system.on_site_client.events.PatientWalkInAppointmentEvent;
 import il.cshaifa.hmo_system.on_site_client.gui.login.OnSiteLoginController;
 import il.cshaifa.hmo_system.on_site_client.gui.login.OnSiteLoginViewController;
 import il.cshaifa.hmo_system.structs.QueuedAppointment;
@@ -98,6 +99,23 @@ public class OnSitePatientController extends Controller {
   public void onCloseStationEvent(CloseStationEvent event) {
     Platform.runLater(stage::close);
     onWindowClose();
+  }
+
+  @Subscribe
+  public void onPatientWalkInAppointmentEvent(PatientWalkInAppointmentEvent event) {
+    if (event.getSender().equals(view_controller)) {
+      try {
+        HMOOnSiteClient.getClient().patientWalkInRequest(patient, event.appointment_type);
+      } catch (IOException ioException) {
+        ioException.printStackTrace();
+      }
+    } else if (event.getSender().equals(HMOOnSiteClient.getClient())) {
+      if (event.q_appt == null) {
+        // TODO error in case of out of service hours (labs)
+      } else {
+        Platform.runLater(() -> printNumber(event.q_appt));
+      }
+    }
   }
 
   private void printNumber(QueuedAppointment q_appt) {

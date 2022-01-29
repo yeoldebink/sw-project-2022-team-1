@@ -6,6 +6,8 @@ import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.OnSiteEntryMessage;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import il.cshaifa.hmo_system.server.server_handlers.queues.ClinicQueues;
+import il.cshaifa.hmo_system.server.server_handlers.queues.QueueUpdate;
+import il.cshaifa.hmo_system.structs.QueuedAppointment;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.criteria.CriteriaQuery;
@@ -16,6 +18,7 @@ public class HandleOnSiteEntryMessage extends MessageHandler {
 
   OnSiteEntryMessage class_message;
   private final ConnectionToClient client;
+  public QueueUpdate q_update;
 
   public HandleOnSiteEntryMessage(OnSiteEntryMessage message, Session session,
       ConnectionToClient client) {
@@ -42,7 +45,8 @@ public class HandleOnSiteEntryMessage extends MessageHandler {
       session.update(patient_appt);
       session.flush();
 
-      class_message.q_appt = ClinicQueues.push(patient_appt);
+      this.q_update = ClinicQueues.push(patient_appt);
+      this.class_message.q_appt = q_update.q_appt;
     }
   }
 

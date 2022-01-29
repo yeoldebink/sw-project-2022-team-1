@@ -36,6 +36,7 @@ import il.cshaifa.hmo_system.server.server_handlers.HandleStaffAssignmentMessage
 import il.cshaifa.hmo_system.server.server_handlers.HandleStaffMessage;
 import il.cshaifa.hmo_system.server.server_handlers.MessageHandler;
 import il.cshaifa.hmo_system.server.server_handlers.queues.ClinicQueues;
+import il.cshaifa.hmo_system.server.server_handlers.queues.QueueUpdate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -118,7 +119,20 @@ public class HMOServer extends AbstractServer {
       handler.message.message_type = MessageType.RESPONSE;
       client.sendToClient(handler.message);
 
+      // janky, yes, but it's late and I'm tired
+      QueueUpdate q_update = handler instanceof HandleOnSiteEntryMessage ? ((HandleOnSiteEntryMessage) handler).q_update
+          : handler instanceof HandleOnSiteQueueMessage ? ((HandleOnSiteQueueMessage) handler).q_update : null;
+
+      if (q_update != null) {
+        // need to update all those clients
+        var q_msg = OnSiteQueueMessage.updateMessage(q_update.updated_queue);
+        for (var _client : q_update.clients_to_update) {
+          _client.sendToClient(q_msg);
+        }
+      }
+
       session.close();
+
     } catch (Exception exception) {
       exception.printStackTrace();
       if (session != null) {

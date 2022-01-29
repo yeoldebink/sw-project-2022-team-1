@@ -39,6 +39,11 @@ public class OnSiteQueueMessage extends Message {
     this.action = Action.PUSH;
   }
 
+  private OnSiteQueueMessage(MessageType messageType, List<QueuedAppointment> updated_queue) {
+    super(messageType);
+    this.updated_queue = updated_queue;
+  }
+
   /**
    * Creates a message sent by a staff member to pop their next appointment
    *
@@ -58,5 +63,12 @@ public class OnSiteQueueMessage extends Message {
   public static OnSiteQueueMessage pushMessage(
       Patient patient, AppointmentType appt_type) {
     return new OnSiteQueueMessage(MessageType.REQUEST, patient, appt_type);
+  }
+
+  /**
+   * Creates an update message for the clients
+   */
+  public static OnSiteQueueMessage updateMessage(List<QueuedAppointment> updated_queue) {
+    return new OnSiteQueueMessage(MessageType.RESPONSE, updated_queue);
   }
 }

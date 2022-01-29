@@ -2,11 +2,13 @@ package il.cshaifa.hmo_system.on_site_client.gui.patient;
 
 import il.cshaifa.hmo_system.CommonEnums.OnSiteLoginAction;
 import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
+import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.on_site_client.HMOOnSiteClient;
 import il.cshaifa.hmo_system.on_site_client.events.OnSiteEntryEvent;
 import il.cshaifa.hmo_system.on_site_client.events.OnSiteLoginEvent;
+import il.cshaifa.hmo_system.on_site_client.events.PatientWalkInAppointmentEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
@@ -69,7 +71,15 @@ public class OnSitePatientViewController extends ViewController {
 
     closeClinicMenuItem.setOnAction((actionEvent) -> postExitEvent(OnSiteLoginAction.CLOSE_CLINIC));
 
+    nurseButton.setOnAction(actionEvent -> postWalkInEvent("Nurse"));
+
+    labButton.setOnAction(actionEvent -> postWalkInEvent("Lab Tests"));
+
     dashboardWelcomeLabel.setTextFill(Color.web("#4eb5d5"));
+  }
+
+  private void postWalkInEvent(String appt_type) {
+    EventBus.getDefault().post(PatientWalkInAppointmentEvent.newWalkInRequest(new AppointmentType(appt_type), this));
   }
 
   private void postExitEvent(OnSiteLoginAction action) {
