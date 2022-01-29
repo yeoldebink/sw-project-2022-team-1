@@ -29,4 +29,9 @@ public class CommonEnums {
     CLOSE_STATION,
     CLOSE_CLINIC
   }
+
+  public enum OnSiteQueueRejectionReason {
+    ALREADY_IN_QUEUE,
+    OUT_OF_HOURS
+  }
 }

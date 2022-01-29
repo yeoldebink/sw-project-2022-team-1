@@ -73,6 +73,10 @@ public class HMOOnSiteClient extends HMOClient {
   }
 
   private void handleOnSiteQueueMessage(OnSiteQueueMessage message) {
-    EventBus.getDefault().post(PatientWalkInAppointmentEvent.newWalkInResponse(message.q_appt, this));
+    if (message.rejection_reason != null) {
+      EventBus.getDefault().post(PatientWalkInAppointmentEvent.newWalkInRejection(message.rejection_reason, this));
+    } else {
+      EventBus.getDefault().post(PatientWalkInAppointmentEvent.newWalkInResponse(message.q_appt, this));
+    }
   }
 }

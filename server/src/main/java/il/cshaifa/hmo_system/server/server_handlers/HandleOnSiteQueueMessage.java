@@ -1,5 +1,6 @@
 package il.cshaifa.hmo_system.server.server_handlers;
 
+import il.cshaifa.hmo_system.CommonEnums.OnSiteQueueRejectionReason;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.messages.Message;
 import il.cshaifa.hmo_system.messages.OnSiteQueueMessage;
@@ -40,6 +41,7 @@ public class HandleOnSiteQueueMessage extends MessageHandler {
 
     if (class_message.appt_type.getName().equals("Lab Tests") &&
         (now.isBefore(LocalTime.of(8, 0)) || now.isAfter(LocalTime.of(10, 0)))) {
+      this.class_message.rejection_reason = OnSiteQueueRejectionReason.OUT_OF_HOURS;
       return;
     }
 
@@ -65,6 +67,7 @@ public class HandleOnSiteQueueMessage extends MessageHandler {
     if (q_update.q_appt == null) {
       session.delete(appointment);
       session.flush();
+      this.class_message.rejection_reason = OnSiteQueueRejectionReason.ALREADY_IN_QUEUE;
     }
   }
 

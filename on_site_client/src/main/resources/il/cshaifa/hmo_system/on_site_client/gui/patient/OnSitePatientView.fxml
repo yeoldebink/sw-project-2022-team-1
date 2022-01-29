@@ -14,13 +14,13 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
   xmlns:fx="http://javafx.com/fxml"
   fx:controller="il.cshaifa.hmo_system.on_site_client.gui.patient.OnSitePatientViewController"
-  prefHeight="768.0" prefWidth="1024.0" stylesheets="@../hmo_lite_large.css">
+  prefHeight="768.0" prefWidth="1024.0" stylesheets="@../hmo_lite_large.css" onMouseClicked="#onMouseClicked">
 
   <ImageView>
     <Image url="@onsite-welcome.jpg" />
   </ImageView>
 
-  <VBox AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+  <VBox AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" >
     <MenuBar>
       <Menu>
         <graphic>
@@ -62,6 +62,7 @@
             <FontIcon iconLiteral="mdi-test-tube" iconColor="forestgreen" iconSize="28" />
           </graphic>
         </Button>
+        <Label fx:id="dashboardErrorLabel" visible="false" />
       </VBox>
     </AnchorPane>
   </StackPane>

@@ -111,7 +111,17 @@ public class OnSitePatientController extends Controller {
       }
     } else if (event.getSender().equals(HMOOnSiteClient.getClient())) {
       if (event.q_appt == null) {
-        // TODO error in case of out of service hours (labs)
+        switch (event.rejection_reason) {
+          case OUT_OF_HOURS:
+            Platform.runLater(() -> ((OnSitePatientViewController) view_controller).outOfHours());
+            break;
+          case ALREADY_IN_QUEUE:
+            Platform.runLater(() ->  ((OnSitePatientViewController) view_controller).alreadyInQueue());
+            break;
+          default:
+            new NotImplementedException("Rejection reason not implemented").printStackTrace();
+            break;
+        }
       } else {
         Platform.runLater(() -> printNumber(event.q_appt));
       }
