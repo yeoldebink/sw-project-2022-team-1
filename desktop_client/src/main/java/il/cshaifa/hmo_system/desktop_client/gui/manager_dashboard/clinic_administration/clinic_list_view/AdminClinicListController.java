@@ -3,7 +3,7 @@ package il.cshaifa.hmo_system.desktop_client.gui.manager_dashboard.clinic_admini
 import il.cshaifa.hmo_system.client_base.base_controllers.Controller;
 import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client_base.events.ClinicEvent;
-import il.cshaifa.hmo_system.client_base.utils.Utils;
+import il.cshaifa.hmo_system.client_base.utils.ClientUtils;
 import il.cshaifa.hmo_system.desktop_client.HMODesktopClient;
 import il.cshaifa.hmo_system.desktop_client.gui.manager_dashboard.clinic_administration.clinic_view.AdminClinicController;
 import il.cshaifa.hmo_system.desktop_client.gui.manager_dashboard.clinic_administration.clinic_view.AdminClinicViewController;
@@ -30,7 +30,7 @@ public class AdminClinicListController extends Controller {
 
     // Navigate to AdminClinicView
     FXMLLoader loader =
-        new FXMLLoader(getClass().getResource(Utils.get_fxml(AdminClinicViewController.class)));
+        new FXMLLoader(getClass().getResource(ClientUtils.get_fxml(AdminClinicViewController.class)));
 
     // this is for the HMO manager
     if (event.clinic == null) {
@@ -43,7 +43,7 @@ public class AdminClinicListController extends Controller {
               event.clinic, HMODesktopClient.getClient().getConnected_user().getRole());
         });
     try {
-      Utils.openNewWindow(
+      ClientUtils.openNewWindow(
           AdminClinicViewController.class, AdminClinicController.class, loader, true);
     } catch (Exception e) {
       e.printStackTrace();

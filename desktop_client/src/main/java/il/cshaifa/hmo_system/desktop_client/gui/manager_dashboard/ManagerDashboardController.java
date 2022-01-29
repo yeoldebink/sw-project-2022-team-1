@@ -3,7 +3,7 @@ package il.cshaifa.hmo_system.desktop_client.gui.manager_dashboard;
 import il.cshaifa.hmo_system.client_base.base_controllers.Controller;
 import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client_base.events.ClinicEvent;
-import il.cshaifa.hmo_system.client_base.utils.Utils;
+import il.cshaifa.hmo_system.client_base.utils.ClientUtils;
 import il.cshaifa.hmo_system.desktop_client.HMODesktopClient;
 import il.cshaifa.hmo_system.desktop_client.events.AddAppointmentEvent;
 import il.cshaifa.hmo_system.desktop_client.events.ClinicStaffEvent;
@@ -108,7 +108,7 @@ public class ManagerDashboardController extends Controller {
     if (!event.getSender().equals(this.view_controller)) return;
 
     FXMLLoader loader =
-        new FXMLLoader(getClass().getResource(Utils.get_fxml(AdminClinicViewController.class)));
+        new FXMLLoader(getClass().getResource(ClientUtils.get_fxml(AdminClinicViewController.class)));
 
     // this is for the HMO manager
     if (event.clinic == null) {
@@ -121,7 +121,7 @@ public class ManagerDashboardController extends Controller {
               event.clinic, HMODesktopClient.getClient().getConnected_user().getRole());
         });
     try {
-      Utils.openNewWindow(
+      ClientUtils.openNewWindow(
           AdminClinicViewController.class, AdminClinicController.class, loader, true);
     } catch (Exception e) {
       e.printStackTrace();
@@ -132,7 +132,8 @@ public class ManagerDashboardController extends Controller {
   public void onTestOrVaccineAddingRequest(AddAppointmentEvent event) {
     if (!event.getSender().equals(this.view_controller)) return;
 
-    Utils.openNewSingletonWindow(AddAppointmentsViewController.class, AddAppointmentsController.class, false,
+    ClientUtils
+        .openNewSingletonWindow(AddAppointmentsViewController.class, AddAppointmentsController.class, false,
         c -> new AddAppointmentsViewController(event.type));
   }
 }

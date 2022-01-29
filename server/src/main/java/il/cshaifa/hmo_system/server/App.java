@@ -2,6 +2,7 @@ package il.cshaifa.hmo_system.server;
 
 import java.io.IOException;
 
+
 public class App {
   private static HMOServer server;
 

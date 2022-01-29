@@ -1,7 +1,7 @@
 package il.cshaifa.hmo_system.desktop_client.gui.manager_dashboard.clinic_administration.report_view;
 
 import il.cshaifa.hmo_system.client_base.base_controllers.Controller;
-import il.cshaifa.hmo_system.client_base.utils.Utils;
+import il.cshaifa.hmo_system.client_base.utils.ClientUtils;
 import il.cshaifa.hmo_system.desktop_client.HMODesktopClient;
 import il.cshaifa.hmo_system.desktop_client.events.ReportEvent;
 import il.cshaifa.hmo_system.desktop_client.events.ViewReportEvent;
@@ -76,7 +76,7 @@ public class ReportListController extends Controller {
 
     // load the view controller and its pane
     var loadedFXML =
-        Utils.loadFXML(
+        ClientUtils.loadFXML(
             this.getClass(),
             ReportViewController.class,
             c -> new ReportViewController(event.reportType));

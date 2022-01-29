@@ -2,7 +2,7 @@ package il.cshaifa.hmo_system.desktop_client.gui.manager_dashboard.clinic_admini
 
 import il.cshaifa.hmo_system.client_base.base_controllers.Controller;
 import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
-import il.cshaifa.hmo_system.client_base.utils.Utils;
+import il.cshaifa.hmo_system.client_base.utils.ClientUtils;
 import il.cshaifa.hmo_system.desktop_client.HMODesktopClient;
 import il.cshaifa.hmo_system.desktop_client.events.AddAppointmentEvent;
 import il.cshaifa.hmo_system.desktop_client.events.AdminAppointmentListEvent;
@@ -55,7 +55,7 @@ public class AdminAppointmentListController extends Controller {
   public void onShowAddAppointmentDialog(AddAppointmentEvent event) {
     if (!event.getSender().equals(this.view_controller)) return;
 
-    Utils.openNewSingletonWindow(
+    ClientUtils.openNewSingletonWindow(
         AddAppointmentsViewController.class,
         AddAppointmentsController.class,
         false,

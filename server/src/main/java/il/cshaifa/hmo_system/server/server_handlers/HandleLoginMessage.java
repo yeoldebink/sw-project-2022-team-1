@@ -3,7 +3,7 @@ package il.cshaifa.hmo_system.server.server_handlers;
 import il.cshaifa.hmo_system.CommonEnums.OnSiteLoginAction;
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.ClinicStaff;
-import il.cshaifa.hmo_system.entities.HMOUtilities;
+import il.cshaifa.hmo_system.Utils;
 import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.DesktopLoginMessage;
@@ -68,7 +68,7 @@ public class HandleLoginMessage extends MessageHandler {
     String user_encoded_password = user.getPassword();
     String entered_password = null;
     try {
-      entered_password = HMOUtilities.encodePassword(class_message.password, user.getSalt());
+      entered_password = Utils.encodePassword(class_message.password, user.getSalt());
     } catch (NoSuchAlgorithmException e) {
       e.printStackTrace();
     }

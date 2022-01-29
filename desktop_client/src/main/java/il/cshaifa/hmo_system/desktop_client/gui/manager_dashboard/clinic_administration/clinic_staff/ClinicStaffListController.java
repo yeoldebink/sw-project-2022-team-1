@@ -3,7 +3,7 @@ package il.cshaifa.hmo_system.desktop_client.gui.manager_dashboard.clinic_admini
 import il.cshaifa.hmo_system.CommonEnums.StaffAssignmentAction;
 import il.cshaifa.hmo_system.client_base.base_controllers.Controller;
 import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
-import il.cshaifa.hmo_system.client_base.utils.Utils;
+import il.cshaifa.hmo_system.client_base.utils.ClientUtils;
 import il.cshaifa.hmo_system.desktop_client.HMODesktopClient;
 import il.cshaifa.hmo_system.desktop_client.events.AdminAppointmentListEvent;
 import il.cshaifa.hmo_system.desktop_client.events.AssignStaffEvent;
@@ -118,7 +118,7 @@ public class ClinicStaffListController extends Controller {
     if (!event.getSender().equals(this.view_controller)) return;
     FXMLLoader loader =
         new FXMLLoader(
-            getClass().getResource(Utils.get_fxml(AdminAppointmentListViewController.class)));
+            getClass().getResource(ClientUtils.get_fxml(AdminAppointmentListViewController.class)));
 
     loader.setControllerFactory(
         c -> {
@@ -126,7 +126,7 @@ public class ClinicStaffListController extends Controller {
         });
 
     try {
-      Utils.openNewWindow(
+      ClientUtils.openNewWindow(
           AdminAppointmentListViewController.class,
           AdminAppointmentListController.class,
           loader,
