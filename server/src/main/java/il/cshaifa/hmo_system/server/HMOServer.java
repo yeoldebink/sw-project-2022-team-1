@@ -187,7 +187,7 @@ public class HMOServer extends AbstractServer {
   public static class AppointmentReminder extends Thread {
     @Override
     public void run() {
-      int current_hour = LocalDateTime.now().getHour();
+      int current_hour = -1;
       while (true){
         while (current_hour == LocalDateTime.now().getHour()){}
 
