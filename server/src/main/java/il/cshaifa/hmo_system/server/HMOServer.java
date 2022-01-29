@@ -189,6 +189,11 @@ public class HMOServer extends AbstractServer {
     public void run() {
       int current_hour = -1;
       while (true){
+        try {
+          sleep(3600000);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
         while (current_hour == LocalDateTime.now().getHour()){}
 
         current_hour = LocalDateTime.now().getHour();
