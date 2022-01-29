@@ -5,6 +5,7 @@ import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.function.Function;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -94,8 +95,6 @@ public class Utils {
   }
 
   public static String prettifyDateTime(LocalDateTime date) {
-    Function<Integer, String> prettyInt = i -> i < 10 ? "0" + i.toString() : i.toString();
-
     return String.format(
         "%s, %02d %s %s %02d:%02d",
         // day of week and month in 3-letter format
@@ -105,6 +104,13 @@ public class Utils {
         date.getYear(),
         date.getHour(),
         date.getMinute());
+  }
+
+  public static String prettifyLocalTime(LocalTime time) {
+    return String.format(
+        "%02d:%02d",
+        time.getHour(),
+        time.getMinute());
   }
 
   public static String get_fxml(Class<?> view_controller_class) {

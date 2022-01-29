@@ -5,12 +5,16 @@ import il.cshaifa.hmo_system.client_base.HMOClient;
 import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.Patient;
+import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.OnSiteEntryMessage;
 import il.cshaifa.hmo_system.messages.OnSiteLoginMessage;
 import il.cshaifa.hmo_system.messages.OnSiteQueueMessage;
+import il.cshaifa.hmo_system.messages.OnSiteQueueMessage.Action;
 import il.cshaifa.hmo_system.on_site_client.events.OnSiteEntryEvent;
 import il.cshaifa.hmo_system.on_site_client.events.PatientWalkInAppointmentEvent;
+import il.cshaifa.hmo_system.on_site_client.events.StaffNextAppointmentEvent;
 import java.io.IOException;
+import jdk.jshell.spi.ExecutionControl.NotImplementedException;
 import org.greenrobot.eventbus.EventBus;
 
 public class HMOOnSiteClient extends HMOClient {
@@ -53,6 +57,10 @@ public class HMOOnSiteClient extends HMOClient {
     sendToServer(OnSiteQueueMessage.pushMessage(patient, appt_type));
   }
 
+  public void staffQueuePopRequest() throws IOException {
+    sendToServer(OnSiteQueueMessage.popMessage());
+  }
+
   //
   // ********************************* HANDLERS *********************************
   //
@@ -73,10 +81,23 @@ public class HMOOnSiteClient extends HMOClient {
   }
 
   private void handleOnSiteQueueMessage(OnSiteQueueMessage message) {
-    if (message.rejection_reason != null) {
-      EventBus.getDefault().post(PatientWalkInAppointmentEvent.newWalkInRejection(message.rejection_reason, this));
-    } else {
-      EventBus.getDefault().post(PatientWalkInAppointmentEvent.newWalkInResponse(message.q_appt, this));
+    switch (message.action) {
+      case PUSH:
+        if (message.rejection_reason != null) {
+          EventBus.getDefault().post(PatientWalkInAppointmentEvent.newWalkInRejection(message.rejection_reason, this));
+        } else {
+          EventBus.getDefault().post(PatientWalkInAppointmentEvent.newWalkInResponse(message.q_appt, this));
+        }
+        break;
+
+      case POP:
+      case UPDATE_QUEUE:
+        EventBus.getDefault().post(StaffNextAppointmentEvent.nextAppointmentResponseEvent(message.updated_queue, message.q_appt, this));
+        break;
+
+      default:
+        new NotImplementedException("QueueMessage action type not implemented").printStackTrace();
+        break;
     }
   }
 }

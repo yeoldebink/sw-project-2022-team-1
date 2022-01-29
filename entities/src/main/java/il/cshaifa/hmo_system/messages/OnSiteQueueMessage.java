@@ -10,7 +10,8 @@ public class OnSiteQueueMessage extends Message {
 
   public enum Action {
     PUSH,
-    POP
+    POP,
+    UPDATE_QUEUE
   }
 
   // shared for all messages of this type
@@ -44,6 +45,7 @@ public class OnSiteQueueMessage extends Message {
     super(messageType);
     this.updated_queue = updated_queue;
     this.rejection_reason = null;
+    this.action = Action.UPDATE_QUEUE;
   }
 
   /**

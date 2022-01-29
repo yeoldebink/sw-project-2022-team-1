@@ -1,24 +1,34 @@
-package il.cshaifa.hmo_system.on_site_client.gui.staff_appointment_list;
+package il.cshaifa.hmo_system.on_site_client.gui.staff;
 
-import il.cshaifa.hmo_system.entities.Appointment;
+import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
+import il.cshaifa.hmo_system.client_base.utils.Utils;
 import il.cshaifa.hmo_system.entities.User;
+import il.cshaifa.hmo_system.on_site_client.events.StaffNextAppointmentEvent;
 import il.cshaifa.hmo_system.structs.QueuedAppointment;
-import javafx.event.ActionEvent;
+import java.util.List;
+import javafx.animation.Animation;
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import org.greenrobot.eventbus.EventBus;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
+import javafx.util.Duration;
+import org.greenrobot.eventbus.EventBus;
 
-public class StaffAppointmentListViewController {
+public class StaffQueueViewController extends ViewController {
 
+    private PauseTransition clock_tick;
+
+    @FXML private Button call_next_patient_button;
     @FXML private TableView<AppointmentPatientRow> appt_table;
     @FXML private TableColumn<AppointmentPatientRow, LocalTime> appt_time;
     @FXML private TableColumn<AppointmentPatientRow, String> appt_type_name;
@@ -30,21 +40,24 @@ public class StaffAppointmentListViewController {
 
     private final User staff_member;
 
-    public StaffAppointmentListViewController(User staff_member) {
+    public StaffQueueViewController(User staff_member) {
         this.staff_member = staff_member;
     }
 
     @FXML
     public void initialize() {
+        current_date.setText(Utils.prettifyDateTime(LocalDateTime.now()));
         appt_table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        current_date.setText(LocalDateTime.now().toString());
         staff_member_role_name.setText(staff_member.getFirstName() + " " + staff_member.getLastName() + ", " + staff_member.getRole().getName());
         setCellValueFactory();
-    }
 
-    @FXML
-    void requestDequeuePatient(ActionEvent event) {
+        clock_tick = new PauseTransition(Duration.seconds(1));
+        clock_tick.setOnFinished(actionEvent -> current_date.setText(Utils.prettifyDateTime(LocalDateTime.now())));
+        clock_tick.setCycleCount(Animation.INDEFINITE);
+        Platform.runLater(clock_tick::play);
 
+        call_next_patient_button.setOnAction(actionEvent -> EventBus.getDefault().post(
+            StaffNextAppointmentEvent.nextAppointmentRequestEvent(this)));
     }
 
     void setCellValueFactory() {
@@ -55,13 +68,15 @@ public class StaffAppointmentListViewController {
         patient_name.setCellValueFactory((new PropertyValueFactory<>("Patient_name")));
     }
 
-    void populateAppointmentsTable(ArrayList<QueuedAppointment> appt_list) {
+    void populateAppointmentsTable(List<QueuedAppointment> appt_list) {
 
         ArrayList<AppointmentPatientRow> appts_to_populate =
                 new ArrayList<AppointmentPatientRow>();
 
-        for (var appt : appt_list) {
+        if (appt_list != null) {
+          for (var appt : appt_list) {
             appts_to_populate.add(new AppointmentPatientRow(appt));
+          }
         }
 
         appts_to_populate.sort(
@@ -72,25 +87,24 @@ public class StaffAppointmentListViewController {
 
     public static class AppointmentPatientRow {
         private final String place_in_line;
-        private final LocalTime appt_time;
+        private final String appt_time;
         private final String appt_type_name;
         private final String patient_home_clinic;
         private final String patient_name;
 
         public AppointmentPatientRow(QueuedAppointment q_app) {
             this.place_in_line = q_app.place_in_line;
-            this.appt_time = q_app.appointment.getDate().toLocalTime();
+            this.appt_time = Utils.prettifyLocalTime(q_app.appointment.getDate().toLocalTime());
             this.appt_type_name = q_app.appointment.getType().getName();
             this.patient_home_clinic = q_app.appointment.getPatient().getHome_clinic().getName();
-            this.patient_name = q_app.appointment.getPatient().getUser().getFirstName() +
-                    " " + q_app.appointment.getPatient().getUser().getLastName();
+            this.patient_name = q_app.appointment.getPatient().getUser().toString();
         }
 
         public String getPlace_in_line() {
             return place_in_line;
         }
 
-        public LocalTime getAppt_time() {
+        public String getAppt_time() {
             return appt_time;
         }
 

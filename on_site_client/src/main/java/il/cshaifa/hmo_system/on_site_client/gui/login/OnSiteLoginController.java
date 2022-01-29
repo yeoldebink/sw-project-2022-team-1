@@ -13,6 +13,8 @@ import il.cshaifa.hmo_system.on_site_client.events.CloseStationEvent;
 import il.cshaifa.hmo_system.on_site_client.events.OnSiteLoginEvent;
 import il.cshaifa.hmo_system.on_site_client.gui.patient.OnSitePatientController;
 import il.cshaifa.hmo_system.on_site_client.gui.patient.OnSitePatientViewController;
+import il.cshaifa.hmo_system.on_site_client.gui.staff.StaffQueueController;
+import il.cshaifa.hmo_system.on_site_client.gui.staff.StaffQueueViewController;
 import java.io.IOException;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -111,7 +113,9 @@ public class OnSiteLoginController extends Controller {
       var loader = new FXMLLoader(getClass().getResource(Utils.get_fxml(OnSitePatientViewController.class)));
       Utils.openNewWindow(OnSitePatientViewController.class, OnSitePatientController.class, loader, false);
     } else {
-      new NotImplementedException("The princess is in another castle, BITCH").printStackTrace();
+      var loader = new FXMLLoader(getClass().getResource(Utils.get_fxml(StaffQueueViewController.class)));
+      loader.setControllerFactory(c -> new StaffQueueViewController(user));
+      Utils.openNewWindow(StaffQueueViewController.class, StaffQueueController.class, loader, true);
     }
   }
 
