@@ -1,7 +1,7 @@
 package il.cshaifa.hmo_system.on_site_client.gui.staff;
 
 import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
-import il.cshaifa.hmo_system.client_base.utils.Utils;
+import il.cshaifa.hmo_system.Utils;
 import il.cshaifa.hmo_system.on_site_client.events.ViewAppointmentEvent;
 import il.cshaifa.hmo_system.structs.QueuedAppointment;
 import javafx.fxml.FXML;

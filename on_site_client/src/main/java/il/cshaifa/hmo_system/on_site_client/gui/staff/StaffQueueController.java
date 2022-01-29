@@ -2,7 +2,8 @@ package il.cshaifa.hmo_system.on_site_client.gui.staff;
 
 import il.cshaifa.hmo_system.client_base.base_controllers.Controller;
 import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
-import il.cshaifa.hmo_system.client_base.utils.Utils;
+import il.cshaifa.hmo_system.Utils;
+import il.cshaifa.hmo_system.client_base.utils.ClientUtils;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.on_site_client.HMOOnSiteClient;
 import il.cshaifa.hmo_system.on_site_client.events.StaffNextAppointmentEvent;
@@ -60,11 +61,11 @@ public class StaffQueueController extends Controller {
   }
 
   private void viewAppointment(QueuedAppointment q_appt, boolean readonly) {
-    var loader = new FXMLLoader(getClass().getResource(Utils.get_fxml(StaffAppointmentViewController.class)));
+    var loader = new FXMLLoader(getClass().getResource(ClientUtils.get_fxml(StaffAppointmentViewController.class)));
     loader.setControllerFactory(c -> new StaffAppointmentViewController(q_appt, readonly));
     Platform.runLater(() -> {
       try {
-        Utils.openNewWindow(StaffAppointmentViewController.class, StaffAppointmentController.class, loader, false);
+        ClientUtils.openNewWindow(StaffAppointmentViewController.class, StaffAppointmentController.class, loader, false);
       } catch (Exception exception) {
         exception.printStackTrace();
       }

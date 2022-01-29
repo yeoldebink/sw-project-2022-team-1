@@ -1,7 +1,7 @@
 package il.cshaifa.hmo_system.on_site_client.gui.staff;
 
 import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
-import il.cshaifa.hmo_system.client_base.utils.Utils;
+import il.cshaifa.hmo_system.Utils;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.on_site_client.events.StaffNextAppointmentEvent;
 import il.cshaifa.hmo_system.on_site_client.events.ViewAppointmentEvent;
@@ -116,7 +116,7 @@ public class StaffQueueViewController extends ViewController {
         public AppointmentPatientRow(QueuedAppointment q_appt) {
             this.q_appt = q_appt;
             this.place_in_line = q_appt.place_in_line;
-            this.appt_time = Utils.prettifyLocalTime(q_appt.appointment.getDate().toLocalTime());
+            this.appt_time = Utils.prettifyDateTime(q_appt.appointment.getDate());
             this.appt_type_name = q_appt.appointment.getType().getName();
             this.patient_home_clinic = q_appt.appointment.getPatient().getHome_clinic().getName();
             this.patient_name = q_appt.appointment.getPatient().getUser().toString();

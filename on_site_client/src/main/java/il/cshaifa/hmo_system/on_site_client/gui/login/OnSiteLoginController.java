@@ -18,6 +18,7 @@ import il.cshaifa.hmo_system.on_site_client.gui.staff.StaffQueueViewController;
 import java.io.IOException;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.stage.Modality;
@@ -102,7 +103,7 @@ public class OnSiteLoginController extends Controller {
       ClientUtils
           .openNewWindow(OnSitePatientViewController.class, OnSitePatientController.class, loader, false);
     } else {
-      var loader = new FXMLLoader(getClass().getResource(Utils.get_fxml(StaffQueueViewController.class)));
+      var loader = new FXMLLoader(getClass().getResource(ClientUtils.get_fxml(StaffQueueViewController.class)));
       loader.setControllerFactory(c -> new StaffQueueViewController(user));
 
       Platform.runLater(() -> {

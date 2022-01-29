@@ -46,6 +46,7 @@ import java.io.EOFException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -76,6 +77,8 @@ public class HMOServer extends AbstractServer {
    * @throws HibernateException
    */
   private static SessionFactory getSessionFactory() throws HibernateException {
+    java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.SEVERE);
+
     Configuration configuration = new Configuration();
 
     configuration.addAnnotatedClass(Appointment.class);
@@ -191,6 +194,7 @@ public class HMOServer extends AbstractServer {
     @Override
     public void run() {
       while (true) {
+        System.out.println("Performing email reminders...");
         session = getSessionFactory().openSession();
         session.beginTransaction();
         CriteriaBuilder cb = session.getCriteriaBuilder();
@@ -205,10 +209,11 @@ public class HMOServer extends AbstractServer {
 
         for (Appointment appt : tommorows_appts){
           PrepareAndSendEmail(appt);
+          System.out.printf("Sent email for appointment id %s%n", appt.getId());
         }
 
         try {
-          sleep(1000);
+          sleep(3600000);
         } catch (InterruptedException e) {
           return;
         }
