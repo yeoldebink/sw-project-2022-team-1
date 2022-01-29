@@ -2,7 +2,11 @@ package il.cshaifa.hmo_system.on_site_client.gui.staff;
 
 import il.cshaifa.hmo_system.client_base.base_controllers.Controller;
 import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
+import il.cshaifa.hmo_system.on_site_client.HMOOnSiteClient;
+import il.cshaifa.hmo_system.on_site_client.events.ViewAppointmentEvent;
+import java.io.IOException;
 import javafx.stage.Stage;
+import org.greenrobot.eventbus.Subscribe;
 
 public class StaffAppointmentController extends Controller {
 
@@ -10,5 +14,14 @@ public class StaffAppointmentController extends Controller {
       ViewController view_controller,
       Stage stage) {
     super(view_controller, stage);
+  }
+
+  @Subscribe
+  public void onAppointmentCommentsEvent(ViewAppointmentEvent event) {
+    try {
+      HMOOnSiteClient.getClient().updateAppointmentComments(event.appointment);
+    } catch (IOException ioException) {
+      ioException.printStackTrace();
+    }
   }
 }

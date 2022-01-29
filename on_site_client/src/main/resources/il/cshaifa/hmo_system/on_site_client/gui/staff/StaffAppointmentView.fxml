@@ -6,12 +6,32 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 <AnchorPane xmlns="http://javafx.com/javafx"
   xmlns:fx="http://javafx.com/fxml"
   fx:controller="il.cshaifa.hmo_system.on_site_client.gui.staff.StaffAppointmentViewController"
   prefHeight="400.0" prefWidth="600.0" stylesheets="@../hmo_lite_large.css" style="-fx-font-size: 18px;">
 
   <VBox AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" spacing="10">
+    <Label fx:id="appointmentDetailsLabel" styleClass="h1-label" />
+    <GridPane vgap="10" hgap="10">
+      <Label styleClass="h2-label" text="Patient: " GridPane.rowIndex="0" GridPane.columnIndex="0" />
+      <Label text="Appointment Time: " GridPane.rowIndex="1" GridPane.columnIndex="0" />
+      <Label text="Treatment Type: " GridPane.rowIndex="2" GridPane.columnIndex="0" />
+      <Label text="Clinic: " GridPane.rowIndex="3" GridPane.columnIndex="0" />
+      <Label text="Comments: " GridPane.rowIndex="4" GridPane.columnIndex="0" GridPane.valignment="TOP" />
 
+      <Label styleClass="h2-label" fx:id="patientNameLabel" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+      <Label fx:id="appointmentTimeLabel" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+      <Label fx:id="treatmentTypeLabel" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+      <Label fx:id="clinicNameLabel" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+      <TextArea fx:id="commentsTextArea" GridPane.rowIndex="4" GridPane.columnIndex="1" GridPane.valignment="TOP" />
+      <Button text="Update comments" fx:id="updateCommentsButton">
+        <graphic>
+          <FontIcon iconLiteral="mdi-comment-text" iconColor="cadetblue"/>
+        </graphic>
+      </Button>
+
+    </GridPane>
   </VBox>
 </AnchorPane>

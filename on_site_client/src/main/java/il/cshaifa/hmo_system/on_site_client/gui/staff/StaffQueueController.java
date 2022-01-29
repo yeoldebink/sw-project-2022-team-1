@@ -2,6 +2,7 @@ package il.cshaifa.hmo_system.on_site_client.gui.staff;
 
 import il.cshaifa.hmo_system.client_base.base_controllers.Controller;
 import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
+import il.cshaifa.hmo_system.client_base.utils.Utils;
 import il.cshaifa.hmo_system.on_site_client.HMOOnSiteClient;
 import il.cshaifa.hmo_system.on_site_client.events.StaffNextAppointmentEvent;
 import il.cshaifa.hmo_system.structs.QueuedAppointment;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -42,7 +44,19 @@ public class StaffQueueController extends Controller {
       } finally {
         queue_lock.unlock();
       }
-      // TODO see this appointment
+
+      if (event.q_appt != null) {
+        // popped appointment
+        var loader = new FXMLLoader(getClass().getResource(Utils.get_fxml(StaffAppointmentViewController.class)));
+        loader.setControllerFactory(c -> new StaffAppointmentViewController(event.q_appt, false));
+        Platform.runLater(() -> {
+          try {
+            Utils.openNewWindow(StaffAppointmentViewController.class, StaffAppointmentController.class, loader, true);
+          } catch (Exception exception) {
+            exception.printStackTrace();
+          }
+        });
+      }
     }
   }
 }

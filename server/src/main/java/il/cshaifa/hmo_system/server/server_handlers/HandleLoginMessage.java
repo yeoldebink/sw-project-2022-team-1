@@ -11,6 +11,7 @@ import il.cshaifa.hmo_system.messages.LoginMessage;
 import il.cshaifa.hmo_system.messages.OnSiteLoginMessage;
 import il.cshaifa.hmo_system.server.server_handlers.queues.ClinicQueues;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
+import java.awt.Desktop;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -51,7 +52,11 @@ public class HandleLoginMessage extends MessageHandler {
 
   private void setUser(User user) {
     this.class_message.user = user;
-    this.client.setInfo("user", String.format("%s [id: %s]", user.toString(), user.getId()));
+    this.client.setInfo("user_str", String.format("%s [id: %s]", user.toString(), user.getId()));
+    this.client.setInfo("user", user);
+
+    System.out.printf("User logged in: %s, %s {%s}%n", client.getInfo("user_str"), user.getRole().getName(),
+        this.class_message instanceof DesktopLoginMessage ? "Desktop" : "On-site");
   }
 
   /** If login successful will update the LoginMessage with user and his details */

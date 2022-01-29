@@ -16,6 +16,7 @@ public class StaffNextAppointmentEvent extends Event {
         super(sender);
         this.updated_queue = updated_queue;
         this.queue_timestamp = queue_timestamp;
+        this.q_appt = q_appt;
     }
 
     public static StaffNextAppointmentEvent nextAppointmentRequestEvent(Object sender) {

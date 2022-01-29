@@ -2,12 +2,14 @@ package il.cshaifa.hmo_system.on_site_client;
 
 import il.cshaifa.hmo_system.CommonEnums.OnSiteLoginAction;
 import il.cshaifa.hmo_system.client_base.HMOClient;
+import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.messages.OnSiteEntryMessage;
 import il.cshaifa.hmo_system.messages.OnSiteLoginMessage;
 import il.cshaifa.hmo_system.messages.OnSiteQueueMessage;
+import il.cshaifa.hmo_system.messages.UpdateAppointmentMessage;
 import il.cshaifa.hmo_system.on_site_client.events.CloseStationEvent;
 import il.cshaifa.hmo_system.on_site_client.events.OnSiteEntryEvent;
 import il.cshaifa.hmo_system.on_site_client.events.OnSiteLoginEvent;
@@ -63,6 +65,10 @@ public class HMOOnSiteClient extends HMOClient {
 
   public void staffQueuePopRequest() throws IOException {
     sendToServer(OnSiteQueueMessage.popMessage());
+  }
+
+  public void updateAppointmentComments(Appointment appointment) throws IOException {
+    sendToServer(new UpdateAppointmentMessage(appointment));
   }
 
   //

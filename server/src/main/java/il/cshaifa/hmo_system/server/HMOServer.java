@@ -22,6 +22,7 @@ import il.cshaifa.hmo_system.messages.ReportMessage;
 import il.cshaifa.hmo_system.messages.SetAppointmentMessage;
 import il.cshaifa.hmo_system.messages.SetSpecialistAppointmentMessage;
 import il.cshaifa.hmo_system.messages.StaffAssignmentMessage;
+import il.cshaifa.hmo_system.messages.UpdateAppointmentMessage;
 import il.cshaifa.hmo_system.server.ocsf.AbstractServer;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import il.cshaifa.hmo_system.server.server_handlers.HandleAdminAppointmentMessage;
@@ -36,6 +37,7 @@ import il.cshaifa.hmo_system.server.server_handlers.HandleSetAppointmentMessage;
 import il.cshaifa.hmo_system.server.server_handlers.HandleSetSpecialistAppointmentMessage;
 import il.cshaifa.hmo_system.server.server_handlers.HandleStaffAssignmentMessage;
 import il.cshaifa.hmo_system.server.server_handlers.HandleStaffMessage;
+import il.cshaifa.hmo_system.server.server_handlers.HandleUpdateAppointmentMessage;
 import il.cshaifa.hmo_system.server.server_handlers.MessageHandler;
 import il.cshaifa.hmo_system.server.server_handlers.queues.ClinicQueues;
 import il.cshaifa.hmo_system.server.server_handlers.queues.QueueUpdate;
@@ -115,6 +117,8 @@ public class HMOServer extends AbstractServer {
         handler = new HandleStaffAssignmentMessage((StaffAssignmentMessage) msg, session);
       } else if (msg_class == ClinicStaffMessage.class) {
         handler = new HandleStaffMessage((ClinicStaffMessage) msg, session);
+      } else if (msg_class == UpdateAppointmentMessage.class) {
+        handler = new HandleUpdateAppointmentMessage((UpdateAppointmentMessage) msg, session);
       }
 
       assert handler != null;
@@ -130,7 +134,7 @@ public class HMOServer extends AbstractServer {
         // need to update all those clients
         var q_msg = OnSiteQueueMessage.updateMessage(q_update.updated_queue, q_update.timestamp);
         for (var _client : q_update.clients_to_update) {
-          _client.sendToClient(q_msg);
+          if (!_client.equals(client)) _client.sendToClient(q_msg);
         }
       }
 
@@ -146,8 +150,8 @@ public class HMOServer extends AbstractServer {
 
   @Override
   protected synchronized void clientDisconnected(ConnectionToClient client) {
-    var user = client.getInfo("user");
-    System.out.printf("Client disconnected: [%s] @ %s\n", user != null ? user : "not logged in", client.getInfo("inet"));
+    var user_str = client.getInfo("user_str");
+    System.out.printf("Client disconnected: [%s] @ %s\n", user_str != null ? user_str : "not logged in", client.getInfo("inet"));
 
     HandleLoginMessage.disconnectClient(client);
     ClinicQueues.disconnectClient(client);
