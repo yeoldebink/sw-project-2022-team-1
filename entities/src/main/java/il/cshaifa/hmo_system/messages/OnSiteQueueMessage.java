@@ -1,10 +1,8 @@
 package il.cshaifa.hmo_system.messages;
 
-import il.cshaifa.hmo_system.entities.Appointment;
+import il.cshaifa.hmo_system.CommonEnums.OnSiteQueueRejectionReason;
 import il.cshaifa.hmo_system.entities.AppointmentType;
-import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.Patient;
-import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.structs.QueuedAppointment;
 import java.util.List;
 
@@ -25,10 +23,12 @@ public class OnSiteQueueMessage extends Message {
   // response
   public QueuedAppointment q_appt;
   public List<QueuedAppointment> updated_queue;
+  public OnSiteQueueRejectionReason rejection_reason;
 
   private OnSiteQueueMessage(MessageType message_type) {
     super(message_type);
     this.action = Action.POP;
+    this.rejection_reason = null;
   }
 
   private OnSiteQueueMessage(
@@ -37,6 +37,13 @@ public class OnSiteQueueMessage extends Message {
     this.patient = patient;
     this.appt_type = appt_type;
     this.action = Action.PUSH;
+    this.rejection_reason = null;
+  }
+
+  private OnSiteQueueMessage(MessageType messageType, List<QueuedAppointment> updated_queue) {
+    super(messageType);
+    this.updated_queue = updated_queue;
+    this.rejection_reason = null;
   }
 
   /**
@@ -58,5 +65,12 @@ public class OnSiteQueueMessage extends Message {
   public static OnSiteQueueMessage pushMessage(
       Patient patient, AppointmentType appt_type) {
     return new OnSiteQueueMessage(MessageType.REQUEST, patient, appt_type);
+  }
+
+  /**
+   * Creates an update message for the clients
+   */
+  public static OnSiteQueueMessage updateMessage(List<QueuedAppointment> updated_queue) {
+    return new OnSiteQueueMessage(MessageType.RESPONSE, updated_queue);
   }
 }

@@ -23,4 +23,15 @@ public class CommonEnums {
     TESTED,
     REJECT
   }
+
+  public enum OnSiteLoginAction {
+    LOGIN,
+    CLOSE_STATION,
+    CLOSE_CLINIC
+  }
+
+  public enum OnSiteQueueRejectionReason {
+    ALREADY_IN_QUEUE,
+    OUT_OF_HOURS
+  }
 }

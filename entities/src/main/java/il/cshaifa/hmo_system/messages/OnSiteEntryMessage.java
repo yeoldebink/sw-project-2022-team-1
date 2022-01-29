@@ -12,8 +12,8 @@ public class OnSiteEntryMessage extends Message {
   public Patient patient;
   public QueuedAppointment q_appt;
 
-  public OnSiteEntryMessage(MessageType message_type, int id) {
-    super(message_type);
+  public OnSiteEntryMessage(int id) {
+    super(MessageType.REQUEST);
     this.id = id;
   }
 }

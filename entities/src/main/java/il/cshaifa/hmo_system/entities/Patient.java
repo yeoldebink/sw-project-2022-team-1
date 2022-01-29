@@ -2,6 +2,7 @@ package il.cshaifa.hmo_system.entities;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -57,5 +58,15 @@ public class Patient implements Serializable {
 
   public void setBirthday(LocalDateTime birthday) {
     this.birthday = birthday;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    return o instanceof Patient && ((Patient) o).id == id;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(id);
   }
 }

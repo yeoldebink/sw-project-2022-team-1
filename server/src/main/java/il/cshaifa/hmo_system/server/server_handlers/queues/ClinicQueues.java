@@ -8,6 +8,7 @@ import il.cshaifa.hmo_system.structs.QueuedAppointment;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class ClinicQueues {
@@ -97,37 +98,32 @@ public class ClinicQueues {
     clinicQueuesLock.lock();
     try {
       var appt_queue = clientQueues.get(client);
-      appt_queue.disconnectClient(client);
+      if (appt_queue != null) appt_queue.disconnectClient(client);
     } finally {
       clinicQueuesLock.unlock();
     }
   }
 
-  public static QueuedAppointment push(Appointment appointment) {
+  public static QueueUpdate push(Appointment appointment) {
     clinicQueuesLock.lock();
 
     try {
       var q_name = initQueue(appointment);
-      return clinicQueues.get(appointment.getClinic()).get(q_name).push(appointment);
+      var appt_queue = clinicQueues.get(appointment.getClinic()).get(q_name);
+      var q_appt = appt_queue.push(appointment);
+      return new QueueUpdate(q_appt, appt_queue.getList(), appt_queue.getConnectedClients());
     } finally {
       clinicQueuesLock.unlock();
     }
   }
 
-  public static QueuedAppointment pop(ConnectionToClient client) {
+  public static QueueUpdate pop(ConnectionToClient client) {
     clinicQueuesLock.lock();
 
     try {
-      return clientQueues.get(client).pop();
-    } finally {
-      clinicQueuesLock.unlock();
-    }
-  }
-
-  public static List<QueuedAppointment> getQueueAsList(ConnectionToClient client) {
-    clinicQueuesLock.lock();
-    try {
-      return clientQueues.get(client).getList();
+      var appt_queue = clientQueues.get(client);
+      var q_appt = appt_queue.pop();
+      return new QueueUpdate(q_appt, appt_queue.getList(), appt_queue.getConnectedClients());
     } finally {
       clinicQueuesLock.unlock();
     }

@@ -13,13 +13,19 @@
 <?import javafx.scene.control.ComboBox?>
 <AnchorPane prefWidth="500" xmlns="http://javafx.com/javafx/17"
   xmlns:fx="http://javafx.com/fxml/1"
-  fx:controller="il.cshaifa.hmo_system.on_site_client.gui.login.OnSiteLoginViewController" stylesheets="@../hmo_lite.css">
+  fx:controller="il.cshaifa.hmo_system.on_site_client.gui.login.OnSiteLoginViewController" stylesheets="@../hmo_lite_large.css">
   <VBox AnchorPane.bottomAnchor="10" AnchorPane.topAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10">
 
     <TextField fx:id="idTextField" promptText="ID" onAction="#requestLogin"
       onKeyPressed="#clearStatusText"/>
     <PasswordField fx:id="passwordField" promptText="Password" onAction="#requestLogin"
       onKeyPressed="#clearStatusText"/>
+
+    <ComboBox fx:id="clinicComboBox" promptText="Choose a clinic">
+      <VBox.margin>
+        <Insets top="10" />
+      </VBox.margin>
+    </ComboBox>
 
     <HBox spacing="15">
       <VBox.margin>
@@ -34,11 +40,5 @@
         <Label fx:id="statusLabel" />
       </VBox>
     </HBox>
-
-    <ComboBox fx:id="clinicComboBox" promptText="Choose a clinic">
-      <VBox.margin>
-        <Insets top="10" />
-      </VBox.margin>
-    </ComboBox>
   </VBox>
 </AnchorPane>

@@ -51,6 +51,11 @@
   -fx-font-size: 22px;
 }
 
+.menu {
+  -fx-font-family: "Helvetica Light";
+  -fx-font-size: 16px;
+}
+
 .root {
     /***************************************************************************
      *                                                                         *
@@ -63,7 +68,7 @@
 
     /* font-family */
     -fx-font-family: "Helvetica Light";
-    -fx-font-size: 18px;
+    -fx-font-size: 22px;
 
     /* A very light grey used for the background of windows.  See also
      * -fx-text-background-color, which should be used as the -fx-text-fill
