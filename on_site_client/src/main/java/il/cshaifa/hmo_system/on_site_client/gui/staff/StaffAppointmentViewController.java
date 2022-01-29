@@ -6,6 +6,7 @@ import il.cshaifa.hmo_system.on_site_client.events.ViewAppointmentEvent;
 import il.cshaifa.hmo_system.structs.QueuedAppointment;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import org.greenrobot.eventbus.EventBus;
@@ -38,8 +39,10 @@ public class StaffAppointmentViewController extends ViewController {
 
     updateCommentsButton.setOnAction(actionEvent -> {
       q_appt.appointment.setComments(commentsTextArea.getText());
-      EventBus.getDefault().post(new ViewAppointmentEvent(q_appt.appointment, this));
+      EventBus.getDefault().post(new ViewAppointmentEvent(q_appt, this));
     });
+
+    commentsTextArea.setWrapText(true);
 
     if (readonly) setReadOnly();
   }

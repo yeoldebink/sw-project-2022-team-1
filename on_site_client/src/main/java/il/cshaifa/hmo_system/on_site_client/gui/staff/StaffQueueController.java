@@ -3,8 +3,10 @@ package il.cshaifa.hmo_system.on_site_client.gui.staff;
 import il.cshaifa.hmo_system.client_base.base_controllers.Controller;
 import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client_base.utils.Utils;
+import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.on_site_client.HMOOnSiteClient;
 import il.cshaifa.hmo_system.on_site_client.events.StaffNextAppointmentEvent;
+import il.cshaifa.hmo_system.on_site_client.events.ViewAppointmentEvent;
 import il.cshaifa.hmo_system.structs.QueuedAppointment;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -47,16 +49,25 @@ public class StaffQueueController extends Controller {
 
       if (event.q_appt != null) {
         // popped appointment
-        var loader = new FXMLLoader(getClass().getResource(Utils.get_fxml(StaffAppointmentViewController.class)));
-        loader.setControllerFactory(c -> new StaffAppointmentViewController(event.q_appt, false));
-        Platform.runLater(() -> {
-          try {
-            Utils.openNewWindow(StaffAppointmentViewController.class, StaffAppointmentController.class, loader, true);
-          } catch (Exception exception) {
-            exception.printStackTrace();
-          }
-        });
+        viewAppointment(event.q_appt, false);
       }
     }
+  }
+
+  @Subscribe
+  public void onViewAppointmentEvent(ViewAppointmentEvent event) {
+    viewAppointment(event.q_appt, true);
+  }
+
+  private void viewAppointment(QueuedAppointment q_appt, boolean readonly) {
+    var loader = new FXMLLoader(getClass().getResource(Utils.get_fxml(StaffAppointmentViewController.class)));
+    loader.setControllerFactory(c -> new StaffAppointmentViewController(q_appt, readonly));
+    Platform.runLater(() -> {
+      try {
+        Utils.openNewWindow(StaffAppointmentViewController.class, StaffAppointmentController.class, loader, false);
+      } catch (Exception exception) {
+        exception.printStackTrace();
+      }
+      });
   }
 }

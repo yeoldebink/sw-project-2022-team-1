@@ -52,6 +52,7 @@ public class HandleSetAppointmentMessage extends MessageHandler {
     }
     class_message.appointment.setTaken(true);
     class_message.appointment.setLock_time(null);
+    class_message.appointment.setComments(appt_comments);
     session.update(class_message.appointment);
     return true;
   }
@@ -77,7 +78,6 @@ public class HandleSetAppointmentMessage extends MessageHandler {
     // lock the relevant appointment
     class_message.appointment.setLock_time(LocalDateTime.now().plusSeconds(330));
     class_message.appointment.setPatient(class_message.patient);
-    class_message.appointment.setComments(appt_comments);
     session.update(class_message.appointment);
 
     // release the other appointments by the patient

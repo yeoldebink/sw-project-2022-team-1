@@ -336,6 +336,8 @@ public class SetAppointmentViewController extends ViewController {
             (obs, oldStr, newStr) ->
                 testAppointmentsButton.setDisable(newStr == null || newStr.equals("")));
 
+    symptomsTextArea.setWrapText(true);
+
     testAppointmentsButton.setOnAction(
         (event) -> requestAppointments(new AppointmentType("COVID Test"), null));
   }

@@ -4,6 +4,7 @@ import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client_base.utils.Utils;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.on_site_client.events.StaffNextAppointmentEvent;
+import il.cshaifa.hmo_system.on_site_client.events.ViewAppointmentEvent;
 import il.cshaifa.hmo_system.structs.QueuedAppointment;
 import java.time.temporal.ChronoField;
 import java.util.List;
@@ -12,6 +13,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
@@ -39,6 +41,8 @@ public class StaffQueueViewController extends ViewController {
 
     private final User staff_member;
 
+    @FXML private ContextMenu queueContextMenu;
+
     public StaffQueueViewController(User staff_member) {
         this.staff_member = staff_member;
     }
@@ -60,6 +64,13 @@ public class StaffQueueViewController extends ViewController {
 
         call_next_patient_button.setOnAction(actionEvent -> EventBus.getDefault().post(
             StaffNextAppointmentEvent.nextAppointmentRequestEvent(this)));
+
+        queueContextMenu.getItems().get(0).setOnAction(actionEvent -> {
+            var appt = appt_table.getSelectionModel().getSelectedItem();
+            if (appt != null) {
+                EventBus.getDefault().post(new ViewAppointmentEvent(appt.getQ_appt(), this));
+            }
+        });
     }
 
     void setCellValueFactory() {
@@ -71,6 +82,12 @@ public class StaffQueueViewController extends ViewController {
     }
 
     void populateAppointmentsTable(List<QueuedAppointment> appt_list) {
+
+        while (queueContextMenu.isShowing()) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ignored) {}
+        }
 
         ArrayList<AppointmentPatientRow> appts_to_populate =
                 new ArrayList<AppointmentPatientRow>();
@@ -94,12 +111,15 @@ public class StaffQueueViewController extends ViewController {
         private final String patient_home_clinic;
         private final String patient_name;
 
-        public AppointmentPatientRow(QueuedAppointment q_app) {
-            this.place_in_line = q_app.place_in_line;
-            this.appt_time = Utils.prettifyLocalTime(q_app.appointment.getDate().toLocalTime());
-            this.appt_type_name = q_app.appointment.getType().getName();
-            this.patient_home_clinic = q_app.appointment.getPatient().getHome_clinic().getName();
-            this.patient_name = q_app.appointment.getPatient().getUser().toString();
+        private final QueuedAppointment q_appt;
+
+        public AppointmentPatientRow(QueuedAppointment q_appt) {
+            this.q_appt = q_appt;
+            this.place_in_line = q_appt.place_in_line;
+            this.appt_time = Utils.prettifyLocalTime(q_appt.appointment.getDate().toLocalTime());
+            this.appt_type_name = q_appt.appointment.getType().getName();
+            this.patient_home_clinic = q_appt.appointment.getPatient().getHome_clinic().getName();
+            this.patient_name = q_appt.appointment.getPatient().getUser().toString();
         }
 
         public String getPlace_in_line() {
@@ -120,6 +140,10 @@ public class StaffQueueViewController extends ViewController {
 
         public String getPatient_name() {
             return patient_name;
+        }
+
+        public QueuedAppointment getQ_appt() {
+            return q_appt;
         }
     }
 }

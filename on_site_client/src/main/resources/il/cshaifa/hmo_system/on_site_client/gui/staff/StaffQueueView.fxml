@@ -41,7 +41,7 @@
             </columnResizePolicy>
 
             <contextMenu>
-                <ContextMenu>
+                <ContextMenu fx:id="queueContextMenu">
                     <items>
                         <MenuItem text="View appointment details" />
                     </items>
