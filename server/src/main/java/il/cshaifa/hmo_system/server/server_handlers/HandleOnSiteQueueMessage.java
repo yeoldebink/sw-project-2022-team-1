@@ -80,6 +80,7 @@ public class HandleOnSiteQueueMessage extends MessageHandler {
       session.flush();
 
       class_message.q_appt = q_update.q_appt;
+      class_message.queue_timestamp = q_update.timestamp;
     }
   }
 }

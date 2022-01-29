@@ -111,8 +111,9 @@ public class HandleLoginMessage extends MessageHandler {
                   }
                 } else {
                   // this is an employee who needs to be connected to their patient queue
-                  ClinicQueues.connectToQueue(
-                      user, ((OnSiteLoginMessage) this.class_message).clinic, client);
+                  // connect and put their current queue in the message
+                  ((OnSiteLoginMessage) class_message).staff_member_queue =
+                      ClinicQueues.connectToQueue(user, ((OnSiteLoginMessage) this.class_message).clinic, client);
                 }
               }
 

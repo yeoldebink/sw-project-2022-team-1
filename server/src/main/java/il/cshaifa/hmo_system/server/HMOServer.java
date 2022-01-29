@@ -126,7 +126,7 @@ public class HMOServer extends AbstractServer {
 
       if (q_update != null) {
         // need to update all those clients
-        var q_msg = OnSiteQueueMessage.updateMessage(q_update.updated_queue);
+        var q_msg = OnSiteQueueMessage.updateMessage(q_update.updated_queue, q_update.timestamp);
         for (var _client : q_update.clients_to_update) {
           _client.sendToClient(q_msg);
         }
