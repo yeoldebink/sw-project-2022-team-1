@@ -3,7 +3,7 @@ package il.cshaifa.hmo_system.desktop_client.gui.patient_dashboard;
 import il.cshaifa.hmo_system.client_base.base_controllers.Controller;
 import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client_base.events.AppointmentListEvent;
-import il.cshaifa.hmo_system.client_base.utils.Utils;
+import il.cshaifa.hmo_system.client_base.utils.ClientUtils;
 import il.cshaifa.hmo_system.desktop_client.HMODesktopClient;
 import il.cshaifa.hmo_system.desktop_client.events.GreenPassStatusEvent;
 import il.cshaifa.hmo_system.desktop_client.events.MyClinicEvent;
@@ -46,7 +46,7 @@ public class PatientDashboardController extends Controller {
   @Subscribe
   public void onSetAppointmentEvent(SetAppointmentEvent event) {
     if (event.getSender() == this.view_controller) { // open the set appointments window
-      Utils.openNewSingletonWindow(
+      ClientUtils.openNewSingletonWindow(
           SetAppointmentViewController.class,
           SetAppointmentController.class,
           false,
@@ -58,7 +58,7 @@ public class PatientDashboardController extends Controller {
 
   @Subscribe
   public void onViewClinicEvent(MyClinicEvent event) {
-    Utils.openNewSingletonWindow(
+    ClientUtils.openNewSingletonWindow(
         MyClinicViewController.class,
         MyClinicController.class,
         false,
@@ -74,9 +74,9 @@ public class PatientDashboardController extends Controller {
     FXMLLoader loader =
         new FXMLLoader(
             getClass()
-                .getResource(Utils.get_fxml(PatientAppointmentHistoryListViewController.class)));
+                .getResource(ClientUtils.get_fxml(PatientAppointmentHistoryListViewController.class)));
 
-    Utils.openNewSingletonWindow(
+    ClientUtils.openNewSingletonWindow(
         PatientAppointmentHistoryListViewController.class,
         PatientAppointmentHistoryListController.class,
         false,
@@ -105,9 +105,9 @@ public class PatientDashboardController extends Controller {
       }
     } else {
       var loader =
-          new FXMLLoader(getClass().getResource(Utils.get_fxml(GreenPassViewController.class)));
+          new FXMLLoader(getClass().getResource(ClientUtils.get_fxml(GreenPassViewController.class)));
 
-      Utils.openNewSingletonWindow(
+      ClientUtils.openNewSingletonWindow(
           GreenPassViewController.class,
           GreenPassController.class,
           false,

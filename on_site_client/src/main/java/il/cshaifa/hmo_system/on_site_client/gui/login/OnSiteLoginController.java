@@ -6,7 +6,7 @@ import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client_base.events.ClinicEvent;
 import il.cshaifa.hmo_system.client_base.events.LoginEvent;
 import il.cshaifa.hmo_system.client_base.events.LoginEvent.Response;
-import il.cshaifa.hmo_system.client_base.utils.Utils;
+import il.cshaifa.hmo_system.client_base.utils.ClientUtils;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.on_site_client.HMOOnSiteClient;
 import il.cshaifa.hmo_system.on_site_client.events.CloseStationEvent;
@@ -18,13 +18,9 @@ import il.cshaifa.hmo_system.on_site_client.gui.staff.StaffQueueViewController;
 import java.io.IOException;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 import jdk.jshell.spi.ExecutionControl.NotImplementedException;
 import org.greenrobot.eventbus.EventBus;
@@ -102,8 +98,9 @@ public class OnSiteLoginController extends Controller {
   private void openMainScreenByRole(LoginEvent event) throws Exception {
     var user = event.userData;
     if (user.getRole().getName().equals("Clinic Manager")) { // open up the patient view
-      var loader = new FXMLLoader(getClass().getResource(Utils.get_fxml(OnSitePatientViewController.class)));
-      Utils.openNewWindow(OnSitePatientViewController.class, OnSitePatientController.class, loader, false);
+      var loader = new FXMLLoader(getClass().getResource(ClientUtils.get_fxml(OnSitePatientViewController.class)));
+      ClientUtils
+          .openNewWindow(OnSitePatientViewController.class, OnSitePatientController.class, loader, false);
     } else {
       var loader = new FXMLLoader(getClass().getResource(Utils.get_fxml(StaffQueueViewController.class)));
       loader.setControllerFactory(c -> new StaffQueueViewController(user));

@@ -1,6 +1,7 @@
 package il.cshaifa.hmo_system.server;
 
 import il.cshaifa.hmo_system.CommonEnums.OnSiteLoginAction;
+import il.cshaifa.hmo_system.Utils;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.Clinic;
@@ -62,10 +63,12 @@ public class HMOServer extends AbstractServer {
 
   public static Session session;
 
+  private final AppointmentReminderThread appt_reminder_thread;
+
   public HMOServer(int port) {
     super(port);
-    AppointmentReminder appointment_reminder = new AppointmentReminder();
-    appointment_reminder.start();
+    appt_reminder_thread = new AppointmentReminderThread();
+    appt_reminder_thread.start();
   }
 
   /**
@@ -184,19 +187,10 @@ public class HMOServer extends AbstractServer {
     }
   }
 
-  public static class AppointmentReminder extends Thread {
+  public static class AppointmentReminderThread extends Thread {
     @Override
     public void run() {
-      int current_hour = -1;
-      while (true){
-        try {
-          sleep(3600000);
-        } catch (InterruptedException e) {
-          e.printStackTrace();
-        }
-        while (current_hour == LocalDateTime.now().getHour()){}
-
-        current_hour = LocalDateTime.now().getHour();
+      while (true) {
         session = getSessionFactory().openSession();
         session.beginTransaction();
         CriteriaBuilder cb = session.getCriteriaBuilder();
@@ -212,16 +206,49 @@ public class HMOServer extends AbstractServer {
         for (Appointment appt : tommorows_appts){
           PrepareAndSendEmail(appt);
         }
+
+        try {
+          sleep(1000);
+        } catch (InterruptedException e) {
+          return;
+        }
       }
     }
 
     private void PrepareAndSendEmail(Appointment appt) {
       User currPatient = appt.getPatient().getUser();
+      var date_str = Utils.prettifyDateTime(appt.getDate());
+      var type_str = appt.getStaff_member() != null ? appt.getStaff_member().getRole().getName() : appt.getType().getName();
 
-      String subject = "Reminder for " + appt.getType().getName() + " appointment";
+      String subject = String.format("Your %s appointment - %s", type_str, date_str);
 
-      String bodyText = "Hello, " + currPatient.getFirstName() + ".\n This is a reminder that you have a " + appt.getType().getName() +
-              " appointment at " + appt.getDate();
+      String bodyText = String.format("""
+          Hello, %s
+          
+          This is an automated reminder that you have a %s appointment%s scheduled on %s.
+          
+          Clinic details:
+          -------------------
+          %s
+          %s
+          
+          Please be sure to arrive at the clinic between %s and %s.
+          
+          If you wish to cancel or reschedule your appointment please do so at your earliest
+          convenience via the desktop application or by phone at *2700.
+          
+          See you soon!
+          
+          ############################
+          This is an automated message. Do not reply to this email.""",
+          currPatient.getFirstName(),
+          type_str,
+          appt.getStaff_member() != null ? " with Dr. " + appt.getStaff_member().toString() : "",
+          date_str,
+          appt.getClinic().getName(),
+          appt.getClinic().getAddress(),
+          Utils.prettifyDateTime(appt.getDate().minusMinutes(15)),
+          Utils.prettifyDateTime(appt.getDate().plusHours(1)));
 
       EmailSender.SendEmail(currPatient.getEmail(), subject, bodyText);
     }

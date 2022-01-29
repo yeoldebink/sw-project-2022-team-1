@@ -4,7 +4,7 @@ import il.cshaifa.hmo_system.client_base.base_controllers.Controller;
 import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client_base.events.LoginEvent;
 import il.cshaifa.hmo_system.client_base.events.LoginEvent.Response;
-import il.cshaifa.hmo_system.client_base.utils.Utils;
+import il.cshaifa.hmo_system.client_base.utils.ClientUtils;
 import il.cshaifa.hmo_system.desktop_client.HMODesktopClient;
 import il.cshaifa.hmo_system.desktop_client.gui.manager_dashboard.ManagerDashboardController;
 import il.cshaifa.hmo_system.desktop_client.gui.manager_dashboard.ManagerDashboardViewController;
@@ -93,12 +93,12 @@ public class DesktopLoginController extends Controller {
       case ("HMO Manager"):
         FXMLLoader loader =
             new FXMLLoader(
-                getClass().getResource(Utils.get_fxml(ManagerDashboardViewController.class)));
+                getClass().getResource(ClientUtils.get_fxml(ManagerDashboardViewController.class)));
         loader.setControllerFactory(
             c -> {
               return new ManagerDashboardViewController(user);
             });
-        Utils.openNewWindow(
+        ClientUtils.openNewWindow(
             ManagerDashboardViewController.class, ManagerDashboardController.class, loader, true);
 
         break;
@@ -106,14 +106,14 @@ public class DesktopLoginController extends Controller {
       case ("Patient"):
         loader =
             new FXMLLoader(
-                getClass().getResource(Utils.get_fxml(PatientDashboardViewController.class)));
+                getClass().getResource(ClientUtils.get_fxml(PatientDashboardViewController.class)));
 
         loader.setControllerFactory(
             c ->
                 new PatientDashboardViewController(
                     HMODesktopClient.getClient().getConnected_patient()));
 
-        Utils.openNewWindow(
+        ClientUtils.openNewWindow(
             PatientDashboardViewController.class, PatientDashboardController.class, loader, false);
 
         break;

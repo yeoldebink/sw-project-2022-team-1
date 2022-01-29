@@ -1,9 +1,9 @@
 package il.cshaifa.hmo_system.on_site_client.gui.patient;
 
-import il.cshaifa.hmo_system.CommonEnums.OnSiteLoginAction;
 import il.cshaifa.hmo_system.client_base.base_controllers.Controller;
 import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
-import il.cshaifa.hmo_system.client_base.utils.Utils;
+import il.cshaifa.hmo_system.client_base.utils.ClientUtils;
+import il.cshaifa.hmo_system.Utils;
 import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.on_site_client.App;
@@ -18,7 +18,6 @@ import il.cshaifa.hmo_system.structs.QueuedAppointment;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
@@ -79,7 +78,7 @@ public class OnSitePatientController extends Controller {
     if (event.getSender().equals(this.view_controller)) {
 
       FXMLLoader loader =
-          new FXMLLoader(App.class.getResource(Utils.get_fxml(OnSiteLoginViewController.class)));
+          new FXMLLoader(App.class.getResource(ClientUtils.get_fxml(OnSiteLoginViewController.class)));
 
       Scene scene = new Scene(loader.load());
       Stage nstage = new Stage();

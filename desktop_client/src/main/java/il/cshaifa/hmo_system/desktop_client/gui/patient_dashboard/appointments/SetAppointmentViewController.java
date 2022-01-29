@@ -2,7 +2,7 @@ package il.cshaifa.hmo_system.desktop_client.gui.patient_dashboard.appointments;
 
 import il.cshaifa.hmo_system.CommonEnums.SetAppointmentAction;
 import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
-import il.cshaifa.hmo_system.client_base.utils.Utils;
+import il.cshaifa.hmo_system.Utils;
 import il.cshaifa.hmo_system.desktop_client.events.SetAppointmentEvent;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.AppointmentType;

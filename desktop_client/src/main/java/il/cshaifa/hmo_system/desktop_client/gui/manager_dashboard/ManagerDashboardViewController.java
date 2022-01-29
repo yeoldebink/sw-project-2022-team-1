@@ -2,7 +2,7 @@ package il.cshaifa.hmo_system.desktop_client.gui.manager_dashboard;
 
 import il.cshaifa.hmo_system.client_base.base_controllers.RoleDefinedViewController;
 import il.cshaifa.hmo_system.client_base.events.ClinicEvent;
-import il.cshaifa.hmo_system.client_base.utils.Utils;
+import il.cshaifa.hmo_system.client_base.utils.ClientUtils;
 import il.cshaifa.hmo_system.desktop_client.events.AddAppointmentEvent;
 import il.cshaifa.hmo_system.desktop_client.gui.manager_dashboard.clinic_administration.clinic_list_view.AdminClinicListViewController;
 import il.cshaifa.hmo_system.desktop_client.gui.manager_dashboard.clinic_administration.clinic_staff.ClinicStaffListViewController;
@@ -38,10 +38,10 @@ public class ManagerDashboardViewController extends RoleDefinedViewController {
 
   @FXML
   public void initialize() throws IOException {
-    var clinic_list = Utils.loadFXML(getClass(), AdminClinicListViewController.class);
-    var clinic_staff_list = Utils.loadFXML(getClass(), ClinicStaffListViewController.class);
+    var clinic_list = ClientUtils.loadFXML(getClass(), AdminClinicListViewController.class);
+    var clinic_staff_list = ClientUtils.loadFXML(getClass(), ClinicStaffListViewController.class);
     var report_list =
-        Utils.loadFXML(
+        ClientUtils.loadFXML(
             getClass(), ReportListViewController.class, c -> new ReportListViewController(role));
 
     clinic_list.pane.prefWidthProperty().bind(tabPane.widthProperty());

@@ -1,5 +1,6 @@
 package il.cshaifa.hmo_system.entities;
 
+import il.cshaifa.hmo_system.Utils;
 import java.io.Serializable;
 import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
@@ -39,8 +40,8 @@ public class User implements Serializable {
     this.email = email;
     this.phone = phone;
     this.role = role_id;
-    this.salt = HMOUtilities.generateSalt();
-    this.password = HMOUtilities.encodePassword(password, this.salt);
+    this.salt = Utils.generateSalt();
+    this.password = Utils.encodePassword(password, this.salt);
   }
 
   public User(User user) {
@@ -63,8 +64,8 @@ public class User implements Serializable {
   }
 
   public void setPassword(String password) throws NoSuchAlgorithmException {
-    this.salt = HMOUtilities.generateSalt();
-    this.password = HMOUtilities.encodePassword(password, this.salt);
+    this.salt = Utils.generateSalt();
+    this.password = Utils.encodePassword(password, this.salt);
   }
 
   public String getFirstName() {
