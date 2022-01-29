@@ -11,7 +11,6 @@ import il.cshaifa.hmo_system.messages.LoginMessage;
 import il.cshaifa.hmo_system.messages.OnSiteLoginMessage;
 import il.cshaifa.hmo_system.server.server_handlers.queues.ClinicQueues;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
-import java.awt.Desktop;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -26,14 +25,12 @@ public class HandleLoginMessage extends MessageHandler {
   public LoginMessage class_message;
 
   private static final ReentrantLock connection_maps_lock;
-  private static final HashMap<Integer, ConnectionToClient> connected_desktop_users;
-  private static final HashMap<ConnectionToClient, User> connected_desktop_clients;
+  private static final HashMap<User, ConnectionToClient> connected_desktop_users;
   private static final HashMap<ConnectionToClient, Clinic> onsite_connections;
   private static final HashMap<Clinic, HashSet<ConnectionToClient>> onsite_connections_by_clinic;
   static {
     connection_maps_lock = new ReentrantLock(true);
     connected_desktop_users = new HashMap<>();
-    connected_desktop_clients = new HashMap<>();
     onsite_connections = new HashMap<>();
     onsite_connections_by_clinic = new HashMap<>();
   }
@@ -143,11 +140,10 @@ public class HandleLoginMessage extends MessageHandler {
     connection_maps_lock.lock();
 
     try {
-      if(connected_desktop_users.containsKey(user.getId())) {
+      if(connected_desktop_users.containsKey(user)) {
         ((DesktopLoginMessage) this.class_message).already_logged_in = true;
       } else {
-        connected_desktop_users.put(user.getId(), client);
-        connected_desktop_clients.put(client, user);
+        connected_desktop_users.put(user, client);
       }
     } finally {
       connection_maps_lock.unlock();
@@ -224,20 +220,10 @@ public class HandleLoginMessage extends MessageHandler {
     connection_maps_lock.lock();
 
     try {
-      var user = connected_desktop_clients.remove(client);
-      if (user != null) connected_desktop_users.remove(user.getId());
+      connected_desktop_users.remove((User) client.getInfo("user"));
 
       var clinic = onsite_connections.remove(client);
       if (clinic != null) onsite_connections_by_clinic.get(clinic).remove(client);
-    } finally {
-      connection_maps_lock.unlock();
-    }
-  }
-
-  public static User connectedUser(ConnectionToClient client) {
-    connection_maps_lock.lock();
-    try {
-      return connected_desktop_clients.get(client);
     } finally {
       connection_maps_lock.unlock();
     }
