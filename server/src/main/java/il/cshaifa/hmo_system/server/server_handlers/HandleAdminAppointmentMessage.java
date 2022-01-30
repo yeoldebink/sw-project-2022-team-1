@@ -23,7 +23,6 @@ public class HandleAdminAppointmentMessage extends MessageHandler {
   private final CriteriaQuery<Appointment> cr;
   private final Root<Appointment> root;
 
-  private final static Logger LOGGER = Logger.getLogger(HandleAdminAppointmentMessage.class.getSimpleName());
 
   public HandleAdminAppointmentMessage(AdminAppointmentMessage message, Session session,
       ConnectionToClient client) {
@@ -64,9 +63,9 @@ public class HandleAdminAppointmentMessage extends MessageHandler {
     }
 
     if (class_message.success) {
-      LOGGER.info("SUCCESS");
+      logSuccess("Appointments created");
     } else {
-      LOGGER.info(String.format("FAILED [%s]", class_message.reject));
+      logFailure(class_message.reject.toString());
     }
   }
 

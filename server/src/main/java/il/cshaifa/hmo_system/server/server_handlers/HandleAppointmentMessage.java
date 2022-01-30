@@ -25,7 +25,6 @@ public class HandleAppointmentMessage extends MessageHandler {
   private final CriteriaQuery<Appointment> cr;
   private final Root<Appointment> root;
 
-  private final static Logger LOGGER = Logger.getLogger(HandleAppointmentMessage.class.getSimpleName());
 
   public HandleAppointmentMessage(AppointmentMessage message, Session session,
       ConnectionToClient client) {
@@ -46,7 +45,7 @@ public class HandleAppointmentMessage extends MessageHandler {
 
   @Override
   public void handleMessage() {
-    LOGGER.info(class_message.request.toString());
+    logInfo(class_message.request.toString());
 
     switch (class_message.request) {
       case CLINIC_APPOINTMENTS:

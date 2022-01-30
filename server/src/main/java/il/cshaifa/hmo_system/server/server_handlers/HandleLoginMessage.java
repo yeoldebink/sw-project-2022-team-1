@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Logger;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
@@ -28,6 +29,7 @@ public class HandleLoginMessage extends MessageHandler {
   private static final HashMap<User, ConnectionToClient> connected_desktop_users;
   private static final HashMap<ConnectionToClient, Clinic> onsite_connections;
   private static final HashMap<Clinic, HashSet<ConnectionToClient>> onsite_connections_by_clinic;
+
 
   static {
     connection_maps_lock = new ReentrantLock(true);
@@ -50,11 +52,11 @@ public class HandleLoginMessage extends MessageHandler {
     this.client.setInfo("user_str", String.format("%s [id: %s]", user.toString(), user.getId()));
     this.client.setInfo("user", user);
 
-    System.out.printf(
-        "User logged in: %s, %s {%s}%n",
-        client.getInfo("user_str"),
-        user.getRole().getName(),
-        this.class_message instanceof DesktopLoginMessage ? "Desktop" : "On-site");
+    logSuccess(
+        String.format("User logged in: %s, %s {%s}",
+            client.getInfo("user_str"),
+            user.getRole().getName(),
+            this.class_message instanceof DesktopLoginMessage ? "Desktop" : "On-site"));
   }
 
   /** If login successful will update the LoginMessage with user and his details */
@@ -145,6 +147,12 @@ public class HandleLoginMessage extends MessageHandler {
         break;
     }
 
+    if (this.class_message.user == null) {
+      logFailure(String.valueOf(class_message.id));
+    } else {
+      logSuccess(String.valueOf(class_message.id));
+    }
+
     if (!is_desktop || this.class_message.user == null) return;
 
     connection_maps_lock.lock();
@@ -152,6 +160,7 @@ public class HandleLoginMessage extends MessageHandler {
     try {
       if (connected_desktop_users.containsKey(user)) {
         ((DesktopLoginMessage) this.class_message).already_logged_in = true;
+        logFailure("ALREADY_LOGGED_IN");
       } else {
         connected_desktop_users.put(user, client);
       }
@@ -220,6 +229,7 @@ public class HandleLoginMessage extends MessageHandler {
           ioException.printStackTrace();
         }
       }
+      logInfo(String.format("Clinic closed : %s", clinic));
     } finally {
       connection_maps_lock.unlock();
     }

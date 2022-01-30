@@ -7,12 +7,15 @@ import il.cshaifa.hmo_system.messages.ClinicStaffMessage;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import java.util.HashSet;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 
 public class HandleStaffMessage extends MessageHandler {
-  private ClinicStaffMessage class_message;
+
+
+  private final ClinicStaffMessage class_message;
 
   public HandleStaffMessage(ClinicStaffMessage message, Session session,
       ConnectionToClient client) {
@@ -46,5 +49,7 @@ public class HandleStaffMessage extends MessageHandler {
         class_message.staff_list.add(new ClinicStaff(new Clinic(), staff_member));
       }
     }
+
+    logSuccess("Pulled staff list");
   }
 }

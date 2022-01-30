@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
@@ -29,6 +30,7 @@ public class HandleReportMessage extends MessageHandler {
   private List<Appointment> relevant_appointments;
   private static String[] clinics_general_services;
 
+
   public HandleReportMessage(ReportMessage message, Session session,
       ConnectionToClient client) {
     super(message, session, client);
@@ -43,22 +45,31 @@ public class HandleReportMessage extends MessageHandler {
 
   @Override
   public void handleMessage() {
-    if (class_message.report_type == ReportType.APPOINTMENT_ATTENDANCE) {
-      initServicesReport();
-      getAttendanceReport();
-    } else if (class_message.report_type == ReportType.AVERAGE_WAIT_TIMES) {
-      initStaffMemberReport();
-      getAverageWaitTimeReport();
-    } else if (class_message.report_type == ReportType.MISSED_APPOINTMENTS) {
-      initServicesReport();
-      getMissedAppointmentsReport();
+    switch (class_message.report_type) {
+      case APPOINTMENT_ATTENDANCE:
+        initServicesReport();
+        getAttendanceReport();
+        break;
+
+      case AVERAGE_WAIT_TIMES:
+        initStaffMemberReport();
+        getAverageWaitTimeReport();
+        break;
+
+      case MISSED_APPOINTMENTS:
+        initServicesReport();
+        getMissedAppointmentsReport();
+        break;
     }
+
     class_message.reports = new ArrayList<>();
     for (LocalDate date : daily_reports_map.keySet()) {
       for (int clinic_id : daily_reports_map.get(date).keySet()) {
         class_message.reports.add(daily_reports_map.get(date).get(clinic_id));
       }
     }
+
+    logSuccess(class_message.report_type.toString());
   }
 
   private void initServicesReport() {

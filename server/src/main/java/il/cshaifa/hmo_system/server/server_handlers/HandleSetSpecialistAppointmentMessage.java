@@ -11,11 +11,13 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 
 public class HandleSetSpecialistAppointmentMessage extends MessageHandler {
+
 
   private final SetSpecialistAppointmentMessage class_message;
 
@@ -28,12 +30,17 @@ public class HandleSetSpecialistAppointmentMessage extends MessageHandler {
 
   @Override
   public void handleMessage() {
-    if (class_message.request == SetSpecialistAppointmentMessage.RequestType.GET_ROLES) {
-      getSpecialistRoleList();
-    } else if (class_message.request
-        == SetSpecialistAppointmentMessage.RequestType.GET_APPOINTMENTS) {
-      getSpecialistAppointments();
+    switch (class_message.request) {
+      case GET_ROLES:
+        getSpecialistRoleList();
+        break;
+
+      case GET_APPOINTMENTS:
+        getSpecialistAppointments();
+        break;
     }
+
+    logSuccess(class_message.request.toString());
   }
 
   private void getSpecialistRoleList() {

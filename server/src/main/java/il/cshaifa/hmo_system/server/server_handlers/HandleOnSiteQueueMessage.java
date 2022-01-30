@@ -10,11 +10,13 @@ import il.cshaifa.hmo_system.server.server_handlers.queues.ClinicQueues;
 import il.cshaifa.hmo_system.server.server_handlers.queues.QueueUpdate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.logging.Logger;
 import org.hibernate.Session;
 
 public class HandleOnSiteQueueMessage extends MessageHandler {
   OnSiteQueueMessage class_message;
   public QueueUpdate q_update;
+
 
   public HandleOnSiteQueueMessage(Message msg, Session session, ConnectionToClient client) {
     super(msg, session, client);
@@ -41,6 +43,7 @@ public class HandleOnSiteQueueMessage extends MessageHandler {
     if (class_message.appt_type.getName().equals("Lab Tests")
         && (now.isBefore(LocalTime.of(8, 0)) || now.isAfter(LocalTime.of(10, 0)))) {
       this.class_message.rejection_reason = OnSiteQueueRejectionReason.OUT_OF_HOURS;
+      logFailure(OnSiteQueueRejectionReason.OUT_OF_HOURS.toString());
       return;
     }
 
@@ -67,6 +70,8 @@ public class HandleOnSiteQueueMessage extends MessageHandler {
       session.delete(appointment);
       session.flush();
       this.class_message.rejection_reason = OnSiteQueueRejectionReason.ALREADY_IN_QUEUE;
+    } else {
+      logSuccess(String.format("Entered queue: %s %s", class_message.patient.getUser(), q_update.q_appt.place_in_line));
     }
   }
 
@@ -82,6 +87,8 @@ public class HandleOnSiteQueueMessage extends MessageHandler {
       class_message.q_appt = q_update.q_appt;
       class_message.updated_queue = q_update.updated_queue;
       class_message.queue_timestamp = q_update.timestamp;
+
+      logSuccess(String.format("Called: %s %s", q_update.q_appt.appointment.getPatient().getUser(), q_update.q_appt.place_in_line));
     }
   }
 }

@@ -6,6 +6,7 @@ import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.StaffAssignmentMessage;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
@@ -22,11 +23,17 @@ public class HandleStaffAssignmentMessage extends MessageHandler {
 
   @Override
   public void handleMessage() {
-    if (class_message.action == StaffAssignmentAction.ASSIGN) {
-      assignStaff();
-    } else if (class_message.action == StaffAssignmentAction.UNASSIGN) {
-      unassignStaff();
+    switch (class_message.action) {
+      case ASSIGN:
+        assignStaff();
+        break;
+
+      case UNASSIGN:
+        unassignStaff();
+        break;
     }
+
+    logSuccess(class_message.action.toString());
   }
 
   private void assignStaff() {

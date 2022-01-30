@@ -3,9 +3,12 @@ package il.cshaifa.hmo_system.server.server_handlers;
 import il.cshaifa.hmo_system.messages.Message;
 import il.cshaifa.hmo_system.messages.UpdateAppointmentMessage;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
+import java.util.logging.Logger;
 import org.hibernate.Session;
 
 public class HandleUpdateAppointmentMessage extends MessageHandler {
+
+
   public UpdateAppointmentMessage class_message;
 
   public HandleUpdateAppointmentMessage(Message msg, Session session,
@@ -18,5 +21,7 @@ public class HandleUpdateAppointmentMessage extends MessageHandler {
   public void handleMessage() {
     session.update(class_message.appointment);
     session.flush();
+
+    logSuccess("Updated appointment details");
   }
 }

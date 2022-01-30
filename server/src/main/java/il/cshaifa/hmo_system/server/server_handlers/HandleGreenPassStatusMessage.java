@@ -21,7 +21,6 @@ public class HandleGreenPassStatusMessage extends MessageHandler {
   private final CriteriaQuery<Appointment> cr;
   private final Root<Appointment> root;
 
-  private static final Logger LOGGER = Logger.getLogger(HandleGreenPassStatusMessage.class.getSimpleName());
 
   public HandleGreenPassStatusMessage(Message message, Session session,
       ConnectionToClient client) {
@@ -35,7 +34,7 @@ public class HandleGreenPassStatusMessage extends MessageHandler {
   @Override
   public void handleMessage() {
     class_message.status = getGreenPassStatus();
-    LOGGER.info(class_message.status.toString());
+    logInfo(class_message.status.toString());
   }
 
   /** Updates the status of patients COVID-19 green-pass */

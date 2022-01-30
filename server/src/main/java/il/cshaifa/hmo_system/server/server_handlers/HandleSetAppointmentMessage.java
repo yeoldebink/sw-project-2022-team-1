@@ -6,6 +6,7 @@ import il.cshaifa.hmo_system.messages.SetAppointmentMessage;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
@@ -14,6 +15,7 @@ import org.hibernate.UnresolvableObjectException;
 public class HandleSetAppointmentMessage extends MessageHandler {
   public SetAppointmentMessage class_message;
   public String appt_comments;
+
 
   public HandleSetAppointmentMessage(SetAppointmentMessage message, Session session,
       ConnectionToClient client) {
@@ -36,15 +38,28 @@ public class HandleSetAppointmentMessage extends MessageHandler {
       return;
     }
 
-    if (class_message.action == SetAppointmentAction.TAKE) {
-      class_message.success = takeAppointment();
-    } else if (class_message.action == SetAppointmentAction.LOCK) {
-      class_message.success = lockAppointment();
-    } else if (class_message.action == SetAppointmentAction.RELEASE) {
-      releaseAppointment(class_message.appointment);
-      class_message.success = true;
+    switch (class_message.action) {
+      case LOCK:
+        class_message.success = lockAppointment();
+        break;
+
+      case TAKE:
+        class_message.success = takeAppointment();
+        break;
+
+      case RELEASE:
+        releaseAppointment(class_message.appointment);
+        class_message.success = true;
+        break;
     }
+
     session.flush();
+
+    if (class_message.success) {
+      logSuccess(class_message.action.toString());
+    } else {
+      logFailure(class_message.action.toString());
+    }
   }
 
   private boolean takeAppointment() {

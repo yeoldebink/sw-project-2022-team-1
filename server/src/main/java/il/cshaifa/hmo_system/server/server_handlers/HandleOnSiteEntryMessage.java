@@ -9,6 +9,7 @@ import il.cshaifa.hmo_system.server.server_handlers.queues.ClinicQueues;
 import il.cshaifa.hmo_system.server.server_handlers.queues.QueueUpdate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
@@ -17,6 +18,7 @@ public class HandleOnSiteEntryMessage extends MessageHandler {
 
   OnSiteEntryMessage class_message;
   public QueueUpdate q_update;
+
 
   public HandleOnSiteEntryMessage(
       OnSiteEntryMessage message, Session session, ConnectionToClient client) {
@@ -30,6 +32,7 @@ public class HandleOnSiteEntryMessage extends MessageHandler {
     User user = session.get(User.class, class_message.id);
 
     if (user != null && user.getRole().getName().equals("Patient")) {
+      logSuccess(user.toString());
       Patient patient = getUserPatient(user);
       class_message.patient = patient;
 
@@ -45,6 +48,7 @@ public class HandleOnSiteEntryMessage extends MessageHandler {
 
       this.q_update = ClinicQueues.push(patient_appt);
       this.class_message.q_appt = q_update.q_appt;
+      logSuccess(String.format("Entered queue: %s %s", user, q_update.q_appt.place_in_line));
     }
   }
 

@@ -13,6 +13,8 @@ public abstract class MessageHandler {
   public ConnectionToClient client;
   protected static CriteriaBuilder cb;
 
+  private final static Logger LOGGER = Logger.getLogger(MessageHandler.class.getSimpleName());
+
   public MessageHandler(Message msg, Session session, ConnectionToClient client) {
     this.client = client;
     this.message = msg;
@@ -23,6 +25,18 @@ public abstract class MessageHandler {
   }
 
   public abstract void handleMessage();
+
+  protected void logInfo(String msg) {
+    LOGGER.info(String.format("%s %s %s : %s", getClass().getSimpleName(), client.getInfo("user_str"), client.getInetAddress(), msg));
+  }
+
+  protected void logFailure(String msg) {
+    logInfo(String.format(" * FAILURE [%s]", msg));
+  }
+
+  protected void logSuccess(String msg) {
+    logInfo(String.format("SUCCESS [%s]", msg));
+  }
 
   /** @param entity_list Entities to be added to DB */
   protected void saveEntities(List<?> entity_list) {
