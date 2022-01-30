@@ -218,6 +218,10 @@ public class ReportListViewController extends RoleDefinedViewController {
     EventBus.getDefault().post(report_event);
   }
 
+  /**
+   * Sets split pane with report pane (occurs after report request
+   * @param reportPane Pane to be set
+   */
   public void setViewedReport(Pane reportPane) {
     this.splitPane.getItems().set(2, reportPane);
   }

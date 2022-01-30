@@ -492,6 +492,11 @@ public class SetAppointmentViewController extends ViewController {
     }
   }
 
+  /**
+   * Emits event to retrieve appointments by appointment type & role
+   * @param apptType
+   * @param role
+   */
   public void requestAppointments(AppointmentType apptType, Role role) {
     lastUpdatedAppointmentType = apptType;
     lastUpdatedSpecialistRole = role;

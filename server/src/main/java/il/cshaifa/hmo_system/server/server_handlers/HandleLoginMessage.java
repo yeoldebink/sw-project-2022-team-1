@@ -44,6 +44,7 @@ public class HandleLoginMessage extends MessageHandler {
     this.client = client;
   }
 
+  /** @return Returns Clinic associated with client */
   public static Clinic stationClinic(ConnectionToClient client) {
     return onsite_connections.get(client);
   }
@@ -182,6 +183,7 @@ public class HandleLoginMessage extends MessageHandler {
     return session.createQuery(cr).getResultList().get(0);
   }
 
+  /** Adds (clinic, client) information to relevant data structures */
   public void connectOnSiteStation() {
     connection_maps_lock.lock();
     try {
@@ -194,6 +196,7 @@ public class HandleLoginMessage extends MessageHandler {
     }
   }
 
+  /** Removes client information from relevant data structures */
   public static void disconnectOnSiteStation(ConnectionToClient client) {
     connection_maps_lock.lock();
     try {
@@ -209,6 +212,7 @@ public class HandleLoginMessage extends MessageHandler {
     }
   }
 
+  /** Removes clinic information from relevant data structures */
   public void closeClinic() {
     connection_maps_lock.lock();
     try {
@@ -228,6 +232,7 @@ public class HandleLoginMessage extends MessageHandler {
     }
   }
 
+  /** Removes client information from relevant data structures */
   public static void disconnectClient(ConnectionToClient client) {
     connection_maps_lock.lock();
 
