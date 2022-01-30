@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
@@ -23,6 +24,8 @@ public class HandleAppointmentMessage extends MessageHandler {
   public static Map<String, Long> max_future_appointments;
   private final CriteriaQuery<Appointment> cr;
   private final Root<Appointment> root;
+
+  private final static Logger LOGGER = Logger.getLogger(HandleAppointmentMessage.class.getSimpleName());
 
   public HandleAppointmentMessage(AppointmentMessage message, Session session,
       ConnectionToClient client) {
@@ -43,16 +46,28 @@ public class HandleAppointmentMessage extends MessageHandler {
 
   @Override
   public void handleMessage() {
-    if (class_message.request == RequestType.CLINIC_APPOINTMENTS) {
-      getClinicAppointments();
-    } else if (class_message.request == RequestType.PATIENT_HISTORY) {
-      getPatientHistory();
-    } else if (class_message.request == RequestType.PATIENT_NEXT_APPOINTMENT) {
-      getPatientNextAppointment();
-    } else if (class_message.request == RequestType.STAFF_MEMBER_DAILY_APPOINTMENTS) {
-      getStaffDailyAppointments();
-    } else if (class_message.request == RequestType.STAFF_FUTURE_APPOINTMENTS) {
-      getStaffFutureAppointments();
+    LOGGER.info(class_message.request.toString());
+
+    switch (class_message.request) {
+      case CLINIC_APPOINTMENTS:
+        getClinicAppointments();
+        break;
+
+      case PATIENT_HISTORY:
+        getPatientHistory();
+        break;
+
+      case PATIENT_NEXT_APPOINTMENT:
+        getPatientNextAppointment();
+        break;
+
+      case STAFF_MEMBER_DAILY_APPOINTMENTS:
+        getStaffDailyAppointments();
+        break;
+
+      case STAFF_FUTURE_APPOINTMENTS:
+        getStaffFutureAppointments();
+        break;
     }
   }
 

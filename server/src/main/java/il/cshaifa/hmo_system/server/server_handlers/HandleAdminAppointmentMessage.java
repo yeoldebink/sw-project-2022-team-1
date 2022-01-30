@@ -64,9 +64,9 @@ public class HandleAdminAppointmentMessage extends MessageHandler {
     }
 
     if (class_message.success) {
-      logSuccess();
+      LOGGER.info("SUCCESS");
     } else {
-      logFailure(class_message.reject.toString());
+      LOGGER.info(String.format("FAILED [%s]", class_message.reject));
     }
   }
 
@@ -117,7 +117,6 @@ public class HandleAdminAppointmentMessage extends MessageHandler {
       if (appt == null) {
         class_message.success = false;
         class_message.reject = AddAppointmentRejectionReason.CLINIC_CLOSED;
-        logInfo("Appointments outside clinic hours");
         return;
       }
       new_appointments.add(appt);

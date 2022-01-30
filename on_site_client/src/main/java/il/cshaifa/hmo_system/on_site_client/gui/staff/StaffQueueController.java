@@ -44,6 +44,7 @@ public class StaffQueueController extends Controller {
       }
     } else if (event.getSender().equals(HMOOnSiteClient.getClient())) {
       queue_lock.lock();
+      if (queue_timestamp.isAfter(event.queue_timestamp)) return;
       try {
         ((StaffQueueViewController) view_controller).populateAppointmentsTable(event.updated_queue);
       } finally {

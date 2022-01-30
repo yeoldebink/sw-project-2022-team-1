@@ -47,16 +47,4 @@ public abstract class MessageHandler {
     }
     session.flush();
   }
-
-  protected void logInfo(String msg) {
-    Logger.getLogger(this.getClass().getSimpleName()).info(String.format("%s %s : %s", client.getInfo("user_str"), client.getInetAddress(), msg));
-  }
-
-  protected void logSuccess() {
-    logInfo("SUCCESS");
-  }
-
-  protected void logFailure(String msg) {
-    logInfo(String.format("FAILED [%s]", msg));
-  }
 }

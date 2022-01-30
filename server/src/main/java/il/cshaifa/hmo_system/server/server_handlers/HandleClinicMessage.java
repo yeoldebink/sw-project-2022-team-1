@@ -3,12 +3,15 @@ package il.cshaifa.hmo_system.server.server_handlers;
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
+import java.util.logging.Logger;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 
 public class HandleClinicMessage extends MessageHandler {
   ClinicMessage class_message;
+
+  private static final Logger LOGGER = Logger.getLogger(HandleClinicMessage.class.getSimpleName());
 
   public HandleClinicMessage(ClinicMessage message, Session session,
       ConnectionToClient client) {
@@ -31,6 +34,7 @@ public class HandleClinicMessage extends MessageHandler {
 
   /** Get clinics list */
   protected void getClinics() {
+    LOGGER.info("Getting clinic list");
     CriteriaQuery<Clinic> cr = cb.createQuery(Clinic.class);
     Root<Clinic> root = cr.from(Clinic.class);
     cr.select(root);
@@ -39,6 +43,7 @@ public class HandleClinicMessage extends MessageHandler {
 
   /** Update changed clinics to DB */
   private void updateClinics() {
+    LOGGER.info("Updating clinics");
     updateEntities(class_message.clinics);
   }
 }

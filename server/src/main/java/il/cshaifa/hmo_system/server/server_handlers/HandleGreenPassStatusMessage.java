@@ -1,5 +1,6 @@
 package il.cshaifa.hmo_system.server.server_handlers;
 
+import com.mysql.cj.log.Log;
 import il.cshaifa.hmo_system.CommonEnums.GreenPassStatus;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.Patient;
@@ -8,6 +9,7 @@ import il.cshaifa.hmo_system.messages.Message;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
@@ -18,6 +20,8 @@ public class HandleGreenPassStatusMessage extends MessageHandler {
   private final Patient patient;
   private final CriteriaQuery<Appointment> cr;
   private final Root<Appointment> root;
+
+  private static final Logger LOGGER = Logger.getLogger(HandleGreenPassStatusMessage.class.getSimpleName());
 
   public HandleGreenPassStatusMessage(Message message, Session session,
       ConnectionToClient client) {
@@ -31,6 +35,7 @@ public class HandleGreenPassStatusMessage extends MessageHandler {
   @Override
   public void handleMessage() {
     class_message.status = getGreenPassStatus();
+    LOGGER.info(class_message.status.toString());
   }
 
   /** Updates the status of patients COVID-19 green-pass */
