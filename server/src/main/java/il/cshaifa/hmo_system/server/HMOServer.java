@@ -45,6 +45,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -60,6 +61,8 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
 public class HMOServer extends AbstractServer {
+
+  private static final Logger LOGGER = java.util.logging.Logger.getLogger(HMOServer.class.getSimpleName());
 
   public static Session session;
 
@@ -108,13 +111,13 @@ public class HMOServer extends AbstractServer {
 
       Class<?> msg_class = msg.getClass();
       if (msg_class == AdminAppointmentMessage.class) {
-        handler = new HandleAdminAppointmentMessage((AdminAppointmentMessage) msg, session);
+        handler = new HandleAdminAppointmentMessage((AdminAppointmentMessage) msg, session, client);
       } else if (msg_class == AppointmentMessage.class) {
-        handler = new HandleAppointmentMessage((AppointmentMessage) msg, session);
+        handler = new HandleAppointmentMessage((AppointmentMessage) msg, session, client);
       } else if (msg_class == ClinicMessage.class) {
-        handler = new HandleClinicMessage((ClinicMessage) msg, session);
+        handler = new HandleClinicMessage((ClinicMessage) msg, session, client);
       } else if (msg_class == GreenPassStatusMessage.class) {
-        handler = new HandleGreenPassStatusMessage((GreenPassStatusMessage) msg, session);
+        handler = new HandleGreenPassStatusMessage((GreenPassStatusMessage) msg, session, client);
       } else if (msg instanceof LoginMessage) { // because of subclasses
         handler = new HandleLoginMessage((LoginMessage) msg, session, client);
       } else if (msg_class == OnSiteEntryMessage.class) {
@@ -122,19 +125,20 @@ public class HMOServer extends AbstractServer {
       } else if (msg_class == OnSiteQueueMessage.class) {
         handler = new HandleOnSiteQueueMessage((OnSiteQueueMessage) msg, session, client);
       } else if (msg_class == ReportMessage.class) {
-        handler = new HandleReportMessage((ReportMessage) msg, session);
+        handler = new HandleReportMessage((ReportMessage) msg, session, client);
       } else if (msg_class == SetAppointmentMessage.class) {
-        handler = new HandleSetAppointmentMessage((SetAppointmentMessage) msg, session);
+        handler = new HandleSetAppointmentMessage((SetAppointmentMessage) msg, session, client);
       } else if (msg_class == SetSpecialistAppointmentMessage.class) {
         handler =
             new HandleSetSpecialistAppointmentMessage(
-                (SetSpecialistAppointmentMessage) msg, session);
+                (SetSpecialistAppointmentMessage) msg, session, client);
       } else if (msg_class == StaffAssignmentMessage.class) {
-        handler = new HandleStaffAssignmentMessage((StaffAssignmentMessage) msg, session);
+        handler = new HandleStaffAssignmentMessage((StaffAssignmentMessage) msg, session, client);
       } else if (msg_class == ClinicStaffMessage.class) {
-        handler = new HandleStaffMessage((ClinicStaffMessage) msg, session);
+        handler = new HandleStaffMessage((ClinicStaffMessage) msg, session, client);
       } else if (msg_class == UpdateAppointmentMessage.class) {
-        handler = new HandleUpdateAppointmentMessage((UpdateAppointmentMessage) msg, session);
+        handler = new HandleUpdateAppointmentMessage((UpdateAppointmentMessage) msg, session,
+            client);
       }
 
       assert handler != null;
@@ -171,9 +175,9 @@ public class HMOServer extends AbstractServer {
   @Override
   protected synchronized void clientDisconnected(ConnectionToClient client) {
     var user_str = client.getInfo("user_str");
-    System.out.printf(
-        "Client disconnected: [%s] @ %s\n",
-        user_str != null ? user_str : "not logged in", client.getInfo("inet"));
+    LOGGER.info(String.format(
+        "Client disconnected: [%s] @ %s",
+        user_str != null ? user_str : "not logged in", client.getInfo("inet")));
 
     HandleLoginMessage.disconnectClient(client);
     ClinicQueues.disconnectClient(client);
@@ -185,7 +189,7 @@ public class HMOServer extends AbstractServer {
   protected void clientConnected(ConnectionToClient client) {
     super.clientConnected(client);
     client.setInfo("inet", client.getInetAddress());
-    System.out.printf("Client connected: %s\n", client.getInetAddress());
+    LOGGER.info(String.format("Client connected: %s", client.getInetAddress()));
   }
 
   @Override
@@ -196,10 +200,13 @@ public class HMOServer extends AbstractServer {
   }
 
   public static class AppointmentReminderThread extends Thread {
+
+    public static Logger LOGGER = Logger.getLogger(AppointmentReminderThread.class.getSimpleName());
+
     @Override
     public void run() {
       while (true) {
-        System.out.println("Performing email reminders...");
+        LOGGER.info("Performing email reminders...");
         session = getSessionFactory().openSession();
         session.beginTransaction();
         CriteriaBuilder cb = session.getCriteriaBuilder();
@@ -216,8 +223,8 @@ public class HMOServer extends AbstractServer {
         session.close();
 
         for (Appointment appt : tommorows_appts) {
+          System.out.printf("Sending email for appointment id %s%n", appt.getId());
           prepareAndSendEmail(appt);
-          System.out.printf("Sent email for appointment id %s%n", appt.getId());
         }
 
         try {
@@ -273,12 +280,15 @@ public class HMOServer extends AbstractServer {
       try {
         EmailSender.sendEmail(currPatient.getEmail(), subject, bodyText);
       } catch (IllegalArgumentException e) {
-        System.out.printf("Invalid email address for patient %s%n", currPatient);
+        LOGGER.warning(String.format("Invalid email address for patient %s%n", currPatient));
       }
     }
   }
 
   public static class EmailSender {
+
+    private static final Logger LOGGER = Logger.getLogger(EmailSender.class.getSimpleName());
+
     private static final String host = "***REMOVED***";
     private static final String port = "2525";
     private static final String user_name = "***REMOVED***";
@@ -288,7 +298,7 @@ public class HMOServer extends AbstractServer {
 
     public static void sendEmail(String to, String subject, String bodyText)
         throws IllegalArgumentException {
-      if (!EmailValidator.getInstance().isValid(to)) throw new IllegalArgumentException();
+      if (!EmailValidator.getInstance().isValid(to)) {throw new IllegalArgumentException();}
 
       // Get system properties & setup mail server
       Properties properties = System.getProperties();
@@ -319,8 +329,9 @@ public class HMOServer extends AbstractServer {
         message.setText(bodyText);
 
         Transport.send(message);
-        System.out.println("Sent email successfully....");
+        LOGGER.info("Sent email successfully....");
       } catch (MessagingException mex) {
+        LOGGER.severe(String.format("Error while sending email to %s", to));
         mex.printStackTrace();
       }
     }

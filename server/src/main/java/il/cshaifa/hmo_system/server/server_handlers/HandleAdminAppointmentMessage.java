@@ -4,6 +4,7 @@ import il.cshaifa.hmo_system.CommonEnums.AddAppointmentRejectionReason;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.messages.AdminAppointmentMessage;
 import il.cshaifa.hmo_system.messages.AdminAppointmentMessage.RequestType;
+import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
@@ -21,8 +23,11 @@ public class HandleAdminAppointmentMessage extends MessageHandler {
   private final CriteriaQuery<Appointment> cr;
   private final Root<Appointment> root;
 
-  public HandleAdminAppointmentMessage(AdminAppointmentMessage message, Session session) {
-    super(message, session);
+  private final static Logger LOGGER = Logger.getLogger(HandleAdminAppointmentMessage.class.getSimpleName());
+
+  public HandleAdminAppointmentMessage(AdminAppointmentMessage message, Session session,
+      ConnectionToClient client) {
+    super(message, session, client);
     this.class_message = (AdminAppointmentMessage) this.message;
     if (appointment_duration == null) {
       appointment_duration = new HashMap<>();
@@ -56,6 +61,12 @@ public class HandleAdminAppointmentMessage extends MessageHandler {
       }
     } else if (class_message.request == RequestType.DELETE) {
       deleteAppointments();
+    }
+
+    if (class_message.success) {
+      logSuccess();
+    } else {
+      logFailure(class_message.reject.toString());
     }
   }
 
@@ -106,6 +117,7 @@ public class HandleAdminAppointmentMessage extends MessageHandler {
       if (appt == null) {
         class_message.success = false;
         class_message.reject = AddAppointmentRejectionReason.CLINIC_CLOSED;
+        logInfo("Appointments outside clinic hours");
         return;
       }
       new_appointments.add(appt);

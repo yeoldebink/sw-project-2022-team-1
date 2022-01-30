@@ -4,6 +4,7 @@ import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.ClinicStaff;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.ClinicStaffMessage;
+import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import java.util.HashSet;
 import java.util.List;
 import javax.persistence.criteria.CriteriaQuery;
@@ -13,8 +14,9 @@ import org.hibernate.Session;
 public class HandleStaffMessage extends MessageHandler {
   private ClinicStaffMessage class_message;
 
-  public HandleStaffMessage(ClinicStaffMessage message, Session session) {
-    super(message, session);
+  public HandleStaffMessage(ClinicStaffMessage message, Session session,
+      ConnectionToClient client) {
+    super(message, session, client);
     this.class_message = (ClinicStaffMessage) this.message;
   }
 

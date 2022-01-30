@@ -4,6 +4,7 @@ import il.cshaifa.hmo_system.CommonEnums.StaffAssignmentAction;
 import il.cshaifa.hmo_system.entities.ClinicStaff;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.StaffAssignmentMessage;
+import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import java.util.List;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -13,8 +14,9 @@ public class HandleStaffAssignmentMessage extends MessageHandler {
 
   private final StaffAssignmentMessage class_message;
 
-  public HandleStaffAssignmentMessage(StaffAssignmentMessage message, Session session) {
-    super(message, session);
+  public HandleStaffAssignmentMessage(StaffAssignmentMessage message, Session session,
+      ConnectionToClient client) {
+    super(message, session, client);
     this.class_message = (StaffAssignmentMessage) this.message;
   }
 

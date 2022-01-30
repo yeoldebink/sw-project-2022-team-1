@@ -3,6 +3,7 @@ package il.cshaifa.hmo_system.server.server_handlers;
 import il.cshaifa.hmo_system.CommonEnums.SetAppointmentAction;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.messages.SetAppointmentMessage;
+import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.criteria.CriteriaQuery;
@@ -14,8 +15,9 @@ public class HandleSetAppointmentMessage extends MessageHandler {
   public SetAppointmentMessage class_message;
   public String appt_comments;
 
-  public HandleSetAppointmentMessage(SetAppointmentMessage message, Session session) {
-    super(message, session);
+  public HandleSetAppointmentMessage(SetAppointmentMessage message, Session session,
+      ConnectionToClient client) {
+    super(message, session, client);
     this.class_message = (SetAppointmentMessage) this.message;
   }
 

@@ -36,12 +36,9 @@ public class HandleLoginMessage extends MessageHandler {
     onsite_connections_by_clinic = new HashMap<>();
   }
 
-  private final ConnectionToClient client;
-
   public HandleLoginMessage(LoginMessage message, Session session, ConnectionToClient client) {
-    super(message, session);
+    super(message, session, client);
     this.class_message = (LoginMessage) this.message;
-    this.client = client;
   }
 
   public static Clinic stationClinic(ConnectionToClient client) {

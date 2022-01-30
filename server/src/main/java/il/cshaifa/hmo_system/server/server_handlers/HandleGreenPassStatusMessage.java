@@ -5,6 +5,7 @@ import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.messages.GreenPassStatusMessage;
 import il.cshaifa.hmo_system.messages.Message;
+import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.criteria.CriteriaQuery;
@@ -18,8 +19,9 @@ public class HandleGreenPassStatusMessage extends MessageHandler {
   private final CriteriaQuery<Appointment> cr;
   private final Root<Appointment> root;
 
-  public HandleGreenPassStatusMessage(Message message, Session session) {
-    super(message, session);
+  public HandleGreenPassStatusMessage(Message message, Session session,
+      ConnectionToClient client) {
+    super(message, session, client);
     this.class_message = (GreenPassStatusMessage) this.message;
     this.patient = ((GreenPassStatusMessage) message).patient;
     cr = cb.createQuery(Appointment.class);

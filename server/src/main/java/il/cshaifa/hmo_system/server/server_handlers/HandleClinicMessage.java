@@ -2,6 +2,7 @@ package il.cshaifa.hmo_system.server.server_handlers;
 
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
+import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
@@ -9,8 +10,9 @@ import org.hibernate.Session;
 public class HandleClinicMessage extends MessageHandler {
   ClinicMessage class_message;
 
-  public HandleClinicMessage(ClinicMessage message, Session session) {
-    super(message, session);
+  public HandleClinicMessage(ClinicMessage message, Session session,
+      ConnectionToClient client) {
+    super(message, session, client);
     this.class_message = (ClinicMessage) this.message;
   }
 

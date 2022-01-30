@@ -4,6 +4,7 @@ import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.Role;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.SetSpecialistAppointmentMessage;
+import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -19,8 +20,9 @@ public class HandleSetSpecialistAppointmentMessage extends MessageHandler {
   private final SetSpecialistAppointmentMessage class_message;
 
   public HandleSetSpecialistAppointmentMessage(
-      SetSpecialistAppointmentMessage message, Session session) {
-    super(message, session);
+      SetSpecialistAppointmentMessage message, Session session,
+      ConnectionToClient client) {
+    super(message, session, client);
     this.class_message = (SetSpecialistAppointmentMessage) this.message;
   }
 

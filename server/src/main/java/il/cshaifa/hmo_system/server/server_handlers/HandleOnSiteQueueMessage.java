@@ -14,11 +14,10 @@ import org.hibernate.Session;
 
 public class HandleOnSiteQueueMessage extends MessageHandler {
   OnSiteQueueMessage class_message;
-  private final ConnectionToClient client;
   public QueueUpdate q_update;
 
   public HandleOnSiteQueueMessage(Message msg, Session session, ConnectionToClient client) {
-    super(msg, session);
+    super(msg, session, client);
     class_message = (OnSiteQueueMessage) this.message;
     this.client = client;
   }

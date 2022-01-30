@@ -8,6 +8,7 @@ import il.cshaifa.hmo_system.messages.ReportMessage.ReportType;
 import il.cshaifa.hmo_system.reports.DailyAppointmentTypesReport;
 import il.cshaifa.hmo_system.reports.DailyAverageWaitTimeReport;
 import il.cshaifa.hmo_system.reports.DailyReport;
+import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -28,8 +29,9 @@ public class HandleReportMessage extends MessageHandler {
   private List<Appointment> relevant_appointments;
   private static String[] clinics_general_services;
 
-  public HandleReportMessage(ReportMessage message, Session session) {
-    super(message, session);
+  public HandleReportMessage(ReportMessage message, Session session,
+      ConnectionToClient client) {
+    super(message, session, client);
     this.class_message = (ReportMessage) this.message;
     cr = cb.createQuery(Appointment.class);
     root = cr.from(Appointment.class);

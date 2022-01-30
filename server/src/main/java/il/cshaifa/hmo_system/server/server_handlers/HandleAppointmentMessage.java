@@ -3,6 +3,7 @@ package il.cshaifa.hmo_system.server.server_handlers;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.messages.AppointmentMessage;
 import il.cshaifa.hmo_system.messages.AppointmentMessage.*;
+import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,8 +24,9 @@ public class HandleAppointmentMessage extends MessageHandler {
   private final CriteriaQuery<Appointment> cr;
   private final Root<Appointment> root;
 
-  public HandleAppointmentMessage(AppointmentMessage message, Session session) {
-    super(message, session);
+  public HandleAppointmentMessage(AppointmentMessage message, Session session,
+      ConnectionToClient client) {
+    super(message, session, client);
     this.class_message = (AppointmentMessage) this.message;
     if (max_future_appointments == null) {
       max_future_appointments = new HashMap<>();
