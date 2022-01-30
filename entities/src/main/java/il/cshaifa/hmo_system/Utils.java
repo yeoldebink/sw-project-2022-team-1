@@ -6,6 +6,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.function.Function;
 
 public class Utils {
@@ -37,8 +38,6 @@ public class Utils {
   }
 
   public static String prettifyDateTime(LocalDateTime date) {
-    Function<Integer, String> prettyInt = i -> i < 10 ? "0" + i.toString() : i.toString();
-
     return String.format(
         "%s, %02d %s %s %02d:%02d",
         // day of week and month in 3-letter format
@@ -46,6 +45,13 @@ public class Utils {
         date.getDayOfMonth(),
         date.getMonth().toString().substring(0, 3),
         date.getYear(),
+        date.getHour(),
+        date.getMinute());
+  }
+
+  public static String prettifyTime(LocalTime date) {
+    return String.format(
+        "%02d:%02d",
         date.getHour(),
         date.getMinute());
   }

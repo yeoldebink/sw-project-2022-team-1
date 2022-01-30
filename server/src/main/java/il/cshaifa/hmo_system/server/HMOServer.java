@@ -266,8 +266,8 @@ public class HMOServer extends AbstractServer {
               date_str,
               appt.getClinic().getName(),
               appt.getClinic().getAddress(),
-              Utils.prettifyDateTime(appt.getDate().minusMinutes(15)),
-              Utils.prettifyDateTime(appt.getDate().plusHours(1)));
+              Utils.prettifyTime(appt.getDate().minusMinutes(15).toLocalTime()),
+              Utils.prettifyTime(appt.getDate().plusHours(1).toLocalTime()));
 
       EmailSender.SendEmail(currPatient.getEmail(), subject, bodyText);
     }
@@ -285,9 +285,12 @@ public class HMOServer extends AbstractServer {
       // Get system properties & setup mail server
       Properties properties = System.getProperties();
       properties.setProperty("mail.smtp.host", host);
-      properties.setProperty("mail.smtp.auth", "true");
-      properties.setProperty("mail.smtp.ssl.trust", host);
+//      properties.setProperty("mail.smtp.auth", "true");
+//      properties.setProperty("mail.smtp.ssl.trust", host);
       properties.setProperty("mail.smtp.port", port);
+      properties.setProperty("mail.smtp.ssl.enable", "false");
+      properties.setProperty("java.net.preferIPv4Stack", "true");
+      properties.setProperty("mail.smtp.auth", "true");
 
       try {
         javax.mail.Session session =
