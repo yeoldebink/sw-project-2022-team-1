@@ -61,6 +61,9 @@ public class ReportListViewController extends RoleDefinedViewController {
     }
   }
 
+  /**
+   * Updates view by report type and User role
+   */
   @FXML
   public void initialize() {
     clinicList.setCellFactory(
@@ -185,6 +188,10 @@ public class ReportListViewController extends RoleDefinedViewController {
     }
   }
 
+  /**
+   * Emits event requesting reports chosen through the view
+   * @param event
+   */
   @FXML
   public void requestReports(ActionEvent event) {
     // clear the pane and the list
@@ -224,6 +231,10 @@ public class ReportListViewController extends RoleDefinedViewController {
       this.reportTypeName = reportTypeName;
     }
 
+    /**
+     * Override of String.toString
+     * @return The report type name
+     */
     @Override
     public String toString() {
       return this.reportTypeName;

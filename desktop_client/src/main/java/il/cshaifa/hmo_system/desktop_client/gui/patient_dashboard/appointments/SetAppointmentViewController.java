@@ -371,10 +371,18 @@ public class SetAppointmentViewController extends ViewController {
     apptDatePickerParent = newParent;
   }
 
+  /**
+   * Populates specialist roles combo box
+   * @param specialistRoles Roles that will populate the combo box
+   */
   public void populateSpecialistRoles(List<Role> specialistRoles) {
     spTypeComboBox.getItems().setAll(specialistRoles);
   }
 
+  /**
+   * Populates doctor combo box
+   * @param appointments Data used during combo box population
+   */
   public void populateSpecialistData(List<Appointment> appointments) {
     appointmentsByDoctorAndClinic = new HashMap<>();
 
@@ -397,6 +405,10 @@ public class SetAppointmentViewController extends ViewController {
     spDoctorComboBox.setVisible(true);
   }
 
+  /**
+   * Populates appointment list in view
+   * @param appointments Appointments that will populate the view
+   */
   public void populateAppointments(List<Appointment> appointments) {
     if (appointments == null || appointments.size() == 0) {
       errorLabel.setVisible(true);
@@ -414,6 +426,11 @@ public class SetAppointmentViewController extends ViewController {
     } else populateAppointmentDates(appointments, true);
   }
 
+  /**
+   * Populates appointment dates in view date picker
+   * @param appointments Appointment list containing dates
+   * @param showDates Decide whether to show datepicker on current pane
+   */
   public void populateAppointmentDates(List<Appointment> appointments, boolean showDates) {
     // hash appts by date for the picker
     appointmentsByDate = new HashMap<>();
@@ -449,6 +466,10 @@ public class SetAppointmentViewController extends ViewController {
     switchToPane(appointmentsTablePane);
   }
 
+  /**
+   * Emits event requesting appointment registration using appointment selected in view
+   * @param event
+   */
   @FXML
   public void takeAppointment(ActionEvent event) {
     var appt = appointmentsTable.getSelectionModel().getSelectedItem().getAppointment();
@@ -461,6 +482,10 @@ public class SetAppointmentViewController extends ViewController {
         .post(new SetAppointmentEvent(this, SetAppointmentAction.TAKE, patient, appt));
   }
 
+  /**
+   * Expands selected pane
+   * @param pane Pane to be expanded
+   */
   public void switchToPane(Object pane) {
     for (var p : stackPane.getChildren()) {
       p.setVisible(p.equals(pane));
@@ -483,6 +508,12 @@ public class SetAppointmentViewController extends ViewController {
     switchToPane(chooseApptTypeAccordion);
   }
 
+  /**
+   * Depending on if appointment registration was successful, displays response in view, and closes the view
+   * @param success Indicates whether appointment registration was successful
+   * @param dialogX
+   * @param dialogY
+   */
   public void takeAppointment(boolean success, int dialogX, int dialogY) {
     Stage stage = new Stage();
     VBox vbox = new VBox();
@@ -578,6 +609,7 @@ public class SetAppointmentViewController extends ViewController {
       return String.format(
           "%s • %s %s", clinic.getName(), doctor.getFirstName(), doctor.getLastName());
     }
+
 
     public User getDoctor() {
       return doctor;

@@ -61,6 +61,10 @@ public class ManagerDashboardViewController extends RoleDefinedViewController {
     applyRoleBehavior();
   }
 
+  /**
+   * Emits event requesting to open the edit clinic dialog
+   * @param event
+   */
   @FXML
   public void editMyClinicHours(ActionEvent event) {
     ClinicEvent clinic_event = new ClinicEvent((Clinic) null, this);
@@ -88,14 +92,26 @@ public class ManagerDashboardViewController extends RoleDefinedViewController {
     return reportListViewController;
   }
 
+  /**
+   * Emits event requesting to open add appointment view of Flu Vaccine appointment type
+   * @param actionEvent
+   */
   public void addFluVaccinceAppt(ActionEvent actionEvent) {
     addTestOrVaccineAppointments(new AppointmentType("Flu Vaccine"));
   }
 
+  /**
+   * Emits event requesting to open add appointment view of COVID Vaccine appointment type
+   * @param actionEvent
+   */
   public void addCovidVaccinceAppt(ActionEvent actionEvent) {
     addTestOrVaccineAppointments(new AppointmentType("COVID Vaccine"));
   }
 
+  /**
+   * Emits event requesting to open add appointment view of COVID Test appointment type
+   * @param actionEvent
+   */
   public void addCovidTests(ActionEvent actionEvent) {
     addTestOrVaccineAppointments(new AppointmentType("COVID Test"));
   }

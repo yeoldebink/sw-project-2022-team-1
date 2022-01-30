@@ -2,8 +2,9 @@ package il.cshaifa.hmo_system.desktop_client.gui.manager_dashboard.clinic_admini
 
 import il.cshaifa.hmo_system.entities.User;
 
-// Extends the User entity with a boolean field to indicate whether this user
-// is assigned to this clinic or not
+/**
+ * Extends the User entity with a boolean field to indicate whether this user is assigned to this clinic or not
+ */
 public class AssignedUser extends User {
   private final Boolean assigned;
 

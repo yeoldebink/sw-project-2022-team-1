@@ -27,6 +27,13 @@ public class AdminClinicListViewController extends ViewController {
 
   @FXML
   public void initialize() {
+    setCellValueFactory();
+  }
+
+  /**
+   * Binds table column values to class getters
+   */
+  void setCellValueFactory() {
     name.setCellValueFactory(new PropertyValueFactory<>("Name"));
     address.setCellValueFactory(new PropertyValueFactory<>("Address"));
     sun_hours.setCellValueFactory(new PropertyValueFactory<>("Sun_hours"));
@@ -41,12 +48,20 @@ public class AdminClinicListViewController extends ViewController {
   @FXML
   void showAddClinicDialog(ActionEvent event) {}
 
+  /**
+   * Emits event to open the edit clinic dialog of the clinic selected in the view
+   * @param event
+   */
   @FXML
   void showEditClinicDialog(ActionEvent event) {
     var clinic = clinicTable.getSelectionModel().getSelectedItem();
     EventBus.getDefault().post(new ClinicEvent(clinic, this));
   }
 
+  /**
+   * Populates clinic table view with clinics
+   * @param clinics Clinics to populate the table view
+   */
   void populateClinicTable(ArrayList<Clinic> clinics) {
     // fill the table
     clinicTable.getItems().setAll(clinics);

@@ -47,6 +47,10 @@ public class AddAppointmentsViewController extends ViewController {
     }
   }
 
+  /**
+   * Emits an event that requests appointments to be created
+   * @param actionEvent
+   */
   @FXML
   void requestCreateAppointments(ActionEvent actionEvent) {
     // Disable button to prevent spam
@@ -75,6 +79,10 @@ public class AddAppointmentsViewController extends ViewController {
     }
   }
 
+  /**
+   * Sets error message and enables view Create Appointment button
+   * @param message
+   */
   public void setErrorMessage(String message) {
     error_text.setText(message);
     create_appts.setDisable(false);

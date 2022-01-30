@@ -24,6 +24,9 @@ public class MyClinicViewController extends ViewController {
     this.clinic = clinic;
   }
 
+  /**
+   * Sets view data
+   */
   @FXML
   public void initialize() {
     clinicName.setText(clinic.getName());
