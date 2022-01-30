@@ -1,5 +1,6 @@
 package il.cshaifa.hmo_system.client_base;
 
+import il.cshaifa.hmo_system.Constants;
 import il.cshaifa.hmo_system.client_base.events.AppointmentListEvent;
 import il.cshaifa.hmo_system.client_base.events.ClinicEvent;
 import il.cshaifa.hmo_system.client_base.events.LoginEvent;
@@ -13,6 +14,7 @@ import il.cshaifa.hmo_system.entities.Warning;
 import il.cshaifa.hmo_system.messages.AppointmentMessage;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
 import il.cshaifa.hmo_system.messages.DesktopLoginMessage;
+import il.cshaifa.hmo_system.messages.InitConstantsMessage;
 import il.cshaifa.hmo_system.messages.LoginMessage;
 import il.cshaifa.hmo_system.messages.Message.MessageType;
 import il.cshaifa.hmo_system.messages.OnSiteLoginMessage;
@@ -54,6 +56,8 @@ public abstract class HMOClient extends AbstractClient {
         handleClinicMessage((ClinicMessage) message);
       } else if (message.getClass().equals(AppointmentMessage.class)) {
         handleAppointmentMessage((AppointmentMessage) message);
+      } else if (message.getClass().equals(InitConstantsMessage.class)) {
+        Constants.init(((InitConstantsMessage) message).appointment_types, ((InitConstantsMessage) message).roles);
       }
     }
   }

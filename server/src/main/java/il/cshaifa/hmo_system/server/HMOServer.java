@@ -14,6 +14,7 @@ import il.cshaifa.hmo_system.messages.AppointmentMessage;
 import il.cshaifa.hmo_system.messages.ClinicMessage;
 import il.cshaifa.hmo_system.messages.ClinicStaffMessage;
 import il.cshaifa.hmo_system.messages.GreenPassStatusMessage;
+import il.cshaifa.hmo_system.messages.InitConstantsMessage;
 import il.cshaifa.hmo_system.messages.LoginMessage;
 import il.cshaifa.hmo_system.messages.Message.MessageType;
 import il.cshaifa.hmo_system.messages.OnSiteEntryMessage;
@@ -42,6 +43,7 @@ import il.cshaifa.hmo_system.server.server_handlers.MessageHandler;
 import il.cshaifa.hmo_system.server.server_handlers.queues.ClinicQueues;
 import il.cshaifa.hmo_system.server.server_handlers.queues.QueueUpdate;
 import java.io.EOFException;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Properties;
@@ -69,10 +71,14 @@ public class HMOServer extends AbstractServer {
 
   private final AppointmentReminderThread appt_reminder_thread;
 
+  private List<AppointmentType> appointment_types;
+  private List<Role> roles;
+
   public HMOServer(int port) {
     super(port);
     appt_reminder_thread = new AppointmentReminderThread();
     appt_reminder_thread.start();
+    initConstants();
   }
 
   /**
@@ -99,6 +105,8 @@ public class HMOServer extends AbstractServer {
 
   private void initConstants() {
     session = getSessionFactory().openSession();
+    session.beginTransaction();
+
     var cb = session.getCriteriaBuilder();
 
     // appointment types
@@ -106,12 +114,19 @@ public class HMOServer extends AbstractServer {
     var troot = tcr.from(AppointmentType.class);
     tcr.select(troot);
 
+    appointment_types = session.createQuery(tcr).getResultList();
+
     // roles
     var rcr = cb.createQuery(Role.class);
     var rroot = rcr.from(Role.class);
     rcr.select(rroot);
 
-    Constants.init(session.createQuery(tcr).getResultList(), session.createQuery(rcr).getResultList());
+    roles = session.createQuery(rcr).getResultList();
+
+    Constants.init(appointment_types, roles);
+
+    session.flush();
+    session.close();
   }
 
   /**
@@ -208,6 +223,11 @@ public class HMOServer extends AbstractServer {
     super.clientConnected(client);
     client.setInfo("inet", client.getInetAddress());
     LOGGER.info(String.format("Client connected: %s", client.getInetAddress()));
+    try {
+      client.sendToClient(new InitConstantsMessage(appointment_types, roles));
+    } catch (IOException ioException) {
+      ioException.printStackTrace();
+    }
   }
 
   @Override
@@ -225,7 +245,7 @@ public class HMOServer extends AbstractServer {
     public void run() {
       while (true) {
         LOGGER.info("Performing email reminders...");
-        session = getSessionFactory().openSession();
+        var session = getSessionFactory().openSession();
         session.beginTransaction();
         CriteriaBuilder cb = session.getCriteriaBuilder();
         CriteriaQuery<Appointment> cr = cb.createQuery(Appointment.class);

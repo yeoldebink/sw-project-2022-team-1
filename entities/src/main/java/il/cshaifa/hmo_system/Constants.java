@@ -96,7 +96,6 @@ public class Constants implements Serializable {
   public static HashMap<String, AppointmentType> APPOINTMENT_TYPES;
   public static HashMap<String, Role> ROLES;
 
-
   // Maps
   public static Map<AppointmentType, Long> FUTURE_APPT_CUTOFF_WEEKS;
   public static Map<AppointmentType, Long> APPT_DURATION;

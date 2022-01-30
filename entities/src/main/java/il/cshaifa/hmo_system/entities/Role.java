@@ -1,6 +1,7 @@
 package il.cshaifa.hmo_system.entities;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,7 +11,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "roles")
 public class Role implements Serializable {
-  @Id // TODO: use name as primary key
+  @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
 
@@ -42,5 +43,15 @@ public class Role implements Serializable {
 
   public void setIs_specialist(boolean is_specialist) {
     this.is_specialist = is_specialist;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    return o instanceof Role && ((Role) o).name.equals(name);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(name);
   }
 }
