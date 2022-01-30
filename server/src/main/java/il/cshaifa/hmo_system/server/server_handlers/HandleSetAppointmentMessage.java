@@ -12,6 +12,9 @@ import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.UnresolvableObjectException;
 
+import static il.cshaifa.hmo_system.Constants.PATIENT_COL;
+import static il.cshaifa.hmo_system.Constants.TAKEN_COL;
+
 public class HandleSetAppointmentMessage extends MessageHandler {
   public SetAppointmentMessage class_message;
   public String appt_comments;
@@ -89,7 +92,7 @@ public class HandleSetAppointmentMessage extends MessageHandler {
     CriteriaQuery<Appointment> cr = cb.createQuery(Appointment.class);
     Root<Appointment> root = cr.from(Appointment.class);
     cr.select(root)
-        .where(cb.isFalse(root.get("taken")), cb.equal(root.get("patient"), class_message.patient));
+        .where(cb.isFalse(root.get(TAKEN_COL)), cb.equal(root.get(PATIENT_COL), class_message.patient));
     List<Appointment> users_locked_appointments = session.createQuery(cr).getResultList();
 
     // lock the relevant appointment

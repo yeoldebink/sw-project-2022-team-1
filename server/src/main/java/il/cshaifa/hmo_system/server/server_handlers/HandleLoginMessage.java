@@ -22,6 +22,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 
+import static il.cshaifa.hmo_system.Constants.CLINIC_COL;
+import static il.cshaifa.hmo_system.Constants.MANAGER_USER_COL;
+import static il.cshaifa.hmo_system.Constants.USER_COL;
+
 public class HandleLoginMessage extends MessageHandler {
   public LoginMessage class_message;
 
@@ -173,10 +177,10 @@ public class HandleLoginMessage extends MessageHandler {
     CriteriaQuery<Clinic> cr = cb.createQuery(Clinic.class);
     if (user.getRole().getName().equals("Clinic Manager")) {
       Root<Clinic> root = cr.from(Clinic.class);
-      cr.select(root).where(cb.equal(root.get("manager_user"), user));
+      cr.select(root).where(cb.equal(root.get(MANAGER_USER_COL), user));
     } else {
       Root<ClinicStaff> root = cr.from(ClinicStaff.class);
-      cr.select(root.get("clinic")).where(cb.equal(root.get("user"), user));
+      cr.select(root.get(CLINIC_COL)).where(cb.equal(root.get(USER_COL), user));
     }
     return session.createQuery(cr).getResultList();
   }
@@ -184,7 +188,7 @@ public class HandleLoginMessage extends MessageHandler {
   private Patient getUserPatient(User user) {
     CriteriaQuery<Patient> cr = cb.createQuery(Patient.class);
     Root<Patient> root = cr.from(Patient.class);
-    cr.select(root).where(cb.equal(root.get("user"), user));
+    cr.select(root).where(cb.equal(root.get(USER_COL), user));
     return session.createQuery(cr).getResultList().get(0);
   }
 
@@ -239,7 +243,7 @@ public class HandleLoginMessage extends MessageHandler {
     connection_maps_lock.lock();
 
     try {
-      connected_desktop_users.remove((User) client.getInfo("user"));
+      connected_desktop_users.remove((User) client.getInfo(USER_COL));
 
       var clinic = onsite_connections.remove(client);
       if (clinic != null) onsite_connections_by_clinic.get(clinic).remove(client);

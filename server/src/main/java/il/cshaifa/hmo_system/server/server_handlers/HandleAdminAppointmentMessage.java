@@ -17,6 +17,11 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 
+import static il.cshaifa.hmo_system.Constants.APPT_DATE_COL;
+import static il.cshaifa.hmo_system.Constants.CLINIC_COL;
+import static il.cshaifa.hmo_system.Constants.STAFF_MEMBER_COL;
+import static il.cshaifa.hmo_system.Constants.TYPE_COL;
+
 public class HandleAdminAppointmentMessage extends MessageHandler {
   private final AdminAppointmentMessage class_message;
   private static Map<String, Long> appointment_duration;
@@ -77,10 +82,10 @@ public class HandleAdminAppointmentMessage extends MessageHandler {
 
     cr.select(root)
         .where(
-            cb.equal(root.get("clinic"), class_message.clinic),
-            cb.equal(root.get("type").get("name"), class_message.appt_type.getName()),
+            cb.equal(root.get(CLINIC_COL), class_message.clinic),
+            cb.equal(root.get(TYPE_COL), class_message.appt_type),
             cb.between(
-                root.get("appt_date"), class_message.start_datetime, end_datetime.minusSeconds(1)));
+                root.get(APPT_DATE_COL), class_message.start_datetime, end_datetime.minusSeconds(1)));
     if (session.createQuery(cr).getResultList().size() > 0) {
       class_message.success = false;
       class_message.reject = AddAppointmentRejectionReason.OVERLAPPING;
@@ -134,9 +139,9 @@ public class HandleAdminAppointmentMessage extends MessageHandler {
 
     cr.select(root)
         .where(
-            cb.equal(root.get("staff_member"), class_message.staff_member),
+            cb.equal(root.get(STAFF_MEMBER_COL), class_message.staff_member),
             cb.between(
-                root.get("appt_date"),
+                root.get(APPT_DATE_COL),
                 class_message.start_datetime.minusMinutes(duration).plusSeconds(1),
                 end_datetime.minusSeconds(1)));
     if (session.createQuery(cr).getResultList().size() > 0) {

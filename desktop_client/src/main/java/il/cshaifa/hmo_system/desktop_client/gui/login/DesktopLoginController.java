@@ -18,6 +18,10 @@ import javafx.stage.Stage;
 import jdk.jshell.spi.ExecutionControl.NotImplementedException;
 import org.greenrobot.eventbus.Subscribe;
 
+import static il.cshaifa.hmo_system.Constants.CLINIC_MANAGER;
+import static il.cshaifa.hmo_system.Constants.HMO_MANAGER;
+import static il.cshaifa.hmo_system.Constants.PATIENT;
+
 public class DesktopLoginController extends Controller {
 
   public DesktopLoginController(ViewController view_controller, Stage stage) {
@@ -89,8 +93,8 @@ public class DesktopLoginController extends Controller {
     var role_name = user.getRole().getName();
 
     switch (role_name) {
-      case ("Clinic Manager"):
-      case ("HMO Manager"):
+      case (CLINIC_MANAGER):
+      case (HMO_MANAGER):
         FXMLLoader loader =
             new FXMLLoader(
                 getClass().getResource(ClientUtils.get_fxml(ManagerDashboardViewController.class)));
@@ -103,7 +107,7 @@ public class DesktopLoginController extends Controller {
 
         break;
 
-      case ("Patient"):
+      case (PATIENT):
         loader =
             new FXMLLoader(
                 getClass().getResource(ClientUtils.get_fxml(PatientDashboardViewController.class)));

@@ -63,6 +63,9 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
+import static il.cshaifa.hmo_system.Constants.APPT_DATE_COL;
+import static il.cshaifa.hmo_system.Constants.TAKEN_COL;
+
 public class HMOServer extends AbstractServer {
 
   private static final Logger LOGGER = java.util.logging.Logger.getLogger(HMOServer.class.getSimpleName());
@@ -253,10 +256,10 @@ public class HMOServer extends AbstractServer {
         cr.select(root)
             .where(
                 cb.between(
-                    root.get("appt_date"),
+                    root.get(APPT_DATE_COL),
                     LocalDateTime.now().plusHours(23),
                     LocalDateTime.now().plusHours(24)),
-                cb.isTrue(root.get("taken")));
+                cb.isTrue(root.get(TAKEN_COL)));
         List<Appointment> tommorows_appts = session.createQuery(cr).getResultList();
         session.close();
 

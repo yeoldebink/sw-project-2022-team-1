@@ -7,10 +7,14 @@ import il.cshaifa.hmo_system.messages.ClinicStaffMessage;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import java.util.HashSet;
 import java.util.List;
-import java.util.logging.Logger;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
+
+import static il.cshaifa.hmo_system.Constants.NAME_COL;
+import static il.cshaifa.hmo_system.Constants.PATIENT;
+import static il.cshaifa.hmo_system.Constants.ROLE;
+import static il.cshaifa.hmo_system.Constants.ROLE_COL;
 
 public class HandleStaffMessage extends MessageHandler {
 
@@ -40,8 +44,9 @@ public class HandleStaffMessage extends MessageHandler {
     user_cr
         .select(user_root)
         .where(
-            cb.notLike(user_root.get("role").get("name"), "%Manager%"),
-            cb.notEqual(user_root.get("role").get("name"), "Patient"));
+            cb.notLike(user_root.get(ROLE_COL).get(NAME_COL), "%Manager%"),
+            cb.notEqual(user_root.get(ROLE_COL), ROLE(PATIENT))
+        );
     List<User> all_staff = session.createQuery(user_cr).getResultList();
 
     for (User staff_member : all_staff) {

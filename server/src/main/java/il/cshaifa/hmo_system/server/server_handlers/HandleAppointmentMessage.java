@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,15 @@ import java.util.logging.Logger;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
+
+import static il.cshaifa.hmo_system.Constants.APPT_DATE_COL;
+import static il.cshaifa.hmo_system.Constants.CLINIC_COL;
+import static il.cshaifa.hmo_system.Constants.LOCK_TIME_COL;
+import static il.cshaifa.hmo_system.Constants.PATIENT_COL;
+import static il.cshaifa.hmo_system.Constants.STAFF_MEMBER_COL;
+import static il.cshaifa.hmo_system.Constants.TAKEN_COL;
+import static il.cshaifa.hmo_system.Constants.TYPE_COL;
+import static il.cshaifa.hmo_system.Constants.UNSTAFFED_APPT_TYPES;
 
 public class HandleAppointmentMessage extends MessageHandler {
 
@@ -75,29 +85,28 @@ public class HandleAppointmentMessage extends MessageHandler {
     LocalDateTime start = LocalDateTime.now();
     LocalDateTime end =
         LocalDateTime.now().plusWeeks(max_future_appointments.get(class_message.type.getName()));
-    if (class_message.type.getName().equals("COVID Test")
-        || class_message.type.getName().equals("COVID Vaccine")
-        || class_message.type.getName().equals("Flu Vaccine")) {
-      cr.select(root)
-          .where(
-              cb.between(root.get("appt_date"), start, end),
-              cb.equal(root.get("type"), class_message.type),
-              cb.isFalse(root.get("taken")),
-              cb.or(
-                  cb.isNull(root.get("lock_time")),
-                  cb.lessThan(root.get("lock_time"), start),
-                  cb.equal(root.get("patient"), class_message.patient)));
+
+    if (UNSTAFFED_APPT_TYPES.contains(class_message.type)) {
+        cr.select(root)
+            .where(
+                cb.between(root.get(APPT_DATE_COL), start, end),
+                cb.equal(root.get(TYPE_COL), class_message.type),
+                cb.isFalse(root.get(TAKEN_COL)),
+                cb.or(
+                    cb.isNull(root.get(LOCK_TIME_COL)),
+                    cb.lessThan(root.get(LOCK_TIME_COL), start),
+                    cb.equal(root.get(PATIENT_COL), class_message.patient)));
     } else {
       cr.select(root)
           .where(
-              cb.between(root.get("appt_date"), start, end),
-              cb.equal(root.get("type"), class_message.type),
-              cb.equal(root.get("clinic"), class_message.clinic),
-              cb.isFalse(root.get("taken")),
+              cb.between(root.get(APPT_DATE_COL), start, end),
+              cb.equal(root.get(TYPE_COL), class_message.type),
+              cb.equal(root.get(CLINIC_COL), class_message.clinic),
+              cb.isFalse(root.get(TAKEN_COL)),
               cb.or(
-                  cb.isNull(root.get("lock_time")),
-                  cb.lessThan(root.get("lock_time"), start),
-                  cb.equal(root.get("patient"), class_message.patient)));
+                  cb.isNull(root.get(LOCK_TIME_COL)),
+                  cb.lessThan(root.get(LOCK_TIME_COL), start),
+                  cb.equal(root.get(PATIENT_COL), class_message.patient)));
     }
 
     List<Appointment> all_appointments = session.createQuery(cr).getResultList();
@@ -119,7 +128,7 @@ public class HandleAppointmentMessage extends MessageHandler {
   /** Get a patient's appointments past and future */
   private void getPatientHistory() {
     cr.select(root)
-        .where(cb.equal(root.get("patient"), class_message.patient), cb.isTrue(root.get("taken")));
+        .where(cb.equal(root.get(PATIENT_COL), class_message.patient), cb.isTrue(root.get(TAKEN_COL)));
     class_message.appointments = session.createQuery(cr).getResultList();
   }
 
@@ -127,10 +136,10 @@ public class HandleAppointmentMessage extends MessageHandler {
   private void getPatientNextAppointment() {
     cr.select(root)
         .where(
-            cb.equal(root.get("patient"), class_message.patient),
-            cb.isTrue(root.get("taken")),
-            cb.greaterThanOrEqualTo(root.get("appt_date"), LocalDateTime.now()));
-    cr.orderBy(cb.asc(root.get("appt_date")));
+            cb.equal(root.get(PATIENT_COL), class_message.patient),
+            cb.isTrue(root.get(TAKEN_COL)),
+            cb.greaterThanOrEqualTo(root.get(APPT_DATE_COL), LocalDateTime.now()));
+    cr.orderBy(cb.asc(root.get(APPT_DATE_COL)));
     class_message.appointments = new ArrayList<>();
     var lst = session.createQuery(cr).getResultList();
     class_message.appointments.add(lst.size() > 0 ? lst.get(0) : null);
@@ -142,9 +151,9 @@ public class HandleAppointmentMessage extends MessageHandler {
     LocalDateTime end = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
     cr.select(root)
         .where(
-            cb.equal(root.get("staff_member"), class_message.user),
-            cb.between(root.get("appt_date"), start, end),
-            cb.isTrue(root.get("taken")));
+            cb.equal(root.get(STAFF_MEMBER_COL), class_message.user),
+            cb.between(root.get(APPT_DATE_COL), start, end),
+            cb.isTrue(root.get(TAKEN_COL)));
     class_message.appointments = session.createQuery(cr).getResultList();
   }
 
@@ -152,9 +161,9 @@ public class HandleAppointmentMessage extends MessageHandler {
   private void getStaffFutureAppointments() {
     cr.select(root)
         .where(
-            cb.equal(root.get("staff_member"), class_message.user),
-            cb.greaterThanOrEqualTo(root.get("appt_date"), LocalDateTime.now()),
-            cb.equal(root.get("clinic"), class_message.clinic));
+            cb.equal(root.get(STAFF_MEMBER_COL), class_message.user),
+            cb.greaterThanOrEqualTo(root.get(APPT_DATE_COL), LocalDateTime.now()),
+            cb.equal(root.get(CLINIC_COL), class_message.clinic));
     class_message.appointments = session.createQuery(cr).getResultList();
   }
 }

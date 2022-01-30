@@ -13,6 +13,8 @@ import java.time.LocalTime;
 import java.util.logging.Logger;
 import org.hibernate.Session;
 
+import static il.cshaifa.hmo_system.Constants.USER_COL;
+
 public class HandleOnSiteQueueMessage extends MessageHandler {
   OnSiteQueueMessage class_message;
   public QueueUpdate q_update;
@@ -80,7 +82,7 @@ public class HandleOnSiteQueueMessage extends MessageHandler {
     if (q_update.q_appt != null) {
       // set the called time
       q_update.q_appt.appointment.setCalled_time(LocalDateTime.now());
-      q_update.q_appt.appointment.setStaff_member((User) client.getInfo("user"));
+      q_update.q_appt.appointment.setStaff_member((User) client.getInfo(USER_COL));
       session.update(q_update.q_appt.appointment);
       session.flush();
 

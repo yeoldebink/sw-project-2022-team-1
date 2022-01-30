@@ -19,6 +19,12 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 
+import static il.cshaifa.hmo_system.Constants.APPT_DATE_COL;
+import static il.cshaifa.hmo_system.Constants.CALLED_TIME_COL;
+import static il.cshaifa.hmo_system.Constants.CLINIC_COL;
+import static il.cshaifa.hmo_system.Constants.STAFF_MEMBER_COL;
+import static il.cshaifa.hmo_system.Constants.TAKEN_COL;
+
 public class HandleReportMessage extends MessageHandler {
   ReportMessage class_message;
   //  LocalDate -> ClinicID -> DailyReport
@@ -133,10 +139,10 @@ public class HandleReportMessage extends MessageHandler {
   private void getAttendanceReport() {
     cr.select(root)
         .where(
-            cb.between(root.get("appt_date"), class_message.start_date, class_message.end_date),
-            cb.isTrue(root.get("taken")),
-            root.get("clinic").in(class_message.clinics),
-            cb.isNotNull(root.get("called_time")));
+            cb.between(root.get(APPT_DATE_COL), class_message.start_date, class_message.end_date),
+            cb.isTrue(root.get(TAKEN_COL)),
+            root.get(CLINIC_COL).in(class_message.clinics),
+            cb.isNotNull(root.get(CALLED_TIME_COL)));
 
     relevant_appointments = session.createQuery(cr).getResultList();
     for (Appointment appt : relevant_appointments) {
@@ -158,11 +164,11 @@ public class HandleReportMessage extends MessageHandler {
   private void getAverageWaitTimeReport() {
     cr.select(root)
         .where(
-            cb.equal(root.get("staff_member"), class_message.staff_member.getUser()),
-            cb.between(root.get("appt_date"), class_message.start_date, class_message.end_date),
-            cb.isTrue(root.get("taken")),
-            root.get("clinic").in(class_message.clinics),
-            cb.isNotNull(root.get("called_time")));
+            cb.equal(root.get(STAFF_MEMBER_COL), class_message.staff_member.getUser()),
+            cb.between(root.get(APPT_DATE_COL), class_message.start_date, class_message.end_date),
+            cb.isTrue(root.get(TAKEN_COL)),
+            root.get(CLINIC_COL).in(class_message.clinics),
+            cb.isNotNull(root.get(CALLED_TIME_COL)));
 
     relevant_appointments = session.createQuery(cr).getResultList();
     for (Appointment appt : relevant_appointments) {
@@ -208,10 +214,10 @@ public class HandleReportMessage extends MessageHandler {
   private void getMissedAppointmentsReport() {
     cr.select(root)
         .where(
-            cb.between(root.get("appt_date"), class_message.start_date, class_message.end_date),
-            cb.isTrue(root.get("taken")),
-            root.get("clinic").in(class_message.clinics),
-            cb.isNull(root.get("called_time")));
+            cb.between(root.get(APPT_DATE_COL), class_message.start_date, class_message.end_date),
+            cb.isTrue(root.get(TAKEN_COL)),
+            root.get(CLINIC_COL).in(class_message.clinics),
+            cb.isNull(root.get(CALLED_TIME_COL)));
 
     relevant_appointments = session.createQuery(cr).getResultList();
     for (Appointment appt : relevant_appointments) {
@@ -233,7 +239,7 @@ public class HandleReportMessage extends MessageHandler {
   private List<ClinicStaff> getClinicStaff(List<Clinic> clinics) {
     CriteriaQuery<ClinicStaff> cr_ClinicStaff = cb.createQuery(ClinicStaff.class);
     Root<ClinicStaff> root_ClinicStaff = cr_ClinicStaff.from(ClinicStaff.class);
-    cr_ClinicStaff.select(root_ClinicStaff).where(root_ClinicStaff.get("clinic").in(clinics));
+    cr_ClinicStaff.select(root_ClinicStaff).where(root_ClinicStaff.get(CLINIC_COL).in(clinics));
     return session.createQuery(cr_ClinicStaff).getResultList();
   }
 }

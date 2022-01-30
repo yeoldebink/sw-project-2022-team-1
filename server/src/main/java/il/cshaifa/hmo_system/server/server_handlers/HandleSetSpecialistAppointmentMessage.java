@@ -16,6 +16,14 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 
+import static il.cshaifa.hmo_system.Constants.APPT_DATE_COL;
+import static il.cshaifa.hmo_system.Constants.CALLED_TIME_COL;
+import static il.cshaifa.hmo_system.Constants.IS_SPECIALIST_COL;
+import static il.cshaifa.hmo_system.Constants.LOCK_TIME_COL;
+import static il.cshaifa.hmo_system.Constants.PATIENT_COL;
+import static il.cshaifa.hmo_system.Constants.SPECIALIST_ROLE_COL;
+import static il.cshaifa.hmo_system.Constants.TAKEN_COL;
+
 public class HandleSetSpecialistAppointmentMessage extends MessageHandler {
 
 
@@ -46,7 +54,7 @@ public class HandleSetSpecialistAppointmentMessage extends MessageHandler {
   private void getSpecialistRoleList() {
     CriteriaQuery<Role> cr = cb.createQuery(Role.class);
     Root<Role> root = cr.from(Role.class);
-    cr.select(root).where(cb.isTrue(root.get("is_specialist")));
+    cr.select(root).where(cb.isTrue(root.get(IS_SPECIALIST_COL)));
     class_message.role_list = session.createQuery(cr).getResultList();
   }
 
@@ -57,11 +65,11 @@ public class HandleSetSpecialistAppointmentMessage extends MessageHandler {
 
     cr.select(root)
         .where(
-            cb.equal(root.get("patient"), class_message.patient),
-            cb.equal(root.get("specialist_role"), class_message.chosen_role),
-            cb.lessThan(root.get("appt_date"), LocalDateTime.now()),
-            cb.isNotNull(root.get("called_time")));
-    cr.orderBy(cb.desc(root.get("appt_date")));
+            cb.equal(root.get(PATIENT_COL), class_message.patient),
+            cb.equal(root.get(SPECIALIST_ROLE_COL), class_message.chosen_role),
+            cb.lessThan(root.get(APPT_DATE_COL), LocalDateTime.now()),
+            cb.isNotNull(root.get(CALLED_TIME_COL)));
+    cr.orderBy(cb.desc(root.get(APPT_DATE_COL)));
     List<Appointment> patient_past_appts = session.createQuery(cr).getResultList();
 
     HashMap<User, LocalDateTime> doctors = new HashMap<>();
@@ -74,19 +82,19 @@ public class HandleSetSpecialistAppointmentMessage extends MessageHandler {
 
     cr.select(root)
         .where(
-            cb.equal(root.get("specialist_role"), class_message.chosen_role),
+            cb.equal(root.get(SPECIALIST_ROLE_COL), class_message.chosen_role),
             cb.between(
-                root.get("appt_date"),
+                root.get(APPT_DATE_COL),
                 LocalDateTime.now(),
                 LocalDateTime.now()
                     .plusWeeks(HandleAppointmentMessage.max_future_appointments.get("Specialist"))),
-            cb.isFalse(root.get("taken")),
+            cb.isFalse(root.get(TAKEN_COL)),
             cb.or(
-                cb.isNull(root.get("lock_time")),
-                cb.lessThan(root.get("lock_time"), LocalDateTime.now()),
+                cb.isNull(root.get(LOCK_TIME_COL)),
+                cb.lessThan(root.get(LOCK_TIME_COL), LocalDateTime.now()),
                 cb.and(
-                    cb.isNotNull(root.get("lock_time")),
-                    cb.equal(root.get("patient"), class_message.patient))));
+                    cb.isNotNull(root.get(LOCK_TIME_COL)),
+                    cb.equal(root.get(PATIENT_COL), class_message.patient))));
 
     List<Appointment> available_appts_all = session.createQuery(cr).getResultList();
 

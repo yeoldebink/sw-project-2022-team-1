@@ -11,6 +11,9 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 
+import static il.cshaifa.hmo_system.Constants.CLINIC_COL;
+import static il.cshaifa.hmo_system.Constants.USER_COL;
+
 public class HandleStaffAssignmentMessage extends MessageHandler {
 
   private final StaffAssignmentMessage class_message;
@@ -51,8 +54,8 @@ public class HandleStaffAssignmentMessage extends MessageHandler {
       ClinicStaff assignment = new ClinicStaff(class_message.clinic, staff_member);
       cr.select(root)
           .where(
-              cb.equal(root.get("user"), assignment.getUser()),
-              cb.equal(root.get("clinic"), assignment.getClinic()));
+              cb.equal(root.get(USER_COL), assignment.getUser()),
+              cb.equal(root.get(CLINIC_COL), assignment.getClinic()));
       List<ClinicStaff> staff_to_remove = session.createQuery(cr).getResultList();
       if (staff_to_remove.size() > 0) {
         session.delete(staff_to_remove.get(0));

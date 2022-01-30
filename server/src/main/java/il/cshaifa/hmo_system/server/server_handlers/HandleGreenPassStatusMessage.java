@@ -14,6 +14,12 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 
+import static il.cshaifa.hmo_system.Constants.APPT_DATE_COL;
+import static il.cshaifa.hmo_system.Constants.CALLED_TIME_COL;
+import static il.cshaifa.hmo_system.Constants.NAME_COL;
+import static il.cshaifa.hmo_system.Constants.PATIENT_COL;
+import static il.cshaifa.hmo_system.Constants.TYPE_COL;
+
 public class HandleGreenPassStatusMessage extends MessageHandler {
 
   private final GreenPassStatusMessage class_message;
@@ -54,11 +60,11 @@ public class HandleGreenPassStatusMessage extends MessageHandler {
   public LocalDateTime getLastCovidTestDate() {
     cr.select(root)
         .where(
-            cb.equal(root.get("patient"), patient),
-            cb.equal(root.get("type").get("name"), "COVID Test"),
-            cb.lessThanOrEqualTo(root.get("appt_date"), LocalDateTime.now()),
-            cb.isNotNull(root.get("called_time")));
-    cr.orderBy(cb.asc(root.get("appt_date")));
+            cb.equal(root.get(PATIENT_COL), patient),
+            cb.equal(root.get(TYPE_COL).get(NAME_COL), "COVID Test"),
+            cb.lessThanOrEqualTo(root.get(APPT_DATE_COL), LocalDateTime.now()),
+            cb.isNotNull(root.get(CALLED_TIME_COL)));
+    cr.orderBy(cb.asc(root.get(APPT_DATE_COL)));
     List<Appointment> covid_test_appt = session.createQuery(cr).getResultList();
     if (covid_test_appt.size() > 0) {
       class_message.last_covid_test = covid_test_appt.get(0).getDate();
@@ -71,11 +77,11 @@ public class HandleGreenPassStatusMessage extends MessageHandler {
   public LocalDateTime getLastCovidVaccineDate() {
     cr.select(root)
         .where(
-            cb.equal(root.get("patient"), patient),
-            cb.equal(root.get("type").get("name"), "COVID Vaccine"),
-            cb.lessThanOrEqualTo(root.get("appt_date"), LocalDateTime.now()),
-            cb.isNotNull(root.get("called_time")));
-    cr.orderBy(cb.asc(root.get("appt_date")));
+            cb.equal(root.get(PATIENT_COL), patient),
+            cb.equal(root.get(TYPE_COL).get(NAME_COL), "COVID Vaccine"),
+            cb.lessThanOrEqualTo(root.get(APPT_DATE_COL), LocalDateTime.now()),
+            cb.isNotNull(root.get(CALLED_TIME_COL)));
+    cr.orderBy(cb.asc(root.get(APPT_DATE_COL)));
     List<Appointment> covid_vaccine_appt = session.createQuery(cr).getResultList();
     if (covid_vaccine_appt.size() > 0) {
       class_message.last_vaccine = covid_vaccine_appt.get(0).getDate();

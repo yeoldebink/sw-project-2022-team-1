@@ -14,6 +14,14 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 
+import static il.cshaifa.hmo_system.Constants.APPT_DATE_COL;
+import static il.cshaifa.hmo_system.Constants.ARRIVED_COL;
+import static il.cshaifa.hmo_system.Constants.CALLED_TIME_COL;
+import static il.cshaifa.hmo_system.Constants.CLINIC_COL;
+import static il.cshaifa.hmo_system.Constants.PATIENT_COL;
+import static il.cshaifa.hmo_system.Constants.TAKEN_COL;
+import static il.cshaifa.hmo_system.Constants.USER_COL;
+
 public class HandleOnSiteEntryMessage extends MessageHandler {
 
   OnSiteEntryMessage class_message;
@@ -55,7 +63,7 @@ public class HandleOnSiteEntryMessage extends MessageHandler {
   private Patient getUserPatient(User user) {
     CriteriaQuery<Patient> cr = cb.createQuery(Patient.class);
     Root<Patient> root = cr.from(Patient.class);
-    cr.select(root).where(cb.equal(root.get("user"), user));
+    cr.select(root).where(cb.equal(root.get(USER_COL), user));
     return session.createQuery(cr).getResultList().get(0);
   }
 
@@ -66,15 +74,15 @@ public class HandleOnSiteEntryMessage extends MessageHandler {
     cr.select(root)
         .where(
             cb.between(
-                root.get("appt_date"),
+                root.get(APPT_DATE_COL),
                 LocalDateTime.now().minusHours(1),
                 LocalDateTime.now().plusMinutes(15)),
-            cb.equal(root.get("patient"), patient),
-            cb.equal(root.get("clinic"), HandleLoginMessage.stationClinic(client)),
-            cb.isTrue(root.get("taken")),
-            cb.isNull(root.get("called_time")),
-            cb.isFalse(root.get("arrived")));
-    cr.orderBy(cb.asc(root.get("appt_date")));
+            cb.equal(root.get(PATIENT_COL), patient),
+            cb.equal(root.get(CLINIC_COL), HandleLoginMessage.stationClinic(client)),
+            cb.isTrue(root.get(TAKEN_COL)),
+            cb.isNull(root.get(CALLED_TIME_COL)),
+            cb.isFalse(root.get(ARRIVED_COL)));
+    cr.orderBy(cb.asc(root.get(APPT_DATE_COL)));
     return session.createQuery(cr).getResultList();
   }
 }
