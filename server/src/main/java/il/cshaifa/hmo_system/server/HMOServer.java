@@ -1,5 +1,6 @@
 package il.cshaifa.hmo_system.server;
 
+import il.cshaifa.hmo_system.Constants;
 import il.cshaifa.hmo_system.Utils;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.AppointmentType;
@@ -94,6 +95,23 @@ public class HMOServer extends AbstractServer {
     ServiceRegistry serviceRegistry =
         new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
     return configuration.buildSessionFactory(serviceRegistry);
+  }
+
+  private void initConstants() {
+    session = getSessionFactory().openSession();
+    var cb = session.getCriteriaBuilder();
+
+    // appointment types
+    var tcr = cb.createQuery(AppointmentType.class);
+    var troot = tcr.from(AppointmentType.class);
+    tcr.select(troot);
+
+    // roles
+    var rcr = cb.createQuery(Role.class);
+    var rroot = rcr.from(Role.class);
+    rcr.select(rroot);
+
+    Constants.init(session.createQuery(tcr).getResultList(), session.createQuery(rcr).getResultList());
   }
 
   /**
