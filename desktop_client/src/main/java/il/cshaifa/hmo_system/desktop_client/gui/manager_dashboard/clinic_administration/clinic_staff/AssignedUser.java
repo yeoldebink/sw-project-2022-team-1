@@ -15,8 +15,4 @@ public class AssignedUser extends User {
   public Boolean getAssigned() {
     return assigned;
   }
-
-  public String getRoleName() {
-    return this.getRole().getName();
-  }
 }

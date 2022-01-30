@@ -13,7 +13,7 @@
 <?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.MenuItem?>
 <AnchorPane prefWidth="1280.0" stylesheets="@../hmo_lite_large.css" style="-fx-font-size: 18px;"
-  xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+  xmlns="http://javafx.com/javafx/14" xmlns:fx="http://javafx.com/fxml/1"
   fx:controller="il.cshaifa.hmo_system.on_site_client.gui.staff.StaffQueueViewController">
 
     <VBox AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" spacing="10">

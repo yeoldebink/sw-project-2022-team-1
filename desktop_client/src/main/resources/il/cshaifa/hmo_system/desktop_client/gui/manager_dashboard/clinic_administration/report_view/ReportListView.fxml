@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.StackPane?>
-<AnchorPane xmlns="http://javafx.com/javafx/17"
+<AnchorPane xmlns="http://javafx.com/javafx/14"
   xmlns:fx="http://javafx.com/fxml/1"
   fx:controller="il.cshaifa.hmo_system.desktop_client.gui.manager_dashboard.clinic_administration.report_view.ReportListViewController"
   stylesheets="@../../../hmo_lite.css">

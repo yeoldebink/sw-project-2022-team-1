@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1"
-  xmlns="http://javafx.com/javafx/17"
+  xmlns="http://javafx.com/javafx/14"
   fx:controller="il.cshaifa.hmo_system.desktop_client.gui.manager_dashboard.clinic_administration.clinic_view.AdminClinicViewController"
   stylesheets="@../../../hmo_lite.css">
   <VBox AnchorPane.topAnchor="10" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10"
