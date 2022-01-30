@@ -20,7 +20,7 @@
         <Label fx:id="staff_member_name" styleClass="h2-label"/>
         <TableView fx:id="appt_table" prefWidth="574.0" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
             <columns>
-                <TableColumn fx:id="appt_date" prefWidth="75.0" text="Date &amp; Time"/>
+                <TableColumn fx:id="appt_date" prefWidth="75.0" text="Date &amp; Time" minWidth="150"/>
                 <TableColumn fx:id="appt_type" prefWidth="75.0" text="Type"/>
                 <TableColumn fx:id="comments" prefWidth="75.0" text="Comments"/>
                 <TableColumn fx:id="taken" prefWidth="75.0" text="Assigned"/>
