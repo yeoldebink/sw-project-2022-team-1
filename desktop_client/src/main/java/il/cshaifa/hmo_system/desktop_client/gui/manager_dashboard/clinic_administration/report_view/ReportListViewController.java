@@ -84,7 +84,7 @@ public class ReportListViewController extends RoleDefinedViewController {
                 setText(
                     staff == null
                         ? null
-                        : staff.getUser().getLastName() + " " + staff.getUser().getFirstName());
+                        : staff.getUser().toString());
               }
             });
 
@@ -216,8 +216,8 @@ public class ReportListViewController extends RoleDefinedViewController {
   }
 
   static class ReportTypeComboBoxItem {
-    public ReportType reportType;
-    public String reportTypeName;
+    public final ReportType reportType;
+    public final String reportTypeName;
 
     public ReportTypeComboBoxItem(ReportType reportType, String reportTypeName) {
       this.reportType = reportType;

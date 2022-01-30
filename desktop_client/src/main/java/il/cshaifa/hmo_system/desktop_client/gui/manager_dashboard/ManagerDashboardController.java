@@ -35,7 +35,7 @@ public class ManagerDashboardController extends Controller {
     var user = HMODesktopClient.getClient().getConnected_user();
 
     stage.setTitle(
-        String.format("Management Console ~ %s %s", user.getFirstName(), user.getLastName()));
+        String.format("Management Console ~ %s", user));
 
     adminClinicListController =
         new AdminClinicListController(
@@ -79,7 +79,7 @@ public class ManagerDashboardController extends Controller {
     if (Objects.equals(role, "HMO Manager")) {
       var unique_staffs_map = new HashMap<String, ClinicStaff>();
       for (var member : event.clinic_staff) {
-        var name = member.getUser().getFirstName() + " " + member.getUser().getLastName();
+        var name = member.getUser().toString();
         unique_staffs_map.put(name, member);
       }
       clinicStaff.addAll(new ArrayList<>(unique_staffs_map.values()));

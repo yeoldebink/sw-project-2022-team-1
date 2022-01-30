@@ -45,7 +45,7 @@ public class AdminAppointmentListViewController extends ViewController {
 
   @FXML
   public void initialize() {
-    this.staff_member_name.setText(staff_member.getFirstName() + " " + staff_member.getLastName());
+    this.staff_member_name.setText(staff_member.toString());
     appt_table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     setCellValueFactory();
 
@@ -76,9 +76,6 @@ public class AdminAppointmentListViewController extends ViewController {
     EventBus.getDefault()
         .post(new AdminAppointmentListEvent(this.staff_member, appts_to_delete, this));
   }
-
-  @FXML
-  void showEditAppointmentDialog(ActionEvent event) {}
 
   @FXML
   void showAddAppointmentDialog(ActionEvent event) {
@@ -117,13 +114,13 @@ public class AdminAppointmentListViewController extends ViewController {
 
   public static class AppointmentForAdminTableView {
 
-    Integer id;
-    String type_name;
-    String appt_date_str;
-    LocalDateTime called_time;
-    String comments;
-    Boolean taken;
-    String patient_name;
+    final Integer id;
+    final String type_name;
+    final String appt_date_str;
+    final LocalDateTime called_time;
+    final String comments;
+    final Boolean taken;
+    final String patient_name;
 
     public AppointmentForAdminTableView(
         Integer id,
@@ -140,7 +137,7 @@ public class AdminAppointmentListViewController extends ViewController {
       this.comments = comments;
       this.taken = taken;
       if (patient != null && taken) { // only display patient name for taken appointments
-        this.patient_name = patient.getUser().getFirstName() + " " + patient.getUser().getLastName();
+        this.patient_name = patient.getUser().toString();
       } else {
         this.patient_name = "";
       }

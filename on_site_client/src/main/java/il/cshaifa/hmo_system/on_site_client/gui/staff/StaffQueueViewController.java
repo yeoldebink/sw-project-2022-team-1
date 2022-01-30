@@ -51,9 +51,7 @@ public class StaffQueueViewController extends ViewController {
     current_date.setText(Utils.prettifyDateTime(LocalDateTime.now()));
     appt_table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
     staff_member_role_name.setText(
-        staff_member.getFirstName()
-            + " "
-            + staff_member.getLastName()
+        staff_member.toString()
             + ", "
             + staff_member.getRole().getName());
     setCellValueFactory();

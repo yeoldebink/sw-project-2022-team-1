@@ -26,9 +26,8 @@ public class ClinicQueues {
     var type_name = appointment.getType().getName();
     if (Arrays.asList("Family Doctor", "Pediatrician", "Specialist").contains(type_name)) {
       return String.format(
-          "Dr. %s %s",
-          appointment.getStaff_member().getFirstName(),
-          appointment.getStaff_member().getLastName());
+          "Dr. %s",
+          appointment.getStaff_member().toString());
     } else {
       return queueNames.get(type_name);
     }
@@ -38,7 +37,7 @@ public class ClinicQueues {
     var role_name = staff_member.getRole().getName();
     if (staff_member.getRole().isSpecialist()
         || Arrays.asList("Family Doctor", "Pediatrician").contains(role_name)) {
-      return String.format("Dr. %s %s", staff_member.getFirstName(), staff_member.getLastName());
+      return String.format("Dr. %s", staff_member);
     } else {
       return queueNames.get(role_name);
     }

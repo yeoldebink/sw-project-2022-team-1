@@ -43,7 +43,7 @@ public class AddAppointmentsViewController extends ViewController {
       this.staff_member_name.setText(type.getName());
     } else {
       this.staff_member_name.setText(
-          staff_member.getFirstName() + " " + staff_member.getLastName());
+          staff_member.toString());
     }
   }
 

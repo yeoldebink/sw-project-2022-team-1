@@ -31,7 +31,6 @@
                 <ContextMenu>
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#deleteSelectedAppointments" text="Delete"/>
-                        <MenuItem mnemonicParsing="false" onAction="#showEditAppointmentDialog" text="Edit"/>
                     </items>
                 </ContextMenu>
             </contextMenu>

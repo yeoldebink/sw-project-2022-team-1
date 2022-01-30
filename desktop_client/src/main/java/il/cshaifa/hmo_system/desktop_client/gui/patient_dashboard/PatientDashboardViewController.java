@@ -31,7 +31,7 @@ public class PatientDashboardViewController extends ViewController {
   public void initialize() {
     nameLabel.setText(
         String.format(
-            "Welcome, %s %s", patient.getUser().getFirstName(), patient.getUser().getLastName()));
+            "Welcome, %s", patient.getUser().toString()));
     nextAppointmentStatusLabel.setText("Your next appointment:");
   }
 
@@ -53,14 +53,13 @@ public class PatientDashboardViewController extends ViewController {
     } else {
       var date = appointment.getDate();
 
-      String apptTypeInfo = "";
+      String apptTypeInfo;
 
       if (appointment.getStaff_member() != null) {
         apptTypeInfo =
             String.format(
-                "Dr. %s %s, %s\n",
-                appointment.getStaff_member().getFirstName(),
-                appointment.getStaff_member().getLastName(),
+                "Dr. %s, %s\n",
+                appointment.getStaff_member().toString(),
                 appointment.getStaff_member().getRole().getName());
       } else {
         apptTypeInfo = appointment.getType().getName() + "\n";

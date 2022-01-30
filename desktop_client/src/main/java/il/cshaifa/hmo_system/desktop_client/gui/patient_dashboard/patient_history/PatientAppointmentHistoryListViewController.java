@@ -26,11 +26,7 @@ public class PatientAppointmentHistoryListViewController extends ViewController 
   @FXML private TableColumn<AppointmentForPatientHistoryView, String> appt_passed;
   @FXML private MenuItem cancel_menu_item;
 
-  private final Patient patient;
-  private ArrayList<Appointment> appt_list = null;
-
   public PatientAppointmentHistoryListViewController(Patient connected_patient) {
-    this.patient = connected_patient;
   }
 
   @FXML
@@ -41,7 +37,6 @@ public class PatientAppointmentHistoryListViewController extends ViewController 
   }
 
   void populateAppointmentsTable(ArrayList<Appointment> appt_list) {
-    this.appt_list = appt_list;
 
     ArrayList<AppointmentForPatientHistoryView> appts_to_populate =
         new ArrayList<AppointmentForPatientHistoryView>();
@@ -113,7 +108,7 @@ public class PatientAppointmentHistoryListViewController extends ViewController 
 
       if (staff_member != null) {
         this.role_name = appointment.getStaff_member().getRole().getName();
-        this.staff_member_name = staff_member.getFirstName() + " " + staff_member.getLastName();
+        this.staff_member_name = staff_member.toString();
       } else {
         this.role_name = "";
         this.staff_member_name = "";

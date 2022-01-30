@@ -554,9 +554,7 @@ public class SetAppointmentViewController extends ViewController {
     public String getAppointmentDoctor() {
       if (appointment.getStaff_member() != null)
         return "Dr. "
-            + appointment.getStaff_member().getFirstName()
-            + " "
-            + appointment.getStaff_member().getLastName();
+            + appointment.getStaff_member().toString();
       else return "";
     }
 
@@ -576,7 +574,7 @@ public class SetAppointmentViewController extends ViewController {
 
     public String toString() {
       return String.format(
-          "%s • %s %s", clinic.getName(), doctor.getFirstName(), doctor.getLastName());
+          "%s • %s", clinic.getName(), doctor.toString());
     }
 
     public User getDoctor() {
