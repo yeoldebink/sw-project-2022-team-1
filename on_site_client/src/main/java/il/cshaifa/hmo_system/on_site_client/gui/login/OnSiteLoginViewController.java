@@ -82,6 +82,10 @@ public class OnSiteLoginViewController extends ViewController {
     setDisable(false);
   }
 
+  /**
+   * Populates view clinic combo box
+   * @param clinics Clinics to populate the combo box
+   */
   public void populateClinics(List<Clinic> clinics) {
     clinicComboBox.getItems().setAll(clinics);
   }

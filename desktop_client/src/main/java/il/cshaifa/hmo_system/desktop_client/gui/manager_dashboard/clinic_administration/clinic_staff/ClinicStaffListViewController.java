@@ -39,6 +39,10 @@ public class ClinicStaffListViewController extends ViewController {
     setCellValueFactory();
   }
 
+  /**
+   * Converts each User (staff member) and boolean of input map into a View class and populates staff table view with that data
+   * @param staff_assignments
+   */
   void populateStaffTable(Map<User, Boolean> staff_assignments) {
 
     ArrayList<AssignedUser> assigned_staff = new ArrayList<AssignedUser>();

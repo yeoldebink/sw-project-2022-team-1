@@ -56,6 +56,10 @@ public class AdminAppointmentListViewController extends ViewController {
     }
   }
 
+  /**
+   * Emits event to delete appointments selected in the view
+   * @param event
+   */
   @FXML
   void deleteSelectedAppointments(ActionEvent event) {
     var appts_selected =
@@ -82,6 +86,9 @@ public class AdminAppointmentListViewController extends ViewController {
     EventBus.getDefault().post(new AddAppointmentEvent(this.staff_member, null, 0, this));
   }
 
+  /**
+   * Binds table column values to class getters
+   */
   void setCellValueFactory() {
     appt_type.setCellValueFactory((new PropertyValueFactory<>("Appt_type")));
     appt_date.setCellValueFactory((new PropertyValueFactory<>("Appt_date")));
@@ -91,6 +98,10 @@ public class AdminAppointmentListViewController extends ViewController {
     patient_assigned.setCellValueFactory((new PropertyValueFactory<>("Patient_name")));
   }
 
+  /**
+   * Sorts received appointments by date descending, converts to View class, and populates table view
+   * @param appt_list List of appointments to populate the table view
+   */
   void populateAppointmentsTable(ArrayList<Appointment> appt_list) {
     this.appt_list = appt_list;
     this.appt_list.sort(Comparator.comparing(Appointment::getDate));

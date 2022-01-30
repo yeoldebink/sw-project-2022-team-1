@@ -33,6 +33,9 @@ public class AdminClinicViewController extends RoleDefinedViewController {
     this.clinicCopy = new Clinic(clinic); // prevents saves for invalid objects
   }
 
+  /**
+   * Sets view data and applies view role behavior
+   */
   @FXML
   public void initialize() {
     name.setText(clinicCopy.getName());
@@ -65,6 +68,10 @@ public class AdminClinicViewController extends RoleDefinedViewController {
     }
   }
 
+  /**
+   * Emits an event requesting the Clinic entity in the event be updated in the database
+   * @param actionEvent
+   */
   @FXML
   public void requestClinicUpdate(ActionEvent actionEvent) {
     clinicCopy.setSun_hours(sunHoursTextField.getText());

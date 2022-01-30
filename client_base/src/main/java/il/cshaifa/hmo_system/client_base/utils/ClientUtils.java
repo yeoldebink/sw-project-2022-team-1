@@ -11,6 +11,14 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 public class ClientUtils {
+  /**
+   * Opens view component
+   * @param view_controller Associated view controller
+   * @param controller Associated controller
+   * @param loader Loader used to generate scene
+   * @param resizeable Should window be resizeable
+   * @throws Exception
+   */
   public static void openNewWindow(
       Class<?> view_controller, Class<?> controller, FXMLLoader loader, boolean resizeable)
       throws Exception {
@@ -37,6 +45,13 @@ public class ClientUtils {
         });
   }
 
+  /**
+   * Opens view component, only if not already opened
+   * @param view_controller Associated view controller
+   * @param controller Associated controller
+   * @param resizeable Should window be resizeable
+   * @param ctrl_factory Callback
+   */
   public static void openNewSingletonWindow(
       Class<?> view_controller,
       Class<?> controller,
@@ -76,6 +91,14 @@ public class ClientUtils {
         });
   }
 
+  /**
+   * Loads FXML
+   * @param requestor Object requesting fxml to be loaded
+   * @param target Target view controller referencing FXML
+   * @param ctrl_factory Callback
+   * @return returns Loaded Pane containing Pane loaded and view controller
+   * @throws IOException
+   */
   public static LoadedPane loadFXML(
       Class<?> requestor, Class<?> target, Callback<Class<?>, Object> ctrl_factory)
       throws IOException {
@@ -88,10 +111,22 @@ public class ClientUtils {
     return new LoadedPane(loader.load(), loader.getController());
   }
 
+  /**
+   * Loads FXML
+   * @param requestor Object requesting fxml to be loaded
+   * @param target Target view controller referencing FXML
+   * @return
+   * @throws IOException
+   */
   public static LoadedPane loadFXML(Class<?> requestor, Class<?> target) throws IOException {
     return loadFXML(requestor, target, null);
   }
 
+  /**
+   * Creates fxml path and returns
+   * @param view_controller_class FXML's associated view controller
+   * @return The fxml path
+   */
   public static String get_fxml(Class<?> view_controller_class) {
     String canonicalName = view_controller_class.getCanonicalName();
     String path = "/" + canonicalName.replace(".", "/").replace("Controller", "");

@@ -35,17 +35,29 @@ public class PatientDashboardViewController extends ViewController {
     nextAppointmentStatusLabel.setText("Your next appointment:");
   }
 
+  /**
+   * Emits event requesting appointment list view to open
+   * @param event
+   */
   @FXML
   public void viewPatientAppointments(ActionEvent event) {
     EventBus.getDefault().post(new AppointmentListEvent(null, this));
   }
 
+  /**
+   * Emits event requesting the set appointment view to open
+   * @param event
+   */
   @FXML
   public void setAppointment(ActionEvent event) {
     // no data, just asking for the window to be opened
     EventBus.getDefault().post(new SetAppointmentEvent(this, null, null, null));
   }
 
+  /**
+   * Updates the view with information on connected user's upcoming appointment, if exists
+   * @param appointment User's upcoming appointment (or null)
+   */
   public void updateNextAppointmentInfo(Appointment appointment) {
     if (appointment == null) {
       nextAppointmentStatusLabel.setText("You have no upcoming appointments");
@@ -83,11 +95,19 @@ public class PatientDashboardViewController extends ViewController {
     }
   }
 
+  /**
+   * Emits event requesting the my clinic view to open
+   * @param event
+   */
   @FXML
   public void viewMyClinic(ActionEvent event) {
     EventBus.getDefault().post(new MyClinicEvent(this));
   }
 
+  /**
+   * Emits event requesting the my green pass view to open
+   * @param event
+   */
   @FXML
   public void viewMyGreenPass(ActionEvent event) {
     EventBus.getDefault().post(new GreenPassStatusEvent(this));

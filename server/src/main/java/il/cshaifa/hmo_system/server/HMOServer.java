@@ -337,6 +337,13 @@ public class HMOServer extends AbstractServer {
     private static final String from =
         "***REMOVED***"; // Needs to remain this email for smtp-pulse API
 
+    /**
+     * Sends email using properties defined in class fields
+     * @param to Email to send to
+     * @param subject Email subject text
+     * @param bodyText Email body text
+     * @throws IllegalArgumentException
+     */
     public static void sendEmail(String to, String subject, String bodyText)
         throws IllegalArgumentException {
       if (!EmailValidator.getInstance().isValid(to)) {throw new IllegalArgumentException();}

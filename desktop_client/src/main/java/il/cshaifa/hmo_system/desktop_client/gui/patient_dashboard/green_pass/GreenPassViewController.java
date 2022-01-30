@@ -32,6 +32,9 @@ public class GreenPassViewController extends ViewController {
     this.lastTestDate = statusEvent.last_covid_test;
   }
 
+  /**
+   * Sets green pass (if found), vaccination, and test information on view
+   */
   @FXML
   public void initialize() {
 

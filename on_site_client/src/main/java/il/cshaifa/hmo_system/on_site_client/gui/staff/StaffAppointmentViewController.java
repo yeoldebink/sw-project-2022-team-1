@@ -28,6 +28,9 @@ public class StaffAppointmentViewController extends ViewController {
     this.readonly = readonly;
   }
 
+  /**
+   * Sets view text and button actions, and view set to read-only mode, updates
+   */
   @FXML
   public void initialize() {
     appointmentDetailsLabel.setText(
@@ -49,6 +52,9 @@ public class StaffAppointmentViewController extends ViewController {
     if (readonly) setReadOnly();
   }
 
+  /**
+   * Disables comments and update comments controls
+   */
   public void setReadOnly() {
     commentsTextArea.setDisable(true);
     updateCommentsButton.setDisable(true);
