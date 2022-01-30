@@ -59,6 +59,7 @@ public class StaffQueueController extends Controller {
 
   @Subscribe
   public void onViewAppointmentEvent(ViewAppointmentEvent event) {
+    if (!event.getSender().equals(this.view_controller)) return;
     viewAppointment(event.q_appt, true);
   }
 

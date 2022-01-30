@@ -16,6 +16,7 @@ public class StaffAppointmentController extends Controller {
 
   @Subscribe
   public void onAppointmentCommentsEvent(ViewAppointmentEvent event) {
+    if (!event.getSender().equals(this.view_controller)) return;
     try {
       HMOOnSiteClient.getClient().updateAppointmentComments(event.q_appt.appointment);
       stage.close();
