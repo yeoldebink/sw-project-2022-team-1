@@ -63,6 +63,11 @@
           </graphic>
         </Button>
         <Label fx:id="dashboardErrorLabel" visible="false" />
+        <Button text="Back" onAction="#returnToEntryScreen">
+          <graphic>
+            <FontIcon iconLiteral="mdi-exit-to-app" iconColor="cadetblue" />
+          </graphic>
+        </Button>
       </VBox>
     </AnchorPane>
   </StackPane>

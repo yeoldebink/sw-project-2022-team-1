@@ -126,6 +126,7 @@ public class OnSitePatientViewController extends ViewController {
   }
 
   public void showDashboard(Patient patient) {
+    dashboardErrorLabel.setVisible(false);
     dashboardWelcomeLabel.setText(String.format("Welcome, %s", patient.getUser()));
 
     stackPane.getChildren().get(0).setVisible(false);
@@ -135,6 +136,7 @@ public class OnSitePatientViewController extends ViewController {
   }
 
   public void returnToEntryScreen() {
+    errorLabel.setVisible(false);
     stackPane.getChildren().get(0).setVisible(true);
     stackPane.getChildren().get(1).setVisible(false);
 
