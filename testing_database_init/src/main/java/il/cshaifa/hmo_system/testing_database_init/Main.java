@@ -131,6 +131,10 @@ public class Main {
         new User(5973, "5973", "Sarah", "Tizdale", "sarah.tizdale@hmolite.com", "053-8522581", roles.get("Nurse")));
 
     users.put(
+        "Summer Smith",
+        new User(2697, "2697", "Summer", "Smith", "summer.smith@hmolite.com", "053-8522521", roles.get("Nurse")));
+
+    users.put(
         "LaVerne Roberts",
         new User(4532, "4532", "LaVerne", "Roberts", "laverne.roberts@hmolite.com", "054-7894569", roles.get("Nurse")));
 
@@ -241,6 +245,7 @@ public class Main {
     clinicStaff.add(new ClinicStaff(carmel, users.get("Bob Kelso")));
     clinicStaff.add(new ClinicStaff(carmel, users.get("John Dorian")));
     clinicStaff.add(new ClinicStaff(carmel, users.get("Sarah Tizdale")));
+    clinicStaff.add(new ClinicStaff(carmel, users.get("Summer Smith")));
     clinicStaff.add(new ClinicStaff(carmel, users.get("Perry Cox")));
     clinicStaff.add(new ClinicStaff(carmel, users.get("Christopher Turk")));
     clinicStaff.add(new ClinicStaff(carmel, users.get("Glen Matthews")));

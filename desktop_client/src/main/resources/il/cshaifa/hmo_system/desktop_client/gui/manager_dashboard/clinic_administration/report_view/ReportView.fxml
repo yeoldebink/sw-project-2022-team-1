@@ -14,11 +14,7 @@
         <VBox prefWidth="270.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0"
               AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
             <children>
-                <Label fx:id="report_type_label" text="Placeholder Text">
-                    <font>
-                        <Font size="26.0"/>
-                    </font>
-                </Label>
+                <Label fx:id="report_type_label" text="Placeholder Text" styleClass="h1-label" />
                 <TableView fx:id="report_table" prefWidth="280.0" VBox.vgrow="ALWAYS">
                     <columns>
                         <TableColumn fx:id="keyColumn" prefWidth="75.0" text="Key"/>

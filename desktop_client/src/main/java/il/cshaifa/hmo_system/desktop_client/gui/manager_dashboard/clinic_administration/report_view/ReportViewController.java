@@ -39,7 +39,7 @@ public class ReportViewController extends ViewController {
         this.setViewText("Missed Appointments", "Type", "Amount missed");
         break;
       case AVERAGE_WAIT_TIMES:
-        this.setViewText("Average Doctor Wait Times", "Doctor name", "Wait time");
+        this.setViewText("Average Wait Times", "Staff member", "Wait time");
         break;
       case APPOINTMENT_ATTENDANCE:
         this.setViewText("Appointment Attendance", "Type", "Num. attended");

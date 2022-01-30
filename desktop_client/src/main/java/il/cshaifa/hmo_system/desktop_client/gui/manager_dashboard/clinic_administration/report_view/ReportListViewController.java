@@ -212,7 +212,8 @@ public class ReportListViewController extends RoleDefinedViewController {
     if (report_type != ReportType.AVERAGE_WAIT_TIMES) {
       report_event =
           new ReportEvent(selected_clinics, null, report_type, startDate, endDate, null, this);
-    } else {
+    } else if (staffList.getSelectionModel().getSelectedItems().isEmpty()) return;
+    else {
       var selected_staff_member = staffList.getSelectionModel().getSelectedItems().get(0);
       report_event =
           new ReportEvent(

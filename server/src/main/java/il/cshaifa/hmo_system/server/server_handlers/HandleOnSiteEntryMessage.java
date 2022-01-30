@@ -58,7 +58,7 @@ public class HandleOnSiteEntryMessage extends MessageHandler {
 
       this.q_update = ClinicQueues.push(patient_appt);
       this.class_message.q_appt = q_update.q_appt;
-      logSuccess(String.format("Entered queue: %s %s", user, q_update.q_appt.place_in_line));
+      logSuccess(String.format("Entered queue: %s %s", user, q_update.q_appt != null ? q_update.q_appt.place_in_line : ""));
     }
   }
 
