@@ -8,6 +8,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class contains all the constants necessary for the system's operation.
+ * It is initialized using database values in the server; once this is done
+ * the values for its init (a list of appointment types and roles) are
+ * sent to the client for local initialization. This ensures uniform behavior
+ * between client and server applications provided builds are current as well
+ * as (relatively) simple addition of roles, appointment types, and additional
+ * parameters as clinic policies change.
+ */
 public class Constants {
 
   // roles & appt_types

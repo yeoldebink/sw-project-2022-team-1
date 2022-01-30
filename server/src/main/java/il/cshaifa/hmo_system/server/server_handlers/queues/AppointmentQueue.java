@@ -11,6 +11,18 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Manages a single queue in a clinic, i.e. the nurses' queue, the
+ * lab techs' queue, or queues for individual doctors.
+ *
+ * Appointments are pushed either onto the appropriate queue (late or on-time)
+ * and popped alternately from each queue.
+ *
+ * The queue maintains a set of clients to update on changes. This class
+ * is only accessed by the ClinicQueues class, which surrounds those method
+ * calls with ReentrantLocks to prevent race conditions from destroying
+ * data structures.
+ */
 class AppointmentQueue {
   private final String name;
   private final String numberPrefix;
@@ -70,18 +82,36 @@ class AppointmentQueue {
     }
   }
 
+  /**
+   * Returns a list of clients registered to this queue
+   * @return
+   */
   public ArrayList<ConnectionToClient> getConnectedClients() {
     return new ArrayList<>(connected_clients);
   }
 
+  /**
+   * Registers a client to this queue
+   * @param client
+   */
   public void connectClient(ConnectionToClient client) {
     connected_clients.add(client);
   }
 
+  /**
+   * Unregisters a client from this queue
+   * @param client
+   */
   public void disconnectClient(ConnectionToClient client) {
     connected_clients.remove(client);
   }
 
+  /**
+   * Returns a linked list representing the queue in the order in which
+   * the appointments will be popped; this is for presentation to the
+   * staff member.
+   * @return
+   */
   public List<QueuedAppointment> getAsList() {
     Iterator<QueuedAppointment> i1, i2;
     if (pop_from_late_queue) {

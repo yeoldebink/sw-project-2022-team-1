@@ -17,6 +17,11 @@ import static il.cshaifa.hmo_system.Constants.NURSE;
 import static il.cshaifa.hmo_system.Constants.UNSTAFFED_APPT_TYPES;
 import static il.cshaifa.hmo_system.Constants.WALK_IN_ROLES;
 
+/**
+ * This class maintains maps of queues for each of the clinics and within those
+ * clinics, maps of queue names to queues. It is ONLY through here that the push and
+ * pop methods of the AppointmentQueue class are to be called.
+ */
 public class ClinicQueues {
 
   public static final HashMap<String, String> queueNames;
@@ -110,6 +115,10 @@ public class ClinicQueues {
     }
   }
 
+  /**
+   * Disconnects a staff member from their queue
+   * @param client
+   */
   public static void disconnectClient(ConnectionToClient client) {
     clinicQueuesLock.lock();
     try {
@@ -120,6 +129,11 @@ public class ClinicQueues {
     }
   }
 
+  /**
+   * Pushes an appointment onto the relevant queue in the relevant clinic
+   * @param appointment
+   * @return
+   */
   public static QueueUpdate push(Appointment appointment) {
     clinicQueuesLock.lock();
 
@@ -133,6 +147,11 @@ public class ClinicQueues {
     }
   }
 
+  /**
+   * Pops an appointment from the queue to which this client is connected
+   * @param client
+   * @return
+   */
   public static QueueUpdate pop(ConnectionToClient client) {
     clinicQueuesLock.lock();
 
@@ -145,6 +164,10 @@ public class ClinicQueues {
     }
   }
 
+  /**
+   * Closes all the queues of the given clinic
+   * @param clinic
+   */
   public static void closeClinic(Clinic clinic) {
     clinicQueuesLock.lock();
     try {
