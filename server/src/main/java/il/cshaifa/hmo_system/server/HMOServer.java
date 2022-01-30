@@ -285,8 +285,6 @@ public class HMOServer extends AbstractServer {
       // Get system properties & setup mail server
       Properties properties = System.getProperties();
       properties.setProperty("mail.smtp.host", host);
-//      properties.setProperty("mail.smtp.auth", "true");
-//      properties.setProperty("mail.smtp.ssl.trust", host);
       properties.setProperty("mail.smtp.port", port);
       properties.setProperty("mail.smtp.ssl.enable", "false");
       properties.setProperty("java.net.preferIPv4Stack", "true");

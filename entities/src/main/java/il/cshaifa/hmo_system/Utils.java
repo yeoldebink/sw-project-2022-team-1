@@ -7,7 +7,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.function.Function;
 
 public class Utils {
 
@@ -50,9 +49,6 @@ public class Utils {
   }
 
   public static String prettifyTime(LocalTime date) {
-    return String.format(
-        "%02d:%02d",
-        date.getHour(),
-        date.getMinute());
+    return String.format("%02d:%02d", date.getHour(), date.getMinute());
   }
 }
