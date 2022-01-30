@@ -1,5 +1,12 @@
 package il.cshaifa.hmo_system.desktop_client.gui.patient_dashboard.appointments;
 
+import static il.cshaifa.hmo_system.Constants.COVID_TEST;
+import static il.cshaifa.hmo_system.Constants.COVID_VACCINE;
+import static il.cshaifa.hmo_system.Constants.FAMILY_DOCTOR;
+import static il.cshaifa.hmo_system.Constants.FLU_VACCINE;
+import static il.cshaifa.hmo_system.Constants.PEDIATRICIAN;
+import static il.cshaifa.hmo_system.Constants.SPECIALIST;
+
 import il.cshaifa.hmo_system.CommonEnums.SetAppointmentAction;
 import il.cshaifa.hmo_system.client_base.base_controllers.Controller;
 import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
@@ -14,13 +21,6 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 import jdk.jshell.spi.ExecutionControl.NotImplementedException;
 import org.greenrobot.eventbus.Subscribe;
-
-import static il.cshaifa.hmo_system.Constants.COVID_TEST;
-import static il.cshaifa.hmo_system.Constants.COVID_VACCINE;
-import static il.cshaifa.hmo_system.Constants.FAMILY_DOCTOR;
-import static il.cshaifa.hmo_system.Constants.FLU_VACCINE;
-import static il.cshaifa.hmo_system.Constants.PEDIATRICIAN;
-import static il.cshaifa.hmo_system.Constants.SPECIALIST;
 
 public class SetAppointmentController extends Controller {
 

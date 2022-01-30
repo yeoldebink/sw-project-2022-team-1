@@ -1,5 +1,11 @@
 package il.cshaifa.hmo_system.server.server_handlers;
 
+import static il.cshaifa.hmo_system.Constants.APPT_DATE_COL;
+import static il.cshaifa.hmo_system.Constants.APPT_DURATION;
+import static il.cshaifa.hmo_system.Constants.CLINIC_COL;
+import static il.cshaifa.hmo_system.Constants.STAFF_MEMBER_COL;
+import static il.cshaifa.hmo_system.Constants.TYPE_COL;
+
 import il.cshaifa.hmo_system.CommonEnums.AddAppointmentRejectionReason;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.messages.AdminAppointmentMessage;
@@ -9,28 +15,18 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
-
-import static il.cshaifa.hmo_system.Constants.APPT_DATE_COL;
-import static il.cshaifa.hmo_system.Constants.APPT_DURATION;
-import static il.cshaifa.hmo_system.Constants.CLINIC_COL;
-import static il.cshaifa.hmo_system.Constants.STAFF_MEMBER_COL;
-import static il.cshaifa.hmo_system.Constants.TYPE_COL;
 
 public class HandleAdminAppointmentMessage extends MessageHandler {
   private final AdminAppointmentMessage class_message;
   private final CriteriaQuery<Appointment> cr;
   private final Root<Appointment> root;
 
-
-  public HandleAdminAppointmentMessage(AdminAppointmentMessage message, Session session,
-      ConnectionToClient client) {
+  public HandleAdminAppointmentMessage(
+      AdminAppointmentMessage message, Session session, ConnectionToClient client) {
     super(message, session, client);
     this.class_message = (AdminAppointmentMessage) this.message;
     cr = cb.createQuery(Appointment.class);
@@ -76,7 +72,9 @@ public class HandleAdminAppointmentMessage extends MessageHandler {
             cb.equal(root.get(CLINIC_COL), class_message.clinic),
             cb.equal(root.get(TYPE_COL), class_message.appt_type),
             cb.between(
-                root.get(APPT_DATE_COL), class_message.start_datetime, end_datetime.minusSeconds(1)));
+                root.get(APPT_DATE_COL),
+                class_message.start_datetime,
+                end_datetime.minusSeconds(1)));
     if (session.createQuery(cr).getResultList().size() > 0) {
       class_message.success = false;
       class_message.reject = AddAppointmentRejectionReason.OVERLAPPING;

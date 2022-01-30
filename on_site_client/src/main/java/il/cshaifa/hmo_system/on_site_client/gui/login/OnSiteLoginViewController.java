@@ -84,6 +84,7 @@ public class OnSiteLoginViewController extends ViewController {
 
   /**
    * Populates view clinic combo box
+   *
    * @param clinics Clinics to populate the combo box
    */
   public void populateClinics(List<Clinic> clinics) {

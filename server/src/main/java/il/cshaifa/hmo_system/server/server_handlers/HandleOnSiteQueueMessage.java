@@ -1,5 +1,9 @@
 package il.cshaifa.hmo_system.server.server_handlers;
 
+import static il.cshaifa.hmo_system.Constants.APPT_TYPE;
+import static il.cshaifa.hmo_system.Constants.LAB_TESTS;
+import static il.cshaifa.hmo_system.Constants.USER_COL;
+
 import il.cshaifa.hmo_system.CommonEnums.OnSiteQueueRejectionReason;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.User;
@@ -10,17 +14,11 @@ import il.cshaifa.hmo_system.server.server_handlers.queues.ClinicQueues;
 import il.cshaifa.hmo_system.server.server_handlers.queues.QueueUpdate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.logging.Logger;
 import org.hibernate.Session;
-
-import static il.cshaifa.hmo_system.Constants.APPT_TYPE;
-import static il.cshaifa.hmo_system.Constants.LAB_TESTS;
-import static il.cshaifa.hmo_system.Constants.USER_COL;
 
 public class HandleOnSiteQueueMessage extends MessageHandler {
   OnSiteQueueMessage class_message;
   public QueueUpdate q_update;
-
 
   public HandleOnSiteQueueMessage(Message msg, Session session, ConnectionToClient client) {
     super(msg, session, client);
@@ -75,7 +73,10 @@ public class HandleOnSiteQueueMessage extends MessageHandler {
       session.flush();
       this.class_message.rejection_reason = OnSiteQueueRejectionReason.ALREADY_IN_QUEUE;
     } else {
-      logSuccess(String.format("Entered queue: %s %s", class_message.patient.getUser(), q_update.q_appt.place_in_line));
+      logSuccess(
+          String.format(
+              "Entered queue: %s %s",
+              class_message.patient.getUser(), q_update.q_appt.place_in_line));
     }
   }
 
@@ -92,7 +93,10 @@ public class HandleOnSiteQueueMessage extends MessageHandler {
       class_message.updated_queue = q_update.updated_queue;
       class_message.queue_timestamp = q_update.timestamp;
 
-      logSuccess(String.format("Called: %s %s", q_update.q_appt.appointment.getPatient().getUser(), q_update.q_appt.place_in_line));
+      logSuccess(
+          String.format(
+              "Called: %s %s",
+              q_update.q_appt.appointment.getPatient().getUser(), q_update.q_appt.place_in_line));
     }
   }
 }

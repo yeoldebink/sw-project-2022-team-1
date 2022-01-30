@@ -1,5 +1,16 @@
 package il.cshaifa.hmo_system.server.server_handlers;
 
+import static il.cshaifa.hmo_system.Constants.APPT_DATE_COL;
+import static il.cshaifa.hmo_system.Constants.APPT_TYPE;
+import static il.cshaifa.hmo_system.Constants.CALLED_TIME_COL;
+import static il.cshaifa.hmo_system.Constants.FUTURE_APPT_CUTOFF_WEEKS;
+import static il.cshaifa.hmo_system.Constants.IS_SPECIALIST_COL;
+import static il.cshaifa.hmo_system.Constants.LOCK_TIME_COL;
+import static il.cshaifa.hmo_system.Constants.PATIENT_COL;
+import static il.cshaifa.hmo_system.Constants.SPECIALIST;
+import static il.cshaifa.hmo_system.Constants.SPECIALIST_ROLE_COL;
+import static il.cshaifa.hmo_system.Constants.TAKEN_COL;
+
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.Role;
 import il.cshaifa.hmo_system.entities.User;
@@ -11,31 +22,16 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Logger;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 
-import static il.cshaifa.hmo_system.Constants.APPT_DATE_COL;
-import static il.cshaifa.hmo_system.Constants.APPT_TYPE;
-import static il.cshaifa.hmo_system.Constants.CALLED_TIME_COL;
-import static il.cshaifa.hmo_system.Constants.FUTURE_APPT_CUTOFF_WEEKS;
-import static il.cshaifa.hmo_system.Constants.IS_SPECIALIST_COL;
-import static il.cshaifa.hmo_system.Constants.LOCK_TIME_COL;
-import static il.cshaifa.hmo_system.Constants.PATIENT_COL;
-import static il.cshaifa.hmo_system.Constants.ROLE;
-import static il.cshaifa.hmo_system.Constants.SPECIALIST;
-import static il.cshaifa.hmo_system.Constants.SPECIALIST_ROLE_COL;
-import static il.cshaifa.hmo_system.Constants.TAKEN_COL;
-
 public class HandleSetSpecialistAppointmentMessage extends MessageHandler {
-
 
   private final SetSpecialistAppointmentMessage class_message;
 
   public HandleSetSpecialistAppointmentMessage(
-      SetSpecialistAppointmentMessage message, Session session,
-      ConnectionToClient client) {
+      SetSpecialistAppointmentMessage message, Session session, ConnectionToClient client) {
     super(message, session, client);
     this.class_message = (SetSpecialistAppointmentMessage) this.message;
   }
@@ -90,8 +86,7 @@ public class HandleSetSpecialistAppointmentMessage extends MessageHandler {
             cb.between(
                 root.get(APPT_DATE_COL),
                 LocalDateTime.now(),
-                LocalDateTime.now()
-                    .plusWeeks(FUTURE_APPT_CUTOFF_WEEKS.get(APPT_TYPE(SPECIALIST)))),
+                LocalDateTime.now().plusWeeks(FUTURE_APPT_CUTOFF_WEEKS.get(APPT_TYPE(SPECIALIST)))),
             cb.isFalse(root.get(TAKEN_COL)),
             cb.or(
                 cb.isNull(root.get(LOCK_TIME_COL)),

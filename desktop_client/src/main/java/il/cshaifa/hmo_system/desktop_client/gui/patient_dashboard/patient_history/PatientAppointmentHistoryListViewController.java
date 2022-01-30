@@ -26,8 +26,7 @@ public class PatientAppointmentHistoryListViewController extends ViewController 
   @FXML private TableColumn<AppointmentForPatientHistoryView, String> appt_passed;
   @FXML private MenuItem cancel_menu_item;
 
-  public PatientAppointmentHistoryListViewController(Patient connected_patient) {
-  }
+  public PatientAppointmentHistoryListViewController(Patient connected_patient) {}
 
   @FXML
   public void initialize() {

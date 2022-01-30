@@ -29,14 +29,13 @@ public class PatientDashboardViewController extends ViewController {
   /** Green pass status (?) */
   @FXML
   public void initialize() {
-    nameLabel.setText(
-        String.format(
-            "Welcome, %s", patient.getUser().toString()));
+    nameLabel.setText(String.format("Welcome, %s", patient.getUser().toString()));
     nextAppointmentStatusLabel.setText("Your next appointment:");
   }
 
   /**
    * Emits event requesting appointment list view to open
+   *
    * @param event
    */
   @FXML
@@ -46,6 +45,7 @@ public class PatientDashboardViewController extends ViewController {
 
   /**
    * Emits event requesting the set appointment view to open
+   *
    * @param event
    */
   @FXML
@@ -56,6 +56,7 @@ public class PatientDashboardViewController extends ViewController {
 
   /**
    * Updates the view with information on connected user's upcoming appointment, if exists
+   *
    * @param appointment User's upcoming appointment (or null)
    */
   public void updateNextAppointmentInfo(Appointment appointment) {
@@ -97,6 +98,7 @@ public class PatientDashboardViewController extends ViewController {
 
   /**
    * Emits event requesting the my clinic view to open
+   *
    * @param event
    */
   @FXML
@@ -106,6 +108,7 @@ public class PatientDashboardViewController extends ViewController {
 
   /**
    * Emits event requesting the my green pass view to open
+   *
    * @param event
    */
   @FXML

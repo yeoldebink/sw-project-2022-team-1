@@ -1,5 +1,7 @@
 package il.cshaifa.hmo_system.desktop_client.gui.manager_dashboard.clinic_administration.clinic_appointments.appointment_list;
 
+import static il.cshaifa.hmo_system.Constants.WALK_IN_ROLES;
+
 import il.cshaifa.hmo_system.Utils;
 import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
 import il.cshaifa.hmo_system.desktop_client.events.AddAppointmentEvent;
@@ -20,8 +22,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.greenrobot.eventbus.EventBus;
-
-import static il.cshaifa.hmo_system.Constants.WALK_IN_ROLES;
 
 public class AdminAppointmentListViewController extends ViewController {
 
@@ -58,6 +58,7 @@ public class AdminAppointmentListViewController extends ViewController {
 
   /**
    * Emits event to delete appointments selected in the view
+   *
    * @param event
    */
   @FXML
@@ -86,9 +87,7 @@ public class AdminAppointmentListViewController extends ViewController {
     EventBus.getDefault().post(new AddAppointmentEvent(this.staff_member, null, 0, this));
   }
 
-  /**
-   * Binds table column values to class getters
-   */
+  /** Binds table column values to class getters */
   void setCellValueFactory() {
     appt_type.setCellValueFactory((new PropertyValueFactory<>("Appt_type")));
     appt_date.setCellValueFactory((new PropertyValueFactory<>("Appt_date")));
@@ -99,7 +98,9 @@ public class AdminAppointmentListViewController extends ViewController {
   }
 
   /**
-   * Sorts received appointments by date descending, converts to View class, and populates table view
+   * Sorts received appointments by date descending, converts to View class, and populates table
+   * view
+   *
    * @param appt_list List of appointments to populate the table view
    */
   void populateAppointmentsTable(ArrayList<Appointment> appt_list) {
@@ -182,5 +183,4 @@ public class AdminAppointmentListViewController extends ViewController {
       return type_name;
     }
   }
-
 }

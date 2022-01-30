@@ -42,13 +42,13 @@ public class AddAppointmentsViewController extends ViewController {
     if (this.staff_member == null) {
       this.staff_member_name.setText(type.getName());
     } else {
-      this.staff_member_name.setText(
-          staff_member.toString());
+      this.staff_member_name.setText(staff_member.toString());
     }
   }
 
   /**
    * Emits an event that requests appointments to be created
+   *
    * @param actionEvent
    */
   @FXML
@@ -81,6 +81,7 @@ public class AddAppointmentsViewController extends ViewController {
 
   /**
    * Sets error message and enables view Create Appointment button
+   *
    * @param message
    */
   public void setErrorMessage(String message) {

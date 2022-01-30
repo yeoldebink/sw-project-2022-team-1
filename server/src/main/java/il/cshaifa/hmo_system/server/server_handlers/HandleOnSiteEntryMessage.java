@@ -1,19 +1,5 @@
 package il.cshaifa.hmo_system.server.server_handlers;
 
-import il.cshaifa.hmo_system.entities.Appointment;
-import il.cshaifa.hmo_system.entities.Patient;
-import il.cshaifa.hmo_system.entities.User;
-import il.cshaifa.hmo_system.messages.OnSiteEntryMessage;
-import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
-import il.cshaifa.hmo_system.server.server_handlers.queues.ClinicQueues;
-import il.cshaifa.hmo_system.server.server_handlers.queues.QueueUpdate;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.logging.Logger;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-import org.hibernate.Session;
-
 import static il.cshaifa.hmo_system.Constants.APPT_DATE_COL;
 import static il.cshaifa.hmo_system.Constants.ARRIVED_COL;
 import static il.cshaifa.hmo_system.Constants.CALLED_TIME_COL;
@@ -24,11 +10,23 @@ import static il.cshaifa.hmo_system.Constants.ROLE;
 import static il.cshaifa.hmo_system.Constants.TAKEN_COL;
 import static il.cshaifa.hmo_system.Constants.USER_COL;
 
+import il.cshaifa.hmo_system.entities.Appointment;
+import il.cshaifa.hmo_system.entities.Patient;
+import il.cshaifa.hmo_system.entities.User;
+import il.cshaifa.hmo_system.messages.OnSiteEntryMessage;
+import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
+import il.cshaifa.hmo_system.server.server_handlers.queues.ClinicQueues;
+import il.cshaifa.hmo_system.server.server_handlers.queues.QueueUpdate;
+import java.time.LocalDateTime;
+import java.util.List;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import org.hibernate.Session;
+
 public class HandleOnSiteEntryMessage extends MessageHandler {
 
   OnSiteEntryMessage class_message;
   public QueueUpdate q_update;
-
 
   public HandleOnSiteEntryMessage(
       OnSiteEntryMessage message, Session session, ConnectionToClient client) {
@@ -58,7 +56,10 @@ public class HandleOnSiteEntryMessage extends MessageHandler {
 
       this.q_update = ClinicQueues.push(patient_appt);
       this.class_message.q_appt = q_update.q_appt;
-      logSuccess(String.format("Entered queue: %s %s", user, q_update.q_appt != null ? q_update.q_appt.place_in_line : ""));
+      logSuccess(
+          String.format(
+              "Entered queue: %s %s",
+              user, q_update.q_appt != null ? q_update.q_appt.place_in_line : ""));
     }
   }
 

@@ -1,27 +1,24 @@
 package il.cshaifa.hmo_system.server.server_handlers;
 
-import il.cshaifa.hmo_system.CommonEnums.SetAppointmentAction;
+import static il.cshaifa.hmo_system.Constants.PATIENT_COL;
+import static il.cshaifa.hmo_system.Constants.TAKEN_COL;
+
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.messages.SetAppointmentMessage;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.logging.Logger;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.UnresolvableObjectException;
 
-import static il.cshaifa.hmo_system.Constants.PATIENT_COL;
-import static il.cshaifa.hmo_system.Constants.TAKEN_COL;
-
 public class HandleSetAppointmentMessage extends MessageHandler {
   public SetAppointmentMessage class_message;
   public String appt_comments;
 
-
-  public HandleSetAppointmentMessage(SetAppointmentMessage message, Session session,
-      ConnectionToClient client) {
+  public HandleSetAppointmentMessage(
+      SetAppointmentMessage message, Session session, ConnectionToClient client) {
     super(message, session, client);
     this.class_message = (SetAppointmentMessage) this.message;
   }
@@ -92,7 +89,9 @@ public class HandleSetAppointmentMessage extends MessageHandler {
     CriteriaQuery<Appointment> cr = cb.createQuery(Appointment.class);
     Root<Appointment> root = cr.from(Appointment.class);
     cr.select(root)
-        .where(cb.isFalse(root.get(TAKEN_COL)), cb.equal(root.get(PATIENT_COL), class_message.patient));
+        .where(
+            cb.isFalse(root.get(TAKEN_COL)),
+            cb.equal(root.get(PATIENT_COL), class_message.patient));
     List<Appointment> users_locked_appointments = session.createQuery(cr).getResultList();
 
     // lock the relevant appointment

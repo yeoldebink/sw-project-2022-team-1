@@ -1,5 +1,9 @@
 package il.cshaifa.hmo_system.desktop_client.gui.login;
 
+import static il.cshaifa.hmo_system.Constants.CLINIC_MANAGER;
+import static il.cshaifa.hmo_system.Constants.HMO_MANAGER;
+import static il.cshaifa.hmo_system.Constants.PATIENT;
+
 import il.cshaifa.hmo_system.client_base.base_controllers.Controller;
 import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client_base.events.LoginEvent;
@@ -17,10 +21,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import jdk.jshell.spi.ExecutionControl.NotImplementedException;
 import org.greenrobot.eventbus.Subscribe;
-
-import static il.cshaifa.hmo_system.Constants.CLINIC_MANAGER;
-import static il.cshaifa.hmo_system.Constants.HMO_MANAGER;
-import static il.cshaifa.hmo_system.Constants.PATIENT;
 
 public class DesktopLoginController extends Controller {
 

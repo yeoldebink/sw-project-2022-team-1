@@ -1,5 +1,8 @@
 package il.cshaifa.hmo_system.desktop_client;
 
+import static il.cshaifa.hmo_system.Constants.CLINIC_MANAGER;
+import static il.cshaifa.hmo_system.Constants.ROLE;
+
 import il.cshaifa.hmo_system.CommonEnums.SetAppointmentAction;
 import il.cshaifa.hmo_system.CommonEnums.StaffAssignmentAction;
 import il.cshaifa.hmo_system.client_base.HMOClient;
@@ -36,9 +39,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.greenrobot.eventbus.EventBus;
-
-import static il.cshaifa.hmo_system.Constants.CLINIC_MANAGER;
-import static il.cshaifa.hmo_system.Constants.ROLE;
 
 public class HMODesktopClient extends HMOClient {
 

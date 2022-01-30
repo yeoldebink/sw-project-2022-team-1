@@ -1,5 +1,8 @@
 package il.cshaifa.hmo_system.desktop_client.gui.manager_dashboard.clinic_administration.clinic_view;
 
+import static il.cshaifa.hmo_system.Constants.HMO_MANAGER;
+import static il.cshaifa.hmo_system.Constants.ROLE;
+
 import il.cshaifa.hmo_system.client_base.base_controllers.RoleDefinedViewController;
 import il.cshaifa.hmo_system.client_base.events.ClinicEvent;
 import il.cshaifa.hmo_system.entities.Clinic;
@@ -9,9 +12,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import org.greenrobot.eventbus.EventBus;
-
-import static il.cshaifa.hmo_system.Constants.HMO_MANAGER;
-import static il.cshaifa.hmo_system.Constants.ROLE;
 
 public class AdminClinicViewController extends RoleDefinedViewController {
 
@@ -33,15 +33,12 @@ public class AdminClinicViewController extends RoleDefinedViewController {
     this.clinicCopy = new Clinic(clinic); // prevents saves for invalid objects
   }
 
-  /**
-   * Sets view data and applies view role behavior
-   */
+  /** Sets view data and applies view role behavior */
   @FXML
   public void initialize() {
     name.setText(clinicCopy.getName());
     address.setText(clinicCopy.getAddress());
-    manager.setText(
-        clinicCopy.getManager_user().toString());
+    manager.setText(clinicCopy.getManager_user().toString());
     sunHoursTextField.setText(clinicCopy.getSun_hours());
     monHoursTextField.setText(clinicCopy.getMon_hours());
     tueHoursTextField.setText(clinicCopy.getTue_hours());
@@ -70,6 +67,7 @@ public class AdminClinicViewController extends RoleDefinedViewController {
 
   /**
    * Emits an event requesting the Clinic entity in the event be updated in the database
+   *
    * @param actionEvent
    */
   @FXML

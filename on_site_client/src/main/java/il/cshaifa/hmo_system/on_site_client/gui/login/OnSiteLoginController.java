@@ -1,5 +1,8 @@
 package il.cshaifa.hmo_system.on_site_client.gui.login;
 
+import static il.cshaifa.hmo_system.Constants.CLINIC_MANAGER;
+import static il.cshaifa.hmo_system.Constants.ROLE;
+
 import il.cshaifa.hmo_system.CommonEnums.OnSiteLoginAction;
 import il.cshaifa.hmo_system.client_base.base_controllers.Controller;
 import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
@@ -19,10 +22,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.greenrobot.eventbus.Subscribe;
-
-import static il.cshaifa.hmo_system.Constants.CLINIC_MANAGER;
-import static il.cshaifa.hmo_system.Constants.HMO_MANAGER;
-import static il.cshaifa.hmo_system.Constants.ROLE;
 
 public class OnSiteLoginController extends Controller {
 

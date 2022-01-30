@@ -1,5 +1,18 @@
 package il.cshaifa.hmo_system.desktop_client.gui.patient_dashboard.appointments;
 
+import static il.cshaifa.hmo_system.Constants.APPT_TYPE;
+import static il.cshaifa.hmo_system.Constants.CARDIOLOGIST;
+import static il.cshaifa.hmo_system.Constants.COVID_TEST;
+import static il.cshaifa.hmo_system.Constants.COVID_VACCINE;
+import static il.cshaifa.hmo_system.Constants.DERMATOLOGIST;
+import static il.cshaifa.hmo_system.Constants.ENDOCRINOLOGIST;
+import static il.cshaifa.hmo_system.Constants.FAMILY_DOCTOR;
+import static il.cshaifa.hmo_system.Constants.FLU_VACCINE;
+import static il.cshaifa.hmo_system.Constants.NEUROLOGIST;
+import static il.cshaifa.hmo_system.Constants.ORTHOPEDIST;
+import static il.cshaifa.hmo_system.Constants.PEDIATRICIAN;
+import static il.cshaifa.hmo_system.Constants.SPECIALIST;
+
 import il.cshaifa.hmo_system.CommonEnums.SetAppointmentAction;
 import il.cshaifa.hmo_system.Utils;
 import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
@@ -51,20 +64,6 @@ import javafx.util.Callback;
 import jdk.jshell.spi.ExecutionControl.NotImplementedException;
 import org.greenrobot.eventbus.EventBus;
 import org.kordamp.ikonli.javafx.FontIcon;
-
-import static il.cshaifa.hmo_system.Constants.APPT_TYPE;
-import static il.cshaifa.hmo_system.Constants.CARDIOLOGIST;
-import static il.cshaifa.hmo_system.Constants.COVID_TEST;
-import static il.cshaifa.hmo_system.Constants.COVID_VACCINE;
-import static il.cshaifa.hmo_system.Constants.DERMATOLOGIST;
-import static il.cshaifa.hmo_system.Constants.ENDOCRINOLOGIST;
-import static il.cshaifa.hmo_system.Constants.FAMILY_DOCTOR;
-import static il.cshaifa.hmo_system.Constants.FLU_VACCINE;
-import static il.cshaifa.hmo_system.Constants.NEUROLOGIST;
-import static il.cshaifa.hmo_system.Constants.ORTHOPEDIST;
-import static il.cshaifa.hmo_system.Constants.PEDIATRICIAN;
-import static il.cshaifa.hmo_system.Constants.ROLE;
-import static il.cshaifa.hmo_system.Constants.SPECIALIST;
 
 public class SetAppointmentViewController extends ViewController {
   private final Patient patient;
@@ -286,8 +285,7 @@ public class SetAppointmentViewController extends ViewController {
     vaxTypeComboBox
         .getItems()
         .setAll(
-            FXCollections.observableArrayList(
-                APPT_TYPE(COVID_VACCINE), APPT_TYPE(FLU_VACCINE)));
+            FXCollections.observableArrayList(APPT_TYPE(COVID_VACCINE), APPT_TYPE(FLU_VACCINE)));
 
     vaxTypeComboBox
         .valueProperty()
@@ -352,8 +350,7 @@ public class SetAppointmentViewController extends ViewController {
 
     symptomsTextArea.setWrapText(true);
 
-    testAppointmentsButton.setOnAction(
-        (event) -> requestAppointments(APPT_TYPE(COVID_TEST), null));
+    testAppointmentsButton.setOnAction((event) -> requestAppointments(APPT_TYPE(COVID_TEST), null));
   }
 
   private void moveApptDatePicker(AppointmentType apptType) {
@@ -387,6 +384,7 @@ public class SetAppointmentViewController extends ViewController {
 
   /**
    * Populates specialist roles combo box
+   *
    * @param specialistRoles Roles that will populate the combo box
    */
   public void populateSpecialistRoles(List<Role> specialistRoles) {
@@ -395,6 +393,7 @@ public class SetAppointmentViewController extends ViewController {
 
   /**
    * Populates doctor combo box
+   *
    * @param appointments Data used during combo box population
    */
   public void populateSpecialistData(List<Appointment> appointments) {
@@ -421,6 +420,7 @@ public class SetAppointmentViewController extends ViewController {
 
   /**
    * Populates appointment list in view
+   *
    * @param appointments Appointments that will populate the view
    */
   public void populateAppointments(List<Appointment> appointments) {
@@ -442,6 +442,7 @@ public class SetAppointmentViewController extends ViewController {
 
   /**
    * Populates appointment dates in view date picker
+   *
    * @param appointments Appointment list containing dates
    * @param showDates Decide whether to show datepicker on current pane
    */
@@ -482,6 +483,7 @@ public class SetAppointmentViewController extends ViewController {
 
   /**
    * Emits event requesting appointment registration using appointment selected in view
+   *
    * @param event
    */
   @FXML
@@ -498,6 +500,7 @@ public class SetAppointmentViewController extends ViewController {
 
   /**
    * Expands selected pane
+   *
    * @param pane Pane to be expanded
    */
   public void switchToPane(Object pane) {
@@ -508,6 +511,7 @@ public class SetAppointmentViewController extends ViewController {
 
   /**
    * Emits event to retrieve appointments by appointment type & role
+   *
    * @param apptType
    * @param role
    */
@@ -528,7 +532,9 @@ public class SetAppointmentViewController extends ViewController {
   }
 
   /**
-   * Depending on if appointment registration was successful, displays response in view, and closes the view
+   * Depending on if appointment registration was successful, displays response in view, and closes
+   * the view
+   *
    * @param success Indicates whether appointment registration was successful
    * @param dialogX
    * @param dialogY
@@ -603,8 +609,7 @@ public class SetAppointmentViewController extends ViewController {
 
     public String getAppointmentDoctor() {
       if (appointment.getStaff_member() != null)
-        return "Dr. "
-            + appointment.getStaff_member().toString();
+        return "Dr. " + appointment.getStaff_member().toString();
       else return "";
     }
 
@@ -623,10 +628,8 @@ public class SetAppointmentViewController extends ViewController {
     }
 
     public String toString() {
-      return String.format(
-          "%s • %s", clinic.getName(), doctor.toString());
+      return String.format("%s • %s", clinic.getName(), doctor.toString());
     }
-
 
     public User getDoctor() {
       return doctor;

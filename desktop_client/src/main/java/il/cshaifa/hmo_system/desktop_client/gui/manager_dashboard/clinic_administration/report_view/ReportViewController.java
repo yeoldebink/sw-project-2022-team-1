@@ -30,9 +30,7 @@ public class ReportViewController extends ViewController {
     processReportType();
   }
 
-  /**
-   * Sets view text and table view column text by report type
-   */
+  /** Sets view text and table view column text by report type */
   private void processReportType() {
     switch (this.report_type) {
       case MISSED_APPOINTMENTS:

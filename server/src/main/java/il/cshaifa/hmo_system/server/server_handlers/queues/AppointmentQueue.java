@@ -12,16 +12,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Manages a single queue in a clinic, i.e. the nurses' queue, the
- * lab techs' queue, or queues for individual doctors.
+ * Manages a single queue in a clinic, i.e. the nurses' queue, the lab techs' queue, or queues for
+ * individual doctors.
  *
- * Appointments are pushed either onto the appropriate queue (late or on-time)
- * and popped alternately from each queue.
+ * <p>Appointments are pushed either onto the appropriate queue (late or on-time) and popped
+ * alternately from each queue.
  *
- * The queue maintains a set of clients to update on changes. This class
- * is only accessed by the ClinicQueues class, which surrounds those method
- * calls with ReentrantLocks to prevent race conditions from destroying
- * data structures.
+ * <p>The queue maintains a set of clients to update on changes. This class is only accessed by the
+ * ClinicQueues class, which surrounds those method calls with ReentrantLocks to prevent race
+ * conditions from destroying data structures.
  */
 class AppointmentQueue {
   private final String name;
@@ -84,6 +83,7 @@ class AppointmentQueue {
 
   /**
    * Returns a list of clients registered to this queue
+   *
    * @return
    */
   public ArrayList<ConnectionToClient> getConnectedClients() {
@@ -92,6 +92,7 @@ class AppointmentQueue {
 
   /**
    * Registers a client to this queue
+   *
    * @param client
    */
   public void connectClient(ConnectionToClient client) {
@@ -100,6 +101,7 @@ class AppointmentQueue {
 
   /**
    * Unregisters a client from this queue
+   *
    * @param client
    */
   public void disconnectClient(ConnectionToClient client) {
@@ -107,9 +109,9 @@ class AppointmentQueue {
   }
 
   /**
-   * Returns a linked list representing the queue in the order in which
-   * the appointments will be popped; this is for presentation to the
-   * staff member.
+   * Returns a linked list representing the queue in the order in which the appointments will be
+   * popped; this is for presentation to the staff member.
+   *
    * @return
    */
   public List<QueuedAppointment> getAsList() {

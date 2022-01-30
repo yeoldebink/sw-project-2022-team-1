@@ -1,13 +1,5 @@
 package il.cshaifa.hmo_system.server.server_handlers.queues;
 
-import il.cshaifa.hmo_system.entities.Appointment;
-import il.cshaifa.hmo_system.entities.Clinic;
-import il.cshaifa.hmo_system.entities.User;
-import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.concurrent.locks.ReentrantLock;
-
 import static il.cshaifa.hmo_system.Constants.COVID_TEST;
 import static il.cshaifa.hmo_system.Constants.COVID_VACCINE;
 import static il.cshaifa.hmo_system.Constants.FLU_VACCINE;
@@ -17,32 +9,40 @@ import static il.cshaifa.hmo_system.Constants.NURSE;
 import static il.cshaifa.hmo_system.Constants.UNSTAFFED_APPT_TYPES;
 import static il.cshaifa.hmo_system.Constants.WALK_IN_ROLES;
 
+import il.cshaifa.hmo_system.entities.Appointment;
+import il.cshaifa.hmo_system.entities.Clinic;
+import il.cshaifa.hmo_system.entities.User;
+import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
+import java.util.HashMap;
+import java.util.concurrent.locks.ReentrantLock;
+
 /**
- * This class maintains maps of queues for each of the clinics and within those
- * clinics, maps of queue names to queues. It is ONLY through here that the push and
- * pop methods of the AppointmentQueue class are to be called.
+ * This class maintains maps of queues for each of the clinics and within those clinics, maps of
+ * queue names to queues. It is ONLY through here that the push and pop methods of the
+ * AppointmentQueue class are to be called.
  */
 public class ClinicQueues {
 
   public static final HashMap<String, String> queueNames;
 
   static {
-    queueNames = new HashMap<>() {{
-      put(COVID_TEST, LAB_TESTS);
-      put(COVID_VACCINE, NURSE);
-      put(FLU_VACCINE, NURSE);
-      put(NURSE, NURSE);
-      put(LAB_TESTS, LAB_TESTS);
-      put(LAB_TECHNICIAN, LAB_TESTS);
-    }};
+    queueNames =
+        new HashMap<>() {
+          {
+            put(COVID_TEST, LAB_TESTS);
+            put(COVID_VACCINE, NURSE);
+            put(FLU_VACCINE, NURSE);
+            put(NURSE, NURSE);
+            put(LAB_TESTS, LAB_TESTS);
+            put(LAB_TECHNICIAN, LAB_TESTS);
+          }
+        };
   }
 
   private static String queueName(Appointment appointment) {
     var type_name = appointment.getType().getName();
     if (!UNSTAFFED_APPT_TYPES.contains(appointment.getType())) {
-      return String.format(
-          "Dr. %s",
-          appointment.getStaff_member().toString());
+      return String.format("Dr. %s", appointment.getStaff_member().toString());
     } else {
       return queueNames.get(type_name);
     }
@@ -117,6 +117,7 @@ public class ClinicQueues {
 
   /**
    * Disconnects a staff member from their queue
+   *
    * @param client
    */
   public static void disconnectClient(ConnectionToClient client) {
@@ -131,6 +132,7 @@ public class ClinicQueues {
 
   /**
    * Pushes an appointment onto the relevant queue in the relevant clinic
+   *
    * @param appointment
    * @return
    */
@@ -149,6 +151,7 @@ public class ClinicQueues {
 
   /**
    * Pops an appointment from the queue to which this client is connected
+   *
    * @param client
    * @return
    */
@@ -166,6 +169,7 @@ public class ClinicQueues {
 
   /**
    * Closes all the queues of the given clinic
+   *
    * @param clinic
    */
   public static void closeClinic(Clinic clinic) {

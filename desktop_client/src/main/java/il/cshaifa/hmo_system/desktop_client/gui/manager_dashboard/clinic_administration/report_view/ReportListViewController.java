@@ -1,5 +1,9 @@
 package il.cshaifa.hmo_system.desktop_client.gui.manager_dashboard.clinic_administration.report_view;
 
+import static il.cshaifa.hmo_system.Constants.CLINIC_MANAGER;
+import static il.cshaifa.hmo_system.Constants.HMO_MANAGER;
+import static il.cshaifa.hmo_system.Constants.ROLE;
+
 import il.cshaifa.hmo_system.client_base.base_controllers.RoleDefinedViewController;
 import il.cshaifa.hmo_system.client_base.events.Event;
 import il.cshaifa.hmo_system.desktop_client.HMODesktopClient;
@@ -29,10 +33,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import org.greenrobot.eventbus.EventBus;
-
-import static il.cshaifa.hmo_system.Constants.CLINIC_MANAGER;
-import static il.cshaifa.hmo_system.Constants.HMO_MANAGER;
-import static il.cshaifa.hmo_system.Constants.ROLE;
 
 public class ReportListViewController extends RoleDefinedViewController {
 
@@ -65,9 +65,7 @@ public class ReportListViewController extends RoleDefinedViewController {
     }
   }
 
-  /**
-   * Updates view by report type and User role
-   */
+  /** Updates view by report type and User role */
   @FXML
   public void initialize() {
     clinicList.setCellFactory(
@@ -88,10 +86,7 @@ public class ReportListViewController extends RoleDefinedViewController {
               @Override
               protected void updateItem(ClinicStaff staff, boolean b) {
                 super.updateItem(staff, b);
-                setText(
-                    staff == null
-                        ? null
-                        : staff.getUser().toString());
+                setText(staff == null ? null : staff.getUser().toString());
               }
             });
 
@@ -193,6 +188,7 @@ public class ReportListViewController extends RoleDefinedViewController {
 
   /**
    * Emits event requesting reports chosen through the view
+   *
    * @param event
    */
   @FXML
@@ -224,6 +220,7 @@ public class ReportListViewController extends RoleDefinedViewController {
 
   /**
    * Sets split pane with report pane (occurs after report request
+   *
    * @param reportPane Pane to be set
    */
   public void setViewedReport(Pane reportPane) {
@@ -241,6 +238,7 @@ public class ReportListViewController extends RoleDefinedViewController {
 
     /**
      * Override of String.toString
+     *
      * @return The report type name
      */
     @Override

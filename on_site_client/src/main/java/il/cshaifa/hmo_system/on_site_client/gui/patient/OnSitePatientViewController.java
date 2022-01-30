@@ -1,5 +1,8 @@
 package il.cshaifa.hmo_system.on_site_client.gui.patient;
 
+import static il.cshaifa.hmo_system.Constants.LAB_TESTS;
+import static il.cshaifa.hmo_system.Constants.NURSE;
+
 import il.cshaifa.hmo_system.CommonEnums.OnSiteLoginAction;
 import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
 import il.cshaifa.hmo_system.entities.AppointmentType;
@@ -20,9 +23,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import org.greenrobot.eventbus.EventBus;
-
-import static il.cshaifa.hmo_system.Constants.LAB_TESTS;
-import static il.cshaifa.hmo_system.Constants.NURSE;
 
 public class OnSitePatientViewController extends ViewController {
 

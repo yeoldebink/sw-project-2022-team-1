@@ -1,5 +1,7 @@
 package il.cshaifa.hmo_system.on_site_client.gui.patient;
 
+import static il.cshaifa.hmo_system.Constants.UNSTAFFED_NON_WALK_IN_APPT_TYPES;
+
 import il.cshaifa.hmo_system.Utils;
 import il.cshaifa.hmo_system.client_base.base_controllers.Controller;
 import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
@@ -38,8 +40,6 @@ import jdk.jshell.spi.ExecutionControl.NotImplementedException;
 import net.glxn.qrgen.core.image.ImageType;
 import net.glxn.qrgen.javase.QRCode;
 import org.greenrobot.eventbus.Subscribe;
-
-import static il.cshaifa.hmo_system.Constants.UNSTAFFED_NON_WALK_IN_APPT_TYPES;
 
 public class OnSitePatientController extends Controller {
 

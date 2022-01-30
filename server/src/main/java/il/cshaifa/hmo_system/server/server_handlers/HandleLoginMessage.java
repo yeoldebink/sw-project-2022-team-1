@@ -1,5 +1,13 @@
 package il.cshaifa.hmo_system.server.server_handlers;
 
+import static il.cshaifa.hmo_system.Constants.CLINIC_COL;
+import static il.cshaifa.hmo_system.Constants.CLINIC_MANAGER;
+import static il.cshaifa.hmo_system.Constants.HMO_MANAGER;
+import static il.cshaifa.hmo_system.Constants.MANAGER_USER_COL;
+import static il.cshaifa.hmo_system.Constants.PATIENT;
+import static il.cshaifa.hmo_system.Constants.ROLE;
+import static il.cshaifa.hmo_system.Constants.USER_COL;
+
 import il.cshaifa.hmo_system.CommonEnums.OnSiteLoginAction;
 import il.cshaifa.hmo_system.Utils;
 import il.cshaifa.hmo_system.entities.Clinic;
@@ -17,18 +25,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Logger;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
-
-import static il.cshaifa.hmo_system.Constants.CLINIC_COL;
-import static il.cshaifa.hmo_system.Constants.CLINIC_MANAGER;
-import static il.cshaifa.hmo_system.Constants.HMO_MANAGER;
-import static il.cshaifa.hmo_system.Constants.MANAGER_USER_COL;
-import static il.cshaifa.hmo_system.Constants.PATIENT;
-import static il.cshaifa.hmo_system.Constants.ROLE;
-import static il.cshaifa.hmo_system.Constants.USER_COL;
 
 public class HandleLoginMessage extends MessageHandler {
   public LoginMessage class_message;
@@ -37,7 +36,6 @@ public class HandleLoginMessage extends MessageHandler {
   private static final HashMap<User, ConnectionToClient> connected_desktop_users;
   private static final HashMap<ConnectionToClient, Clinic> onsite_connections;
   private static final HashMap<Clinic, HashSet<ConnectionToClient>> onsite_connections_by_clinic;
-
 
   static {
     connection_maps_lock = new ReentrantLock(true);
@@ -62,7 +60,8 @@ public class HandleLoginMessage extends MessageHandler {
     this.client.setInfo("user", user);
 
     logSuccess(
-        String.format("User logged in: %s, %s {%s}",
+        String.format(
+            "User logged in: %s, %s {%s}",
             client.getInfo("user_str"),
             user.getRole().getName(),
             this.class_message instanceof DesktopLoginMessage ? "Desktop" : "On-site"));

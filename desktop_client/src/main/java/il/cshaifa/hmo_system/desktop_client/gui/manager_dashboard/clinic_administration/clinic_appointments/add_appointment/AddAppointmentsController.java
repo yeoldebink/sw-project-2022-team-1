@@ -1,5 +1,8 @@
 package il.cshaifa.hmo_system.desktop_client.gui.manager_dashboard.clinic_administration.clinic_appointments.add_appointment;
 
+import static il.cshaifa.hmo_system.Constants.APPT_TYPE;
+import static il.cshaifa.hmo_system.Constants.SPECIALIST;
+
 import il.cshaifa.hmo_system.client_base.base_controllers.Controller;
 import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
 import il.cshaifa.hmo_system.desktop_client.HMODesktopClient;
@@ -10,9 +13,6 @@ import java.io.IOException;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import org.greenrobot.eventbus.Subscribe;
-
-import static il.cshaifa.hmo_system.Constants.APPT_TYPE;
-import static il.cshaifa.hmo_system.Constants.SPECIALIST;
 
 public class AddAppointmentsController extends Controller {
 
@@ -52,8 +52,7 @@ public class AddAppointmentsController extends Controller {
     User staff_member = null;
     AppointmentType appt_type;
     if (event.staff_member != null) {
-      if (event.staff_member.getRole().isSpecialist())
-        appt_type = APPT_TYPE(SPECIALIST);
+      if (event.staff_member.getRole().isSpecialist()) appt_type = APPT_TYPE(SPECIALIST);
       else appt_type = new AppointmentType(event.staff_member.getRole().getName());
       staff_member = new User(event.staff_member);
     } else {

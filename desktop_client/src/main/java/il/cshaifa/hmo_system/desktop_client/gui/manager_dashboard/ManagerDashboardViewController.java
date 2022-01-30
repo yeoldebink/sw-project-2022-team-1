@@ -1,5 +1,12 @@
 package il.cshaifa.hmo_system.desktop_client.gui.manager_dashboard;
 
+import static il.cshaifa.hmo_system.Constants.APPT_TYPE;
+import static il.cshaifa.hmo_system.Constants.CLINIC_MANAGER;
+import static il.cshaifa.hmo_system.Constants.COVID_TEST;
+import static il.cshaifa.hmo_system.Constants.COVID_VACCINE;
+import static il.cshaifa.hmo_system.Constants.FLU_VACCINE;
+import static il.cshaifa.hmo_system.Constants.ROLE;
+
 import il.cshaifa.hmo_system.client_base.base_controllers.RoleDefinedViewController;
 import il.cshaifa.hmo_system.client_base.events.ClinicEvent;
 import il.cshaifa.hmo_system.client_base.utils.ClientUtils;
@@ -17,13 +24,6 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import org.greenrobot.eventbus.EventBus;
-
-import static il.cshaifa.hmo_system.Constants.APPT_TYPE;
-import static il.cshaifa.hmo_system.Constants.CLINIC_MANAGER;
-import static il.cshaifa.hmo_system.Constants.COVID_TEST;
-import static il.cshaifa.hmo_system.Constants.COVID_VACCINE;
-import static il.cshaifa.hmo_system.Constants.FLU_VACCINE;
-import static il.cshaifa.hmo_system.Constants.ROLE;
 
 public class ManagerDashboardViewController extends RoleDefinedViewController {
 
@@ -70,6 +70,7 @@ public class ManagerDashboardViewController extends RoleDefinedViewController {
 
   /**
    * Emits event requesting to open the edit clinic dialog
+   *
    * @param event
    */
   @FXML
@@ -99,9 +100,9 @@ public class ManagerDashboardViewController extends RoleDefinedViewController {
     return reportListViewController;
   }
 
-
   /**
    * Emits event requesting to open add appointment view of Flu Vaccine appointment type
+   *
    * @param actionEvent
    */
   public void addFluVaccineAppts(ActionEvent actionEvent) {
@@ -110,6 +111,7 @@ public class ManagerDashboardViewController extends RoleDefinedViewController {
 
   /**
    * Emits event requesting to open add appointment view of COVID Vaccine appointment type
+   *
    * @param actionEvent
    */
   public void addCovidVaccineAppts(ActionEvent actionEvent) {
@@ -118,6 +120,7 @@ public class ManagerDashboardViewController extends RoleDefinedViewController {
 
   /**
    * Emits event requesting to open add appointment view of COVID Test appointment type
+   *
    * @param actionEvent
    */
   public void addCovidTests(ActionEvent actionEvent) {

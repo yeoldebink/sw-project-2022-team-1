@@ -1,6 +1,13 @@
 package il.cshaifa.hmo_system.server.server_handlers;
 
-import com.mysql.cj.log.Log;
+import static il.cshaifa.hmo_system.Constants.APPT_DATE_COL;
+import static il.cshaifa.hmo_system.Constants.APPT_TYPE;
+import static il.cshaifa.hmo_system.Constants.CALLED_TIME_COL;
+import static il.cshaifa.hmo_system.Constants.COVID_TEST;
+import static il.cshaifa.hmo_system.Constants.COVID_VACCINE;
+import static il.cshaifa.hmo_system.Constants.PATIENT_COL;
+import static il.cshaifa.hmo_system.Constants.TYPE_COL;
+
 import il.cshaifa.hmo_system.CommonEnums.GreenPassStatus;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.Patient;
@@ -9,19 +16,9 @@ import il.cshaifa.hmo_system.messages.Message;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.logging.Logger;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
-
-import static il.cshaifa.hmo_system.Constants.APPT_DATE_COL;
-import static il.cshaifa.hmo_system.Constants.APPT_TYPE;
-import static il.cshaifa.hmo_system.Constants.CALLED_TIME_COL;
-import static il.cshaifa.hmo_system.Constants.COVID_TEST;
-import static il.cshaifa.hmo_system.Constants.COVID_VACCINE;
-import static il.cshaifa.hmo_system.Constants.NAME_COL;
-import static il.cshaifa.hmo_system.Constants.PATIENT_COL;
-import static il.cshaifa.hmo_system.Constants.TYPE_COL;
 
 public class HandleGreenPassStatusMessage extends MessageHandler {
 
@@ -30,9 +27,7 @@ public class HandleGreenPassStatusMessage extends MessageHandler {
   private final CriteriaQuery<Appointment> cr;
   private final Root<Appointment> root;
 
-
-  public HandleGreenPassStatusMessage(Message message, Session session,
-      ConnectionToClient client) {
+  public HandleGreenPassStatusMessage(Message message, Session session, ConnectionToClient client) {
     super(message, session, client);
     this.class_message = (GreenPassStatusMessage) this.message;
     this.patient = ((GreenPassStatusMessage) message).patient;

@@ -1,25 +1,23 @@
 package il.cshaifa.hmo_system.server.server_handlers;
 
-import il.cshaifa.hmo_system.CommonEnums.StaffAssignmentAction;
+import static il.cshaifa.hmo_system.Constants.CLINIC_COL;
+import static il.cshaifa.hmo_system.Constants.USER_COL;
+
 import il.cshaifa.hmo_system.entities.ClinicStaff;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.StaffAssignmentMessage;
 import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import java.util.List;
-import java.util.logging.Logger;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
-
-import static il.cshaifa.hmo_system.Constants.CLINIC_COL;
-import static il.cshaifa.hmo_system.Constants.USER_COL;
 
 public class HandleStaffAssignmentMessage extends MessageHandler {
 
   private final StaffAssignmentMessage class_message;
 
-  public HandleStaffAssignmentMessage(StaffAssignmentMessage message, Session session,
-      ConnectionToClient client) {
+  public HandleStaffAssignmentMessage(
+      StaffAssignmentMessage message, Session session, ConnectionToClient client) {
     super(message, session, client);
     this.class_message = (StaffAssignmentMessage) this.message;
   }

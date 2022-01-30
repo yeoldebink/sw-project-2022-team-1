@@ -13,6 +13,7 @@ import javafx.util.Callback;
 public class ClientUtils {
   /**
    * Opens view component
+   *
    * @param view_controller Associated view controller
    * @param controller Associated controller
    * @param loader Loader used to generate scene
@@ -47,6 +48,7 @@ public class ClientUtils {
 
   /**
    * Opens view component, only if not already opened
+   *
    * @param view_controller Associated view controller
    * @param controller Associated controller
    * @param resizeable Should window be resizeable
@@ -93,6 +95,7 @@ public class ClientUtils {
 
   /**
    * Loads FXML
+   *
    * @param requestor Object requesting fxml to be loaded
    * @param target Target view controller referencing FXML
    * @param ctrl_factory Callback
@@ -113,6 +116,7 @@ public class ClientUtils {
 
   /**
    * Loads FXML
+   *
    * @param requestor Object requesting fxml to be loaded
    * @param target Target view controller referencing FXML
    * @return
@@ -124,6 +128,7 @@ public class ClientUtils {
 
   /**
    * Creates fxml path and returns
+   *
    * @param view_controller_class FXML's associated view controller
    * @return The fxml path
    */

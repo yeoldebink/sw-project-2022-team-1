@@ -1,5 +1,8 @@
 package il.cshaifa.hmo_system.desktop_client.gui.manager_dashboard;
 
+import static il.cshaifa.hmo_system.Constants.HMO_MANAGER;
+import static il.cshaifa.hmo_system.Constants.ROLE;
+
 import il.cshaifa.hmo_system.client_base.base_controllers.Controller;
 import il.cshaifa.hmo_system.client_base.base_controllers.ViewController;
 import il.cshaifa.hmo_system.client_base.events.ClinicEvent;
@@ -19,13 +22,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Objects;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import org.greenrobot.eventbus.Subscribe;
-
-import static il.cshaifa.hmo_system.Constants.HMO_MANAGER;
-import static il.cshaifa.hmo_system.Constants.ROLE;
 
 public class ManagerDashboardController extends Controller {
   private final AdminClinicListController adminClinicListController;
@@ -37,8 +36,7 @@ public class ManagerDashboardController extends Controller {
 
     var user = HMODesktopClient.getClient().getConnected_user();
 
-    stage.setTitle(
-        String.format("Management Console ~ %s", user));
+    stage.setTitle(String.format("Management Console ~ %s", user));
 
     adminClinicListController =
         new AdminClinicListController(

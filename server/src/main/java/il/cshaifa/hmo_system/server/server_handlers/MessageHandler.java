@@ -13,7 +13,7 @@ public abstract class MessageHandler {
   public ConnectionToClient client;
   protected static CriteriaBuilder cb;
 
-  private final static Logger LOGGER = Logger.getLogger(MessageHandler.class.getSimpleName());
+  private static final Logger LOGGER = Logger.getLogger(MessageHandler.class.getSimpleName());
 
   public MessageHandler(Message msg, Session session, ConnectionToClient client) {
     this.client = client;
@@ -27,7 +27,10 @@ public abstract class MessageHandler {
   public abstract void handleMessage();
 
   protected void logInfo(String msg) {
-    LOGGER.info(String.format("%s %s %s : %s", getClass().getSimpleName(), client.getInfo("user_str"), client.getInetAddress(), msg));
+    LOGGER.info(
+        String.format(
+            "%s %s %s : %s",
+            getClass().getSimpleName(), client.getInfo("user_str"), client.getInetAddress(), msg));
   }
 
   protected void logFailure(String msg) {

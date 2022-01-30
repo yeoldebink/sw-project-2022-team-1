@@ -46,17 +46,13 @@ public class StaffQueueViewController extends ViewController {
     this.staff_member = staff_member;
   }
 
-  /**
-   * Initializes and sets various view controls
-   */
+  /** Initializes and sets various view controls */
   @FXML
   public void initialize() {
     current_date.setText(Utils.prettifyDateTime(LocalDateTime.now()));
     appt_table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
     staff_member_role_name.setText(
-        staff_member.toString()
-            + ", "
-            + staff_member.getRole().getName());
+        staff_member.toString() + ", " + staff_member.getRole().getName());
     setCellValueFactory();
 
     Timeline clock =

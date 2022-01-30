@@ -40,7 +40,9 @@ public class ClinicStaffListViewController extends ViewController {
   }
 
   /**
-   * Converts each User (staff member) and boolean of input map into a View class and populates staff table view with that data
+   * Converts each User (staff member) and boolean of input map into a View class and populates
+   * staff table view with that data
+   *
    * @param staff_assignments
    */
   void populateStaffTable(Map<User, Boolean> staff_assignments) {

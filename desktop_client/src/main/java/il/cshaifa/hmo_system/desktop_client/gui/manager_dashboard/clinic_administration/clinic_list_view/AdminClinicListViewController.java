@@ -30,9 +30,7 @@ public class AdminClinicListViewController extends ViewController {
     setCellValueFactory();
   }
 
-  /**
-   * Binds table column values to class getters
-   */
+  /** Binds table column values to class getters */
   void setCellValueFactory() {
     name.setCellValueFactory(new PropertyValueFactory<>("Name"));
     address.setCellValueFactory(new PropertyValueFactory<>("Address"));
@@ -50,6 +48,7 @@ public class AdminClinicListViewController extends ViewController {
 
   /**
    * Emits event to open the edit clinic dialog of the clinic selected in the view
+   *
    * @param event
    */
   @FXML
@@ -60,6 +59,7 @@ public class AdminClinicListViewController extends ViewController {
 
   /**
    * Populates clinic table view with clinics
+   *
    * @param clinics Clinics to populate the table view
    */
   void populateClinicTable(ArrayList<Clinic> clinics) {

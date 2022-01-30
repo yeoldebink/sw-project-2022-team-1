@@ -1,23 +1,5 @@
 package il.cshaifa.hmo_system.server.server_handlers;
 
-import il.cshaifa.hmo_system.entities.Appointment;
-import il.cshaifa.hmo_system.messages.AppointmentMessage;
-import il.cshaifa.hmo_system.messages.AppointmentMessage.*;
-import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-import org.hibernate.Session;
-
 import static il.cshaifa.hmo_system.Constants.APPT_DATE_COL;
 import static il.cshaifa.hmo_system.Constants.CLINIC_COL;
 import static il.cshaifa.hmo_system.Constants.FUTURE_APPT_CUTOFF_WEEKS;
@@ -28,6 +10,20 @@ import static il.cshaifa.hmo_system.Constants.TAKEN_COL;
 import static il.cshaifa.hmo_system.Constants.TYPE_COL;
 import static il.cshaifa.hmo_system.Constants.UNSTAFFED_APPT_TYPES;
 
+import il.cshaifa.hmo_system.entities.Appointment;
+import il.cshaifa.hmo_system.messages.AppointmentMessage;
+import il.cshaifa.hmo_system.messages.AppointmentMessage.*;
+import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import org.hibernate.Session;
+
 public class HandleAppointmentMessage extends MessageHandler {
 
   private final AppointmentMessage class_message;
@@ -35,9 +31,8 @@ public class HandleAppointmentMessage extends MessageHandler {
   private final CriteriaQuery<Appointment> cr;
   private final Root<Appointment> root;
 
-
-  public HandleAppointmentMessage(AppointmentMessage message, Session session,
-      ConnectionToClient client) {
+  public HandleAppointmentMessage(
+      AppointmentMessage message, Session session, ConnectionToClient client) {
     super(message, session, client);
     this.class_message = (AppointmentMessage) this.message;
     cr = cb.createQuery(Appointment.class);
@@ -78,15 +73,15 @@ public class HandleAppointmentMessage extends MessageHandler {
         LocalDateTime.now().plusWeeks(FUTURE_APPT_CUTOFF_WEEKS.get(class_message.type));
 
     if (UNSTAFFED_APPT_TYPES.contains(class_message.type)) {
-        cr.select(root)
-            .where(
-                cb.between(root.get(APPT_DATE_COL), start, end),
-                cb.equal(root.get(TYPE_COL), class_message.type),
-                cb.isFalse(root.get(TAKEN_COL)),
-                cb.or(
-                    cb.isNull(root.get(LOCK_TIME_COL)),
-                    cb.lessThan(root.get(LOCK_TIME_COL), start),
-                    cb.equal(root.get(PATIENT_COL), class_message.patient)));
+      cr.select(root)
+          .where(
+              cb.between(root.get(APPT_DATE_COL), start, end),
+              cb.equal(root.get(TYPE_COL), class_message.type),
+              cb.isFalse(root.get(TAKEN_COL)),
+              cb.or(
+                  cb.isNull(root.get(LOCK_TIME_COL)),
+                  cb.lessThan(root.get(LOCK_TIME_COL), start),
+                  cb.equal(root.get(PATIENT_COL), class_message.patient)));
     } else {
       cr.select(root)
           .where(
@@ -119,7 +114,8 @@ public class HandleAppointmentMessage extends MessageHandler {
   /** Get a patient's appointments past and future */
   private void getPatientHistory() {
     cr.select(root)
-        .where(cb.equal(root.get(PATIENT_COL), class_message.patient), cb.isTrue(root.get(TAKEN_COL)));
+        .where(
+            cb.equal(root.get(PATIENT_COL), class_message.patient), cb.isTrue(root.get(TAKEN_COL)));
     class_message.appointments = session.createQuery(cr).getResultList();
   }
 

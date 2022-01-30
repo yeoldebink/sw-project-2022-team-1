@@ -1,10 +1,16 @@
 package il.cshaifa.hmo_system.server.server_handlers;
 
+import static il.cshaifa.hmo_system.Constants.APPT_DATE_COL;
+import static il.cshaifa.hmo_system.Constants.CALLED_TIME_COL;
+import static il.cshaifa.hmo_system.Constants.CLINIC_COL;
+import static il.cshaifa.hmo_system.Constants.STAFF_MEMBER_COL;
+import static il.cshaifa.hmo_system.Constants.TAKEN_COL;
+import static il.cshaifa.hmo_system.Constants.UNSTAFFED_APPT_TYPES;
+
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.ClinicStaff;
 import il.cshaifa.hmo_system.messages.ReportMessage;
-import il.cshaifa.hmo_system.messages.ReportMessage.ReportType;
 import il.cshaifa.hmo_system.reports.DailyAppointmentTypesReport;
 import il.cshaifa.hmo_system.reports.DailyAverageWaitTimeReport;
 import il.cshaifa.hmo_system.reports.DailyReport;
@@ -14,17 +20,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Logger;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
-
-import static il.cshaifa.hmo_system.Constants.APPT_DATE_COL;
-import static il.cshaifa.hmo_system.Constants.CALLED_TIME_COL;
-import static il.cshaifa.hmo_system.Constants.CLINIC_COL;
-import static il.cshaifa.hmo_system.Constants.STAFF_MEMBER_COL;
-import static il.cshaifa.hmo_system.Constants.TAKEN_COL;
-import static il.cshaifa.hmo_system.Constants.UNSTAFFED_APPT_TYPES;
 
 public class HandleReportMessage extends MessageHandler {
   ReportMessage class_message;
@@ -36,9 +34,7 @@ public class HandleReportMessage extends MessageHandler {
   private final Root<Appointment> root;
   private List<Appointment> relevant_appointments;
 
-
-  public HandleReportMessage(ReportMessage message, Session session,
-      ConnectionToClient client) {
+  public HandleReportMessage(ReportMessage message, Session session, ConnectionToClient client) {
     super(message, session, client);
     this.class_message = (ReportMessage) this.message;
     cr = cb.createQuery(Appointment.class);

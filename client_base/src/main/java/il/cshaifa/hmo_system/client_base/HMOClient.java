@@ -57,7 +57,9 @@ public abstract class HMOClient extends AbstractClient {
       } else if (message.getClass().equals(AppointmentMessage.class)) {
         handleAppointmentMessage((AppointmentMessage) message);
       } else if (message.getClass().equals(InitConstantsMessage.class)) {
-        Constants.init(((InitConstantsMessage) message).appointment_types, ((InitConstantsMessage) message).roles);
+        Constants.init(
+            ((InitConstantsMessage) message).appointment_types,
+            ((InitConstantsMessage) message).roles);
       }
     }
   }

@@ -7,10 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class contains all the data relevant to a queue update operation:
- * the popped or pushed appointment, the updated queue, a list of clients
- * which need to receive updates about this queue, and a timestamp of
- * when this update took place.
+ * This class contains all the data relevant to a queue update operation: the popped or pushed
+ * appointment, the updated queue, a list of clients which need to receive updates about this queue,
+ * and a timestamp of when this update took place.
  */
 public class QueueUpdate {
   public QueuedAppointment q_appt;

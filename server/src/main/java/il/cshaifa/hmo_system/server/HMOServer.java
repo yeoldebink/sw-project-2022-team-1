@@ -1,5 +1,8 @@
 package il.cshaifa.hmo_system.server;
 
+import static il.cshaifa.hmo_system.Constants.APPT_DATE_COL;
+import static il.cshaifa.hmo_system.Constants.TAKEN_COL;
+
 import il.cshaifa.hmo_system.Constants;
 import il.cshaifa.hmo_system.Utils;
 import il.cshaifa.hmo_system.entities.Appointment;
@@ -63,12 +66,10 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
-import static il.cshaifa.hmo_system.Constants.APPT_DATE_COL;
-import static il.cshaifa.hmo_system.Constants.TAKEN_COL;
-
 public class HMOServer extends AbstractServer {
 
-  private static final Logger LOGGER = java.util.logging.Logger.getLogger(HMOServer.class.getSimpleName());
+  private static final Logger LOGGER =
+      java.util.logging.Logger.getLogger(HMOServer.class.getSimpleName());
 
   public static Session session;
 
@@ -173,8 +174,8 @@ public class HMOServer extends AbstractServer {
       } else if (msg_class == ClinicStaffMessage.class) {
         handler = new HandleStaffMessage((ClinicStaffMessage) msg, session, client);
       } else if (msg_class == UpdateAppointmentMessage.class) {
-        handler = new HandleUpdateAppointmentMessage((UpdateAppointmentMessage) msg, session,
-            client);
+        handler =
+            new HandleUpdateAppointmentMessage((UpdateAppointmentMessage) msg, session, client);
       }
 
       assert handler != null;
@@ -211,9 +212,10 @@ public class HMOServer extends AbstractServer {
   @Override
   protected synchronized void clientDisconnected(ConnectionToClient client) {
     var user_str = client.getInfo("user_str");
-    LOGGER.info(String.format(
-        "Client disconnected: [%s] @ %s",
-        user_str != null ? user_str : "not logged in", client.getInfo("inet")));
+    LOGGER.info(
+        String.format(
+            "Client disconnected: [%s] @ %s",
+            user_str != null ? user_str : "not logged in", client.getInfo("inet")));
 
     HandleLoginMessage.disconnectClient(client);
     ClinicQueues.disconnectClient(client);
@@ -339,6 +341,7 @@ public class HMOServer extends AbstractServer {
 
     /**
      * Sends email using properties defined in class fields
+     *
      * @param to Email to send to
      * @param subject Email subject text
      * @param bodyText Email body text
@@ -346,7 +349,9 @@ public class HMOServer extends AbstractServer {
      */
     public static void sendEmail(String to, String subject, String bodyText)
         throws IllegalArgumentException {
-      if (!EmailValidator.getInstance().isValid(to)) {throw new IllegalArgumentException();}
+      if (!EmailValidator.getInstance().isValid(to)) {
+        throw new IllegalArgumentException();
+      }
 
       // Get system properties & setup mail server
       Properties properties = System.getProperties();

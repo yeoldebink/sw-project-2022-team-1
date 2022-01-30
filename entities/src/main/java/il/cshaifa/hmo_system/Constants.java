@@ -9,13 +9,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This class contains all the constants necessary for the system's operation.
- * It is initialized using database values in the server; once this is done
- * the values for its init (a list of appointment types and roles) are
- * sent to the client for local initialization. This ensures uniform behavior
- * between client and server applications provided builds are current as well
- * as (relatively) simple addition of roles, appointment types, and additional
- * parameters as clinic policies change.
+ * This class contains all the constants necessary for the system's operation. It is initialized
+ * using database values in the server; once this is done the values for its init (a list of
+ * appointment types and roles) are sent to the client for local initialization. This ensures
+ * uniform behavior between client and server applications provided builds are current as well as
+ * (relatively) simple addition of roles, appointment types, and additional parameters as clinic
+ * policies change.
  */
 public class Constants {
 
@@ -74,65 +73,69 @@ public class Constants {
   public static final String SALT_COL = "salt";
 
   public static void init(List<AppointmentType> appt_types, List<Role> roles) {
-    APPOINTMENT_TYPES = new HashMap<>() {{
-      for (var appt_type : appt_types) {
-        put(appt_type.getName(), appt_type);
-      }
-    }};
+    APPOINTMENT_TYPES =
+        new HashMap<>() {
+          {
+            for (var appt_type : appt_types) {
+              put(appt_type.getName(), appt_type);
+            }
+          }
+        };
 
-    ROLES = new HashMap<>() {{
-      for (var role : roles) {
-        put(role.getName(), role);
-      }
-    }};
+    ROLES =
+        new HashMap<>() {
+          {
+            for (var role : roles) {
+              put(role.getName(), role);
+            }
+          }
+        };
 
     // init maps
-    FUTURE_APPT_CUTOFF_WEEKS = new HashMap<>() {{
-      put(APPT_TYPE(FAMILY_DOCTOR), 4L);
-      put(APPT_TYPE(PEDIATRICIAN), 4L);
-      put(APPT_TYPE(COVID_TEST), 4L);
-      put(APPT_TYPE(COVID_VACCINE), 4L);
-      put(APPT_TYPE(FLU_VACCINE), 4L);
-      put(APPT_TYPE(SPECIALIST), 12L);
-    }};
+    FUTURE_APPT_CUTOFF_WEEKS =
+        new HashMap<>() {
+          {
+            put(APPT_TYPE(FAMILY_DOCTOR), 4L);
+            put(APPT_TYPE(PEDIATRICIAN), 4L);
+            put(APPT_TYPE(COVID_TEST), 4L);
+            put(APPT_TYPE(COVID_VACCINE), 4L);
+            put(APPT_TYPE(FLU_VACCINE), 4L);
+            put(APPT_TYPE(SPECIALIST), 12L);
+          }
+        };
 
-    GENERAL_PHYSICAN = new HashSet<>(Arrays.asList(
-        APPT_TYPE(FAMILY_DOCTOR),
-        APPT_TYPE(PEDIATRICIAN))
-    );
+    GENERAL_PHYSICAN =
+        new HashSet<>(Arrays.asList(APPT_TYPE(FAMILY_DOCTOR), APPT_TYPE(PEDIATRICIAN)));
 
-    UNSTAFFED_APPT_TYPES = new HashSet<>(Arrays.asList(
-        APPT_TYPE(NURSE),
-        APPT_TYPE(LAB_TESTS),
-        APPT_TYPE(COVID_TEST),
-        APPT_TYPE(COVID_VACCINE),
-        APPT_TYPE(FLU_VACCINE)
-    ));
+    UNSTAFFED_APPT_TYPES =
+        new HashSet<>(
+            Arrays.asList(
+                APPT_TYPE(NURSE),
+                APPT_TYPE(LAB_TESTS),
+                APPT_TYPE(COVID_TEST),
+                APPT_TYPE(COVID_VACCINE),
+                APPT_TYPE(FLU_VACCINE)));
 
-    UNSTAFFED_NON_WALK_IN_APPT_TYPES = new HashSet<>(Arrays.asList(
-        APPT_TYPE(COVID_TEST),
-        APPT_TYPE(COVID_VACCINE),
-        APPT_TYPE(FLU_VACCINE)
-    ));
+    UNSTAFFED_NON_WALK_IN_APPT_TYPES =
+        new HashSet<>(
+            Arrays.asList(APPT_TYPE(COVID_TEST), APPT_TYPE(COVID_VACCINE), APPT_TYPE(FLU_VACCINE)));
 
-    APPT_DURATION = new HashMap<>() {{
-      for (var appt_type : UNSTAFFED_APPT_TYPES) {
-        put(appt_type, 10L);
-      }
+    APPT_DURATION =
+        new HashMap<>() {
+          {
+            for (var appt_type : UNSTAFFED_APPT_TYPES) {
+              put(appt_type, 10L);
+            }
 
-      for (var appt_type : GENERAL_PHYSICAN) {
-        put(appt_type, 15L);
-      }
+            for (var appt_type : GENERAL_PHYSICAN) {
+              put(appt_type, 15L);
+            }
 
-      put(APPT_TYPE(SPECIALIST), 20L);
-    }};
+            put(APPT_TYPE(SPECIALIST), 20L);
+          }
+        };
 
-    WALK_IN_ROLES = new HashSet<>(
-        Arrays.asList(
-            ROLE(NURSE),
-            ROLE(LAB_TECHNICIAN)
-        )
-    );
+    WALK_IN_ROLES = new HashSet<>(Arrays.asList(ROLE(NURSE), ROLE(LAB_TECHNICIAN)));
 
     MANAGER_ROLES = new HashSet<>(Arrays.asList(ROLE(HMO_MANAGER), ROLE(CLINIC_MANAGER)));
   }
@@ -157,4 +160,3 @@ public class Constants {
   public static HashSet<Role> WALK_IN_ROLES;
   public static HashSet<Role> MANAGER_ROLES;
 }
-
