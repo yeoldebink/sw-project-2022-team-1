@@ -1,10 +1,19 @@
 package il.cshaifa.hmo_system.server.server_handlers;
 
+import static il.cshaifa.hmo_system.Constants.APPT_DATE_COL;
+import static il.cshaifa.hmo_system.Constants.APPT_TYPE;
+import static il.cshaifa.hmo_system.Constants.CALLED_TIME_COL;
+import static il.cshaifa.hmo_system.Constants.COVID_TEST;
+import static il.cshaifa.hmo_system.Constants.COVID_VACCINE;
+import static il.cshaifa.hmo_system.Constants.PATIENT_COL;
+import static il.cshaifa.hmo_system.Constants.TYPE_COL;
+
 import il.cshaifa.hmo_system.CommonEnums.GreenPassStatus;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.Patient;
 import il.cshaifa.hmo_system.messages.GreenPassStatusMessage;
 import il.cshaifa.hmo_system.messages.Message;
+import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.criteria.CriteriaQuery;
@@ -18,8 +27,8 @@ public class HandleGreenPassStatusMessage extends MessageHandler {
   private final CriteriaQuery<Appointment> cr;
   private final Root<Appointment> root;
 
-  public HandleGreenPassStatusMessage(Message message, Session session) {
-    super(message, session);
+  public HandleGreenPassStatusMessage(Message message, Session session, ConnectionToClient client) {
+    super(message, session, client);
     this.class_message = (GreenPassStatusMessage) this.message;
     this.patient = ((GreenPassStatusMessage) message).patient;
     cr = cb.createQuery(Appointment.class);
@@ -29,6 +38,7 @@ public class HandleGreenPassStatusMessage extends MessageHandler {
   @Override
   public void handleMessage() {
     class_message.status = getGreenPassStatus();
+    logInfo(class_message.status.toString());
   }
 
   /** Updates the status of patients COVID-19 green-pass */
@@ -48,11 +58,11 @@ public class HandleGreenPassStatusMessage extends MessageHandler {
   public LocalDateTime getLastCovidTestDate() {
     cr.select(root)
         .where(
-            cb.equal(root.get("patient"), patient),
-            cb.equal(root.get("type").get("name"), "COVID Test"),
-            cb.lessThanOrEqualTo(root.get("appt_date"), LocalDateTime.now()),
-            cb.isNotNull(root.get("called_time")));
-    cr.orderBy(cb.asc(root.get("appt_date")));
+            cb.equal(root.get(PATIENT_COL), patient),
+            cb.equal(root.get(TYPE_COL), APPT_TYPE(COVID_TEST)),
+            cb.lessThanOrEqualTo(root.get(APPT_DATE_COL), LocalDateTime.now()),
+            cb.isNotNull(root.get(CALLED_TIME_COL)));
+    cr.orderBy(cb.asc(root.get(APPT_DATE_COL)));
     List<Appointment> covid_test_appt = session.createQuery(cr).getResultList();
     if (covid_test_appt.size() > 0) {
       class_message.last_covid_test = covid_test_appt.get(0).getDate();
@@ -65,11 +75,11 @@ public class HandleGreenPassStatusMessage extends MessageHandler {
   public LocalDateTime getLastCovidVaccineDate() {
     cr.select(root)
         .where(
-            cb.equal(root.get("patient"), patient),
-            cb.equal(root.get("type").get("name"), "COVID Vaccine"),
-            cb.lessThanOrEqualTo(root.get("appt_date"), LocalDateTime.now()),
-            cb.isNotNull(root.get("called_time")));
-    cr.orderBy(cb.asc(root.get("appt_date")));
+            cb.equal(root.get(PATIENT_COL), patient),
+            cb.equal(root.get(TYPE_COL), APPT_TYPE(COVID_VACCINE)),
+            cb.lessThanOrEqualTo(root.get(APPT_DATE_COL), LocalDateTime.now()),
+            cb.isNotNull(root.get(CALLED_TIME_COL)));
+    cr.orderBy(cb.asc(root.get(APPT_DATE_COL)));
     List<Appointment> covid_vaccine_appt = session.createQuery(cr).getResultList();
     if (covid_vaccine_appt.size() > 0) {
       class_message.last_vaccine = covid_vaccine_appt.get(0).getDate();

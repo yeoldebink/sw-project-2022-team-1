@@ -1,10 +1,25 @@
 package il.cshaifa.hmo_system.server.server_handlers;
 
+import static il.cshaifa.hmo_system.Constants.APPT_DATE_COL;
+import static il.cshaifa.hmo_system.Constants.APPT_TYPE;
+import static il.cshaifa.hmo_system.Constants.CALLED_TIME_COL;
+import static il.cshaifa.hmo_system.Constants.FUTURE_APPT_CUTOFF_WEEKS;
+import static il.cshaifa.hmo_system.Constants.IS_SPECIALIST_COL;
+import static il.cshaifa.hmo_system.Constants.LOCK_TIME_COL;
+import static il.cshaifa.hmo_system.Constants.PATIENT_COL;
+import static il.cshaifa.hmo_system.Constants.SPECIALIST;
+import static il.cshaifa.hmo_system.Constants.SPECIALIST_ROLE_COL;
+import static il.cshaifa.hmo_system.Constants.TAKEN_COL;
+
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.Role;
 import il.cshaifa.hmo_system.entities.User;
 import il.cshaifa.hmo_system.messages.SetSpecialistAppointmentMessage;
+import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.persistence.criteria.CriteriaQuery;
@@ -16,25 +31,30 @@ public class HandleSetSpecialistAppointmentMessage extends MessageHandler {
   private final SetSpecialistAppointmentMessage class_message;
 
   public HandleSetSpecialistAppointmentMessage(
-      SetSpecialistAppointmentMessage message, Session session) {
-    super(message, session);
+      SetSpecialistAppointmentMessage message, Session session, ConnectionToClient client) {
+    super(message, session, client);
     this.class_message = (SetSpecialistAppointmentMessage) this.message;
   }
 
   @Override
   public void handleMessage() {
-    if (class_message.request == SetSpecialistAppointmentMessage.RequestType.GET_ROLES) {
-      getSpecialistRoleList();
-    } else if (class_message.request
-        == SetSpecialistAppointmentMessage.RequestType.GET_APPOINTMENTS) {
-      getSpecialistAppointments();
+    switch (class_message.request) {
+      case GET_ROLES:
+        getSpecialistRoleList();
+        break;
+
+      case GET_APPOINTMENTS:
+        getSpecialistAppointments();
+        break;
     }
+
+    logSuccess(class_message.request.toString());
   }
 
   private void getSpecialistRoleList() {
     CriteriaQuery<Role> cr = cb.createQuery(Role.class);
     Root<Role> root = cr.from(Role.class);
-    cr.select(root).where(cb.isTrue(root.get("is_specialist")));
+    cr.select(root).where(cb.isTrue(root.get(IS_SPECIALIST_COL)));
     class_message.role_list = session.createQuery(cr).getResultList();
   }
 
@@ -45,11 +65,11 @@ public class HandleSetSpecialistAppointmentMessage extends MessageHandler {
 
     cr.select(root)
         .where(
-            cb.equal(root.get("patient"), class_message.patient),
-            cb.equal(root.get("specialist_role"), class_message.chosen_role),
-            cb.lessThan(root.get("appt_date"), LocalDateTime.now()),
-            cb.isNotNull(root.get("called_time")));
-    cr.orderBy(cb.desc(root.get("appt_date")));
+            cb.equal(root.get(PATIENT_COL), class_message.patient),
+            cb.equal(root.get(SPECIALIST_ROLE_COL), class_message.chosen_role),
+            cb.lessThan(root.get(APPT_DATE_COL), LocalDateTime.now()),
+            cb.isNotNull(root.get(CALLED_TIME_COL)));
+    cr.orderBy(cb.desc(root.get(APPT_DATE_COL)));
     List<Appointment> patient_past_appts = session.createQuery(cr).getResultList();
 
     HashMap<User, LocalDateTime> doctors = new HashMap<>();
@@ -62,21 +82,33 @@ public class HandleSetSpecialistAppointmentMessage extends MessageHandler {
 
     cr.select(root)
         .where(
-            cb.equal(root.get("specialist_role"), class_message.chosen_role),
+            cb.equal(root.get(SPECIALIST_ROLE_COL), class_message.chosen_role),
             cb.between(
-                root.get("appt_date"),
+                root.get(APPT_DATE_COL),
                 LocalDateTime.now(),
-                LocalDateTime.now()
-                    .plusWeeks(HandleAppointmentMessage.max_future_appointments.get("Specialist"))),
-            cb.isFalse(root.get("taken")),
+                LocalDateTime.now().plusWeeks(FUTURE_APPT_CUTOFF_WEEKS.get(APPT_TYPE(SPECIALIST)))),
+            cb.isFalse(root.get(TAKEN_COL)),
             cb.or(
-                cb.isNull(root.get("lock_time")),
-                cb.lessThan(root.get("lock_time"), LocalDateTime.now()),
+                cb.isNull(root.get(LOCK_TIME_COL)),
+                cb.lessThan(root.get(LOCK_TIME_COL), LocalDateTime.now()),
                 cb.and(
-                    cb.isNotNull(root.get("lock_time")),
-                    cb.equal(root.get("patient"), class_message.patient))));
+                    cb.isNotNull(root.get(LOCK_TIME_COL)),
+                    cb.equal(root.get(PATIENT_COL), class_message.patient))));
 
-    List<Appointment> available_appts = session.createQuery(cr).getResultList();
+    List<Appointment> available_appts_all = session.createQuery(cr).getResultList();
+
+    List<Appointment> available_appts = new ArrayList<>();
+    for (Appointment appt : available_appts_all) {
+      DayOfWeek day = appt.getDate().toLocalDate().getDayOfWeek();
+      List<LocalTime> clinic_hours = appt.getClinic().timeStringToLocalTimeList(day.getValue());
+      for (int i = 0; i < clinic_hours.toArray().length; i += 2) {
+        LocalTime open_time = clinic_hours.get(i), close_time = clinic_hours.get(i + 1);
+        LocalTime appt_time = appt.getDate().toLocalTime();
+        if (appt_time.isAfter(open_time.minusSeconds(1)) && appt_time.isBefore(close_time)) {
+          available_appts.add(appt);
+        }
+      }
+    }
 
     available_appts.sort(
         (appt_a, appt_b) -> {

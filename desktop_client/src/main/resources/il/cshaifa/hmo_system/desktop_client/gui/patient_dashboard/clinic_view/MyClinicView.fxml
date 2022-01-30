@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+  xmlns:fx="http://javafx.com/fxml"
+  fx:controller="il.cshaifa.hmo_system.desktop_client.gui.patient_dashboard.clinic_view.MyClinicViewController"
+  prefWidth="450.0" stylesheets="@../../hmo_lite.css">
+
+  <VBox AnchorPane.topAnchor="10" AnchorPane.bottomAnchor="30" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" spacing="10">
+    <ImageView>
+      <Image url="@my_clinic.jpg" />
+    </ImageView>
+
+    <AnchorPane>
+      <VBox spacing="10" AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="9" AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="0">
+        <Label fx:id="clinicName" styleClass="h1-label" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+        <GridPane vgap="10" hgap="10">
+          <Label text="Manager: " GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="h2-label" />
+          <Label fx:id="managerName" GridPane.rowIndex="1" GridPane.columnIndex="1" styleClass="h2-label" />
+
+          <Label text="Address: " GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="h2-label" />
+          <Label fx:id="clinicAddress" GridPane.rowIndex="2" GridPane.columnIndex="1"  styleClass="h2-label" />
+
+          <Separator GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+
+          <Label text="Sunday: " GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+          <Label fx:id="sunHours" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+          <Label text="Monday: " GridPane.rowIndex="5" GridPane.columnIndex="0" />
+          <Label fx:id="monHours" GridPane.rowIndex="5" GridPane.columnIndex="1" />
+
+          <Label text="Tuesday: " GridPane.rowIndex="6" GridPane.columnIndex="0" />
+          <Label fx:id="tueHours" GridPane.rowIndex="6" GridPane.columnIndex="1" />
+
+          <Label text="Wednesday: " GridPane.rowIndex="7" GridPane.columnIndex="0" />
+          <Label fx:id="wedHours" GridPane.rowIndex="7" GridPane.columnIndex="1" />
+
+          <Label text="Thursday: " GridPane.rowIndex="8" GridPane.columnIndex="0" />
+          <Label fx:id="thuHours" GridPane.rowIndex="8" GridPane.columnIndex="1" />
+
+          <Label text="Friday: " GridPane.rowIndex="9" GridPane.columnIndex="0" />
+          <Label fx:id="friHours" GridPane.rowIndex="9" GridPane.columnIndex="1" />
+
+          <Label text="Saturday: " GridPane.rowIndex="10" GridPane.columnIndex="0" />
+          <Label fx:id="satHours" GridPane.rowIndex="10" GridPane.columnIndex="1" />
+        </GridPane>
+      </VBox>
+    </AnchorPane>
+  </VBox>
+
+</AnchorPane>

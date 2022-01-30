@@ -49,6 +49,6 @@ public class ClinicStaff implements Serializable {
 
   @Override
   public String toString() {
-    return this.user.getLastName() + " " + this.getUser().getFirstName();
+    return this.user.toString();
   }
 }

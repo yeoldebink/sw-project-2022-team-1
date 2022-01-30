@@ -76,67 +76,256 @@ public class Main {
     Map<String, User> users = new HashMap<>();
     users.put(
         "Jordan Sullivan",
-        new User(9000, "null", "Jordan", "Sullivan", null, null, roles.get("HMO Manager")));
+        new User(
+            9000,
+            "9000",
+            "Jordan",
+            "Sullivan",
+            "jordan.sullivan@hmolite.com",
+            "050-7892363",
+            roles.get("HMO Manager")));
+
     users.put(
         "Carla Espinosa",
         new User(
-            1618, "QUEEN_carla", "Carla", "Espinosa", null, null, roles.get("Clinic Manager")));
+            1618,
+            "1618",
+            "Carla",
+            "Espinosa",
+            "carla.espinisa@hmolite.com",
+            "050-1239537",
+            roles.get("Clinic Manager")));
+
     users.put(
         "Carmen Sandiego",
-        new User(8793, null, "Carmen", "Sandiego", null, null, roles.get("Clinic Manager")));
+        new User(
+            8793,
+            "8793",
+            "Carmen",
+            "Sandiego",
+            "carmen.sandiego@hmolite.com",
+            "052-4569851",
+            roles.get("Clinic Manager")));
+
     users.put(
         "Billy Crystal",
-        new User(5487, null, "Billy", "Crystal", null, null, roles.get("Clinic Manager")));
+        new User(
+            5487,
+            "5487",
+            "Billy",
+            "Crystal",
+            "billy.crystal@hmolite.com",
+            "052-1569745",
+            roles.get("Clinic Manager")));
+
     users.put(
         "Joan Rivers",
-        new User(1979, null, "Joan", "Rivers", null, null, roles.get("Clinic Manager")));
+        new User(
+            1979,
+            "1979",
+            "Joan",
+            "Rivers",
+            "joan.rivers@hmolite.com",
+            "053-9634562",
+            roles.get("Clinic Manager")));
 
     users.put(
-        "Bob Kelso", new User(3141, null, "Bob", "Kelso", null, null, roles.get("Family Doctor")));
+        "Bob Kelso",
+        new User(
+            3141,
+            "3141",
+            "Bob",
+            "Kelso",
+            "bob.kelso@hmolite.com",
+            "053-1234865",
+            roles.get("Family Doctor")));
 
     users.put(
-        "Elliot Reed",
-        new User(7893, null, "Elliot", "Reed", null, null, roles.get("Neurologist")));
+        "Alice Kelso",
+        new User(
+            2659,
+            "2659",
+            "Alice",
+            "Kelso",
+            "alice.kelso@hmolite.com",
+            "053-8987566",
+            roles.get("Family Doctor")));
 
     users.put(
         "John Dorian",
-        new User(5123, null, "John", "Dorian", null, null, roles.get("Pediatrician")));
+        new User(
+            5123,
+            "5123",
+            "John",
+            "Dorian",
+            "john.dorian@hmolite.com",
+            "054-1231239",
+            roles.get("Pediatrician")));
 
     users.put(
-        "Sarah Tizdale", new User(5973, null, "Sarah", "Tizdale", null, null, roles.get("Nurse")));
-
-    users.put(
-        "LaVerne Roberts",
-        new User(4532, null, "LaVerne", "Roberts", null, null, roles.get("Nurse")));
+        "Dana Biton-Tishbi",
+        new User(
+            9643,
+            "9643",
+            "Dana",
+            "Biton-Tishbi",
+            "dana.bitontishbi@hmolite.com",
+            "050-4569638",
+            roles.get("Pediatrician")));
 
     users.put(
         "Perry Cox",
-        new User(1499, null, "Perry", "Cox", null, null, roles.get("Endocrinologist")));
+        new User(
+            1499,
+            "1499",
+            "Perry",
+            "Cox",
+            "perry.cox@hmolite.com",
+            "050-7894562",
+            roles.get("Endocrinologist")));
 
     users.put(
         "Christopher Turk",
-        new User(8561, null, "Christopher", "Turk", null, null, roles.get("Neurologist")));
+        new User(
+            8561,
+            "8561",
+            "Christopher",
+            "Turk",
+            "christopher.turk@hmolite.com",
+            "052-1235686",
+            roles.get("Neurologist")));
+
+    users.put(
+        "Elliot Reed",
+        new User(
+            7893,
+            "7893",
+            "Elliot",
+            "Reed",
+            "elliot.reed@hmolite.com",
+            "052-4569637",
+            roles.get("Neurologist")));
+
+    users.put(
+        "Jurgen Norbert Klopp",
+        new User(
+            1901,
+            "1901",
+            "Jurgen Norbert",
+            "Klopp",
+            "jurgen.klopp@hmolite.com",
+            "053-7897412",
+            roles.get("Orthopedist")));
+
+    users.put(
+        "Sarah Tizdale",
+        new User(
+            5973,
+            "5973",
+            "Sarah",
+            "Tizdale",
+            "sarah.tizdale@hmolite.com",
+            "053-8522581",
+            roles.get("Nurse")));
+
+    users.put(
+        "Summer Smith",
+        new User(
+            2697,
+            "2697",
+            "Summer",
+            "Smith",
+            "summer.smith@hmolite.com",
+            "053-8522521",
+            roles.get("Nurse")));
+
+    users.put(
+        "LaVerne Roberts",
+        new User(
+            4532,
+            "4532",
+            "LaVerne",
+            "Roberts",
+            "laverne.roberts@hmolite.com",
+            "054-7894569",
+            roles.get("Nurse")));
 
     users.put(
         "Glen Matthews",
-        new User(2887, null, "Glen", "Matthews", null, null, roles.get("Lab Technician")));
+        new User(
+            2887,
+            "2887",
+            "Glen",
+            "Matthews",
+            "glen.matthews@hmolite.com",
+            "054-1256874",
+            roles.get("Lab Technician")));
 
     users.put(
         "Franklin Kurosawa",
-        new User(1967, null, "Franklin", "Kurowasa", null, null, roles.get("Lab Technician")));
+        new User(
+            1967,
+            "1967",
+            "Franklin",
+            "Kurowasa",
+            "franklin.kurowasa@hmolite.com",
+            "050-7531596",
+            roles.get("Lab Technician")));
 
-    users.put("Avi Ron", new User(459721591, null, "Avi", "Ron", null, null, roles.get("Patient")));
+    users.put(
+        "Avi Ron",
+        new User(
+            459721591,
+            "459721591",
+            "Avi",
+            "Ron",
+            "kingAvi@bmail.com",
+            "050-1452365",
+            roles.get("Patient")));
 
     users.put(
         "Tyler Durden",
-        new User(254789321, "password", "Tyler", "Durden", null, null, roles.get("Patient")));
+        new User(
+            254789321,
+            "254789321",
+            "Tyler",
+            "Durden",
+            "tyler.durden@bmail.com",
+            "055-4264910",
+            roles.get("Patient")));
 
     users.put(
         "Marquis De Carabas",
-        new User(985241266, null, "Marquis", "De Carabas", null, null, roles.get("Patient")));
+        new User(
+            985241266,
+            "985241266",
+            "Marquis",
+            "De Carabas",
+            "mdCara@bmail.com",
+            "058-2570022",
+            roles.get("Patient")));
 
     users.put(
-        "Jill Tracy", new User(309827022, null, "Jill", "Tracy", null, null, roles.get("Patient")));
+        "Jill Tracy",
+        new User(
+            309827022,
+            "309827022",
+            "Jill",
+            "Tracy",
+            "queenJill123@bmail.com",
+            null,
+            roles.get("Patient")));
+
+    users.put(
+        "Emma Tracy",
+        new User(
+            120427022,
+            "120427022",
+            "Emma",
+            "Tracy",
+            "emma.tracy@bmail.com",
+            "050-8745613",
+            roles.get("Patient")));
 
     for (var user : users.entrySet()) {
       session.save(user.getValue());
@@ -217,16 +406,25 @@ public class Main {
     clinicStaff.add(new ClinicStaff(carmel, users.get("Bob Kelso")));
     clinicStaff.add(new ClinicStaff(carmel, users.get("John Dorian")));
     clinicStaff.add(new ClinicStaff(carmel, users.get("Sarah Tizdale")));
+    clinicStaff.add(new ClinicStaff(carmel, users.get("Summer Smith")));
     clinicStaff.add(new ClinicStaff(carmel, users.get("Perry Cox")));
     clinicStaff.add(new ClinicStaff(carmel, users.get("Christopher Turk")));
     clinicStaff.add(new ClinicStaff(carmel, users.get("Glen Matthews")));
 
     var dizengoff = clinics.get("Dizengoff");
     clinicStaff.add(new ClinicStaff(dizengoff, users.get("Elliot Reed")));
-    clinicStaff.add(new ClinicStaff(dizengoff, users.get("John Dorian")));
     clinicStaff.add(new ClinicStaff(dizengoff, users.get("LaVerne Roberts")));
     clinicStaff.add(new ClinicStaff(dizengoff, users.get("Christopher Turk")));
     clinicStaff.add(new ClinicStaff(dizengoff, users.get("Franklin Kurosawa")));
+    clinicStaff.add(new ClinicStaff(dizengoff, users.get("Jurgen Norbert Klopp")));
+    clinicStaff.add(new ClinicStaff(dizengoff, users.get("Alice Kelso")));
+    clinicStaff.add(new ClinicStaff(dizengoff, users.get("Dana Biton-Tishbi")));
+
+    var mile_end = clinics.get("Mile End");
+    clinicStaff.add(new ClinicStaff(mile_end, users.get("Perry Cox")));
+    clinicStaff.add(new ClinicStaff(mile_end, users.get("Elliot Reed")));
+    clinicStaff.add(new ClinicStaff(mile_end, users.get("Christopher Turk")));
+    clinicStaff.add(new ClinicStaff(mile_end, users.get("Jurgen Norbert Klopp")));
 
     for (var cstaff : clinicStaff) {
       session.save(cstaff);
@@ -267,6 +465,13 @@ public class Main {
             clinics.get("Carmel Center"),
             LocalDateTime.of(2010, 8, 12, 2, 34)));
 
+    patients.put(
+        "Emma Tracy",
+        new Patient(
+            users.get("Emma Tracy"),
+            clinics.get("Carmel Center"),
+            LocalDateTime.of(1980, 12, 12, 21, 12)));
+
     for (var patient : patients.values()) {
       session.save(patient);
       session.flush();
@@ -306,16 +511,295 @@ public class Main {
       Map<String, Role> roles) {
     ArrayList<Appointment> appointments = new ArrayList<>();
 
+    // --------------------------- COVID Appointments --------------------------- //
     appointments.add(
         new Appointment(
-            patients.get("Tyler Durden"),
+            patients.get("Marquis De Carabas"),
+            appt_types.get("COVID Vaccine"),
+            null,
+            null,
+            clinics.get("Carmel Center"),
+            LocalDateTime.of(2022, 1, 20, 15, 0),
+            null,
+            null,
+            true,
+            false));
+
+    appointments.add(
+        new Appointment(
+            patients.get("Marquis De Carabas"),
+            appt_types.get("COVID Vaccine"),
+            null,
+            null,
+            clinics.get("Carmel Center"),
+            LocalDateTime.of(2022, 1, 23, 10, 0),
+            LocalDateTime.of(2022, 1, 23, 9, 50),
+            null,
+            true,
+            true));
+
+    appointments.add(
+        new Appointment(
+            patients.get("Avi Ron"),
+            appt_types.get("COVID Test"),
+            null,
+            null,
+            clinics.get("Dizengoff"),
+            LocalDateTime.of(2022, 1, 30, 18, 0),
+            LocalDateTime.of(2022, 1, 30, 18, 7, 2),
+            null,
+            true,
+            true));
+
+    appointments.add(
+        new Appointment(
+            patients.get("Emma Tracy"),
+            appt_types.get("COVID Vaccine"),
+            null,
+            null,
+            clinics.get("Carmel Center"),
+            LocalDateTime.of(2021, 3, 11, 20, 0),
+            LocalDateTime.of(2021, 3, 11, 20, 0, 59),
+            null,
+            true,
+            true));
+
+    appointments.add(
+        new Appointment(
+            patients.get("Jill Tracy"),
+            appt_types.get("COVID Test"),
+            null,
+            null,
+            clinics.get("Carmel Center"),
+            LocalDateTime.of(2021, 3, 11, 19, 40),
+            LocalDateTime.of(2021, 3, 11, 19, 41, 36),
+            null,
+            true,
+            true));
+
+    appointments.add(
+        new Appointment(
+            patients.get("Emma Tracy"),
+            appt_types.get("COVID Vaccine"),
+            null,
+            null,
+            clinics.get("Carmel Center"),
+            LocalDateTime.of(2022, 1, 30, 18, 0),
+            null,
+            null,
+            true,
+            false));
+
+    appointments.add(
+        new Appointment(
+            patients.get("Jill Tracy"),
+            appt_types.get("COVID Test"),
+            null,
+            null,
+            clinics.get("Carmel Center"),
+            LocalDateTime.of(2022, 1, 30, 18, 30),
+            null,
+            null,
+            true,
+            false));
+
+    // --------------------------- Jill Tracy Appointments --------------------------- //
+    appointments.add(
+        new Appointment(
+            patients.get("Jill Tracy"),
+            appt_types.get("Pediatrician"),
+            null,
+            users.get("John Dorian"),
+            clinics.get("Carmel Center"),
+            LocalDateTime.of(2022, 1, 23, 10, 0),
+            LocalDateTime.of(2022, 1, 23, 10, 15),
+            null,
+            true,
+            true));
+
+    appointments.add(
+        new Appointment(
+            patients.get("Jill Tracy"),
+            appt_types.get("Pediatrician"),
+            null,
+            users.get("John Dorian"),
+            clinics.get("Carmel Center"),
+            LocalDateTime.of(2022, 1, 25, 8, 30),
+            LocalDateTime.of(2022, 1, 25, 8, 32, 7),
+            null,
+            true,
+            true));
+
+    appointments.add(
+        new Appointment(
+            patients.get("Jill Tracy"),
+            appt_types.get("Specialist"),
+            roles.get("Orthopedist"),
+            users.get("Jurgen Norbert Klopp"),
+            clinics.get("Dizengoff"),
+            LocalDateTime.of(2022, 1, 30, 18, 0),
+            LocalDateTime.of(2022, 1, 30, 18, 3, 52),
+            null,
+            true,
+            true));
+
+    // --------------------------- Emma Tracy Appointments --------------------------- //
+    appointments.add(
+        new Appointment(
+            patients.get("Emma Tracy"),
+            appt_types.get("Specialist"),
+            roles.get("Neurologist"),
+            users.get("Elliot Reed"),
+            clinics.get("Carmel Center"),
+            LocalDateTime.of(2021, 7, 18, 9, 40),
+            LocalDateTime.of(2021, 7, 18, 9, 40, 16),
+            null,
+            true,
+            true));
+
+    appointments.add(
+        new Appointment(
+            patients.get("Emma Tracy"),
+            appt_types.get("Specialist"),
+            roles.get("Neurologist"),
+            users.get("Christopher Turk"),
+            clinics.get("Dizengoff"),
+            LocalDateTime.of(2022, 1, 23, 13, 20),
+            null,
+            null,
+            true,
+            false));
+
+    appointments.add(
+        new Appointment(
+            patients.get("Emma Tracy"),
+            appt_types.get("Specialist"),
+            roles.get("Neurologist"),
+            users.get("Christopher Turk"),
+            clinics.get("Dizengoff"),
+            LocalDateTime.of(2022, 1, 27, 13, 20),
+            LocalDateTime.of(2022, 1, 27, 13, 8, 59),
+            null,
+            true,
+            true));
+
+    appointments.add(
+        new Appointment(
+            patients.get("Emma Tracy"),
             appt_types.get("Family Doctor"),
             null,
             users.get("Bob Kelso"),
             clinics.get("Carmel Center"),
-            LocalDateTime.of(2022, 2, 1, 12, 20),
-            LocalDateTime.of(2022, 2, 1, 12, 22, 41),
+            LocalDateTime.of(2022, 1, 30, 13, 20),
+            LocalDateTime.of(2022, 1, 30, 13, 25, 1),
             null,
+            true,
+            true));
+
+    // --------------------------- Avi Ron Appointments --------------------------- //
+    appointments.add(
+        new Appointment(
+            patients.get("Avi Ron"),
+            appt_types.get("Family Doctor"),
+            null,
+            users.get("Bob Kelso"),
+            clinics.get("Carmel Center"),
+            LocalDateTime.of(2022, 1, 20, 11, 40),
+            LocalDateTime.of(2022, 1, 20, 11, 41, 43),
+            null,
+            true,
+            true));
+
+    appointments.add(
+        new Appointment(
+            patients.get("Avi Ron"),
+            appt_types.get("Specialist"),
+            roles.get("Orthopedist"),
+            users.get("Jurgen Norbert Klopp"),
+            clinics.get("Dizengoff"),
+            LocalDateTime.of(2022, 1, 22, 8, 40),
+            LocalDateTime.of(2022, 1, 22, 8, 40),
+            null,
+            true,
+            true));
+
+    appointments.add(
+        new Appointment(
+            patients.get("Avi Ron"),
+            appt_types.get("Specialist"),
+            roles.get("Neurologist"),
+            users.get("Christopher Turk"),
+            clinics.get("Mile End"),
+            LocalDateTime.of(2022, 1, 22, 20, 20),
+            LocalDateTime.of(2022, 1, 22, 20, 20, 23),
+            null,
+            true,
+            true));
+
+    appointments.add(
+        new Appointment(
+            patients.get("Avi Ron"),
+            appt_types.get("Specialist"),
+            roles.get("Endocrinologist"),
+            users.get("Perry Cox"),
+            clinics.get("Mile End"),
+            LocalDateTime.of(2022, 1, 25, 21, 0),
+            LocalDateTime.of(2022, 1, 25, 21, 2, 36),
+            null,
+            true,
+            true));
+
+    appointments.add(
+        new Appointment(
+            patients.get("Avi Ron"),
+            appt_types.get("Specialist"),
+            roles.get("Neurologist"),
+            users.get("Elliot Reed"),
+            clinics.get("Mile End"),
+            LocalDateTime.of(2022, 1, 26, 8, 0),
+            null,
+            null,
+            true,
+            false));
+
+    appointments.add(
+        new Appointment(
+            patients.get("Avi Ron"),
+            appt_types.get("Nurse"),
+            roles.get("Nurse"),
+            users.get("Sarah Tizdale"),
+            clinics.get("Carmel Center"),
+            LocalDateTime.of(2022, 1, 26, 13, 0),
+            LocalDateTime.of(2022, 1, 26, 13, 20, 11),
+            null,
+            true,
+            true));
+
+    appointments.add(
+        new Appointment(
+            patients.get("Avi Ron"),
+            appt_types.get("Flu Vaccine"),
+            roles.get("Nurse"),
+            users.get("Sarah Tizdale"),
+            clinics.get("Carmel Center"),
+            LocalDateTime.of(2022, 1, 26, 15, 0),
+            LocalDateTime.of(2022, 1, 26, 15, 1, 39),
+            null,
+            true,
+            true));
+
+    // --------------------------- Marquis De Carabas Appointments --------------------------- //
+    appointments.add(
+        new Appointment(
+            patients.get("Marquis De Carabas"),
+            appt_types.get("Family Doctor"),
+            null,
+            users.get("Alice Kelso"),
+            clinics.get("Dizengoff"),
+            LocalDateTime.of(2022, 1, 23, 10, 30),
+            LocalDateTime.of(2022, 1, 23, 10, 25),
+            null,
+            true,
             true));
 
     appointments.add(
@@ -323,11 +807,26 @@ public class Main {
             patients.get("Marquis De Carabas"),
             appt_types.get("Family Doctor"),
             null,
+            users.get("Alice Kelso"),
+            clinics.get("Dizengoff"),
+            LocalDateTime.of(2022, 1, 30, 8, 30),
+            LocalDateTime.of(2022, 1, 30, 8, 28),
+            null,
+            true,
+            true));
+
+    // --------------------------- Tyler Durden Appointments --------------------------- //
+    appointments.add(
+        new Appointment(
+            patients.get("Tyler Durden"),
+            appt_types.get("Family Doctor"),
+            null,
             users.get("Bob Kelso"),
             clinics.get("Carmel Center"),
-            LocalDateTime.of(2022, 2, 3, 10, 40),
-            LocalDateTime.of(2022, 2, 3, 10, 45, 11),
+            LocalDateTime.of(2022, 1, 24, 12, 15),
+            LocalDateTime.of(2022, 1, 24, 12, 22, 41),
             null,
+            true,
             true));
 
     appointments.add(
@@ -337,9 +836,10 @@ public class Main {
             null,
             users.get("Bob Kelso"),
             clinics.get("Carmel Center"),
-            LocalDateTime.of(2020, 2, 1, 12, 20),
-            LocalDateTime.of(2020, 2, 1, 12, 22, 41),
+            LocalDateTime.of(2022, 1, 30, 16, 45),
+            LocalDateTime.of(2022, 1, 30, 16, 43, 26),
             null,
+            true,
             true));
 
     appointments.add(
@@ -349,9 +849,10 @@ public class Main {
             roles.get("Neurologist"),
             users.get("Elliot Reed"),
             clinics.get("Carmel Center"),
-            LocalDateTime.of(2021, 1, 10, 12, 20),
-            LocalDateTime.of(2021, 1, 10, 12, 22),
+            LocalDateTime.of(2020, 1, 10, 12, 20),
+            LocalDateTime.of(2020, 1, 10, 12, 22),
             null,
+            true,
             true));
 
     appointments.add(
@@ -361,9 +862,10 @@ public class Main {
             roles.get("Neurologist"),
             users.get("Elliot Reed"),
             clinics.get("Carmel Center"),
-            LocalDateTime.of(2021, 1, 10, 12, 20),
-            LocalDateTime.of(2021, 1, 10, 12, 22),
+            LocalDateTime.of(2021, 1, 10, 14, 40),
+            LocalDateTime.of(2021, 1, 10, 14, 42),
             null,
+            true,
             true));
 
     appointments.add(
@@ -372,11 +874,12 @@ public class Main {
             appt_types.get("Specialist"),
             roles.get("Neurologist"),
             users.get("Elliot Reed"),
-            clinics.get("Carmel Center"),
-            LocalDateTime.of(2021, 1, 11, 12, 20),
-            LocalDateTime.of(2021, 1, 11, 12, 22),
+            clinics.get("Mile End"),
+            LocalDateTime.of(2022, 1, 10, 8, 0),
             null,
-            true));
+            null,
+            true,
+            false));
 
     appointments.add(
         new Appointment(
@@ -384,22 +887,11 @@ public class Main {
             appt_types.get("Specialist"),
             roles.get("Neurologist"),
             users.get("Christopher Turk"),
-            clinics.get("Carmel Center"),
-            LocalDateTime.of(2021, 1, 9, 12, 20),
-            LocalDateTime.of(2021, 1, 9, 12, 22),
+            clinics.get("Mile End"),
+            LocalDateTime.of(2022, 1, 23, 13, 0),
+            LocalDateTime.of(2021, 1, 23, 13, 1, 1),
             null,
-            true));
-
-    appointments.add(
-        new Appointment(
-            patients.get("Tyler Durden"),
-            appt_types.get("COVID Vaccine"),
-            null,
-            users.get("LaVerne Roberts"),
-            clinics.get("Carmel Center"),
-            LocalDateTime.of(2022, 1, 9, 12, 20),
-            LocalDateTime.of(2022, 1, 9, 12, 22),
-            null,
+            true,
             true));
 
     for (var appt : appointments) {

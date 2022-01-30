@@ -1,13 +1,20 @@
 package il.cshaifa.hmo_system.server.server_handlers;
 
+import static il.cshaifa.hmo_system.Constants.APPT_DATE_COL;
+import static il.cshaifa.hmo_system.Constants.CALLED_TIME_COL;
+import static il.cshaifa.hmo_system.Constants.CLINIC_COL;
+import static il.cshaifa.hmo_system.Constants.STAFF_MEMBER_COL;
+import static il.cshaifa.hmo_system.Constants.TAKEN_COL;
+import static il.cshaifa.hmo_system.Constants.UNSTAFFED_APPT_TYPES;
+
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.entities.Clinic;
 import il.cshaifa.hmo_system.entities.ClinicStaff;
 import il.cshaifa.hmo_system.messages.ReportMessage;
-import il.cshaifa.hmo_system.messages.ReportMessage.ReportType;
 import il.cshaifa.hmo_system.reports.DailyAppointmentTypesReport;
 import il.cshaifa.hmo_system.reports.DailyAverageWaitTimeReport;
 import il.cshaifa.hmo_system.reports.DailyReport;
+import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -26,37 +33,41 @@ public class HandleReportMessage extends MessageHandler {
   private final CriteriaQuery<Appointment> cr;
   private final Root<Appointment> root;
   private List<Appointment> relevant_appointments;
-  private static String[] clinics_general_services;
 
-  public HandleReportMessage(ReportMessage message, Session session) {
-    super(message, session);
+  public HandleReportMessage(ReportMessage message, Session session, ConnectionToClient client) {
+    super(message, session, client);
     this.class_message = (ReportMessage) this.message;
     cr = cb.createQuery(Appointment.class);
     root = cr.from(Appointment.class);
-    if (clinics_general_services == null) {
-      clinics_general_services =
-          new String[] {"COVID Test", "COVID Vaccine", "Flu Vaccine", "Nurse", "Lab Tests"};
-    }
   }
 
   @Override
   public void handleMessage() {
-    if (class_message.report_type == ReportType.APPOINTMENT_ATTENDANCE) {
-      initServicesReport();
-      getAttendanceReport();
-    } else if (class_message.report_type == ReportType.AVERAGE_WAIT_TIMES) {
-      initStaffMemberReport();
-      getAverageWaitTimeReport();
-    } else if (class_message.report_type == ReportType.MISSED_APPOINTMENTS) {
-      initServicesReport();
-      getMissedAppointmentsReport();
+    switch (class_message.report_type) {
+      case APPOINTMENT_ATTENDANCE:
+        initServicesReport();
+        getAttendanceReport();
+        break;
+
+      case AVERAGE_WAIT_TIMES:
+        initStaffMemberReport();
+        getAverageWaitTimeReport();
+        break;
+
+      case MISSED_APPOINTMENTS:
+        initServicesReport();
+        getMissedAppointmentsReport();
+        break;
     }
+
     class_message.reports = new ArrayList<>();
     for (LocalDate date : daily_reports_map.keySet()) {
       for (int clinic_id : daily_reports_map.get(date).keySet()) {
         class_message.reports.add(daily_reports_map.get(date).get(clinic_id));
       }
     }
+
+    logSuccess(class_message.report_type.toString());
   }
 
   private void initServicesReport() {
@@ -76,9 +87,9 @@ public class HandleReportMessage extends MessageHandler {
             .put(
                 clinic.getId(),
                 new DailyAppointmentTypesReport(current_date.atStartOfDay(), clinic));
-        for (String service : clinics_general_services) {
+        for (var service : UNSTAFFED_APPT_TYPES) {
           ((DailyAppointmentTypesReport) daily_reports_map.get(current_date).get(clinic.getId()))
-              .report_data.put(service, 0);
+              .report_data.put(service.getName(), 0);
         }
       }
       // for each staff member fill his report at certain clinic make 0-report
@@ -120,10 +131,10 @@ public class HandleReportMessage extends MessageHandler {
   private void getAttendanceReport() {
     cr.select(root)
         .where(
-            cb.between(root.get("appt_date"), class_message.start_date, class_message.end_date),
-            cb.isTrue(root.get("taken")),
-            root.get("clinic").in(class_message.clinics),
-            cb.isNotNull(root.get("called_time")));
+            cb.between(root.get(APPT_DATE_COL), class_message.start_date, class_message.end_date),
+            cb.isTrue(root.get(TAKEN_COL)),
+            root.get(CLINIC_COL).in(class_message.clinics),
+            cb.isNotNull(root.get(CALLED_TIME_COL)));
 
     relevant_appointments = session.createQuery(cr).getResultList();
     for (Appointment appt : relevant_appointments) {
@@ -145,11 +156,11 @@ public class HandleReportMessage extends MessageHandler {
   private void getAverageWaitTimeReport() {
     cr.select(root)
         .where(
-            cb.equal(root.get("staff_member"), class_message.staff_member.getUser()),
-            cb.between(root.get("appt_date"), class_message.start_date, class_message.end_date),
-            cb.isTrue(root.get("taken")),
-            root.get("clinic").in(class_message.clinics),
-            cb.isNotNull(root.get("called_time")));
+            cb.equal(root.get(STAFF_MEMBER_COL), class_message.staff_member.getUser()),
+            cb.between(root.get(APPT_DATE_COL), class_message.start_date, class_message.end_date),
+            cb.isTrue(root.get(TAKEN_COL)),
+            root.get(CLINIC_COL).in(class_message.clinics),
+            cb.isNotNull(root.get(CALLED_TIME_COL)));
 
     relevant_appointments = session.createQuery(cr).getResultList();
     for (Appointment appt : relevant_appointments) {
@@ -195,10 +206,10 @@ public class HandleReportMessage extends MessageHandler {
   private void getMissedAppointmentsReport() {
     cr.select(root)
         .where(
-            cb.between(root.get("appt_date"), class_message.start_date, class_message.end_date),
-            cb.isTrue(root.get("taken")),
-            root.get("clinic").in(class_message.clinics),
-            cb.isNull(root.get("called_time")));
+            cb.between(root.get(APPT_DATE_COL), class_message.start_date, class_message.end_date),
+            cb.isTrue(root.get(TAKEN_COL)),
+            root.get(CLINIC_COL).in(class_message.clinics),
+            cb.isNull(root.get(CALLED_TIME_COL)));
 
     relevant_appointments = session.createQuery(cr).getResultList();
     for (Appointment appt : relevant_appointments) {
@@ -220,7 +231,7 @@ public class HandleReportMessage extends MessageHandler {
   private List<ClinicStaff> getClinicStaff(List<Clinic> clinics) {
     CriteriaQuery<ClinicStaff> cr_ClinicStaff = cb.createQuery(ClinicStaff.class);
     Root<ClinicStaff> root_ClinicStaff = cr_ClinicStaff.from(ClinicStaff.class);
-    cr_ClinicStaff.select(root_ClinicStaff).where(root_ClinicStaff.get("clinic").in(clinics));
+    cr_ClinicStaff.select(root_ClinicStaff).where(root_ClinicStaff.get(CLINIC_COL).in(clinics));
     return session.createQuery(cr_ClinicStaff).getResultList();
   }
 }

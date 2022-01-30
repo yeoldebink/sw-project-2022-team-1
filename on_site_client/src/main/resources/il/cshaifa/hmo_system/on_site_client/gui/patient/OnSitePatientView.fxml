@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+<?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+  xmlns:fx="http://javafx.com/fxml"
+  fx:controller="il.cshaifa.hmo_system.on_site_client.gui.patient.OnSitePatientViewController"
+  prefHeight="768.0" prefWidth="1024.0" stylesheets="@../hmo_lite_large.css" onMouseClicked="#onMouseClicked">
+
+  <ImageView>
+    <Image url="@onsite-welcome.jpg" />
+  </ImageView>
+
+  <VBox AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" >
+    <MenuBar>
+      <Menu>
+        <graphic>
+          <FontIcon iconLiteral="mdi-close-network" iconSize="20" />
+        </graphic>
+        <MenuItem text="Close station" fx:id="closeStationMenuItem" />
+        <MenuItem text="Close clinic" fx:id="closeClinicMenuItem" />
+      </Menu>
+    </MenuBar>
+  </VBox>
+
+  <StackPane layoutX="440" layoutY="307" fx:id="stackPane">
+    <AnchorPane>
+      <VBox spacing="15">
+        <Label fx:id="clinicWelcomeLabel" styleClass="h1-label" />
+        <Label text="Swipe your card or enter your ID to get started."/>
+        <HBox spacing="10">
+          <TextField promptText="ID" fx:id="idTextField" />
+          <Button fx:id="goButton">
+            <graphic>
+              <FontIcon iconLiteral="mdi-arrow-right-bold-circle" iconSize="28" iconColor="cadetblue"/>
+            </graphic>
+          </Button>
+        </HBox>
+        <Label fx:id="errorLabel" visible="false" />
+      </VBox>
+    </AnchorPane>
+
+    <AnchorPane>
+      <VBox spacing="25" AnchorPane.topAnchor="20">
+        <Label fx:id="dashboardWelcomeLabel" styleClass="h1-label" />
+        <Button fx:id="nurseButton" text="Visit a nurse" prefWidth="250">
+          <graphic>
+            <FontIcon iconLiteral="mdi-hospital" iconColor="red" iconSize="28" />
+          </graphic>
+        </Button>
+        <Button fx:id="labButton" text="Lab tests"  prefWidth="250">
+          <graphic>
+            <FontIcon iconLiteral="mdi-test-tube" iconColor="forestgreen" iconSize="28" />
+          </graphic>
+        </Button>
+        <Label fx:id="dashboardErrorLabel" visible="false" />
+        <Button text="Back" onAction="#returnToEntryScreen">
+          <graphic>
+            <FontIcon iconLiteral="mdi-exit-to-app" iconColor="cadetblue" />
+          </graphic>
+        </Button>
+      </VBox>
+    </AnchorPane>
+  </StackPane>
+</AnchorPane>

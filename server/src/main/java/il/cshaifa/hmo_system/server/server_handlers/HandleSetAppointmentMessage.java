@@ -1,20 +1,25 @@
 package il.cshaifa.hmo_system.server.server_handlers;
 
-import il.cshaifa.hmo_system.CommonEnums.SetAppointmentAction;
+import static il.cshaifa.hmo_system.Constants.PATIENT_COL;
+import static il.cshaifa.hmo_system.Constants.TAKEN_COL;
+
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.messages.SetAppointmentMessage;
+import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
+import org.hibernate.UnresolvableObjectException;
 
 public class HandleSetAppointmentMessage extends MessageHandler {
   public SetAppointmentMessage class_message;
   public String appt_comments;
 
-  public HandleSetAppointmentMessage(SetAppointmentMessage message, Session session) {
-    super(message, session);
+  public HandleSetAppointmentMessage(
+      SetAppointmentMessage message, Session session, ConnectionToClient client) {
+    super(message, session, client);
     this.class_message = (SetAppointmentMessage) this.message;
   }
 
@@ -23,17 +28,38 @@ public class HandleSetAppointmentMessage extends MessageHandler {
     // before changing the state of the appointment, get the updated version of it
     appt_comments = class_message.appointment.getComments();
     session.flush();
-    session.refresh(class_message.appointment);
 
-    if (class_message.action == SetAppointmentAction.TAKE) {
-      class_message.success = takeAppointment();
-    } else if (class_message.action == SetAppointmentAction.LOCK) {
-      class_message.success = lockAppointment();
-    } else if (class_message.action == SetAppointmentAction.RELEASE) {
-      releaseAppointment(class_message.appointment);
-      class_message.success = true;
+    // if the patient attempted to grab a deleted appointment we reject
+    try {
+      session.refresh(class_message.appointment);
+    } catch (UnresolvableObjectException e) {
+      class_message.success = false;
+      session.flush();
+      return;
     }
+
+    switch (class_message.action) {
+      case LOCK:
+        class_message.success = lockAppointment();
+        break;
+
+      case TAKE:
+        class_message.success = takeAppointment();
+        break;
+
+      case RELEASE:
+        releaseAppointment(class_message.appointment);
+        class_message.success = true;
+        break;
+    }
+
     session.flush();
+
+    if (class_message.success) {
+      logSuccess(class_message.action.toString());
+    } else {
+      logFailure(class_message.action.toString());
+    }
   }
 
   private boolean takeAppointment() {
@@ -43,6 +69,7 @@ public class HandleSetAppointmentMessage extends MessageHandler {
     }
     class_message.appointment.setTaken(true);
     class_message.appointment.setLock_time(null);
+    class_message.appointment.setComments(appt_comments);
     session.update(class_message.appointment);
     return true;
   }
@@ -62,13 +89,14 @@ public class HandleSetAppointmentMessage extends MessageHandler {
     CriteriaQuery<Appointment> cr = cb.createQuery(Appointment.class);
     Root<Appointment> root = cr.from(Appointment.class);
     cr.select(root)
-        .where(cb.isFalse(root.get("taken")), cb.equal(root.get("patient"), class_message.patient));
+        .where(
+            cb.isFalse(root.get(TAKEN_COL)),
+            cb.equal(root.get(PATIENT_COL), class_message.patient));
     List<Appointment> users_locked_appointments = session.createQuery(cr).getResultList();
 
     // lock the relevant appointment
     class_message.appointment.setLock_time(LocalDateTime.now().plusSeconds(330));
     class_message.appointment.setPatient(class_message.patient);
-    class_message.appointment.setComments(appt_comments);
     session.update(class_message.appointment);
 
     // release the other appointments by the patient

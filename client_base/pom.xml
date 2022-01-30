@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>hmo_system</artifactId>
+    <groupId>il.cshaifa</groupId>
+    <version>prototype</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>client_base</artifactId>
+  <groupId>il.cshaifa.hmo_system</groupId>
+  <packaging>jar</packaging>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.kordamp.ikonli</groupId>
+        <artifactId>ikonli-bom</artifactId>
+        <version>12.3.0</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+  <dependencies>
+    <dependency>
+      <artifactId>javafx-base</artifactId>
+      <groupId>org.openjfx</groupId>
+      <version>${javafx.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>javafx-controls</artifactId>
+      <groupId>org.openjfx</groupId>
+      <version>${javafx.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>javafx-fxml</artifactId>
+      <groupId>org.openjfx</groupId>
+      <version>${javafx.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>javafx-graphics</artifactId>
+      <classifier>win</classifier>
+      <groupId>org.openjfx</groupId>
+      <version>${javafx.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>javafx-graphics</artifactId>
+      <classifier>linux</classifier>
+      <groupId>org.openjfx</groupId>
+      <version>${javafx.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>javafx-graphics</artifactId>
+      <classifier>mac</classifier>
+      <groupId>org.openjfx</groupId>
+      <version>${javafx.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>eventbus</artifactId>
+      <groupId>org.greenrobot</groupId>
+      <version>3.2.0</version>
+    </dependency>
+    <dependency>
+      <artifactId>entities</artifactId>
+      <groupId>${project.groupId}</groupId>
+    </dependency>
+
+    <!-- Stuff for icons -->
+    <dependency>
+      <groupId>org.kordamp.ikonli</groupId>
+      <artifactId>ikonli-javafx</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.kordamp.ikonli</groupId>
+      <artifactId>ikonli-fontawesome5-pack</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.kordamp.ikonli</groupId>
+      <artifactId>ikonli-materialdesign-pack</artifactId>
+      <version>12.3.0</version>
+    </dependency>
+
+    <!-- QR Code for Green Pass -->
+    <dependency>
+      <groupId>net.glxn.qrgen</groupId>
+      <artifactId>javase</artifactId>
+      <version>2.0</version>
+    </dependency>
+  </dependencies>
+
+</project>

@@ -31,6 +31,7 @@ public class Appointment implements Serializable {
   private String comments;
   private LocalDateTime lock_time;
   private LocalDateTime called_time;
+  private boolean arrived;
 
   public Appointment() {}
 
@@ -43,7 +44,8 @@ public class Appointment implements Serializable {
       LocalDateTime appt_date,
       LocalDateTime called_time,
       LocalDateTime lock_time,
-      boolean taken) {
+      boolean taken,
+      boolean arrived) {
     this.patient = patient_id;
     this.type = type_id;
     this.specialist_role = specialist_role_id;
@@ -55,6 +57,7 @@ public class Appointment implements Serializable {
     this.taken = taken;
     this.comments = null;
     this.lock_time = null;
+    this.arrived = arrived;
   }
 
   public int getId() {
@@ -139,5 +142,13 @@ public class Appointment implements Serializable {
 
   public void setCalled_time(LocalDateTime called_time) {
     this.called_time = called_time;
+  }
+
+  public boolean hasArrived() {
+    return arrived;
+  }
+
+  public void setArrived(boolean arrived) {
+    this.arrived = arrived;
   }
 }

@@ -1,38 +1,34 @@
 package il.cshaifa.hmo_system.server.server_handlers;
 
+import static il.cshaifa.hmo_system.Constants.APPT_DATE_COL;
+import static il.cshaifa.hmo_system.Constants.APPT_DURATION;
+import static il.cshaifa.hmo_system.Constants.CLINIC_COL;
+import static il.cshaifa.hmo_system.Constants.STAFF_MEMBER_COL;
+import static il.cshaifa.hmo_system.Constants.TYPE_COL;
+
 import il.cshaifa.hmo_system.CommonEnums.AddAppointmentRejectionReason;
 import il.cshaifa.hmo_system.entities.Appointment;
 import il.cshaifa.hmo_system.messages.AdminAppointmentMessage;
 import il.cshaifa.hmo_system.messages.AdminAppointmentMessage.RequestType;
+import il.cshaifa.hmo_system.server.ocsf.ConnectionToClient;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 
 public class HandleAdminAppointmentMessage extends MessageHandler {
   private final AdminAppointmentMessage class_message;
-  private static Map<String, Long> appointment_duration;
   private final CriteriaQuery<Appointment> cr;
   private final Root<Appointment> root;
 
-  public HandleAdminAppointmentMessage(AdminAppointmentMessage message, Session session) {
-    super(message, session);
+  public HandleAdminAppointmentMessage(
+      AdminAppointmentMessage message, Session session, ConnectionToClient client) {
+    super(message, session, client);
     this.class_message = (AdminAppointmentMessage) this.message;
-    if (appointment_duration == null) {
-      appointment_duration = new HashMap<>();
-      appointment_duration.put("Family Doctor", 15L);
-      appointment_duration.put("Pediatrician", 15L);
-      appointment_duration.put("Specialist", 20L);
-      appointment_duration.put("COVID Test", 10L);
-      appointment_duration.put("COVID Vaccine", 10L);
-      appointment_duration.put("Flu Vaccine", 10L);
-    }
     cr = cb.createQuery(Appointment.class);
     root = cr.from(Appointment.class);
   }
@@ -57,20 +53,28 @@ public class HandleAdminAppointmentMessage extends MessageHandler {
     } else if (class_message.request == RequestType.DELETE) {
       deleteAppointments();
     }
+
+    if (class_message.success) {
+      logSuccess("Appointments created");
+    } else {
+      logFailure(class_message.reject.toString());
+    }
   }
 
   private void openClinicServices() {
     // calculate total time of appointments sequence
-    long duration = appointment_duration.get(class_message.appt_type.getName());
+    long duration = APPT_DURATION.get(class_message.appt_type);
     long total_minutes = class_message.count * duration;
     LocalDateTime end_datetime = class_message.start_datetime.plusMinutes(total_minutes);
 
     cr.select(root)
         .where(
-            cb.equal(root.get("clinic"), class_message.clinic),
-            cb.equal(root.get("type").get("name"), class_message.appt_type.getName()),
+            cb.equal(root.get(CLINIC_COL), class_message.clinic),
+            cb.equal(root.get(TYPE_COL), class_message.appt_type),
             cb.between(
-                root.get("appt_date"), class_message.start_datetime, end_datetime.minusSeconds(1)));
+                root.get(APPT_DATE_COL),
+                class_message.start_datetime,
+                end_datetime.minusSeconds(1)));
     if (session.createQuery(cr).getResultList().size() > 0) {
       class_message.success = false;
       class_message.reject = AddAppointmentRejectionReason.OVERLAPPING;
@@ -85,7 +89,7 @@ public class HandleAdminAppointmentMessage extends MessageHandler {
     while (current_datetime.isBefore(end_datetime)) {
       Appointment appt = null;
       for (int i = 0; i < opening_hours.size(); i += 2) {
-        LocalTime open_time = opening_hours.get(i);
+        LocalTime open_time = opening_hours.get(i).minusSeconds(1);
         LocalTime close_time = opening_hours.get(i + 1);
         if (current_datetime.toLocalTime().isAfter(open_time)
             && current_datetime.toLocalTime().isBefore(close_time)) {
@@ -99,6 +103,7 @@ public class HandleAdminAppointmentMessage extends MessageHandler {
                   current_datetime,
                   null,
                   null,
+                  false,
                   false);
         }
       }
@@ -117,15 +122,15 @@ public class HandleAdminAppointmentMessage extends MessageHandler {
 
   private void openDoctorsAppointments() {
     // calculate total time of appointments sequence
-    long duration = appointment_duration.get(class_message.appt_type.getName());
+    long duration = APPT_DURATION.get(class_message.appt_type);
     long total_minutes = class_message.count * duration;
     LocalDateTime end_datetime = class_message.start_datetime.plusMinutes(total_minutes);
 
     cr.select(root)
         .where(
-            cb.equal(root.get("staff_member"), class_message.staff_member),
+            cb.equal(root.get(STAFF_MEMBER_COL), class_message.staff_member),
             cb.between(
-                root.get("appt_date"),
+                root.get(APPT_DATE_COL),
                 class_message.start_datetime.minusMinutes(duration).plusSeconds(1),
                 end_datetime.minusSeconds(1)));
     if (session.createQuery(cr).getResultList().size() > 0) {
@@ -158,6 +163,7 @@ public class HandleAdminAppointmentMessage extends MessageHandler {
                   current_datetime,
                   null,
                   null,
+                  false,
                   false);
         }
       }
