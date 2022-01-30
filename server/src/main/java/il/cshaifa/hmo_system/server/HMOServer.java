@@ -51,6 +51,7 @@ import javax.mail.internet.MimeMessage;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -215,7 +216,7 @@ public class HMOServer extends AbstractServer {
         session.close();
 
         for (Appointment appt : tommorows_appts) {
-          PrepareAndSendEmail(appt);
+          prepareAndSendEmail(appt);
           System.out.printf("Sent email for appointment id %s%n", appt.getId());
         }
 
@@ -227,7 +228,7 @@ public class HMOServer extends AbstractServer {
       }
     }
 
-    private void PrepareAndSendEmail(Appointment appt) {
+    private void prepareAndSendEmail(Appointment appt) {
       User currPatient = appt.getPatient().getUser();
       var date_str = Utils.prettifyDateTime(appt.getDate());
       var type_str =
@@ -269,7 +270,11 @@ public class HMOServer extends AbstractServer {
               Utils.prettifyTime(appt.getDate().minusMinutes(15).toLocalTime()),
               Utils.prettifyTime(appt.getDate().plusHours(1).toLocalTime()));
 
-      EmailSender.SendEmail(currPatient.getEmail(), subject, bodyText);
+      try {
+        EmailSender.sendEmail(currPatient.getEmail(), subject, bodyText);
+      } catch (IllegalArgumentException e) {
+        System.out.printf("Invalid email address for patient %s%n", currPatient);
+      }
     }
   }
 
@@ -281,7 +286,10 @@ public class HMOServer extends AbstractServer {
     private static final String from =
         "***REMOVED***"; // Needs to remain this email for smtp-pulse API
 
-    public static void SendEmail(String to, String subject, String bodyText) {
+    public static void sendEmail(String to, String subject, String bodyText)
+        throws IllegalArgumentException {
+      if (!EmailValidator.getInstance().isValid(to)) throw new IllegalArgumentException();
+
       // Get system properties & setup mail server
       Properties properties = System.getProperties();
       properties.setProperty("mail.smtp.host", host);
