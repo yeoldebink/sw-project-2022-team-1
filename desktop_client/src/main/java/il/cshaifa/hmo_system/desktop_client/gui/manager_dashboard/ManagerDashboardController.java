@@ -24,6 +24,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import org.greenrobot.eventbus.Subscribe;
 
+import static il.cshaifa.hmo_system.Constants.HMO_MANAGER;
+import static il.cshaifa.hmo_system.Constants.ROLE;
+
 public class ManagerDashboardController extends Controller {
   private final AdminClinicListController adminClinicListController;
   private final ClinicStaffListController clinicStaffListController;
@@ -75,8 +78,8 @@ public class ManagerDashboardController extends Controller {
     if (!event.getSender().equals(HMODesktopClient.getClient())) return;
     ArrayList<ClinicStaff> clinicStaff = new ArrayList<>();
 
-    var role = HMODesktopClient.getClient().getConnected_user().getRole().getName();
-    if (Objects.equals(role, "HMO Manager")) {
+    var role = HMODesktopClient.getClient().getConnected_user().getRole();
+    if (role.equals(ROLE(HMO_MANAGER))) {
       var unique_staffs_map = new HashMap<String, ClinicStaff>();
       for (var member : event.clinic_staff) {
         var name = member.getUser().toString();

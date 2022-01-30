@@ -10,6 +10,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import org.greenrobot.eventbus.EventBus;
 
+import static il.cshaifa.hmo_system.Constants.HMO_MANAGER;
+import static il.cshaifa.hmo_system.Constants.ROLE;
+
 public class AdminClinicViewController extends RoleDefinedViewController {
 
   private final Clinic clinicCopy;
@@ -48,7 +51,7 @@ public class AdminClinicViewController extends RoleDefinedViewController {
   }
 
   protected void applyRoleBehavior() {
-    if (role.getName().equals("HMO Manager")) {
+    if (role.equals(ROLE(HMO_MANAGER))) {
       sunHoursTextField.setDisable(true);
       monHoursTextField.setDisable(true);
       tueHoursTextField.setDisable(true);

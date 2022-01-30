@@ -2,14 +2,13 @@ package il.cshaifa.hmo_system;
 
 import il.cshaifa.hmo_system.entities.AppointmentType;
 import il.cshaifa.hmo_system.entities.Role;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-public class Constants implements Serializable {
+public class Constants {
 
   // roles & appt_types
   public static final String PATIENT = "Patient";
@@ -28,7 +27,7 @@ public class Constants implements Serializable {
   public static final String COVID_VACCINE = "COVID Vaccine";
   public static final String FLU_VACCINE = "Flu Vaccine";
   public static final String SPECIALIST = "Specialist";
-  public static final String LAB_TEST = "Lab Test";
+  public static final String LAB_TESTS = "Lab Tests";
 
   // column names
   public static final String NAME_COL = "name";
@@ -95,7 +94,13 @@ public class Constants implements Serializable {
 
     UNSTAFFED_APPT_TYPES = new HashSet<>(Arrays.asList(
         APPT_TYPE(NURSE),
-        APPT_TYPE(LAB_TEST),
+        APPT_TYPE(LAB_TESTS),
+        APPT_TYPE(COVID_TEST),
+        APPT_TYPE(COVID_VACCINE),
+        APPT_TYPE(FLU_VACCINE)
+    ));
+
+    UNSTAFFED_NON_WALK_IN_APPT_TYPES = new HashSet<>(Arrays.asList(
         APPT_TYPE(COVID_TEST),
         APPT_TYPE(COVID_VACCINE),
         APPT_TYPE(FLU_VACCINE)
@@ -139,6 +144,7 @@ public class Constants implements Serializable {
   public static Map<AppointmentType, Long> APPT_DURATION;
   public static HashSet<AppointmentType> GENERAL_PHYSICAN;
   public static HashSet<AppointmentType> UNSTAFFED_APPT_TYPES;
+  public static HashSet<AppointmentType> UNSTAFFED_NON_WALK_IN_APPT_TYPES;
   public static HashSet<Role> WALK_IN_ROLES;
   public static HashSet<Role> MANAGER_ROLES;
 }

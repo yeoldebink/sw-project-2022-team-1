@@ -11,6 +11,9 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 import org.greenrobot.eventbus.Subscribe;
 
+import static il.cshaifa.hmo_system.Constants.APPT_TYPE;
+import static il.cshaifa.hmo_system.Constants.SPECIALIST;
+
 public class AddAppointmentsController extends Controller {
 
   private static AddAppointmentsController instance;
@@ -50,7 +53,7 @@ public class AddAppointmentsController extends Controller {
     AppointmentType appt_type;
     if (event.staff_member != null) {
       if (event.staff_member.getRole().isSpecialist())
-        appt_type = new AppointmentType("Specialist");
+        appt_type = APPT_TYPE(SPECIALIST);
       else appt_type = new AppointmentType(event.staff_member.getRole().getName());
       staff_member = new User(event.staff_member);
     } else {

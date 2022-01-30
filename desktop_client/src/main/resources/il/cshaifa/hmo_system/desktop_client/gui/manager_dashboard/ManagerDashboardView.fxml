@@ -15,7 +15,7 @@
   <MenuBar AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
     <Menu text="My Clinic" fx:id="myClinicMenu">
       <MenuItem text="Edit Hours" onAction="#editMyClinicHours" />
-      <MenuItem text="Add Flu Vaccine Appointments" onAction="#addFluVaccinceAppt" />
+      <MenuItem text="Add Flu Vaccine Appointments" onAction="#addFluVaccineAppt" />
       <MenuItem text="Add Covid-19 Vaccine Appointments" onAction="#addCovidVaccinceAppt" />
       <MenuItem text="Add Covid-19 Tests" onAction="#addCovidTests" />
     </Menu>

@@ -20,6 +20,7 @@ import org.hibernate.Session;
 
 import static il.cshaifa.hmo_system.Constants.APPT_DATE_COL;
 import static il.cshaifa.hmo_system.Constants.CLINIC_COL;
+import static il.cshaifa.hmo_system.Constants.FUTURE_APPT_CUTOFF_WEEKS;
 import static il.cshaifa.hmo_system.Constants.LOCK_TIME_COL;
 import static il.cshaifa.hmo_system.Constants.PATIENT_COL;
 import static il.cshaifa.hmo_system.Constants.STAFF_MEMBER_COL;
@@ -31,7 +32,6 @@ public class HandleAppointmentMessage extends MessageHandler {
 
   private final AppointmentMessage class_message;
   // Represented as weeks
-  public static Map<String, Long> max_future_appointments;
   private final CriteriaQuery<Appointment> cr;
   private final Root<Appointment> root;
 
@@ -40,15 +40,6 @@ public class HandleAppointmentMessage extends MessageHandler {
       ConnectionToClient client) {
     super(message, session, client);
     this.class_message = (AppointmentMessage) this.message;
-    if (max_future_appointments == null) {
-      max_future_appointments = new HashMap<>();
-      max_future_appointments.put("Family Doctor", 4L);
-      max_future_appointments.put("Pediatrician", 4L);
-      max_future_appointments.put("Specialist", 12L);
-      max_future_appointments.put("COVID Test", 4L);
-      max_future_appointments.put("COVID Vaccine", 4L);
-      max_future_appointments.put("Flu Vaccine", 4L);
-    }
     cr = cb.createQuery(Appointment.class);
     root = cr.from(Appointment.class);
   }
@@ -84,7 +75,7 @@ public class HandleAppointmentMessage extends MessageHandler {
   private void getClinicAppointments() {
     LocalDateTime start = LocalDateTime.now();
     LocalDateTime end =
-        LocalDateTime.now().plusWeeks(max_future_appointments.get(class_message.type.getName()));
+        LocalDateTime.now().plusWeeks(FUTURE_APPT_CUTOFF_WEEKS.get(class_message.type));
 
     if (UNSTAFFED_APPT_TYPES.contains(class_message.type)) {
         cr.select(root)

@@ -18,7 +18,9 @@ import static il.cshaifa.hmo_system.Constants.APPT_DATE_COL;
 import static il.cshaifa.hmo_system.Constants.ARRIVED_COL;
 import static il.cshaifa.hmo_system.Constants.CALLED_TIME_COL;
 import static il.cshaifa.hmo_system.Constants.CLINIC_COL;
+import static il.cshaifa.hmo_system.Constants.PATIENT;
 import static il.cshaifa.hmo_system.Constants.PATIENT_COL;
+import static il.cshaifa.hmo_system.Constants.ROLE;
 import static il.cshaifa.hmo_system.Constants.TAKEN_COL;
 import static il.cshaifa.hmo_system.Constants.USER_COL;
 
@@ -39,7 +41,7 @@ public class HandleOnSiteEntryMessage extends MessageHandler {
   public void handleMessage() {
     User user = session.get(User.class, class_message.id);
 
-    if (user != null && user.getRole().getName().equals("Patient")) {
+    if (user != null && user.getRole().equals(ROLE(PATIENT))) {
       logSuccess(user.toString());
       Patient patient = getUserPatient(user);
       class_message.patient = patient;

@@ -21,6 +21,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.greenrobot.eventbus.EventBus;
 
+import static il.cshaifa.hmo_system.Constants.WALK_IN_ROLES;
+
 public class AdminAppointmentListViewController extends ViewController {
 
   @FXML private TableView<AppointmentForAdminTableView> appt_table;
@@ -49,9 +51,7 @@ public class AdminAppointmentListViewController extends ViewController {
     appt_table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     setCellValueFactory();
 
-    if (!(staff_member.getRole().getName().equals("Family Doctor")
-        || staff_member.getRole().getName().equals("Pediatrician")
-        || staff_member.getRole().isSpecialist())) {
+    if (WALK_IN_ROLES.contains(staff_member.getRole())) {
       addAppointmentsButton.setDisable(true);
     }
   }

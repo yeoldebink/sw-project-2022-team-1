@@ -8,23 +8,33 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
+import static il.cshaifa.hmo_system.Constants.COVID_TEST;
+import static il.cshaifa.hmo_system.Constants.COVID_VACCINE;
+import static il.cshaifa.hmo_system.Constants.FLU_VACCINE;
+import static il.cshaifa.hmo_system.Constants.LAB_TECHNICIAN;
+import static il.cshaifa.hmo_system.Constants.LAB_TESTS;
+import static il.cshaifa.hmo_system.Constants.NURSE;
+import static il.cshaifa.hmo_system.Constants.UNSTAFFED_APPT_TYPES;
+import static il.cshaifa.hmo_system.Constants.WALK_IN_ROLES;
+
 public class ClinicQueues {
 
   public static final HashMap<String, String> queueNames;
 
   static {
-    queueNames = new HashMap<>();
-    queueNames.put("COVID Test", "Lab Tests");
-    queueNames.put("COVID Vaccine", "Nurse");
-    queueNames.put("Flu Vaccine", "Nurse");
-    queueNames.put("Nurse", "Nurse");
-    queueNames.put("Lab Tests", "Lab Tests");
-    queueNames.put("Lab Technician", "Lab Tests");
+    queueNames = new HashMap<>() {{
+      put(COVID_TEST, LAB_TESTS);
+      put(COVID_VACCINE, NURSE);
+      put(FLU_VACCINE, NURSE);
+      put(NURSE, NURSE);
+      put(LAB_TESTS, LAB_TESTS);
+      put(LAB_TECHNICIAN, LAB_TESTS);
+    }};
   }
 
   private static String queueName(Appointment appointment) {
     var type_name = appointment.getType().getName();
-    if (Arrays.asList("Family Doctor", "Pediatrician", "Specialist").contains(type_name)) {
+    if (!UNSTAFFED_APPT_TYPES.contains(appointment.getType())) {
       return String.format(
           "Dr. %s",
           appointment.getStaff_member().toString());
@@ -35,8 +45,7 @@ public class ClinicQueues {
 
   private static String queueName(User staff_member) {
     var role_name = staff_member.getRole().getName();
-    if (staff_member.getRole().isSpecialist()
-        || Arrays.asList("Family Doctor", "Pediatrician").contains(role_name)) {
+    if (!WALK_IN_ROLES.contains(staff_member.getRole())) {
       return String.format("Dr. %s", staff_member);
     } else {
       return queueNames.get(role_name);

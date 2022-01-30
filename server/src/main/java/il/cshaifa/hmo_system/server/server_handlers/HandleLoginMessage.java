@@ -23,7 +23,11 @@ import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 
 import static il.cshaifa.hmo_system.Constants.CLINIC_COL;
+import static il.cshaifa.hmo_system.Constants.CLINIC_MANAGER;
+import static il.cshaifa.hmo_system.Constants.HMO_MANAGER;
 import static il.cshaifa.hmo_system.Constants.MANAGER_USER_COL;
+import static il.cshaifa.hmo_system.Constants.PATIENT;
+import static il.cshaifa.hmo_system.Constants.ROLE;
 import static il.cshaifa.hmo_system.Constants.USER_COL;
 
 public class HandleLoginMessage extends MessageHandler {
@@ -84,14 +88,14 @@ public class HandleLoginMessage extends MessageHandler {
 
     // patients and HMO Mgr are only able to login on the desktop client
     switch (user.getRole().getName()) {
-      case "Patient":
+      case PATIENT:
         if (is_desktop) {
           setUser(user);
           ((DesktopLoginMessage) this.class_message).patient_data = getUserPatient(user);
         }
         break;
 
-      case "HMO Manager":
+      case HMO_MANAGER:
         if (is_desktop) {
           setUser(user);
         }
@@ -99,7 +103,7 @@ public class HandleLoginMessage extends MessageHandler {
 
       default: // this is for Clinic Mgr & clinic staff
         var employee_clinics = employeeClinics(user);
-        boolean is_clinic_manager = user.getRole().getName().equals("Clinic Manager");
+        boolean is_clinic_manager = user.getRole().equals(ROLE(CLINIC_MANAGER));
 
         var desktop_message =
             class_message instanceof DesktopLoginMessage
@@ -175,7 +179,7 @@ public class HandleLoginMessage extends MessageHandler {
 
   private List<Clinic> employeeClinics(User user) {
     CriteriaQuery<Clinic> cr = cb.createQuery(Clinic.class);
-    if (user.getRole().getName().equals("Clinic Manager")) {
+    if (user.getRole().equals(ROLE(CLINIC_MANAGER))) {
       Root<Clinic> root = cr.from(Clinic.class);
       cr.select(root).where(cb.equal(root.get(MANAGER_USER_COL), user));
     } else {

@@ -18,6 +18,13 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import org.greenrobot.eventbus.EventBus;
 
+import static il.cshaifa.hmo_system.Constants.APPT_TYPE;
+import static il.cshaifa.hmo_system.Constants.CLINIC_MANAGER;
+import static il.cshaifa.hmo_system.Constants.COVID_TEST;
+import static il.cshaifa.hmo_system.Constants.COVID_VACCINE;
+import static il.cshaifa.hmo_system.Constants.FLU_VACCINE;
+import static il.cshaifa.hmo_system.Constants.ROLE;
+
 public class ManagerDashboardViewController extends RoleDefinedViewController {
 
   @FXML private Menu myClinicMenu;
@@ -69,7 +76,7 @@ public class ManagerDashboardViewController extends RoleDefinedViewController {
 
   @Override
   protected void applyRoleBehavior() {
-    if (role.getName().equals("Clinic Manager")) tabPane.getTabs().remove(clinicAdministrationTab);
+    if (role.equals(ROLE(CLINIC_MANAGER))) tabPane.getTabs().remove(clinicAdministrationTab);
     else {
       tabPane.getTabs().remove(staffAdministrationTab);
       myClinicMenu.setVisible(false);
@@ -88,16 +95,16 @@ public class ManagerDashboardViewController extends RoleDefinedViewController {
     return reportListViewController;
   }
 
-  public void addFluVaccinceAppt(ActionEvent actionEvent) {
-    addTestOrVaccineAppointments(new AppointmentType("Flu Vaccine"));
+  public void addFluVaccineAppt(ActionEvent actionEvent) {
+    addTestOrVaccineAppointments(APPT_TYPE(FLU_VACCINE));
   }
 
   public void addCovidVaccinceAppt(ActionEvent actionEvent) {
-    addTestOrVaccineAppointments(new AppointmentType("COVID Vaccine"));
+    addTestOrVaccineAppointments(APPT_TYPE(COVID_VACCINE));
   }
 
   public void addCovidTests(ActionEvent actionEvent) {
-    addTestOrVaccineAppointments(new AppointmentType("COVID Test"));
+    addTestOrVaccineAppointments(APPT_TYPE(COVID_TEST));
   }
 
   private void addTestOrVaccineAppointments(AppointmentType appointmentType) {

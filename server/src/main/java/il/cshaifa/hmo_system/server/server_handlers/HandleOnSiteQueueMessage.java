@@ -13,6 +13,8 @@ import java.time.LocalTime;
 import java.util.logging.Logger;
 import org.hibernate.Session;
 
+import static il.cshaifa.hmo_system.Constants.APPT_TYPE;
+import static il.cshaifa.hmo_system.Constants.LAB_TESTS;
 import static il.cshaifa.hmo_system.Constants.USER_COL;
 
 public class HandleOnSiteQueueMessage extends MessageHandler {
@@ -42,7 +44,7 @@ public class HandleOnSiteQueueMessage extends MessageHandler {
 
     var now = LocalDateTime.now().toLocalTime();
 
-    if (class_message.appt_type.getName().equals("Lab Tests")
+    if (class_message.appt_type.equals(APPT_TYPE(LAB_TESTS))
         && (now.isBefore(LocalTime.of(8, 0)) || now.isAfter(LocalTime.of(10, 0)))) {
       this.class_message.rejection_reason = OnSiteQueueRejectionReason.OUT_OF_HOURS;
       logFailure(OnSiteQueueRejectionReason.OUT_OF_HOURS.toString());

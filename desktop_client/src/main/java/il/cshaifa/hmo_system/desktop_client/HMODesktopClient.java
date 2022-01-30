@@ -37,6 +37,9 @@ import java.util.ArrayList;
 import java.util.List;
 import org.greenrobot.eventbus.EventBus;
 
+import static il.cshaifa.hmo_system.Constants.CLINIC_MANAGER;
+import static il.cshaifa.hmo_system.Constants.ROLE;
+
 public class HMODesktopClient extends HMOClient {
 
   private static HMODesktopClient client = null;
@@ -124,7 +127,7 @@ public class HMODesktopClient extends HMOClient {
   public void updateClinic(Clinic clinic) throws IOException {
     sendToServer(new ClinicMessage(clinic));
     // ensure new clinic data is saved locally as well for HMO manager
-    if (connected_user.getRole().getName().equals("Clinic Manager")) {
+    if (connected_user.getRole().equals(ROLE(CLINIC_MANAGER))) {
       connected_employee_clinics.set(0, clinic);
     }
   }

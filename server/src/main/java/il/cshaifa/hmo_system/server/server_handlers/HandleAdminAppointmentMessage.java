@@ -18,13 +18,13 @@ import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 
 import static il.cshaifa.hmo_system.Constants.APPT_DATE_COL;
+import static il.cshaifa.hmo_system.Constants.APPT_DURATION;
 import static il.cshaifa.hmo_system.Constants.CLINIC_COL;
 import static il.cshaifa.hmo_system.Constants.STAFF_MEMBER_COL;
 import static il.cshaifa.hmo_system.Constants.TYPE_COL;
 
 public class HandleAdminAppointmentMessage extends MessageHandler {
   private final AdminAppointmentMessage class_message;
-  private static Map<String, Long> appointment_duration;
   private final CriteriaQuery<Appointment> cr;
   private final Root<Appointment> root;
 
@@ -33,15 +33,6 @@ public class HandleAdminAppointmentMessage extends MessageHandler {
       ConnectionToClient client) {
     super(message, session, client);
     this.class_message = (AdminAppointmentMessage) this.message;
-    if (appointment_duration == null) {
-      appointment_duration = new HashMap<>();
-      appointment_duration.put("Family Doctor", 15L);
-      appointment_duration.put("Pediatrician", 15L);
-      appointment_duration.put("Specialist", 20L);
-      appointment_duration.put("COVID Test", 10L);
-      appointment_duration.put("COVID Vaccine", 10L);
-      appointment_duration.put("Flu Vaccine", 10L);
-    }
     cr = cb.createQuery(Appointment.class);
     root = cr.from(Appointment.class);
   }
@@ -76,7 +67,7 @@ public class HandleAdminAppointmentMessage extends MessageHandler {
 
   private void openClinicServices() {
     // calculate total time of appointments sequence
-    long duration = appointment_duration.get(class_message.appt_type.getName());
+    long duration = APPT_DURATION.get(class_message.appt_type);
     long total_minutes = class_message.count * duration;
     LocalDateTime end_datetime = class_message.start_datetime.plusMinutes(total_minutes);
 
@@ -133,7 +124,7 @@ public class HandleAdminAppointmentMessage extends MessageHandler {
 
   private void openDoctorsAppointments() {
     // calculate total time of appointments sequence
-    long duration = appointment_duration.get(class_message.appt_type.getName());
+    long duration = APPT_DURATION.get(class_message.appt_type);
     long total_minutes = class_message.count * duration;
     LocalDateTime end_datetime = class_message.start_datetime.plusMinutes(total_minutes);
 

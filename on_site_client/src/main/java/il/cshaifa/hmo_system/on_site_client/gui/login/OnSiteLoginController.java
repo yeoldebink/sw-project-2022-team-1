@@ -20,6 +20,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.greenrobot.eventbus.Subscribe;
 
+import static il.cshaifa.hmo_system.Constants.CLINIC_MANAGER;
+import static il.cshaifa.hmo_system.Constants.HMO_MANAGER;
+import static il.cshaifa.hmo_system.Constants.ROLE;
+
 public class OnSiteLoginController extends Controller {
 
   private final OnSiteLoginAction action;
@@ -91,7 +95,7 @@ public class OnSiteLoginController extends Controller {
    */
   private void openMainScreenByRole(LoginEvent event) throws Exception {
     var user = event.userData;
-    if (user.getRole().getName().equals("Clinic Manager")) { // open up the patient view
+    if (user.getRole().equals(ROLE(CLINIC_MANAGER))) { // open up the patient view
       var loader =
           new FXMLLoader(
               getClass().getResource(ClientUtils.get_fxml(OnSitePatientViewController.class)));

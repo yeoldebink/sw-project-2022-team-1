@@ -21,6 +21,9 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import org.greenrobot.eventbus.EventBus;
 
+import static il.cshaifa.hmo_system.Constants.LAB_TESTS;
+import static il.cshaifa.hmo_system.Constants.NURSE;
+
 public class OnSitePatientViewController extends ViewController {
 
   private PauseTransition inactivity_timer;
@@ -86,9 +89,9 @@ public class OnSitePatientViewController extends ViewController {
 
     closeClinicMenuItem.setOnAction((actionEvent) -> postExitEvent(OnSiteLoginAction.CLOSE_CLINIC));
 
-    nurseButton.setOnAction(actionEvent -> postWalkInEvent("Nurse"));
+    nurseButton.setOnAction(actionEvent -> postWalkInEvent(NURSE));
 
-    labButton.setOnAction(actionEvent -> postWalkInEvent("Lab Tests"));
+    labButton.setOnAction(actionEvent -> postWalkInEvent(LAB_TESTS));
 
     dashboardWelcomeLabel.setTextFill(Color.web("#4eb5d5"));
 

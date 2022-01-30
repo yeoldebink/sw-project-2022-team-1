@@ -52,6 +52,20 @@ import jdk.jshell.spi.ExecutionControl.NotImplementedException;
 import org.greenrobot.eventbus.EventBus;
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import static il.cshaifa.hmo_system.Constants.APPT_TYPE;
+import static il.cshaifa.hmo_system.Constants.CARDIOLOGIST;
+import static il.cshaifa.hmo_system.Constants.COVID_TEST;
+import static il.cshaifa.hmo_system.Constants.COVID_VACCINE;
+import static il.cshaifa.hmo_system.Constants.DERMATOLOGIST;
+import static il.cshaifa.hmo_system.Constants.ENDOCRINOLOGIST;
+import static il.cshaifa.hmo_system.Constants.FAMILY_DOCTOR;
+import static il.cshaifa.hmo_system.Constants.FLU_VACCINE;
+import static il.cshaifa.hmo_system.Constants.NEUROLOGIST;
+import static il.cshaifa.hmo_system.Constants.ORTHOPEDIST;
+import static il.cshaifa.hmo_system.Constants.PEDIATRICIAN;
+import static il.cshaifa.hmo_system.Constants.ROLE;
+import static il.cshaifa.hmo_system.Constants.SPECIALIST;
+
 public class SetAppointmentViewController extends ViewController {
   private final Patient patient;
   private HashMap<LocalDate, ArrayList<Appointment>> appointmentsByDate;
@@ -149,7 +163,7 @@ public class SetAppointmentViewController extends ViewController {
     gpAppointmentsButton.setOnAction(
         (event) -> {
           errorLabel.setVisible(false);
-          requestAppointments(new AppointmentType("Family Doctor"), null);
+          requestAppointments(APPT_TYPE(FAMILY_DOCTOR), null);
         });
 
     // SPECIALIST GUI
@@ -166,19 +180,19 @@ public class SetAppointmentViewController extends ViewController {
                   setText(role.getName());
                   String iconLiteral = null;
                   switch (role.getName()) {
-                    case "Cardiologist":
+                    case CARDIOLOGIST:
                       iconLiteral = "mdi-heart-pulse";
                       break;
-                    case "Neurologist":
+                    case NEUROLOGIST:
                       iconLiteral = "mdi-lightbulb-outline";
                       break;
-                    case "Endocrinologist":
+                    case ENDOCRINOLOGIST:
                       iconLiteral = "mdi-invert-colors";
                       break;
-                    case "Dermatologist":
+                    case DERMATOLOGIST:
                       iconLiteral = "mdi-fingerprint";
                       break;
-                    case "Orthopedist":
+                    case ORTHOPEDIST:
                       iconLiteral = "mdi-wrench";
                       break;
                     default:
@@ -205,7 +219,7 @@ public class SetAppointmentViewController extends ViewController {
             (newRole) -> {
               if (spTypeComboBox.getValue() != null) {
                 errorLabel.setVisible(false);
-                requestAppointments(new AppointmentType("Specialist"), spTypeComboBox.getValue());
+                requestAppointments(APPT_TYPE(SPECIALIST), spTypeComboBox.getValue());
               }
             });
 
@@ -249,10 +263,10 @@ public class SetAppointmentViewController extends ViewController {
                   setText(apptType.getName());
                   String iconLiteral = null;
                   switch (apptType.getName()) {
-                    case "COVID Vaccine":
+                    case COVID_VACCINE:
                       iconLiteral = "mdi-basecamp";
                       break;
-                    case "Flu Vaccine":
+                    case FLU_VACCINE:
                       iconLiteral = "mdi-chemical-weapon";
                       break;
                   }
@@ -273,7 +287,7 @@ public class SetAppointmentViewController extends ViewController {
         .getItems()
         .setAll(
             FXCollections.observableArrayList(
-                new AppointmentType("COVID Vaccine"), new AppointmentType("Flu Vaccine")));
+                APPT_TYPE(COVID_VACCINE), APPT_TYPE(FLU_VACCINE)));
 
     vaxTypeComboBox
         .valueProperty()
@@ -339,7 +353,7 @@ public class SetAppointmentViewController extends ViewController {
     symptomsTextArea.setWrapText(true);
 
     testAppointmentsButton.setOnAction(
-        (event) -> requestAppointments(new AppointmentType("COVID Test"), null));
+        (event) -> requestAppointments(APPT_TYPE(COVID_TEST), null));
   }
 
   private void moveApptDatePicker(AppointmentType apptType) {
@@ -349,18 +363,18 @@ public class SetAppointmentViewController extends ViewController {
     Pane newParent;
 
     switch (apptType.getName()) {
-      case "Family Doctor":
-      case "Pediatrician":
+      case FAMILY_DOCTOR:
+      case PEDIATRICIAN:
         newParent = gpAppointmentVBox;
         break;
-      case "Specialist":
+      case SPECIALIST:
         newParent = spAppointmentsVBox;
         break;
-      case "COVID Vaccine":
-      case "Flu Vaccine":
+      case COVID_VACCINE:
+      case FLU_VACCINE:
         newParent = vaxAppointmentsVBox;
         break;
-      case "COVID Test":
+      case COVID_TEST:
         newParent = testAppointmentsVBox;
         break;
       default:
@@ -409,7 +423,7 @@ public class SetAppointmentViewController extends ViewController {
     }
 
     // if specialist, populate the doctor/clinic list
-    if (appointments.get(0).getType().getName().equals("Specialist")) {
+    if (appointments.get(0).getType().equals(APPT_TYPE(SPECIALIST))) {
       populateSpecialistData(appointments);
     } else populateAppointmentDates(appointments, true);
   }
@@ -452,7 +466,7 @@ public class SetAppointmentViewController extends ViewController {
   @FXML
   public void takeAppointment(ActionEvent event) {
     var appt = appointmentsTable.getSelectionModel().getSelectedItem().getAppointment();
-    if (lastUpdatedAppointmentType.getName().equals("COVID Test"))
+    if (lastUpdatedAppointmentType.equals(APPT_TYPE(COVID_TEST)))
       appt.setComments(
           String.format(
               "Has symptoms: %s\n%s", symptomsComboBox.getValue(), symptomsTextArea.getText()));

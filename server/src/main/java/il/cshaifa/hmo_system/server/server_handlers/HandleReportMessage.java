@@ -24,6 +24,7 @@ import static il.cshaifa.hmo_system.Constants.CALLED_TIME_COL;
 import static il.cshaifa.hmo_system.Constants.CLINIC_COL;
 import static il.cshaifa.hmo_system.Constants.STAFF_MEMBER_COL;
 import static il.cshaifa.hmo_system.Constants.TAKEN_COL;
+import static il.cshaifa.hmo_system.Constants.UNSTAFFED_APPT_TYPES;
 
 public class HandleReportMessage extends MessageHandler {
   ReportMessage class_message;
@@ -34,7 +35,6 @@ public class HandleReportMessage extends MessageHandler {
   private final CriteriaQuery<Appointment> cr;
   private final Root<Appointment> root;
   private List<Appointment> relevant_appointments;
-  private static String[] clinics_general_services;
 
 
   public HandleReportMessage(ReportMessage message, Session session,
@@ -43,10 +43,6 @@ public class HandleReportMessage extends MessageHandler {
     this.class_message = (ReportMessage) this.message;
     cr = cb.createQuery(Appointment.class);
     root = cr.from(Appointment.class);
-    if (clinics_general_services == null) {
-      clinics_general_services =
-          new String[] {"COVID Test", "COVID Vaccine", "Flu Vaccine", "Nurse", "Lab Tests"};
-    }
   }
 
   @Override
@@ -95,9 +91,9 @@ public class HandleReportMessage extends MessageHandler {
             .put(
                 clinic.getId(),
                 new DailyAppointmentTypesReport(current_date.atStartOfDay(), clinic));
-        for (String service : clinics_general_services) {
+        for (var service : UNSTAFFED_APPT_TYPES) {
           ((DailyAppointmentTypesReport) daily_reports_map.get(current_date).get(clinic.getId()))
-              .report_data.put(service, 0);
+              .report_data.put(service.getName(), 0);
         }
       }
       // for each staff member fill his report at certain clinic make 0-report

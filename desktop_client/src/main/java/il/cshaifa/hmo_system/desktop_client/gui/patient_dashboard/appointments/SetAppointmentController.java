@@ -15,6 +15,13 @@ import javafx.stage.Stage;
 import jdk.jshell.spi.ExecutionControl.NotImplementedException;
 import org.greenrobot.eventbus.Subscribe;
 
+import static il.cshaifa.hmo_system.Constants.COVID_TEST;
+import static il.cshaifa.hmo_system.Constants.COVID_VACCINE;
+import static il.cshaifa.hmo_system.Constants.FAMILY_DOCTOR;
+import static il.cshaifa.hmo_system.Constants.FLU_VACCINE;
+import static il.cshaifa.hmo_system.Constants.PEDIATRICIAN;
+import static il.cshaifa.hmo_system.Constants.SPECIALIST;
+
 public class SetAppointmentController extends Controller {
 
   private static SetAppointmentController instance;
@@ -49,19 +56,19 @@ public class SetAppointmentController extends Controller {
     if (!event.getSender().equals(this.view_controller) || event.action != null) return;
     try {
       switch (event.appointmentType.getName()) {
-        case "Family Doctor":
+        case FAMILY_DOCTOR:
           HMODesktopClient.getClient()
               .getClinicAppointments(
-                  new AppointmentType(patientIsMinor() ? "Pediatrician" : "Family Doctor"));
+                  new AppointmentType(patientIsMinor() ? PEDIATRICIAN : FAMILY_DOCTOR));
           break;
 
-        case "Specialist":
+        case SPECIALIST:
           HMODesktopClient.getClient().getSpecialistAppointments(event.role);
           break;
 
-        case "COVID Vaccine":
-        case "Flu Vaccine":
-        case "COVID Test":
+        case COVID_VACCINE:
+        case FLU_VACCINE:
+        case COVID_TEST:
           HMODesktopClient.getClient().getClinicAppointments(event.appointmentType);
           break;
         default:

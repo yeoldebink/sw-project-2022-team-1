@@ -17,10 +17,14 @@ import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 
 import static il.cshaifa.hmo_system.Constants.APPT_DATE_COL;
+import static il.cshaifa.hmo_system.Constants.APPT_TYPE;
 import static il.cshaifa.hmo_system.Constants.CALLED_TIME_COL;
+import static il.cshaifa.hmo_system.Constants.FUTURE_APPT_CUTOFF_WEEKS;
 import static il.cshaifa.hmo_system.Constants.IS_SPECIALIST_COL;
 import static il.cshaifa.hmo_system.Constants.LOCK_TIME_COL;
 import static il.cshaifa.hmo_system.Constants.PATIENT_COL;
+import static il.cshaifa.hmo_system.Constants.ROLE;
+import static il.cshaifa.hmo_system.Constants.SPECIALIST;
 import static il.cshaifa.hmo_system.Constants.SPECIALIST_ROLE_COL;
 import static il.cshaifa.hmo_system.Constants.TAKEN_COL;
 
@@ -87,7 +91,7 @@ public class HandleSetSpecialistAppointmentMessage extends MessageHandler {
                 root.get(APPT_DATE_COL),
                 LocalDateTime.now(),
                 LocalDateTime.now()
-                    .plusWeeks(HandleAppointmentMessage.max_future_appointments.get("Specialist"))),
+                    .plusWeeks(FUTURE_APPT_CUTOFF_WEEKS.get(APPT_TYPE(SPECIALIST)))),
             cb.isFalse(root.get(TAKEN_COL)),
             cb.or(
                 cb.isNull(root.get(LOCK_TIME_COL)),

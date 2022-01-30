@@ -30,6 +30,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import org.greenrobot.eventbus.EventBus;
 
+import static il.cshaifa.hmo_system.Constants.CLINIC_MANAGER;
+import static il.cshaifa.hmo_system.Constants.HMO_MANAGER;
+import static il.cshaifa.hmo_system.Constants.ROLE;
+
 public class ReportListViewController extends RoleDefinedViewController {
 
   @FXML private AnchorPane clinicListPane;
@@ -54,7 +58,7 @@ public class ReportListViewController extends RoleDefinedViewController {
 
   @Override
   protected void applyRoleBehavior() {
-    if (role.getName().equals("Clinic Manager")) {
+    if (role.equals(ROLE(CLINIC_MANAGER))) {
       clinicList.getItems().setAll(HMODesktopClient.getClient().getConnected_employee_clinics());
       clinicList.getSelectionModel().select(0);
       clinicList.setDisable(true);
@@ -119,8 +123,7 @@ public class ReportListViewController extends RoleDefinedViewController {
                     HMODesktopClient.getClient()
                         .getConnected_user()
                         .getRole()
-                        .getName()
-                        .equals("HMO Manager");
+                        .equals(ROLE(HMO_MANAGER));
                 if (newValue == reportTypeComboBox.getItems().get(2)) {
                   if (isHMOManager) {
                     clinicList.getSelectionModel().selectAll();

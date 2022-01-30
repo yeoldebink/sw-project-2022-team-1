@@ -39,6 +39,8 @@ import net.glxn.qrgen.core.image.ImageType;
 import net.glxn.qrgen.javase.QRCode;
 import org.greenrobot.eventbus.Subscribe;
 
+import static il.cshaifa.hmo_system.Constants.UNSTAFFED_NON_WALK_IN_APPT_TYPES;
+
 public class OnSitePatientController extends Controller {
 
   private Patient patient;
@@ -180,8 +182,7 @@ public class OnSitePatientController extends Controller {
                   new Label(Utils.prettifyDateTime(q_appt.appointment.getDate()))));
     } else {
       vbox.getChildren().add(new Label(q_appt.appointment.getType().getName()));
-      if (Arrays.asList("COVID Test", "COVID Vaccine", "Flu Vaccine")
-          .contains(q_appt.appointment.getType().getName())) {
+      if (UNSTAFFED_NON_WALK_IN_APPT_TYPES.contains(q_appt.appointment.getType())) {
         vbox.getChildren().add(new Label(Utils.prettifyDateTime(q_appt.appointment.getDate())));
       }
     }
