@@ -1,45 +1,30 @@
-# Setup For Successful CI
+# HMO System
+#### A system for managing patients, staff, clinics, and appointments for a medical organization.
 
-Every time a pull request is submitted, two CI checks are run:
+Features a desktop application for patients & managerial staff as well as an application for use on 
+clinic premises by staff members & patients arriving for appointments.
 
-- Code style is checked to ensure it matches with the Google Java Code Style
-- The project is built as a `.jar` with dependencies
+Written in Java using OCSF, ORM with MySQL, and an event-driven UI using JavaFX and
+[greenrobot EventBus](https://github.com/greenrobot/EventBus).
 
-If either of these tests fail, your code will not be merged.
+## Screenshots
 
-## IntelliJ Setup
+### Desktop App - Patient welcome screen
 
-### Google Java Format Plugin
+![](img/patient-dashboard.png)
 
-1. File -> Settings -> Plugins
-2. Search for google-java-format
-3. Install the plugin
-4. Close & Re-Open IntelliJ
-5. File -> Settings -> Other Settings -> google-java-format Settings
-6. Check "Enable google-java-format"
+### Desktop App - Setting an appointment
 
-### Code Style XML
+![](img/set-appt.png)
 
-1. [Download the XML](https://raw.githubusercontent.com/google/styleguide/gh-pages/intellij-java-google-style.xml)
-2. File -> Settings -> Editor -> Code Style
-3. Click the gear icon next to Scheme -> Import Scheme -> IntelliJ IDEA code style XML
-4. Choose the XML file and import it
-5. Switch schemes to GoogleStyle
+### Clinic App - Logging in as a patient
 
-## Formatting Your Code
+![](img/on-site-patient-dashboard.png)
 
-You can reformat the file you're currently editing with Code -> Reformat Code or reformat entire
-directories by right-clicking on them and selectin Reformat Code. This is probably the best option
-to make sure you haven't missed any files.
+### Clinic App - Receiving a number for the nurse's queue
 
-## Building
+![](img/on-site-nurse-number.png)
 
-`mvn clean install`
+### Clinic App - The nurse's queue (staff view)
 
-## Initializing a test DB
-
-1. Make sure MySQL is installed and running on your computer
-2. Either change the root password to `Admin@2021` or edit the `hibernate.properties` file found in 
-`testing_database_init/src/main/resources/hibernate.properties` (DO NOT COMMIT CHANGES TO THIS
-   FILE)
-3. Run `mvn clean compile exec:java` in the directory `testing_database_init`
+![](img/on-site-staff-view.png)
