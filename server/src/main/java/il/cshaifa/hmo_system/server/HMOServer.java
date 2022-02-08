@@ -337,7 +337,7 @@ public class HMOServer extends AbstractServer {
     private static final String user_name = "***REMOVED***";
     private static final String password = "***REMOVED***";
     private static final String from =
-        "***REMOVED***"; // Needs to remain this email for smtp-pulse API
+        "***REMOVED***";
 
     /**
      * Sends email using properties defined in class fields
